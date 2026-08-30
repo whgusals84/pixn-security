@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://pixn-analytics-portfolio.forhm0220.chatgpt.site'),
   title: 'PIXN — Digital Analytics & Growth',
   description: '데이터를 더 나은 질문과 실행으로 연결하는 디지털 분석가 포트폴리오',
   icons: { icon: '/favicon.svg' },
