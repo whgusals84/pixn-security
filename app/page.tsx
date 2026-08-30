@@ -18,19 +18,19 @@ export default function Home() {
       <main>
         <section className="hero" id="about" aria-labelledby="hero-title">
           <div className="hero-mark" aria-hidden="true">PX</div>
-          <p className="eyebrow">PIXN · SECURITY KNOWLEDGE ARCHIVE</p>
+          <p className="eyebrow">PIXN · WEB SECURITY &amp; APPLIED CRYPTOGRAPHY</p>
           <h1 id="hero-title">
-            Web Security,
+            Web Security.
             <br />
-            Secure Engineering and
+            Applied Cryptography.
             <br />
-            Practical Field Notes.
+            Built to Understand.
           </h1>
           <p className="hero-copy">
-            취약점의 원리부터 방어 관점의 테스트와 안전한 개발 방법까지,
-            <br className="desktop-break" /> 기술 자료를 검색하고 연결해서 볼 수 있습니다.
+            Field notes from an aspiring security engineer exploring web vulnerabilities,
+            <br className="desktop-break" /> secure systems, cryptographic protocols, and open-source tooling.
           </p>
-          <a className="text-link" href="/sec/">EXPLORE SECURITY GUIDES</a>
+          <a className="text-link" href="/sec/">EXPLORE THE FIELD NOTES</a>
         </section>
 
         <section className="featured" aria-label="추천 글">

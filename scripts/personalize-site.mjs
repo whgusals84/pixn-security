@@ -9,8 +9,8 @@ const previewOnly = Boolean(args.preview);
 
 const removedDiscoveryRoutes = REMOVED_DISCOVERY_ROUTES;
 const removedDiscoveryRouteSet = new Set(REMOVED_DISCOVERY_ROUTES);
-const siteDescription = 'Practical web security knowledge, secure engineering references, and open-source tools.';
-const koSiteDescription = '웹 보안 학습 자료와 안전한 개발 지침, 오픈소스 도구를 정리한 지식 아카이브입니다.';
+const siteDescription = 'Field notes from an aspiring security engineer exploring web security, applied cryptography, secure systems, and open-source tooling.';
+const koSiteDescription = '웹 보안, 응용 암호학, 안전한 시스템과 오픈소스 도구를 탐구하는 예비 보안 엔지니어의 기술 아카이브입니다.';
 const priorPublisherSocialUrlSource = String.raw`https?:\/\/(?:www\.)?(?:x\.com\/(?:hahwul|hahwul_)|twitter\.com\/(?:hahwul|hahwul_)|instagram\.com\/(?:hahwul|hahwul_)|linkedin\.com\/(?:in\/)?(?:hahwul|hahwul_))(?:\/[^\s"'<>]*)?`;
 const priorPublisherSocialUrlPattern = new RegExp(`^${priorPublisherSocialUrlSource}$`, 'i');
 
@@ -58,6 +58,31 @@ function replaceMain(html, main) {
   return html.replace(/<main\b[^>]*id=["']main-content["'][^>]*>[\s\S]*?<\/main>/i, main);
 }
 
+function personalizeHomeMetadata(html) {
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/i, '<title>PIXN — Web Security &amp; Applied Cryptography</title>')
+    .replace(
+      /<meta\b(?=[^>]*\bname=["']description["'])[^>]*>/i,
+      `<meta name="description" content="${siteDescription}">`,
+    )
+    .replace(
+      /<meta\b(?=[^>]*\bproperty=["']og:title["'])[^>]*>/i,
+      '<meta property="og:title" content="PIXN — Web Security &amp; Applied Cryptography">',
+    )
+    .replace(
+      /<meta\b(?=[^>]*\bproperty=["']og:description["'])[^>]*>/i,
+      `<meta property="og:description" content="${siteDescription}">`,
+    )
+    .replace(
+      /<meta\b(?=[^>]*\bname=["']twitter:title["'])[^>]*>/i,
+      '<meta name="twitter:title" content="PIXN — Web Security &amp; Applied Cryptography">',
+    )
+    .replace(
+      /<meta\b(?=[^>]*\bname=["']twitter:description["'])[^>]*>/i,
+      `<meta name="twitter:description" content="${siteDescription}">`,
+    );
+}
+
 function neutralFooter() {
   return `<footer class="site-footer">
     <div class="container">
@@ -70,7 +95,7 @@ function neutralFooter() {
                 <a href="/feeds/">FEEDS</a>
                 <a href="/privacy/">PRIVACY</a>
             </nav>
-            <p>PIXN<br />Security Knowledge Archive.</p>
+            <p>PIXN<br />Web Security &amp; Applied Cryptography.</p>
         </div>
     </div>
 </footer>`;
@@ -79,11 +104,11 @@ function neutralFooter() {
 function homeMain() {
   return `<main id="main-content">
     <div class="container">
-        <section class="gallery-hero exhibit is-lit" aria-label="PIXN Security Knowledge Archive">
+        <section class="gallery-hero exhibit is-lit" aria-label="PIXN Web Security and Applied Cryptography">
             <p class="hero-inscription"><span class="hw-mark" role="img" aria-label="PIXN"></span></p>
-            <h1 class="hero-statement">Web Security Knowledge Base, Tools and Field Notes.</h1>
-            <p class="hero-intro">Practical references for web security testing, secure engineering, and open-source security tooling.</p>
-            <p class="hero-doors"><a class="hero-archive-link" href="/sec/">Explore security guides</a></p>
+            <h1 class="hero-statement">Web Security. Applied Cryptography. Built to Understand.</h1>
+            <p class="hero-intro">Field notes from an aspiring security engineer exploring web vulnerabilities, secure systems, cryptographic protocols, and open-source tooling.</p>
+            <p class="hero-doors"><a class="hero-archive-link" href="/sec/">Explore the field notes</a></p>
         </section>
 
         <section class="home-room exhibit" aria-labelledby="plate-start">
@@ -120,11 +145,11 @@ function aboutMain(language) {
   const title = korean ? 'PIXN 소개' : 'About PIXN';
   const description = korean ? koSiteDescription : siteDescription;
   const paragraphs = korean
-    ? `<p>PIXN은 웹 보안과 안전한 소프트웨어 개발을 위한 학습 자료를 주제별로 정리한 지식 아카이브입니다.</p>
-       <p>취약점의 원리, 방어 관점의 테스트 방법, Secure SDLC, 개발 언어와 보안 도구 문서를 검색하고 연결해서 볼 수 있습니다.</p>
+    ? `<p>PIXN은 웹 보안, 응용 암호학, 안전한 시스템을 탐구하는 예비 보안 엔지니어의 기술 아카이브입니다.</p>
+       <p>취약점의 원리, 방어 관점의 테스트 방법, 암호 프로토콜, Secure SDLC와 오픈소스 보안 도구를 주제별로 연결합니다.</p>
        <p>오래된 자료는 역사적 참고 자료로 제공되며, 실제 시스템에서는 반드시 최신 공식 문서와 안전한 실습 환경을 함께 사용해야 합니다.</p>`
-    : `<p>PIXN is a topic-driven knowledge archive for web security and secure software engineering.</p>
-       <p>It connects vulnerability concepts, defensive testing methods, Secure SDLC guidance, programming references, and open-source security tools.</p>
+    : `<p>PIXN is a growing technical archive by an aspiring security engineer focused on web security, applied cryptography, and secure systems.</p>
+       <p>It connects vulnerability research, defensive testing, cryptographic protocols, Secure SDLC guidance, and open-source security tooling.</p>
        <p>Older material is retained as historical reference. Always verify current official guidance and use an authorized lab environment before testing.</p>`;
   return `<main id="main-content">
     <div class="container">
@@ -456,7 +481,7 @@ function transformHtml(relativePath, html) {
   if (removedDiscoveryRouteSet.has(route)) return removedPage(language);
 
   let output = html;
-  if (route === '/') output = replaceMain(output, homeMain());
+  if (route === '/') output = personalizeHomeMetadata(replaceMain(output, homeMain()));
   if (route === '/about/') output = replaceMain(output, aboutMain('en'));
   if (route === '/ko/about/') output = replaceMain(output, aboutMain('ko'));
   if (route === '/privacy/') output = replaceMain(output, privacyMain());

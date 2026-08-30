@@ -112,7 +112,8 @@ for (const route of removedDiscoveryRoutes) {
 }
 
 const homepage = await readFile(path.join(publicRoot, 'index.html'), 'utf8');
-if (!homepage.includes('Web Security Knowledge Base, Tools and Field Notes.')) errors.push('homepage was not personalized');
+if (!homepage.includes('Web Security. Applied Cryptography. Built to Understand.')) errors.push('homepage was not personalized');
+if (!homepage.includes('PIXN — Web Security &amp; Applied Cryptography')) errors.push('homepage metadata was not personalized');
 const aboutPage = await readFile(path.join(publicRoot, 'about', 'index.html'), 'utf8');
 if (!aboutPage.includes('About PIXN') || /Lee Hwan|HAHWUL/i.test(aboutPage)) errors.push('about page was not neutralized');
 
