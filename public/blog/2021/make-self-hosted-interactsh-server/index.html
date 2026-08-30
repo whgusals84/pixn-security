@@ -232,14 +232,14 @@
 <h3 id="buy-domain">Buy domain</h3>
 <p>우선 Private한 OOB 서버를 구축하기 위해선 도메인이 필요합니다. 저는 처음에 현재 제 도메인을 이용할까 하다가 장애의 여지가 있어서 그냥 하나 더 사기로했습니다. (1년에 10$ 정도면 무난하죠 뭐.. 😁)</p>
 <h3 id="glue-records">Glue records</h3>
-<p>일반적으로 도메인을 구매하면 등록 대행 업체 등의 DNS 서버를 사용하게 됩니다. 당장 제 메인 도메인인 hahwul.com만 해도 google의 nameserver를 쓰고 있죠.</p>
-<pre><code>nslookup hahwul.com -d
+<p>일반적으로 도메인을 구매하면 등록 대행 업체 등의 DNS 서버를 사용하게 됩니다. 당장 제 메인 도메인인 example.com만 해도 google의 nameserver를 쓰고 있죠.</p>
+<pre><code>nslookup example.com -d
 *** Invalid option: d
 Server:		168.126.63.1
 Address:	168.126.63.1#53
 
 Non-authoritative answer:
-Name:	hahwul.com
+Name:	example.com
 Address: 216.239.32.21
 ...
 
@@ -309,7 +309,7 @@ sudo ./install.sh
 <tbody>
 <tr>
 <td>-domain</td>
-<td>interactsh가 사용할 도메인 (e.g hahwul.com)</td>
+<td>interactsh가 사용할 도메인 (e.g example.com)</td>
 </tr>
 <tr>
 <td>-token</td>

@@ -235,6 +235,7 @@ function neutralizeTechnicalIdentifiers(value) {
     .replace(/C:\\Users\\(?:hahwul|hawul)\b/gi, 'C:\\Users\\researcher')
     .replace(/https?:\/\/(?:www\.)?hahwul\.com(?=\/|[?;#\\]|["'&<\s]|$)/gi, 'https://target.example')
     .replace(/\bwww\.hahwul\.com\b/gi, 'target.example')
+    .replace(/(?<![A-Za-z0-9_.@-])hahwul\.com\b/gi, 'example.com')
     .replace(/https-hahwulcom/gi, 'https-targetexample')
     .replace(/https-www-hahwul-com/gi, 'https-target-example')
     .replace(/Author:\s*hahwul\b/gi, 'Author: Example Contributor')
@@ -246,6 +247,11 @@ function neutralizeTechnicalIdentifiers(value) {
     .replace(/Sample Login page - by hahwul/gi, 'Sample Login page')
     .replace(/codeblack\.net by hahwul/gi, 'example.com demo')
     .replace(/Comment=HaHwul Burp/gi, 'Comment=Burp Suite launcher')
+    .replace(/hahwul@gail\.com/gi, 'alice@example.com')
+    .replace(/contact information is not published/gi, 'security@example.com')
+    .replace(/(["']author["']\s*:\s*(?:\[\s*)?)["']hahwul["']/gi, '$1"example-author"')
+    .replace(/(\bauthor\s*:\s*(?:-\s*)?)["']hahwul["']/gi, '$1"example-author"')
+    .replace(/\bauthors\s*=\s*\["hahwul"\]/gi, 'authors = ["Example Author"]')
     .replace(/s\.authors\s*=\s*\[&quot;hahwul&quot;\]/gi, 's.authors     = [&quot;Example Author&quot;]')
     .replace(/s\.authors\s*=\s*\["hahwul"\]/gi, 's.authors = ["Example Author"]')
     .replace(/This script crafted by hahwul/gi, 'Custom header script example')
@@ -387,6 +393,19 @@ function neutralizePriorPublisherArticle(route, html) {
       )
       .replace(/Contact: https:\/\/github\.com\/hahwul\/assets\.hahwul\.com\/discussions/gi, 'Contact: mailto:security@example.com');
   }
+  if (route === '/blog/2018/Security-testing-SAML-SSO-vulnerability-and-pentest/') {
+    output = output
+      .replace(/hahwul@gail\.com/gi, 'alice@example.com')
+      .replace(/contact information is not published/gi, 'alice@example.com');
+  }
+  if (
+    route === '/blog/2024/passivescan-in-owasp-noir/' ||
+    route === '/cullinan/attack/dependency-confusion/' ||
+    route === '/dev/ruby/ruby-cheatsheet/' ||
+    route === '/ko/dev/ruby/ruby-cheatsheet/'
+  ) {
+    output = output.replace(/&quot;hahwul&quot;/gi, '&quot;Example Author&quot;');
+  }
   return output;
 }
 
@@ -443,6 +462,9 @@ function transformHtml(relativePath, html) {
   if (route === '/privacy/') output = replaceMain(output, privacyMain());
   output = neutralizePriorPublisherArticle(route, output);
   output = cleanChrome(output);
+  if (route === '/blog/2018/Security-testing-SAML-SSO-vulnerability-and-pentest/') {
+    output = output.replaceAll('security@example.com', 'alice@example.com');
+  }
 
   if (route === '/archive/projects/') {
     output = output.replace(

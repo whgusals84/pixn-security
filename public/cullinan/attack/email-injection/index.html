@@ -185,12 +185,12 @@
 <p>초대, 안내 등 웹 요청 이후에 이메일이 전송되는 모든 구간은 Email Injection의 영향을 받을 수 있습니다.</p>
 <pre><code>POST /invite HTTP/1.1
 
-email=contact information is not published
+email=security@example.com
 </code></pre>
 <p>email 파라미터를 통해 받은 값이 SMTP 등 메일 전송 시스템을 통해 전송될 때 입력 값에 대한 검증이 없다면 CRLF(개행문자)등을 이용하여 Email의 송/수신인, 내용 등을 변조할 수 있게 됩니다.</p>
 <pre><code>POST /invite HTTP/1.1
 
-email=contact information is not published%0ASubject:Fake%20Subject
+email=security@example.com%0ASubject:Fake%20Subject
 </code></pre>
 <h3 id="exploitation">Exploitation</h3>
 <h4 id="common-vuln">Common Vuln</h4>

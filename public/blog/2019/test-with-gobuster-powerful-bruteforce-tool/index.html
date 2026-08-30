@@ -261,14 +261,14 @@ snip...
 
 </code></pre>
 <h2 id="finding-subdomain-using-gobuster">Finding Subdomain using gobuster</h2>
-<pre><code>gobuster dns -d hahwul.com -w ./Discovery/DNS/subdomains-top1million-5000.txt
+<pre><code>gobuster dns -d example.com -w ./Discovery/DNS/subdomains-top1million-5000.txt
 
 </code></pre>
 <pre><code>===============================================================
 Gobuster v3.0.1
 by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
 ===============================================================
-[+] Domain:     hahwul.com
+[+] Domain:     example.com
 [+] Threads:    10
 [+] Timeout:    1s
 [+] Wordlist:   ./Discovery/DNS/subdomains-top1million-5000.txt
@@ -288,7 +288,7 @@ Found: target.example
 <h2 id="using-pipeline">Using Pipeline</h2>
 <p><code>-z</code>(progress 출력하지 않음) <code>-q</code>(배너를 출력하지 않음) <code>-o</code>(결과 파일저장) 를 이용하면 충분히 pipeline에도 사용할 수 있습니다.
 <code>-z</code>(no progress output) <code>-q</code>(no banner output) <code>-o</code>(save result file) is sufficient for pipeline.</p>
-<pre><code>gobuster dns -d hahwul.com -w ./Discovery/DNS/subdomains-top1million-5000.txt -z -q -o out.txt
+<pre><code>gobuster dns -d example.com -w ./Discovery/DNS/subdomains-top1million-5000.txt -z -q -o out.txt
 
 cat out.txt
 Found: target.example

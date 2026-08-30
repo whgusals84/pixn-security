@@ -220,7 +220,7 @@
 <em>정상 로드</em></p>
 <p><img loading="lazy" src="https://3.bp.blogspot.com/-0ESgp6DM0Uc/XHAhXJkTrDI/AAAAAAAADx8/6St2zP-2u0QgKnue07MiPgkwvtE2anFtACLcBGAs/s1600/Selection_095.png" alt="" />
 <em>차단되어 로드되지 않음</em></p>
-<p>이런 경우에 아래처럼 <code>hahwul.com</code>이 들어간 도메인은 <code>exit()</code> 구문으로 인해 contents를 들고오지 못합니다. 일반적인 경우에는 내부망(사설대역), 내부 도메인 등의 데이터로 검증하고 있겠죠. 저 코드는 웹 요청을 다 따라가지 않고 요청전에 입력값으로만 검증하기 떄문에 아래 방법으로 우회할 수 있습니다. 아래와 같이 HTTP Redirect 코드를 공격자 서버에 두고..</p>
+<p>이런 경우에 아래처럼 <code>example.com</code>이 들어간 도메인은 <code>exit()</code> 구문으로 인해 contents를 들고오지 못합니다. 일반적인 경우에는 내부망(사설대역), 내부 도메인 등의 데이터로 검증하고 있겠죠. 저 코드는 웹 요청을 다 따라가지 않고 요청전에 입력값으로만 검증하기 떄문에 아래 방법으로 우회할 수 있습니다. 아래와 같이 HTTP Redirect 코드를 공격자 서버에 두고..</p>
 <pre><code class="language-php hljs"><span class="hljs-operator">&lt;</span><span class="hljs-operator">?</span>php
 header<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;Location: https://pixn-analytics-portfolio.forhm0220.chatgpt.site&#39;</span><span class="hljs-punctuation">);</span>
 <span class="hljs-meta">?&gt;</span>

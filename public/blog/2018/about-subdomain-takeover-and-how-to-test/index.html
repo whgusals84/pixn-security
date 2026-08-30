@@ -214,9 +214,9 @@
 </blockquote>
 <p>만약 도메인에 매핑된 CNAME등을 직접 확인하려면 host 명령 등으로 도메인에 대한 정보를 체크할 수 있습니다.</p>
 <pre><code class="language-bash hljs">host vaha.hahwul.com
-<span class="hljs-comment"># vaha.hahwul.com is an alias for hahwul.com.</span>
+<span class="hljs-comment"># vaha.hahwul.com is an alias for example.com.</span>
 </code></pre>
-<p>보시면 <code>vaha.hahwul.com</code>은 <code>hahwul.com</code>과 같다고 이야기됩니다. 예시로는 동일 도메인이지만 만약 다른 서비스의 주소로 별칭이 지정된 경우엔 해당 서비스 제어만으로 원본 주소의 제어권도 같이 얻어낼 수 있죠.
+<p>보시면 <code>vaha.hahwul.com</code>은 <code>example.com</code>과 같다고 이야기됩니다. 예시로는 동일 도메인이지만 만약 다른 서비스의 주소로 별칭이 지정된 경우엔 해당 서비스 제어만으로 원본 주소의 제어권도 같이 얻어낼 수 있죠.
 대체로 위에 subover 관련 툴들은 이 과정까지 대체로 포함되어 있습니다.</p>
 <pre><code class="language-bash hljs">python takeover.py -d google.com -w subdomains-10000.txt  -t <span class="hljs-number">10</span>
 <span class="hljs-comment"># mail.google.com.  CNAME: googlemail.l.google.com.</span>

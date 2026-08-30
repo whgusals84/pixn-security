@@ -245,10 +245,10 @@
   <span class="hljs-name">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;report&quot;</span>
 </code></pre>
 <p>이제 zap.sh로 cli 실행을 할 때 -autorun 플래그를 주어 이 yaml 파일을 넘겨주면 ZAP 실행과 동시에 아까 만들었던 작업이 그대로 수행됩니다.</p>
-<pre><code>./zap.sh -autorun hahwul.com-test.yaml
+<pre><code>./zap.sh -autorun example.com-test.yaml
 </code></pre>
 <p>-cmd flag를 같이 넘겨주면 deamon 모드로 동작하기 떄문에 ZAP UI를 띄우지 않고 cli로만 수행하고 지정한 리포트 디렉토리에 결과 파일을 받을 수도 있습니다.</p>
-<pre><code> $ ./zap.sh -autorun hahwul.com-test.yaml -cmd
+<pre><code> $ ./zap.sh -autorun example.com-test.yaml -cmd
 </code></pre>
 <h2 id="references">References</h2>
 <ul>

@@ -7,7 +7,7 @@ const args = parseArgs(process.argv.slice(2));
 const publicRoot = path.resolve(args.public ?? 'public');
 const expectedOrigin = new URL(args.origin ?? 'https://pixn-analytics-portfolio.forhm0220.chatgpt.site').origin;
 const priorPublisherIdentityPattern = /Lee Hwan|이환|hahwul@gmail\.com|https?:\/\/(?:www\.)?(?:x\.com|twitter\.com|instagram\.com)\/(?:hahwul|hahwul_)|https?:\/\/(?:www\.)?linkedin\.com\/(?:in\/)?(?:hahwul|hahwul_)|Developed and Designed by Me/i;
-const priorPublisherIdentifierPattern = /\/(?:Users|home)\/(?:hahwul|hawul)\b|C:\\Users\\(?:hahwul|hawul)\b|https?:\/\/(?:www\.)?hahwul\.com(?:\/|[?;#\\]|["'&<\s]|$)|\bwww\.hahwul\.com\b|Author:\s*hahwul\b|Committer:\s*hahwul\b|Signed-off-by:\s*hahwul\b|Twitter:\s*hahwul\b|<cite>hahwul<\/cite>|s\.authors\s*=\s*\[(?:&quot;|")hahwul(?:&quot;|")\]|This script crafted by hahwul/i;
+const priorPublisherIdentifierPattern = /\/(?:Users|home)\/(?:hahwul|hawul)\b|C:\\Users\\(?:hahwul|hawul)\b|https?:\/\/(?:www\.)?hahwul\.com(?:\/|[?;#\\]|["'&<\s]|$)|\bwww\.hahwul\.com\b|(?<![A-Za-z0-9_.@-])hahwul\.com\b|hahwul@gail\.com|Author:\s*hahwul\b|Committer:\s*hahwul\b|Signed-off-by:\s*hahwul\b|Twitter:\s*hahwul\b|<cite>hahwul<\/cite>|s\.authors\s*=\s*\[(?:&quot;|")hahwul(?:&quot;|")\]|This script crafted by hahwul|(?:author|authors)[\s\S]{0,250}(?:&quot;|")hahwul(?:&quot;|")/i;
 
 function parseArgs(values) {
   const parsed = {};
