@@ -267,11 +267,11 @@
 <pre><code class="language-html hljs">esii test
 <span class="hljs-punctuation">&lt;</span><span class="hljs-name">esi:include</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;http https://pixn-analytics-portfolio.forhm0220.chatgpt.site/CNAME&quot;</span><span class="hljs-punctuation">/</span><span class="hljs-punctuation">&gt;</span>
 </code></pre>
-<p>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/CNAME 페이지의 Body는 아래와 같이 <code>www.hahwul.com</code>만 있습니다.</p>
+<p>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/CNAME 페이지의 Body는 아래와 같이 <code>target.example</code>만 있습니다.</p>
 <p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/146646923-2c453c7b-ad03-4688-822a-ef0976cf1b74.png" alt="" /></p>
-<p>이제 이 코드를 로드시키는 페이지에서 esi 구문 대신 www.hahwul.com이 찍히게 되면 LB나 캐시 등에서 ESI 문법을 처리한다는 것을 알 수 있습니다.</p>
+<p>이제 이 코드를 로드시키는 페이지에서 esi 구문 대신 target.example이 찍히게 되면 LB나 캐시 등에서 ESI 문법을 처리한다는 것을 알 수 있습니다.</p>
 <pre><code class="language-html hljs">esii test
-www.hahwul.com
+target.example
 </code></pre>
 <h3 id="exploitation">Exploitation</h3>
 <h4 id="ssrf">SSRF</h4>

@@ -11,6 +11,8 @@ const removedDiscoveryRoutes = REMOVED_DISCOVERY_ROUTES;
 const removedDiscoveryRouteSet = new Set(REMOVED_DISCOVERY_ROUTES);
 const siteDescription = 'Practical web security knowledge, secure engineering references, and open-source tools.';
 const koSiteDescription = '웹 보안 학습 자료와 안전한 개발 지침, 오픈소스 도구를 정리한 지식 아카이브입니다.';
+const priorPublisherSocialUrlSource = String.raw`https?:\/\/(?:www\.)?(?:x\.com\/(?:hahwul|hahwul_)|twitter\.com\/(?:hahwul|hahwul_)|instagram\.com\/(?:hahwul|hahwul_)|linkedin\.com\/(?:in\/)?(?:hahwul|hahwul_))(?:\/[^\s"'<>]*)?`;
+const priorPublisherSocialUrlPattern = new RegExp(`^${priorPublisherSocialUrlSource}$`, 'i');
 
 function parseArgs(values) {
   const parsed = {};
@@ -196,6 +198,198 @@ function removePersonalRouteLinks(html) {
   return output.replace(/<li\b[^>]*>\s*<\/li>/gi, '');
 }
 
+function neutralizePriorPublisherSocialReferences(value) {
+  let output = value
+    .replace(
+      new RegExp(`<p\\b[^>]*>\\s*(?:<a\\b(?=[^>]*href=["']${priorPublisherSocialUrlSource}["'])[^>]*>(?:(?!<\\/a>)[\\s\\S])*?<\\/a>|${priorPublisherSocialUrlSource})\\s*<\\/p>\\s*`, 'gi'),
+      '',
+    )
+    .replace(
+      new RegExp(`<li\\b[^>]*>(?:(?!<\\/li>)[\\s\\S])*?${priorPublisherSocialUrlSource}(?:(?!<\\/li>)[\\s\\S])*?<\\/li>\\s*`, 'gi'),
+      '',
+    )
+    .replace(
+      new RegExp(`<a\\b(?=[^>]*href=["']${priorPublisherSocialUrlSource}["'])[^>]*>([\\s\\S]*?)<\\/a>`, 'gi'),
+      (_match, label) => {
+        const plainLabel = label.replace(/<[^>]+>/g, '').trim();
+        return priorPublisherSocialUrlPattern.test(plainLabel) ? '' : label;
+      },
+    )
+    .replace(new RegExp(priorPublisherSocialUrlSource, 'gi'), '');
+
+  output = output
+    .replace(/웹에서도 비슷합니다\.\s*제\s*트윗\s*하나를 참고해주세요!/g, '웹에서도 같은 원리를 적용할 수 있습니다.')
+    .replace(/저 또한 dalfox에 바로 반영하고 관련\s*트윗을 공유했습니다\./gi, 'Dalfox에도 같은 변경이 반영되었습니다.')
+    .replace(/제가 최근\s*트윗\s*엔\s*/g, '다음은 ')
+    .replace(/As I told you on\s*,\s*/gi, 'In this context, ')
+    .replace(/개인적으로 광고\s*이슈때문에 좋아하지 않기 때문에/g, '광고 문제를 피하고자')
+    .replace(/가볍게\s*리트윗했더니/g, '관련 변경을 확인해보니')
+    .replace(/Read the tweet above to create a list of http services based on multiple targets through the pipeline\./gi, 'Create a list of HTTP services based on multiple targets through the pipeline.');
+  return output;
+}
+
+function neutralizeTechnicalIdentifiers(value) {
+  return value
+    .replace(/\/Users\/(?:hahwul|hawul)\b/gi, '/Users/researcher')
+    .replace(/\/home\/(?:hahwul|hawul)\b/gi, '/home/researcher')
+    .replace(/C:\\Users\\(?:hahwul|hawul)\b/gi, 'C:\\Users\\researcher')
+    .replace(/https?:\/\/(?:www\.)?hahwul\.com(?=\/|[?;#\\]|["'&<\s]|$)/gi, 'https://target.example')
+    .replace(/\bwww\.hahwul\.com\b/gi, 'target.example')
+    .replace(/https-hahwulcom/gi, 'https-targetexample')
+    .replace(/https-www-hahwul-com/gi, 'https-target-example')
+    .replace(/Author:\s*hahwul\b/gi, 'Author: Example Contributor')
+    .replace(/Committer:\s*hahwul\b/gi, 'Committer: Example Contributor')
+    .replace(/Signed-off-by:\s*hahwul\s*&lt;[^&]*&gt;/gi, 'Signed-off-by: Example Contributor &lt;contributor@example.com&gt;')
+    .replace(/Signed-off-by:\s*hahwul\s*<[^>]*>/gi, 'Signed-off-by: Example Contributor <contributor@example.com>')
+    .replace(/Twitter:\s*hahwul\b/gi, 'Team: Security Engineering')
+    .replace(/Hi,? I am hahwul\b/gi, 'Hi, I am Alex')
+    .replace(/Sample Login page - by hahwul/gi, 'Sample Login page')
+    .replace(/codeblack\.net by hahwul/gi, 'example.com demo')
+    .replace(/Comment=HaHwul Burp/gi, 'Comment=Burp Suite launcher')
+    .replace(/s\.authors\s*=\s*\[&quot;hahwul&quot;\]/gi, 's.authors     = [&quot;Example Author&quot;]')
+    .replace(/s\.authors\s*=\s*\["hahwul"\]/gi, 's.authors = ["Example Author"]')
+    .replace(/This script crafted by hahwul/gi, 'Custom header script example')
+    .replace(/<cite>hahwul<\/cite>/gi, '<cite>PIXN editorial note</cite>');
+}
+
+function neutralizeSearchNarrative(route, value) {
+  let output = value;
+  if (route === '/blog/2020/find-s3-vulnerability-widh-pipelinging/') {
+    output = output
+      .replace(
+        /Hi hackers![\s\S]*?pipelining을 이용하여 쉽게 찾는 방법들에 대해 이야기하려고 합니다\./i,
+        'This guide shows how to connect S3 bucket takeover and misconfiguration checks into a repeatable pipeline. 이 문서에서는 S3 Bucket takeover와 Misconfiguration 점검을 파이프라인으로 연결하는 방법을 설명합니다.',
+      )
+      .replace(
+        /저의 경우엔[\s\S]*?등등\.\.\./i,
+        '서브도메인 탐색, HTTP 서비스 식별, S3 점검 도구를 파이프라인으로 연결할 수 있습니다. 관련 배경은 서브도메인 테이크오버 탐색 문서에서 확인할 수 있습니다.',
+      )
+      .replace(
+        /First, create a host file\.[\s\S]*?http 서비스의 리스트를 만들 수 있습니다\./i,
+        'First, create a host file and build a list of reachable HTTP services from multiple targets using the pipeline described above. 먼저 hosts 파일을 만들고, 위 파이프라인으로 여러 대상의 HTTP 서비스 목록을 생성합니다.',
+      );
+  }
+  if (route === '/blog/2021/developer-certificate-of-origin-and-github/') {
+    output = output
+      .replace(
+        /어제 밤에 ZAP쪽에 Pull Request를 날렸다가[\s\S]*?간략하게 글로 작성해봅니다\./i,
+        '오픈소스 프로젝트에서 DCO 검사를 사용하는 경우 sign-off가 없는 커밋은 CI에서 거부될 수 있습니다. 아래에서는 DCO의 의미, sign-off 커밋 방법, 누락된 서명을 보완하는 절차를 정리합니다.',
+      )
+      .replace(
+        /sign-off commit은 예전에 어느\(쿠팡인가\.\.\) 개발자분이 쓰신 글을 보고[\s\S]*?오픈소스를 지원하는 개발자에겐 매력적인 방법이 아닐까 싶습니다\./i,
+        'DCO sign-off는 오픈소스 기여의 출처와 제출 권한을 명확히 기록하는 실용적인 방법입니다. 프로젝트 정책을 확인하고 필요한 경우 커밋에 sign-off를 포함하세요.',
+      );
+  }
+  if (route === '/blog/2021/what-is-wellknown-directory/') {
+    output = output
+      .replace(
+        /간혹 웹 페이지를 들여다보면 \.well-known 디렉토리를 만나게됩니다\.[\s\S]*?조금더 살펴볼까 합니다\./i,
+        '.well-known 디렉터리는 사이트가 보안 연락처와 운영 정보를 표준 경로로 제공할 때 사용됩니다. 여기서는 주요 파일과 안전한 작성 방법을 살펴봅니다.',
+      )
+      .replace(
+        /이참에 humans\.txt도 작성해봅시다\.[\s\S]*?정해진 포맷이 있는건 아닌 것 같습니다\.\)/i,
+        'humans.txt는 서비스를 운영하는 팀과 사이트 정보를 공개하는 선택적 문서입니다. 꼭 필요한 정보만 기재하고 개인 연락처는 노출하지 않는 편이 안전합니다.',
+      )
+      .replace(
+        /security\.txt for me # If you find any security issues on this site, please contact me![\s\S]*?Preferred-Languages: en, ko/i,
+        'security.txt example # Report security issues through the published security contact. Contact: mailto:security@example.com Canonical: https://example.com/.well-known/security.txt Preferred-Languages: en, ko',
+      )
+      .replace(
+        /물론 humans\.txt 에서 예시를 보면[\s\S]*?전 생략했습니다\./i,
+        'humans.txt에는 서비스 정보도 포함할 수 있지만, 보안 관점에서는 꼭 필요한 정보만 공개하는 편이 안전합니다.',
+      );
+  }
+  return output;
+}
+
+function neutralizePriorPublisherArticle(route, html) {
+  let output = html;
+  if (route === '/blog/2019/bypass-host-validation-technique-in-android/') {
+    output = output.replace(
+      /<p>웹에서도 비슷합니다\. 제 <a\b[^>]*href=["']https?:\/\/twitter\.com\/hahwul\/status\/1110580091266826241["'][^>]*>트윗<\/a> 하나를 참고해주세요!<\/p>/i,
+      '<p>웹 환경에서도 같은 호스트 검증 우회 원리를 확인할 수 있습니다.</p>',
+    );
+  }
+  if (route === '/blog/2020/jekyll-utterances/') {
+    output = output.replace(
+      /<p>최근에 블로그를 blogger에서 github page로 옮기면서[\s\S]*?<a href=["']https:\/\/utteranc\.es\/["']>Utterances<\/a>를 알게 되었습니다\.<\/p>\s*<p>그래서 현재 블로그에 Utterances를 적용하면서 방법 정리할겸 글로 남겨둡니다\.<\/p>/i,
+      '<p>Jekyll 사이트에서 광고 없이 GitHub Issues 기반 댓글을 제공하려면 <a href="https://utteranc.es/">Utterances</a>를 사용할 수 있습니다. 아래에서 적용 방법을 정리합니다.</p>',
+    );
+  }
+  if (route === '/blog/2020/find-s3-vulnerability-widh-pipelinging/') {
+    output = output
+      .replace(
+        /<p>저의 경우엔[\s\S]*?<\/p>\s*<p>제 트윗을 보면[\s\S]*?<a href=["']https:\/\/pixn-analytics-portfolio\.forhm0220\.chatgpt\.site\/2019\/10\/find-subdomain-takeover-with-amass-and-subjack\.html["'][^>]*>[\s\S]*?<\/a><\/p>/i,
+        '<p>서브도메인 탐색, HTTP 서비스 식별, S3 점검 도구를 파이프라인으로 연결할 수 있습니다. 관련 배경은 <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/10/find-subdomain-takeover-with-amass-and-subjack.html">서브도메인 테이크오버 탐색 문서</a>에서 확인할 수 있습니다.</p>',
+      )
+      .replace(
+        /<p><a\b[^>]*href=["']https:\/\/twitter\.com\/hahwul\/status\/1236334555000274944["'][^>]*>[\s\S]*?<\/a>\s*First, create a host file\.[\s\S]*?http 서비스의 리스트를 만들 수 있습니다\.<\/p>/i,
+        '<p>First, create a host file and build a list of reachable HTTP services from multiple targets using the pipeline described above.<br>먼저 hosts 파일을 만들고, 위 파이프라인으로 여러 대상의 HTTP 서비스 목록을 생성합니다.</p>',
+      )
+      .replace(/<p>naabu \+ httprobe \+ meg\s*<\/p>\s*<p>등등\.\.\.<\/p>/i, '');
+  }
+  if (route === '/blog/2020/using-flat-darcula-theme-in-ZAP/') {
+    output = output.replace(
+      /<p>트위터를 보던 중 사이먼의 어마어마한 <a\b[^>]*href=["']https:\/\/twitter\.com\/psiinon\/status\/1232299460019052546["'][^>]*>트윗<\/a>을 보게되었습니다\.[\s\S]*?그래서 아직 Weekly 버전에도 반영되지 않았지만, 미리 체험해보기로 하겠습니다\.<\/p>/i,
+      '<p><a href="https://twitter.com/psiinon/status/1232299460019052546">Simon Bennetts의 안내</a>에 따르면 ZAP 다크 모드 변경은 이미 커밋되어 Weekly 반영 전에도 직접 시험할 수 있었습니다.</p>',
+    );
+  }
+  if (route === '/blog/2021/owasp-zap-oast/') {
+    output = output.replace(
+      /<p>Hi hackers and geeks! Today, ZAP OAST was released as Alpha version\. \(As I told you on <a\b[^>]*href=["']https:\/\/twitter\.com\/hahwul\/status\/1415710990608461827["'][^>]*>[\s\S]*?<\/a>, OAST is a tool for identifying out-of-band, similar to callback, which is very useful for SSRF, RCE, etc\.\)<\/p>/i,
+      '<p>ZAP OAST identifies out-of-band interactions and is useful when testing SSRF, RCE, and similar callback-based behavior.</p>',
+    );
+  }
+  if (route === '/blog/2021/zap-automation-gui/') {
+    output = output.replace(
+      /<p>최근에 ZAP Automation framework가 0\.4 버전으로 업데이트 됬습니다\.[\s\S]*?0\.4 버전대 기능이라고 합니다\.<\/p>\s*<p><a\b[^>]*href=["']https:\/\/twitter\.com\/hahwul\/status\/1423145897232265220["'][^>]*>[\s\S]*?<\/a><\/p>\s*<p>오늘은 Automation Framework에 새로 추가된 GUI 부분에 대해서 살펴보려고 합니다\.<\/p>/i,
+      '<p>ZAP Automation Framework 0.4에는 Automation Framework를 UI에서 제어하는 기능이 추가되었습니다. 아래에서 새 GUI를 살펴봅니다.</p>',
+    );
+  }
+  if (route === '/blog/2022/oast-power-up/') {
+    output = output.replace(
+      /<p>제가 최근 <a\b[^>]*href=["']https:\/\/twitter\.com\/hahwul\/status\/1569476833619619840["'][^>]*>트윗<\/a>엔 <a href=["']https:\/\/github\.com\/knassar702\/lorsrf["']>lorsrf<\/a> 도구에 대한 내용이 있습니다\. 이 도구는 OAST 테스팅 시 정보를 쉽게 수집할 수 있도록 HOST, PARAM 등의 정보를 OAST 주소에 붙여서 만들어줍니다\.<\/p>/i,
+      '<p><a href="https://github.com/knassar702/lorsrf">lorsrf</a>는 OAST URL에 HOST, PARAM 등의 메타데이터를 붙여 콜백 정보를 더 쉽게 분류할 수 있게 합니다.</p>',
+    );
+  }
+  if (route === '/blog/2021/developer-certificate-of-origin-and-github/') {
+    output = output
+      .replace(
+        /<p>어제 밤에 ZAP쪽에 Pull Request를 날렸다가[\s\S]*?<p>저에게 한번 더 확인할 기회를 준 sign-off 관련 내용은 DCO\(Developer Certificate of Origin\)에 관한 내용이였고 오늘은 이러한 DCO가 뭔지, 어떻게 commit 해야하는지, 실수했을 땐 어떻게 해야하는지 간략하게 글로 작성해봅니다\.<\/p>/i,
+        '<p>오픈소스 프로젝트에서 DCO 검사를 사용하는 경우 sign-off가 없는 커밋은 CI에서 거부될 수 있습니다.</p><pre><code>Commit sha: example,\nAuthor: Example Contributor,\nCommitter: Example Contributor;\n\nThe sign-off is missing.\n</code></pre><p>아래에서는 DCO의 의미, sign-off 커밋 방법, 누락된 서명을 보완하는 절차를 정리합니다.</p>',
+      )
+      .replace(
+        /<p>sign-off commit은 예전에 어느\(쿠팡인가\.\.\) 개발자분이 쓰신 글을 보고[\s\S]*?오픈소스를 지원하는 개발자에겐 매력적인 방법이 아닐까 싶습니다\.<\/p>/i,
+        '<p>DCO sign-off는 오픈소스 기여의 출처와 제출 권한을 명확히 기록하는 실용적인 방법입니다. 프로젝트 정책을 확인하고 필요한 경우 커밋에 sign-off를 포함하세요.</p>',
+      );
+  }
+  if (route === '/blog/2021/what-is-wellknown-directory/') {
+    output = output
+      .replace(
+        /<p>간혹 웹 페이지를 들여다보면[\s\S]*?조금더 살펴볼까 합니다\.<\/p>/i,
+        '<p>.well-known 디렉터리는 사이트가 보안 연락처와 운영 정보를 표준 경로로 제공할 때 사용됩니다. 여기서는 주요 파일과 안전한 작성 방법을 살펴봅니다.</p>',
+      )
+      .replace(
+        /<p>이참에 humans\.txt도 작성해봅시다\.[\s\S]*?정해진 포맷이 있는건 아닌 것 같습니다\.\)<\/p>/i,
+        '<p>humans.txt는 서비스를 운영하는 팀과 사이트 정보를 공개하는 선택적 문서입니다. 꼭 필요한 정보만 기재하고 개인 연락처는 노출하지 않는 편이 안전합니다.</p>',
+      )
+      .replace(
+        /<pre><code>PIXN\s*Site: https:\/\/pixn-analytics-portfolio\.forhm0220\.chatgpt\.site\s*Twitter: hahwul\s*<\/code><\/pre>/i,
+        '<pre><code>Team: Security Engineering\nSite: https://example.com\n</code></pre>',
+      )
+      .replace(
+        /<h3 id="securitytxt-for-me">security\.txt for me<\/h3>\s*<pre><code>[\s\S]*?Preferred-Languages: en, ko\s*<\/code><\/pre>/i,
+        '<h3 id="securitytxt-example">security.txt example</h3><pre><code># Report security issues through the published security contact.\nContact: mailto:security@example.com\nCanonical: https://example.com/.well-known/security.txt\nPreferred-Languages: en, ko\n</code></pre>',
+      )
+      .replace(
+        /<p>물론 humans\.txt 에서 <a href="http:\/\/humanstxt\.org\/Standard\.html">예시<\/a>를 보면[\s\S]*?전 생략했습니다\.<\/p>/i,
+        '<p><a href="http://humanstxt.org/Standard.html">humans.txt 예시</a>에는 서비스 정보도 포함할 수 있지만, 보안 관점에서는 꼭 필요한 정보만 공개하는 편이 안전합니다.</p>',
+      )
+      .replace(/Contact: https:\/\/github\.com\/hahwul\/assets\.hahwul\.com\/discussions/gi, 'Contact: mailto:security@example.com');
+  }
+  return output;
+}
+
 function cleanChrome(html) {
   let output = html
     .replace(/(<title>[\s\S]*?)\s*\|\s*HAHWUL(<\/title>)/gi, '$1 | PIXN$2')
@@ -234,7 +428,7 @@ function cleanChrome(html) {
     '<span>Contact information is not published.</span>',
   );
   output = output.replaceAll('hahwul@gmail.com', 'contact information is not published');
-  return removePersonalRouteLinks(output);
+  return neutralizeTechnicalIdentifiers(neutralizePriorPublisherSocialReferences(removePersonalRouteLinks(output)));
 }
 
 function transformHtml(relativePath, html) {
@@ -247,6 +441,7 @@ function transformHtml(relativePath, html) {
   if (route === '/about/') output = replaceMain(output, aboutMain('en'));
   if (route === '/ko/about/') output = replaceMain(output, aboutMain('ko'));
   if (route === '/privacy/') output = replaceMain(output, privacyMain());
+  output = neutralizePriorPublisherArticle(route, output);
   output = cleanChrome(output);
 
   if (route === '/archive/projects/') {
@@ -281,13 +476,14 @@ function transformSearchIndex(text) {
       const updated = { ...document };
       for (const key of ['title', 'content', 'description']) {
         if (typeof updated[key] === 'string') {
-          updated[key] = updated[key]
+          updated[key] = neutralizeTechnicalIdentifiers(neutralizePriorPublisherSocialReferences(updated[key]))
             .replaceAll('hahwul@gmail.com', 'security@example.com')
             .replace(/https:\/\/x\.com\/hahwul\/status\/\d+/gi, '[original announcement removed]')
             .replaceAll('@hahwul', 'archived author')
             .replaceAll('HAHWUL', 'PIXN');
         }
       }
+      if (typeof updated.content === 'string') updated.content = neutralizeSearchNarrative(updated.url, updated.content);
       if (updated.url === '/about/') {
         updated.title = 'About PIXN';
         updated.description = siteDescription;
@@ -321,7 +517,7 @@ function transformSitemap(text) {
 }
 
 function transformRss(text) {
-  return text
+  return neutralizeTechnicalIdentifiers(neutralizePriorPublisherSocialReferences(text))
     .replace(/\s*<item>[\s\S]*?<\/item>/gi, (block) => {
       const links = [...block.matchAll(/<(?:link|guid)>\s*([^<]+)\s*<\/(?:link|guid)>/gi)].map((match) => match[1]);
       return links.some(isPersonalUrl) ? '' : block;

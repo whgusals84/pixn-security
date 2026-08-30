@@ -177,9 +177,9 @@
 <p>이게 바로 MacOS의 보안 어플리케이션 중 하나인 Gatekeeper인데요. 보통은 Finder에서 우클릭 후 실행을 하면 <code>열기</code> 라는 버튼을 통해 활성화 시킬 수 있었습니다. 다만 저에겐 좀 애매한 경우가 있었는데, 앱은 승인을 해도 앱 내 포함된 dylib로 인해 차단되는거였죠..</p>
 <pre><code>./arachni
 dyld: Library not loaded: /Users/zapotek/arachni-build-dir/arachni/system/usr/lib/libruby.2.2.0.dylib
-  Referenced from: /Users/hahwul/PIXN/tool/arachni/bin/../system/usr/bin/ruby
+  Referenced from: /Users/researcher/PIXN/tool/arachni/bin/../system/usr/bin/ruby
   Reason: no suitable image found.  Did find:
- /Users/hahwul/PIXN/tool/arachni/bin/../system/usr/lib/libruby.2.2.0.dylib: code signature in (/Users/hahwul/PIXN/tool/arachni/bin/../system/usr/lib/libruby.2.2.0.dylib) not valid for use in process using Library Validation: library load disallowed by system policy
+ /Users/researcher/PIXN/tool/arachni/bin/../system/usr/lib/libruby.2.2.0.dylib: code signature in (/Users/researcher/PIXN/tool/arachni/bin/../system/usr/lib/libruby.2.2.0.dylib) not valid for use in process using Library Validation: library load disallowed by system policy
 [1]    84989 abort      ./arachni
 </code></pre>
 <h2 id="why">Why?</h2>

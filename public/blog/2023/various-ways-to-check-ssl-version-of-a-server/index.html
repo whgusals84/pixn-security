@@ -179,7 +179,7 @@
 <pre><code class="language-bash hljs">git clone https://github.com/drwetter/testssl.sh
 <span class="hljs-built_in">cd</span> testssl.sh
 </code></pre>
-<pre><code class="language-bash hljs">./testssl.sh www.hahwul.com <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;Testing protocols&quot;</span> -A <span class="hljs-number">10</span>
+<pre><code class="language-bash hljs">./testssl.sh target.example <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;Testing protocols&quot;</span> -A <span class="hljs-number">10</span>
 
 <span class="hljs-comment"># Testing protocols via sockets except NPN+ALPN</span>
 
@@ -195,12 +195,12 @@
 <h2 id="openssl">OpenSSL</h2>
 <pre><code class="language-bash hljs">brew install openssl
 </code></pre>
-<pre><code class="language-bash hljs">openssl s_client -connect www.hahwul.com:443 -tls1
-openssl s_client -connect www.hahwul.com:443 -tls1_1
-openssl s_client -connect www.hahwul.com:443 -tls1_2
+<pre><code class="language-bash hljs">openssl s_client -connect target.example:443 -tls1
+openssl s_client -connect target.example:443 -tls1_1
+openssl s_client -connect target.example:443 -tls1_2
 
 <span class="hljs-comment"># 지원하지 않는 경우</span>
-<span class="hljs-comment"># openssl s_client -connect www.hahwul.com:443 -tls1</span>
+<span class="hljs-comment"># openssl s_client -connect target.example:443 -tls1</span>
 <span class="hljs-comment"># ...</span>
 <span class="hljs-comment"># This TLS version forbids renegotiation.</span>
 
@@ -220,14 +220,14 @@ curl https://pixn-analytics-portfolio.forhm0220.chatgpt.site -vv --tlsv1.2 --tls
 
 <span class="hljs-comment"># 지원하지 않는 경우</span>
 <span class="hljs-comment"># *   Trying 185.199.111.153:443...</span>
-<span class="hljs-comment"># * Connected to www.hahwul.com (185.199.111.153) port 443 (#0)</span>
+<span class="hljs-comment"># * Connected to target.example (185.199.111.153) port 443 (#0)</span>
 <span class="hljs-comment"># * CURL_SSLVERSION_MAX incompatible with CURL_SSLVERSION</span>
 <span class="hljs-comment"># * Closing connection 0</span>
 <span class="hljs-comment"># curl: (35) CURL_SSLVERSION_MAX incompatible with CURL_SSLVERSION</span>
 
 <span class="hljs-comment"># 지원하는 경우</span>
 <span class="hljs-comment"># *   Trying 185.199.108.153:443...</span>
-<span class="hljs-comment"># * Connected to www.hahwul.com (185.199.108.153) port 443 (#0)</span>
+<span class="hljs-comment"># * Connected to target.example (185.199.108.153) port 443 (#0)</span>
 <span class="hljs-comment"># * ALPN: offers h2,http/1.1</span>
 <span class="hljs-comment"># * (304) (OUT), TLS handshake, Client hello (1):</span>
 <span class="hljs-comment"># *  CAfile: /etc/ssl/cert.pem</span>
@@ -244,7 +244,7 @@ http https://pixn-analytics-portfolio.forhm0220.chatgpt.site --ssl tls1.1
 http https://pixn-analytics-portfolio.forhm0220.chatgpt.site --ssl tls1.2
 
 <span class="hljs-comment"># 지원하지 않는 경우</span>
-<span class="hljs-comment"># http: error: SSLError: HTTPSConnectionPool(host=&#39;www.hahwul.com&#39;, port=443): Max retries exceeded with url: / (Caused by SSLError(SSLError(1, &#39;[SSL: NO_PROTOCOLS_AVAILABLE] no protocols available (_ssl.c:1002)&#39;))) while doing a GET request to URL: https://pixn-analytics-portfolio.forhm0220.chatgpt.site/</span>
+<span class="hljs-comment"># http: error: SSLError: HTTPSConnectionPool(host=&#39;target.example&#39;, port=443): Max retries exceeded with url: / (Caused by SSLError(SSLError(1, &#39;[SSL: NO_PROTOCOLS_AVAILABLE] no protocols available (_ssl.c:1002)&#39;))) while doing a GET request to URL: https://pixn-analytics-portfolio.forhm0220.chatgpt.site/</span>
 
 <span class="hljs-comment"># 지원하는 경우</span>
 <span class="hljs-comment"># HTTP/1.1 200 OK</span>
@@ -256,7 +256,7 @@ http https://pixn-analytics-portfolio.forhm0220.chatgpt.site --ssl tls1.2
 <h2 id="nmap">Nmap</h2>
 <pre><code class="language-bash hljs">brew install nmap
 </code></pre>
-<pre><code class="language-bash hljs">nmap --script ssl-enum-ciphers www.hahwul.com -p <span class="hljs-number">443</span>
+<pre><code class="language-bash hljs">nmap --script ssl-enum-ciphers target.example -p <span class="hljs-number">443</span>
 
 <span class="hljs-comment"># 지원하는 버전을 알 수 있음 (예시에선 1.2와 1.3만 지원)</span>
 <span class="hljs-comment"># PORT    STATE SERVICE</span>
@@ -292,7 +292,7 @@ http https://pixn-analytics-portfolio.forhm0220.chatgpt.site --ssl tls1.2
 
    Name        Current Setting  Required  Description
    ----        ---------------  --------  -----------
-   RHOSTS      www.hahwul.com   yes       The target host(s)
+   RHOSTS      target.example   yes       The target host(s)
    RPORT       443              yes       The target port (TCP)
    SSLCipher   All              yes       SSL cipher to test (Accepted: All, TLS_AES_256_GCM_SHA384, ...
    SSLVersion  All              yes       SSL version to test (Accepted: All, SSLv3, TLSv1.0, TLSv1.2, TLSv1.3)

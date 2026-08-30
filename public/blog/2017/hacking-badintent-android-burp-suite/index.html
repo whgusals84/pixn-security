@@ -199,7 +199,7 @@ vim pom.xml
   <span class="hljs-name">&lt;name</span><span class="hljs-name">&gt;</span>badintent<span class="hljs-name">&lt;/name&gt;</span>
   <span class="hljs-name">&lt;description</span><span class="hljs-name">&gt;</span>BadIntent Burp Plugin<span class="hljs-name">&lt;/description&gt;</span>
     <span class="hljs-name">&lt;properties</span><span class="hljs-name">&gt;</span>
-       <span class="hljs-name">&lt;deploy.target.dir</span><span class="hljs-name">&gt;</span>/home/hahwul/<span class="hljs-name">&lt;/deploy.target.dir&gt;</span>
+       <span class="hljs-name">&lt;deploy.target.dir</span><span class="hljs-name">&gt;</span>/home/researcher/<span class="hljs-name">&lt;/deploy.target.dir&gt;</span>
         <span class="hljs-name">&lt;project.build.sourceEncoding</span><span class="hljs-name">&gt;</span>UTF-8<span class="hljs-name">&lt;/project.build.sourceEncoding&gt;</span>
         <span class="hljs-name">&lt;project.reporting.outputEncoding</span><span class="hljs-name">&gt;</span>UTF-8<span class="hljs-name">&lt;/project.reporting.outputEncoding&gt;</span>
     <span class="hljs-name">&lt;/properties&gt;</span>
@@ -262,12 +262,12 @@ Success
 FAILURE: Build failed with an exception.
 
 * Where:
-Build file '/home/hahwul/Noon/BadIntent/BadIntentAndroid/app/build.gradle' line: 1
+Build file '/home/researcher/Noon/BadIntent/BadIntentAndroid/app/build.gradle' line: 1
 
 * What went wrong:
 A problem occurred evaluating project ':app'.
 &gt; Failed to apply plugin [id 'com.android.application']
-   &gt; Minimum supported Gradle version is 2.14.1. Current version is 2.10. If using the gradle wrapper, try editing the distributionUrl in /home/hahwul/Noon/BadIntent/BadIntentAndroid/gradle/wrapper/gradle-wrapper.properties to gradle-2.14.1-all.zip
+   &gt; Minimum supported Gradle version is 2.14.1. Current version is 2.10. If using the gradle wrapper, try editing the distributionUrl in /home/researcher/Noon/BadIntent/BadIntentAndroid/gradle/wrapper/gradle-wrapper.properties to gradle-2.14.1-all.zip
 
 * Try:
 Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
@@ -348,9 +348,9 @@ OS:           Linux 4.4.0-97-generic amd64
 </blockquote>
 <p>두번째 문제는 ANDROID_HOME 환경변수 관련 문제입니다. 컴파일 시 Android SDK를 사용해야하기 때문에 환경 변수의 값을 참조하게 되어있습니다. 다만 사람에 따라 Android Studio를 사용하지 않을 수 있기 때문에(저 같은 상황) 환경 변수에 SDK가 설치된 경로를 넣어주면 깔끔하게 해결됩니다.</p>
 <pre><code class="language-bash hljs">env <span class="hljs-punctuation">|</span> grep ANDROID_HOME
-<span class="hljs-built_in">export</span> <span class="hljs-variable">ANDROID_HOME</span><span class="hljs-operator">=</span>/home/hahwul/Other/android/sdk/
+<span class="hljs-built_in">export</span> <span class="hljs-variable">ANDROID_HOME</span><span class="hljs-operator">=</span>/home/researcher/Other/android/sdk/
 env <span class="hljs-punctuation">|</span> grep ANDROID_HOME
-<span class="hljs-variable">ANDROID_HOME</span><span class="hljs-operator">=</span>/home/hahwul/Other/android/sdk/
+<span class="hljs-variable">ANDROID_HOME</span><span class="hljs-operator">=</span>/home/researcher/Other/android/sdk/
 </code></pre>
 <h3 id="you-have-not-accepted-the-license-agreements">You have not accepted the license agreements</h3>
 <blockquote>

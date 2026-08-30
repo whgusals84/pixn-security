@@ -191,8 +191,8 @@
 <pre><code class="language-php hljs"><span class="hljs-operator">&lt;</span><span class="hljs-operator">?</span>php
 
 <span class="hljs-keyword">function</span> <span class="hljs-title function_">protect_ssrf</span><span class="hljs-punctuation">(</span><span class="hljs-variable">$data</span><span class="hljs-punctuation">){</span>
-  <span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span>strpos<span class="hljs-punctuation">(</span><span class="hljs-variable">$data</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">www.hahwul.com</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">!==</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">){</span>
-    <span class="hljs-keyword">exit</span><span class="hljs-punctuation">();</span> <span class="hljs-comment">// url에 www.hahwul.com이 있으면 차단
+  <span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span>strpos<span class="hljs-punctuation">(</span><span class="hljs-variable">$data</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">target.example</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">!==</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">){</span>
+    <span class="hljs-keyword">exit</span><span class="hljs-punctuation">();</span> <span class="hljs-comment">// url에 target.example이 있으면 차단
 </span><span class="hljs-comment"></span>  <span class="hljs-punctuation">}</span>
 <span class="hljs-punctuation">}</span>
 
@@ -235,7 +235,7 @@ Connection: keep-alive
 P3P: CP='NOI CURa ADMa DEVa TAIa OUR DELa BUS IND PHY ONL UNI COM NAV INT DEM PRE'
 Location: https://pixn-analytics-portfolio.forhm0220.chatgpt.site
 </code></pre>
-<p>SSRF 취약점이 있는 저 페이지도 위에 url을 접근했을 떄 동일한 결과를 받을겁니다. 대신 검증 로직 이후에 Location 헤더를 따라가기 떄문에 www.hahwul.com에 대한 검증 구간이 있어도 정상적으로 불러올 수 있습니다.</p>
+<p>SSRF 취약점이 있는 저 페이지도 위에 url을 접근했을 떄 동일한 결과를 받을겁니다. 대신 검증 로직 이후에 Location 헤더를 따라가기 떄문에 target.example에 대한 검증 구간이 있어도 정상적으로 불러올 수 있습니다.</p>
 <pre><code>?q=http://your_domain/hr.php
 </code></pre>
 <p><img loading="lazy" src="https://1.bp.blogspot.com/-Usx51MDsrzM/XHAhRJTplFI/AAAAAAAADx4/lj5cfRUKgBoDDfkH_k0cWVR5_nU6FaiQwCLcBGAs/s1600/Selection_096.png" alt="" /></p>

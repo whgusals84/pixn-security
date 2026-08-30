@@ -227,7 +227,7 @@
 <li>Mitigation: 앞서 언급했듯, 서버는 핸드셰이크 요청의 <code>Origin</code> 헤더를 엄격하게 검증하여 허용된 출처에서 온 요청만 수락해야 합니다.</li>
 </ul>
 <pre><code class="language-javascript hljs"><span class="hljs-comment">// Example: Origin header validation in Node.js (ws library)
-</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> allowedOrigins <span class="hljs-operator">=</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&#39;https://hahwul.com&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;https://sub.hahwul.com&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
+</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> allowedOrigins <span class="hljs-operator">=</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&#39;https://target.example&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;https://sub.hahwul.com&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
 
 wsServer<span class="hljs-punctuation">.</span>on<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;request&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">(</span>request<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
   <span class="hljs-keyword">const</span> origin <span class="hljs-operator">=</span> request<span class="hljs-punctuation">.</span>origin<span class="hljs-punctuation">;</span>

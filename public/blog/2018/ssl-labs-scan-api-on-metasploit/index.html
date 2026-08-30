@@ -217,8 +217,8 @@ Module advanced options (auxiliary/gather/ssllabs_scan):
 </code></pre>
 <h2 id="scan">Scan</h2>
 <p>HOSTNAME 세팅 후 돌려주시면 끝납니다. 각각 SSL 취약점 항목부터, Rating 까지 제공해주기 떄문에 결과를 잘 파싱하면 대량의 서비스를 쉽게 돌려볼 수 있을듯 합니다.</p>
-<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; set HOSTNAME www.hahwul.com
-HOSTNAME =&gt; www.hahwul.com
+<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; set HOSTNAME target.example
+HOSTNAME =&gt; target.example
 </code></pre>
 <pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; show options
 
@@ -228,7 +228,7 @@ Module options (auxiliary/gather/ssllabs_scan):
    ----            ---------------  --------  -----------
    DELAY           5                yes       The delay in seconds between  API requests
    GRADE           false            yes       Output only the hostname: grade
-   HOSTNAME        www.hahwul.com   yes       The target hostname
+   HOSTNAME        target.example   yes       The target hostname
    IGNOREMISMATCH  true             yes       Proceed with assessments even when the server certificate doesn't match the assessment hostname
    USECACHE        true             yes       Use cached results (if available), else force live scan
 </code></pre>
@@ -239,10 +239,10 @@ Module options (auxiliary/gather/ssllabs_scan):
 [*] API version: 1.32.3
 [*] Evaluation criteria: 2009p
 [*] Running assessments: 0 (max 25)
-[*] Server: www.hahwul.com - Resolving domain names
+[*] Server: target.example - Resolving domain names
 [*] Scanned host: 2607:f8b0:4005:80a:0:0:0:2013 (sfo07s17-in-x13.1e100.net)- 0% complete (Testing Session Ticket support)
 [*] Ready: 0, In progress: 1, Pending: 1
-[*] www.hahwul.com - Progress 0%
+[*] target.example - Progress 0%
 
 [… 생략 …]
 

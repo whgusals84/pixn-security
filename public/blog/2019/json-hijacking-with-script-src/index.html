@@ -194,7 +194,7 @@ SOP와 JSONP Hijacking에 대한 내용은 예전에 정리해둔게 있으니 �
 <p>대략 이런 기능을 하는 페이지가 있었습니다.</p>
 <p>[ Request ]</p>
 <pre><code>GET /getData?callback=abcd HTTP/1.1
-Referer: www.hahwul.com
+Referer: target.example
 
 </code></pre>
 <p>[ Response ]</p>
@@ -244,7 +244,7 @@ alert(45)
 </code></pre>
 <p>[ Next request on attacker site ]</p>
 <pre><code>GET /?{\&quot;name\&quot;:\&quot;data~~~~\&quot;}
-Host: www.hahwul.com
+Host: target.example
 
 </code></pre>
 </div>

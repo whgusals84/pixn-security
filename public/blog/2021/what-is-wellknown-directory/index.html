@@ -173,7 +173,7 @@
             
         </header>
 
-        <div class="post-body"><p>간혹 웹 페이지를 들여다보면 <code>.well-known</code> 디렉토리를 만나게됩니다. 제 사이트도 올 1월에 <a href="https://securitytxt.org">security.txt</a>를 추가했었는데, 그 땐 단순히 보안 취약점이나 이슈에 대한 제보를 위해서 만들었었습니다. 오늘은 이 <code>.well-known</code> 디렉토리의 의미와 어떻게 사용되는지 조금더 살펴볼까 합니다.</p>
+        <div class="post-body"><p>.well-known 디렉터리는 사이트가 보안 연락처와 운영 정보를 표준 경로로 제공할 때 사용됩니다. 여기서는 주요 파일과 안전한 작성 방법을 살펴봅니다.</p>
 <p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/111666605-381eb180-8857-11eb-8a05-5f4b00fcbdcb.jpg" alt="" /></p>
 <h2 id="well-known">.well-known?</h2>
 <p>well-known 디렉토리는 <a href="https://tools.ietf.org/html/rfc5785">RF8785</a> 에 명시된 공식적인 URI입니다.</p>
@@ -225,22 +225,18 @@ Contact: https://example.com/your-contact-page
 <p>채용에 대한 주소를 기입합니다.</p>
 <pre><code>Hiring: https://example.com/hiring
 </code></pre>
-<h3 id="securitytxt-for-me">security.txt for me</h3>
-<pre><code># If you find any security issues on this site, please contact me!
+<h3 id="securitytxt-example">security.txt example</h3><pre><code># Report security issues through the published security contact.
 Contact: mailto:security@example.com
-Contact: https://github.com/hahwul/assets.hahwul.com/discussions
-Canonical: https://pixn-analytics-portfolio.forhm0220.chatgpt.site/.well-known/security.txt
+Canonical: https://example.com/.well-known/security.txt
 Preferred-Languages: en, ko
 </code></pre>
 <p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/111666894-803dd400-8857-11eb-9e3b-f246a917657d.jpg" alt="" /></p>
 <h2 id="well-known-humanstxt">.well-known/humans.txt</h2>
-<p>이참에 humans.txt도 작성해봅시다. humans.txt는 이름 그대로 이 서비스를 운영하는 사람의 정보를 제공해줍니다.
-어차피 제 트위터나 메일등은 이미 어디서나 찾을 수 있는 수준이라.. 간단하게 추가해봤습니다. (정해진 포맷이 있는건 아닌 것 같습니다.)</p>
-<pre><code>PIXN
-Site: https://pixn-analytics-portfolio.forhm0220.chatgpt.site
-Twitter: hahwul
+<p>humans.txt는 서비스를 운영하는 팀과 사이트 정보를 공개하는 선택적 문서입니다. 꼭 필요한 정보만 기재하고 개인 연락처는 노출하지 않는 편이 안전합니다.</p>
+<pre><code>Team: Security Engineering
+Site: https://example.com
 </code></pre>
-<p>물론 humans.txt 에서 <a href="http://humanstxt.org/Standard.html">예시</a>를 보면 서비스에 대한 정보도 기입하게 되어있으나, 이는 보안적인 관점에선 굳이 불필요한 정보는 안주는게 좋기 때문에 전 생략했습니다.</p>
+<p><a href="http://humanstxt.org/Standard.html">humans.txt 예시</a>에는 서비스 정보도 포함할 수 있지만, 보안 관점에서는 꼭 필요한 정보만 공개하는 편이 안전합니다.</p>
 <pre><code>/* SITE */
 Last update: YYYY/MM/DD
 Standards: HTML5, CSS3,..

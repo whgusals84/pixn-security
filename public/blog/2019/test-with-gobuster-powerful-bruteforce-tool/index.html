@@ -185,12 +185,12 @@ Today I'm going to write about a <code>gobuster</code> made of golang.</p>
 </code></pre>
 <pre><code># check gobuster path and copy
 ls ~/go/bin/gobuster
-/Users/hahwul/go/bin/gobuster
+/Users/researcher/go/bin/gobuster
 
 # edit your terminal rc (zsh, bash, etc..)
 vim ~/.zshrc
 
-alias gobuster='/Users/hahwul/go/bin/gobuster'
+alias gobuster='/Users/researcher/go/bin/gobuster'
 
 # reload rc file
 source ~/.zshrc
@@ -276,10 +276,10 @@ by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
 2019/12/26 01:56:35 Starting gobuster
 ===============================================================
 Found: localhost.hahwul.com
-Found: www.hahwul.com
+Found: target.example
 Found: test.hahwul.com
 Found: phoenix.hahwul.com
-Found: WWW.hahwul.com
+Found: target.example
 ===============================================================
 2019/12/26 01:57:08 Finished
 ===============================================================
@@ -291,11 +291,11 @@ Found: WWW.hahwul.com
 <pre><code>gobuster dns -d hahwul.com -w ./Discovery/DNS/subdomains-top1million-5000.txt -z -q -o out.txt
 
 cat out.txt
-Found: www.hahwul.com
+Found: target.example
 Found: localhost.hahwul.com
 Found: test.hahwul.com
 Found: phoenix.hahwul.com
-Found: WWW.hahwul.com
+Found: target.example
 
 </code></pre>
 <p>이전에도 Amass와 Subjack을 이용한 Takeover 체크에 대한 <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/10/find-subdomain-takeover-with-amass-and-subjack.html">글</a>을 썼었는데, 참고해보면 좋은 아이디어가 많이 나올 것 같아요.

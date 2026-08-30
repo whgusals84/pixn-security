@@ -304,8 +304,8 @@ total 61720
 -rw-r--r--  1 hahwul  staff     9B  3  1 01:56 test.txt
 </code></pre>
 <p>이제 다 끝났습니다. 아까 추가한 파일을 외부에서 동적으로 사용할 파일의 이름으로 심볼릭 링크로 연결해주면, 따로 파일을 등록하지 않아도 갱신된 파일을 사용할 수 있어집니다.</p>
-<pre><code>rm -rf /Users/hahwul/Library/Application Support/ZAP/dirbuster/test.txt
-ln -s sync_list.txt /Users/hahwul/Library/Application Support/ZAP/dirbuster/test.txt
+<pre><code>rm -rf /Users/researcher/Library/Application Support/ZAP/dirbuster/test.txt
+ln -s sync_list.txt /Users/researcher/Library/Application Support/ZAP/dirbuster/test.txt
 </code></pre>
 <p>요렇게 해주면 되겠네요 :D</p>
 <h2 id="fuzz">Fuzz?</h2>

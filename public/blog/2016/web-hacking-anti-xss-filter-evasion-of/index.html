@@ -230,12 +230,12 @@ Ouput<span class="hljs-operator">:</span> <span class="hljs-operator">&lt;</span
 <p>공격코드 필터링</p>
 <pre><code class="language-html hljs">Filter: 공격코드 필터링
 Case
-Input: &quot; onerror=document.location.href=&quot;www.hahwul.com&quot;
+Input: &quot; onerror=document.location.href=&quot;target.example&quot;
 Output: //Filtered..
 
 Attack
-Input: &quot; onerror=document.loc(at)ion.href=&quot;www.hahwul.com&quot;
-Output: &quot; onerror=document.location.href=&quot;www.hahwul.com&quot;
+Input: &quot; onerror=document.loc(at)ion.href=&quot;target.example&quot;
+Output: &quot; onerror=document.location.href=&quot;target.example&quot;
 </code></pre>
 <p>특수문자 필터링</p>
 <pre><code>Filter: 특수문자 필터링

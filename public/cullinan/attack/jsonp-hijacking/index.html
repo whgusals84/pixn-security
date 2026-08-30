@@ -218,7 +218,7 @@ check={
 </code></pre>
 <p><strong>Attacker Server</strong></p>
 <pre><code>GET /?{\&quot;name\&quot;:\&quot;data~~~~\&quot;}
-Host: www.hahwul.com
+Host: target.example
 </code></pre>
 <h2 id="defensive-techniques">Defensive techniques</h2>
 <p>기본적으로 JSONP 자체가 안전한 구조는 아니라서 가급적 SOP를 준수할 수 있도록 CORS 설정을 통해 통신해야합니다. 다만 서비스 특성 상 JSONP를 사용해야하는 경우 가급적 중요한 정보를 최대한 다루지 않는 것이 좋으며,  Referer 헤더 등으로 요청이 발생한 구간을 검증하는 것이 좋습니다.</p>

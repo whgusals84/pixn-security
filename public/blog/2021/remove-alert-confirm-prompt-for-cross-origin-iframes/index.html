@@ -185,7 +185,7 @@ Safari: Positive
 Web Developers: No signals
 </code></pre>
 <h2 id="for-pentesters-and-hackers">For Pentesters and Hackers</h2>
-<p>이제 iframe 상에서 xss를 테스트할 땐 기존 alert, prompt, confirm 구문이 동작 안할 가능성이 높습니다. 이에 portswigger를 주축으로 <code>print()</code>를 사용하자고 <a href="https://twitter.com/PortSwiggerRes/status/1410953821510119430">이야기</a>가 나온 상태이고, 저 또한 dalfox에 바로 반영하고 관련 <a href="https://twitter.com/hahwul/status/1411345962652426241">트윗</a>을 공유했습니다.</p>
+<p>이제 iframe 상에서 xss를 테스트할 땐 기존 alert, prompt, confirm 구문이 동작 안할 가능성이 높습니다. 이에 portswigger를 주축으로 <code>print()</code>를 사용하자고 <a href="https://twitter.com/PortSwiggerRes/status/1410953821510119430">이야기</a>가 나온 상태이고, Dalfox에도 같은 변경이 반영되었습니다.</p>
 <p><code>print()</code> 이외에도 postMessage 등을 이용한 방법이 있겠지만, 현재 가장 심플한 방법으론 print()가 최선인 것 같네요.</p>
 <h2 id="for-developers">For Developers</h2>
 <p>Cross origin 관계에서 iframe이 사용되는 경우가 최근에는 많지 않을겁니다. 단 레거시 시스템이나 편의성을 위해 iframe을 사용하는 경우 서비스적으로 문제될 수 있는 부분이라 꼭 체크하시는 게 좋을 것 같습니다.</p>

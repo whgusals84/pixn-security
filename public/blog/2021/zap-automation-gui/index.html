@@ -173,9 +173,7 @@
             
         </header>
 
-        <div class="post-body"><p>최근에 ZAP Automation framework가 0.4 버전으로 업데이트 됬습니다. 사실 제가 0.4 버전을 기다린 것은 아래 내용 때문인데요, StackHawk에서 스트리밍으로 진행한 Automation Framework에 대한 소개 내용 중 ZAP에서 UI로 Automation Framework를 컨트롤하는 장면이 잡혔었고, Simon에게 물어보니 0.4 버전대 기능이라고 합니다.</p>
-<p><a href="https://twitter.com/hahwul/status/1423145897232265220">https://twitter.com/hahwul/status/1423145897232265220</a></p>
-<p>오늘은 Automation Framework에 새로 추가된 GUI 부분에 대해서 살펴보려고 합니다.</p>
+        <div class="post-body"><p>ZAP Automation Framework 0.4에는 Automation Framework를 UI에서 제어하는 기능이 추가되었습니다. 아래에서 새 GUI를 살펴봅니다.</p>
 <h2 id="zap-automation-framework">ZAP Automation Framework</h2>
 <p>우선 이 Automation Frakework에 대해 간략히 소개하자면, yaml 포맷의 config 파일을 두고 ZAP 내부의 스캔이나 설정등을 자동으로 처리할 수 있는 기능을 의미합니다. 이 과정은 생각보다 디테일해서 개인 분석 환경을 빠르게 구성하거나, CI/CD에 연동되어 DAST로 동작 시 활용할 부분도 많습니다.</p>
 <p>관련해선 제가 전에 작성한 글이 있으니 참고해주시길 바래요 😁</p>
@@ -242,7 +240,7 @@
   <span class="hljs-name">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;passiveScan-wait&quot;</span>
 - <span class="hljs-name">parameters</span><span class="hljs-punctuation">:</span>
     <span class="hljs-name">template</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;modern&quot;</span>
-    <span class="hljs-name">reportDir</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/Users/hahwul&quot;</span>
+    <span class="hljs-name">reportDir</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/Users/researcher&quot;</span>
   <span class="hljs-name">name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;report&quot;</span>
   <span class="hljs-name">type</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;report&quot;</span>
 </code></pre>
@@ -255,7 +253,6 @@
 <h2 id="references">References</h2>
 <ul>
 <li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2021/06/22/zap-automation/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2021/06/22/zap-automation/</a></li>
-<li><a href="https://twitter.com/hahwul/status/1423145897232265220">https://twitter.com/hahwul/status/1423145897232265220</a></li>
 </ul>
 </div>
 

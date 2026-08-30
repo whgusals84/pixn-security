@@ -200,20 +200,20 @@ http://localhost:9200/index/type/column</p>
 <p>Column 생성</p>
 <pre><code>#&gt; curl -XPUT 'localhost:9200/hahwul/mysite/1' -d'
 {
-  &quot;target&quot;: &quot;www.hahwul.com&quot;
+  &quot;target&quot;: &quot;target.example&quot;
 }' -H 'Content-Type: application/json'
 </code></pre>
 <p>-H 옵션으로 Content-Type을 붙여준 이유는 ES 6.0 이후에는 Type을 정확하게 명시하도록 규정되어 있기 떄문이죠.</p>
 <p>Column 수정</p>
 <pre><code>#&gt; curl -XPOST 'localhost:9200/hahwul/mysite/1/_update' -d'
 {
-  &quot;target&quot;: &quot;www.hahwul.com&quot;
+  &quot;target&quot;: &quot;target.example&quot;
 }' -H 'Content-Type: application/json'
 </code></pre>
 <p>Column 삭제</p>
 <pre><code>#&gt; curl -XDELETE 'localhost:9200/hahwul/mysite/1' -d'
 {
-  &quot;target&quot;: &quot;www.hahwul.com&quot;
+  &quot;target&quot;: &quot;target.example&quot;
 }' -H 'Content-Type: application/json'
 </code></pre>
 <p>데이터 조회</p>

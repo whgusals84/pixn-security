@@ -225,7 +225,7 @@
 <li>Mitigation: As mentioned earlier, the server must strictly validate the <code>Origin</code> header of handshake requests and only accept requests from allowed origins.</li>
 </ul>
 <pre><code class="language-javascript hljs"><span class="hljs-comment">// Example: Origin header validation in Node.js (ws library)
-</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> allowedOrigins <span class="hljs-operator">=</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&#39;https://hahwul.com&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;https://sub.hahwul.com&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
+</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> allowedOrigins <span class="hljs-operator">=</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&#39;https://target.example&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;https://sub.hahwul.com&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
 
 wsServer<span class="hljs-punctuation">.</span>on<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;request&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">(</span>request<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
   <span class="hljs-keyword">const</span> origin <span class="hljs-operator">=</span> request<span class="hljs-punctuation">.</span>origin<span class="hljs-punctuation">;</span>

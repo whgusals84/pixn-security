@@ -282,7 +282,7 @@
 <p>하나 예시를 들어보면, 아까 THEN 구문에서 몇개 지우고 Assign으로 난수를 생성하고, Print Action으로 해당 변수 값을 찍어보겠습니다.</p>
 <p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578425-322ac78b-fa29-43ab-a330-98b218fbc292.png" alt="" /></p>
 <p>그러면 순서에 따라서 처리 후 Print로 인해 생성된 값을 볼 수 있습니다. 자 그럼 이걸 실제론 어떻게 쓸까요? 제가 위에선 임의로 그냥 난수값을 넣었지만, 이 변수들은 Zest 전체적으로 사용할 수 있어서 이렇게 이후 후속 요청등에서 사용할 수 있습니다.</p>
-<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578428-086c59ee-bef3-4187-9240-5fd87296f8a1.png" alt="자세히보면 www.hahwul.com으로 요청 시 하위 경로에 random 변수 값이 붙었습니다." /></p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578428-086c59ee-bef3-4187-9240-5fd87296f8a1.png" alt="자세히보면 target.example으로 요청 시 하위 경로에 random 변수 값이 붙었습니다." /></p>
 <p>그래서 이걸 활용하면 CSRF Token을 자동으로 핸들링(물론 이건 AntiCSRF Token이란 기능이 있긴해요)한다거나 OAuth에서 특정 값만 사용하는 등 여러가지 방법이 있겠죠?</p>
 <pre><code class="language-ruby hljs">��� ��� ��������� ��������� <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>���������<span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span> ��������� ������������ ��� ������������ ����
 </code></pre>

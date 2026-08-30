@@ -195,7 +195,7 @@
 <h2 id="har를-사용함으로써의-이점">HAR를 사용함으로써의 이점</h2>
 <p>위에서 HTTP Request/Response를 저장하는 방법에 대한 이야기를 했죠. 사실 HTTP 자체가 이미 좋은 표준입니다. 직관적으로 Method, URL, Header 등을 알 수 있죠.</p>
 <pre><code>GET / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 </code></pre>
 <p>다만 HTTP 자체가 비 연결형 커넥션이라는 특징을 가지기 때문에 HTTP Request/Response는 여러번의 요청을 기록하는데 적합하지 않습니다. 그래서 도구들 간 여러개의 Request/Response를 서로 공유하기 위해선 단순히 Raw HTTP를 사용하기 어렵습니다.</p>
 <p>HAR는 이러한 점을 채워줍니다.</p>

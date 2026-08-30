@@ -184,7 +184,7 @@
 <h4 id="content-length">Content-Length</h4>
 <p>Content-Length는 대다수의 웹 요청에서 기본적으로 사용하는 길이에 대한 헤더입니다. HTTP Body의 길이를 Content-Length 헤더에 포함하여 같이 전달합니다.</p>
 <pre><code>POST / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 Content-Length: 4
 
 asdf
@@ -200,7 +200,7 @@ asdf
 </code></pre>
 <p>위와 같이 2개의 라인을 기준으로 길이와 값으로 표기합니다. 해당 요청은 여려번의 HTTP Reuqest로 전달되어도 하나의 데이터로 보며, 마지막엔 끝맺음을 의미하는 <code>0\r\n</code> 이 있는 경우에 전체 데이터 전송이 완료되었다고 판단하게 됩니다. <code>0\r\n</code>이 도착하지 않는다면 서버는 요청을 계속 기다리게 됩니다. 실제 예시로 보면 아래와 같습니다.</p>
 <pre><code>POST / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 Transfer-Encoding: chunked
 
 3
@@ -211,7 +211,7 @@ ABC
 <p>위 요청에서 3은 아래에서 사용하는 ABC의 길이, 두번째 줄인 ABC는 값 그리고 마지막에 0은 요청의 마지막을 의미합니다. HTTP 요청을 나눠서 전송하는 경우 이러한 요청이 발생할껍니다.</p>
 <p>Request 1</p>
 <pre><code>POST / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 Transfer-Encoding: chunked
 
 3
@@ -220,7 +220,7 @@ ABC
 </code></pre>
 <p>Request 2</p>
 <pre><code>POST / HTTP/1.1
-Host: www.hahwul.com
+Host: target.example
 Transfer-Encoding: chunked
 
 2

@@ -276,7 +276,7 @@ http://⒰⒩⒯⒭⒰⒮⒯.⒞⒪⒨
 <h4 id="bypass-with">Bypass with @</h4>
 <p>보통 Era of SSRF로 많이 알려진 방법입니다. @를 이용하여 실제 Host와 검증에서 확인하는 Host를 다르게 분리시켜 공격자가 의도한 도메인으로 접근하도록 유도하는 방법입니다. SSRF 이외에도 각종 공격 방법에서 많이 사용되기 떄문에 잘 알아두시는게 좋습니다. 자세한 내용은 아래 링크를 참고해주세요.</p>
 <p><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/09/14/web-hacking-new-attack-vectors-in/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/09/14/web-hacking-new-attack-vectors-in/</a></p>
-<pre><code>https://google.com@www.hahwul.com =&gt; www.hahwul.com
+<pre><code>https://google.com@target.example =&gt; target.example
 </code></pre>
 <h4 id="bypass-with-special-chars">Bypass with Special chars</h4>
 <pre><code>?url=http://allow_domain.internal_domain_or_ip/page
@@ -284,7 +284,7 @@ http://⒰⒩⒯⒭⒰⒮⒯.⒞⒪⒨
 ?url=http://internal_domain_or_ip#.allow_domain/page
 ?url=http://internal_domain_or_ip?.allow_domain/page
 ?url=http://internal_domain_or_ip\.allow_domain/page
-?url=https://ⓦⓦⓦ.ⓗⓐⓗⓦⓤⓛ.ⓒⓞⓜ = www.hahwul.com
+?url=https://ⓦⓦⓦ.ⓗⓐⓗⓦⓤⓛ.ⓒⓞⓜ = target.example
 
 [ List ]
 ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳

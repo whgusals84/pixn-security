@@ -204,7 +204,7 @@ queury = [abcd,cccc]
 <p>당연히... <code>@</code> 앞부분은 어떤 특수문자도 허용할 수 있기 때문에 실제 host인 <code>untrusted.domain</code>을 바라보게 되어 공격자가 <code>trusted.domain</code>만 허용 가능한 페이지에 <code>untrusted.domain</code>을 삽입할 수 있는 결과가 발생합니다.</p>
 <p><code>https://trusted.domain,@untrusted.domain</code> =&gt; <code>untrusted.domain</code></p>
 <p>실제로 아래 URL을 브라우저로 접근하면 제 페이지가 나타나겠죠.</p>
-<pre><code>https://www.google.com,@www.hahwul.com --headers
+<pre><code>https://www.google.com,@target.example --headers
 </code></pre>
 </div>
 

@@ -6,6 +6,8 @@ import { PERSONAL_ONLY_ROUTES, REMOVED_DISCOVERY_ROUTES } from './personal-conte
 const args = parseArgs(process.argv.slice(2));
 const publicRoot = path.resolve(args.public ?? 'public');
 const expectedOrigin = new URL(args.origin ?? 'https://pixn-analytics-portfolio.forhm0220.chatgpt.site').origin;
+const priorPublisherIdentityPattern = /Lee Hwan|이환|hahwul@gmail\.com|https?:\/\/(?:www\.)?(?:x\.com|twitter\.com|instagram\.com)\/(?:hahwul|hahwul_)|https?:\/\/(?:www\.)?linkedin\.com\/(?:in\/)?(?:hahwul|hahwul_)|Developed and Designed by Me/i;
+const priorPublisherIdentifierPattern = /\/(?:Users|home)\/(?:hahwul|hawul)\b|C:\\Users\\(?:hahwul|hawul)\b|https?:\/\/(?:www\.)?hahwul\.com(?:\/|[?;#\\]|["'&<\s]|$)|\bwww\.hahwul\.com\b|Author:\s*hahwul\b|Committer:\s*hahwul\b|Signed-off-by:\s*hahwul\b|Twitter:\s*hahwul\b|<cite>hahwul<\/cite>|s\.authors\s*=\s*\[(?:&quot;|")hahwul(?:&quot;|")\]|This script crafted by hahwul/i;
 
 function parseArgs(values) {
   const parsed = {};
@@ -69,8 +71,11 @@ for (const file of htmlFiles) {
   if (html.includes('https://www.hahwul.com') || html.includes('http://www.hahwul.com')) {
     errors.push(`old internal origin: ${path.relative(publicRoot, file)}`);
   }
-  if (/Lee Hwan|이환|hahwul@gmail\.com|https:\/\/x\.com\/hahwul|https:\/\/www\.instagram\.com\/hahwul_|Developed and Designed by Me/i.test(html)) {
+  if (priorPublisherIdentityPattern.test(html)) {
     errors.push(`prior-publisher identity remains: ${path.relative(publicRoot, file)}`);
+  }
+  if (priorPublisherIdentifierPattern.test(html)) {
+    errors.push(`prior-publisher identifier remains: ${path.relative(publicRoot, file)}`);
   }
   if (/<title>[\s\S]*?\|\s*HAHWUL<\/title>|"name":"HAHWUL"/i.test(html)) {
     errors.push(`old site identity metadata: ${path.relative(publicRoot, file)}`);
@@ -85,9 +90,18 @@ if (!Array.isArray(searchDocuments) || searchDocuments.length !== expectedSearch
 for (const route of PERSONAL_ONLY_ROUTES) {
   if (searchDocuments.some((document) => document.url === route)) errors.push(`personal-only search document remains: ${route}`);
 }
+for (const document of searchDocuments) {
+  const searchableText = `${document.title ?? ''}\n${document.description ?? ''}\n${document.content ?? ''}`;
+  if (priorPublisherIdentityPattern.test(searchableText) || priorPublisherIdentifierPattern.test(searchableText)) {
+    errors.push(`prior-publisher identifier remains in search index: ${document.url}`);
+  }
+}
 
 const sitemap = await readFile(path.join(publicRoot, 'sitemap.xml'), 'utf8');
 const rss = `${await readFile(path.join(publicRoot, 'rss.xml'), 'utf8')}\n${await readFile(path.join(publicRoot, 'ko', 'rss.xml'), 'utf8')}`;
+if (priorPublisherIdentityPattern.test(rss) || priorPublisherIdentifierPattern.test(rss)) {
+  errors.push('prior-publisher identifier remains in RSS');
+}
 for (const route of removedDiscoveryRoutes) {
   if (sitemap.includes(route)) errors.push(`personal-only sitemap URL remains: ${route}`);
   if (rss.includes(route)) errors.push(`personal-only RSS item remains: ${route}`);

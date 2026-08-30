@@ -191,7 +191,7 @@
 <h2 id="test">Test</h2>
 <h3 id="recon-for-testing">Recon for testing</h3>
 <p>테스트를 위해 임의로 몇개 도메인을 nmap으로 포트스캐닝했습니다.</p>
-<pre><code>msf6 &gt; db_nmap -PN www.hahwul.com dalfox.hahwul.com testphp.vulnweb.com
+<pre><code>msf6 &gt; db_nmap -PN target.example dalfox.hahwul.com testphp.vulnweb.com
 </code></pre>
 <p>이후 services 명령으로 리스트를 살펴보면 80,443 등으로 수집된 것을 볼 수 있습니다.</p>
 <pre><code>msf6 &gt; services

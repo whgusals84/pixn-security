@@ -204,13 +204,13 @@ sleep <span class="hljs-variable">$DELAY</span>
 <span class="hljs-keyword">done</span>
 </code></pre>
 <p>Run</p>
-<pre><code>./test.sh www.hahwul.com:443
+<pre><code>./test.sh target.example:443
 </code></pre>
 <script id="asciicast-393708" src="https://asciinema.org/a/393708.js" async></script>
 <h2 id="other-ways">Other ways</h2>
 <p>그냥 쓰기엔 너무 짧아서 같이 기록해둡니다.</p>
 <h3 id="testsslsh">testssl.sh</h3>
-<pre><code>./testssl.sh www.hahwul.com:443
+<pre><code>./testssl.sh target.example:443
 ... snip ...
 TLSv1.2 (server order)
  xc02f   ECDHE-RSA-AES128-GCM-SHA256       ECDH 253   AESGCM      128      TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
@@ -234,7 +234,7 @@ TLSv1.3 (no server order, thus listed by strength)
 ... snip ...
 </code></pre>
 <h3 id="sslyze">sslyze</h3>
-<pre><code>sslyze www.hahwul.com:443
+<pre><code>sslyze target.example:443
 .. snip ...
 * TLS 1.2 Cipher Suites:
     Attempted to connect using 156 cipher suites.

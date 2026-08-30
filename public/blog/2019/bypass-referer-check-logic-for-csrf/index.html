@@ -181,17 +181,17 @@
 <p><a href="https://1.bp.blogspot.com/-ywQG0KOTvkE/XaCniShkn4I/AAAAAAAAEg0/ABT4x0xT-5AsfbRW3HA4gD8_6AyutjdoACLcBGAsYHQ/s1600/1414.png"><img loading="lazy" src="https://1.bp.blogspot.com/-ywQG0KOTvkE/XaCniShkn4I/AAAAAAAAEg0/ABT4x0xT-5AsfbRW3HA4gD8_6AyutjdoACLcBGAsYHQ/s640/1414.png" alt="" /></a></p>
 <h2 id="tldr">TL;DR</h2>
 <h3 id="pattern">Pattern</h3>
-<pre><code>- https://hahwul.com
-- https://hahwul.com?white_domain_com
-- https://hahwul.com;white_domain_com
+<pre><code>- https://target.example
+- https://target.example?white_domain_com
+- https://target.example;white_domain_com
 - https://white_domain_com.hahwul.com
 - https://hahwulwhite_domain_com
 
 </code></pre>
 <h3 id="payloads">Payloads</h3>
-<pre><code>https://hahwul.com/csrf.html
-https://hahwul.com/csrf.html?white_domain_com
-https://hahwul.com/csrf.html;white_domain_com
+<pre><code>https://target.example/csrf.html
+https://target.example/csrf.html?white_domain_com
+https://target.example/csrf.html;white_domain_com
 https://white_domain_com.hahwul.com/csrf.html
 https://hahwulwhite_domain_com/csrf.html
 
@@ -202,17 +202,17 @@ https://hahwulwhite_domain_com/csrf.html
 <p>This is similar to Bypass Host (URL) Valid Check except for non-protection. However, there are cases that can not be actual attacks, so please refer to the following.</p>
 <p>우선 검증 안하는 케이스와 검증하는데 우회되는 케이스로 나눌 수 있고, 우회 패턴은 보통 도메인, 페이지 기반 검증을 우회하게 되는데, 이는 SSRF, CustomS Scheme, Open Redirect 등에서 쓰이는 Host(URL) 검증 우회 방식과 유사합니다. 그렇지만, Referer 헤더가 무조건적으로 전 도메인 주소를 따라가는건 아니라서, 가능한 케이스도 있고 안되는 케이스도 있으니 아래 내용 참고하셔서 보시면 좋을 것 같습니다.</p>
 <h3 id="changed-referer-header-in-bypass-hosturl-valid-check-case">Changed Referer Header in Bypass HOST(URL) Valid Check Case</h3>
-<pre><code>- https://hahwul.com (O)
-- https://hahwul.com?white_domain_com (O)
-- https://hahwul.com;white_domain_com (O)
-- https://hahwul.com/white_domain_com/../target.file (O)
+<pre><code>- https://target.example (O)
+- https://target.example?white_domain_com (O)
+- https://target.example;white_domain_com (O)
+- https://target.example/white_domain_com/../target.file (O)
 - https://white_domain_com.hahwul.com (O)
 - https://hahwulwhite_domain_com (O)
 - file://123.white_domain_com (X) 
 - https://white_domain_comarchived author.com (X)
-- https://hahwul.com#white_domain_com (X)
-- https://hahwul.com\.white_domain_com (X)
-- https://hahwul.com/.white_domain_com (X)
+- https://target.example#white_domain_com (X)
+- https://target.example\.white_domain_com (X)
+- https://target.example/.white_domain_com (X)
 
 </code></pre>
 <h3 id="redirect">redirect</h3>
@@ -225,16 +225,16 @@ https://hahwulwhite_domain_com/csrf.html
 <p>In common, Redirect types cannot use these pages to trick the referrer because the page that became the source is the reference.</p>
 <p>공통적으로 Redirect 종류들은 가장 source가 된 페이지가 referer가 되기 때문에 이런 페이지들을 이용해서 referer를 속일 수 없습니다 ㅜㅜ</p>
 <h2 id="why">Why?</h2>
-<h3 id="https-hahwulcom-o"><code>https://hahwul.com (O)</code></h3>
+<h3 id="https-targetexample-o"><code>https://target.example (O)</code></h3>
 <p>Not protection logic, it’s run any
 검증 안하면 당연히 됩니다.</p>
-<h3 id="https-hahwulcomwhite-domain-com-o"><code>https://hahwul.com?white_domain_com (O)</code></h3>
+<h3 id="https-targetexamplewhite-domain-com-o"><code>https://target.example?white_domain_com (O)</code></h3>
 <p>The referrer header contains parameters.
 인자값의 경우 referer 헤더에 남아있습니다.</p>
-<h3 id="https-hahwulcomwhite-domain-com-o-1"><code>https://hahwul.com;white_domain_com (O)</code></h3>
+<h3 id="https-targetexamplewhite-domain-com-o-1"><code>https://target.example;white_domain_com (O)</code></h3>
 <p>The referrer header contains semi colon and behind string.
 ;(semi colon) 또한 referer 헤더에 남아있습니다.</p>
-<h3 id="https-hahwulcom-white-domain-com-targetfile-x"><code>https://hahwul.com/white_domain_com/../target.file (X)</code></h3>
+<h3 id="https-targetexample-white-domain-com-targetfile-x"><code>https://target.example/white_domain_com/../target.file (X)</code></h3>
 <p>In the Browsing step, processed ../ do not contain the referrer.
 안되는게 맞지만, 아주 예외적으로 브라우저에서 ../ 를 처리해주지 않는 경우엔 가능합니다.</p>
 <h3 id="https-white-domain-comhahwulcom-o"><code>https://white_domain_com.hahwul.com (O)</code></h3>
@@ -250,12 +250,12 @@ file:// 에서 발생한 요청은 Referer 헤더가 생기지 않습니다.</p>
 <p>In the Browsing step, processed ../ do not contain the referrer.
 @로 호스트를 분리하는 경우 실제 호스트 이름이 referer에 남게됩니다.
 =&gt; hahwul.com</p>
-<h3 id="https-hahwulcomwhite-domain-com-x"><code>https://hahwul.com#white_domain_com (X)</code></h3>
+<h3 id="https-targetexamplewhite-domain-com-x"><code>https://target.example#white_domain_com (X)</code></h3>
 <p>The referrer header not contains hash parameter.
 hash 문자는 referer에 남지 않습니다.</p>
-<h3 id="https-hahwulcom-white-domain-com-x"><code>https://hahwul.com\.white_domain_com (X)</code></h3>
+<h3 id="https-targetexample-white-domain-com-x"><code>https://target.example\.white_domain_com (X)</code></h3>
 <p>(%5c)가 path 처리(%2f)되서 당연히 안남습니다.</p>
-<h3 id="https-hahwulcom-white-domain-com-o"><code>https://hahwul.com/.white_domain_com (O)</code></h3>
+<h3 id="https-targetexample-white-domain-com-o"><code>https://target.example/.white_domain_com (O)</code></h3>
 <p>단순 문자열 검증의 경우 우회가 가능합니다.</p>
 </div>
 
