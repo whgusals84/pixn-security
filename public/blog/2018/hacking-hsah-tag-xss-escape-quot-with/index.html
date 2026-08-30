@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>URL Hash(#) 을 이용한 XSS 우회기법 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="URL Hash(#) 을 이용한 XSS 우회기법">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/hacking-hsah-tag-xss-escape-quot-with/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="URL Hash(#) 을 이용한 XSS 우회기법">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/hacking-hsah-tag-xss-escape-quot-with/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"URL Hash(#) 을 이용한 XSS 우회기법","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/hacking-hsah-tag-xss-escape-quot-with/","datePublished":"2018-03-21T00:00:00+00:00","dateModified":"2022-04-22T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2018-hacking-hsah-tag-xss-escape-quot-with.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"URL Hash(#) 을 이용한 XSS 우회기법"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">URL Hash(#) 을 이용한 XSS 우회기법</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-03-21">
+                        MARCH 21, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>최근에 <a href="https://opnsec.com/2018/03/stored-xss-on-facebook/">Facebook의 Stored XSS 취약점 관련 버그바운티 리포트</a>가 올라왔습니다. og tag를 이용해서 xss까지 진행된 케이스인데, 생각보다 조금 의외의 내용이라 글로 공유합니다.</p>
+<blockquote>
+<p><a href="https://ogp.me">Open Graph(og)</a>는 웹 페이지에서 메타정보를 제공하는 프로토콜로 meta 태그에 페이지에 대한 정보를 담아 다른 어플리케이션(브라우저, 웹을 읽어오는 앱 등)에서 이 정보를 활용할 수 있도록 제공할 수 있습니다. 대표적으로 메신저나 SNS에서 링크를 공유할 때 사이트의 주요 이미지, 타이틀 정보 등을 요약하여 작성하는데 사용됩니다.</p>
+</blockquote>
+<p>다만 og 태그 자체에 대한 문제는 아닙니다. 웹 브라우저에서 URL Hash(#)을 처리하는 방식에서 발생한 문제이지요.</p>
+<h2 id="xss-in-mediaelementsjs">XSS in MediaElements.js</h2>
+<p>우선 해당 리포트에서 문제점인 라이브러리는 Facebook에서 사용되고 있던 <code>MediaElements.js</code> 입니다. 이 Javascript는 ogVideoType이 <code>video/flv</code>인 경우 FlashMediaElement.swf를 로드하고 ogVideoUrl을 FlashME.swf로 전달하여 영상을 재생합니다.</p>
+<p>FlashME로 ogVideoUrl을 전달하는 과정의 코드를 보면 이런 형태입니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> absolutizeUrl<span class="hljs-punctuation">(</span>ogVideoUrl<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">var</span> tempDiv <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>createElement<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;div&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    tempDiv<span class="hljs-punctuation">.</span>innerHTML <span class="hljs-operator">=</span> <span class="hljs-string">&#39;&lt;a href=&quot;&#39;</span> <span class="hljs-operator">+</span> ogVideoUrl<span class="hljs-punctuation">.</span>toString<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>split<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;&quot;&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>join<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;&amp;quot;&#39;</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">+</span> <span class="hljs-string">&#39;&quot;&gt;x&lt;/a&gt;&#39;</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-keyword">return</span> tempDiv<span class="hljs-punctuation">.</span>firstChild<span class="hljs-punctuation">.</span>href<span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+
+flashDiv<span class="hljs-punctuation">.</span>innerHTML <span class="hljs-operator">=</span><span class="hljs-string">&#39;&lt;embed src=&quot;FlashME.swf?videoFile=&#39;</span> <span class="hljs-operator">+</span> <span class="hljs-built_in">encodeURI</span><span class="hljs-punctuation">(</span>absolutizeUrl<span class="hljs-punctuation">(</span>ogVideoUrl <span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">+</span><span class="hljs-string">&#39;&quot; type=&quot;application/x-shockwave-flash&quot;&gt;&#39;</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>absolutizeUrl() 함수를 통해서 url 데이터를 가공한 후 플래시 파일의 인자값으로 데이터를 전달해주는데, 크롬에선 #과 &quot;(quot)가 순차로 들어간 경우엔 필터링되지 않고 구문 밖으로 나가게 됩니다.</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-07R1I4gehWM/WrJ1qkT8TiI/AAAAAAAAC6s/sX-zxj4dBy0scr5HOjzsHAhbAU8RyADEwCLcBGAs/s1600/123.PNG" alt="" /></p>
+<p>이걸 이용해서 XSS를 하였고 리포트 이후 이제 세상에 드러나게 되었습니다.</p>
+<h2 id="url-hash-and-bypass">URL Hash and Bypass</h2>
+<p>URL Hash(#) 문자는 URL에서 <code>#</code> 뒤에 구간, 즉 Hash 영역을 표기하기 위한 문자입니다. 그래서 Javascript에서 <code>location.hash</code>를 통해 hash를 읽으면 <code>#</code>과 그 뒤에 fragment가 같이 포함되어 리턴됩니다.</p>
+<p>재미있는건 URL Hash가 웹 브라우저별로 처리 방식이 다르다는 점인데요. 보통 웹 브라우저에서 URL Query 이후에 속한 부분들 중 <code>&quot;</code> 나 <code>' </code>는 %22, %27로 URL 인코딩되어 사용됩니다. 다만 <code>'</code>의 경우는 iPhone safari에선 예외적으로 인코딩되지 않긴 하죠.</p>
+<p>이와 유사하게 Firefox를 제외한 나머지 브라우저에선 Hash 영역의 <code>&quot;</code> 는 URL 인코딩하지 않아 마치 Curl에서만 재현되는 형태의 XSS가 실제로 브라우저에서 동작하게된 케이스입니다.</p>
+<p>그럼 간단하게 실험을 해봅시다.</p>
+<h3 id="without-hash">Without Hash</h3>
+<p><code>#</code>이 없는 경우 <code>&quot;</code>가 %22로 URL encoding되어 페이지에 삽입됩니다. onerror 구문을 처리되지 않습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>write<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;&lt;img/src=&quot;</span><span class="hljs-operator">+</span>absolutizeUrl<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://pixn-analytics-portfolio.forhm0220.chatgpt.site&quot; onerror=alert(45)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-operator">+</span><span class="hljs-string">&quot;&gt;&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-cFxmP3gqhQA/WrJ1159ZKvI/AAAAAAAAC60/eZnTjARV-MM4fJ1kcNFWSkHxOY0mzxfHACLcBGAs/s1600/125.PNG" alt="" /></p>
+<h3 id="with-hash">With Hash</h3>
+<p><code>#</code>이 있는 경우에는 <code>&quot;</code>가 인코딩되지 않기 때문에 구문을 탈출하고 onerror 핸들러가 처리됩니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>write<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;&lt;img/src=&quot;</span><span class="hljs-operator">+</span>absolutizeUrl<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://pixn-analytics-portfolio.forhm0220.chatgpt.site#&quot; onerror=alert(45)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-operator">+</span><span class="hljs-string">&quot;&gt;&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p><img loading="lazy" src="https://4.bp.blogspot.com/-UvupBaMsJk0/WrJ1ygJ9n-I/AAAAAAAAC6w/3z7qnZWir4UgzvN5R1yk2E3jsGq8DtZIQCLcBGAs/s1600/124.PNG" alt="" /></p>
+<p>원래 코드대로라면 싱글쿼터(') 안에 있기 때문에 모두 URL 인코딩을 거쳐 문자열로 처리되어야 하지만 위의 코드가 해시 태그로 인해 특수문자가 그대로 들어가게 됩니다. 그래서 구문 밖으로 탈출 할 수 있고 XSS가 가능해집니다.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>단순히 Facebook에서 쓰고있던 FlashMediaElement.swf의 문제가 아니란 겁니다. 결국은 Hash를 포함한 URL 형태의 문자를 브라우저에서 처리하는 방식의 차이로 트리거까지 가능한 케이스입니다. URL을 처리하는 기능이나 페이지에선 당연히 영향력이 존재하고 일반적인 XSS 우회 기법으로도 충분히 사용할 수 있다고 생각되네요.</p>
+<blockquote>
+<p>https://pixn-analytics-portfolio.forhm0220.chatgpt.site#&quot; =&gt; <code>XSS</code></p>
+</blockquote>
+<p>일부 XSS와 DOM XSS는 FE단에서 직접 필터링 하는 경우가 있습니다. 잘 찾다보면 은근히 보이는 타입입니다. 이런 경우에 사용할 수 있는 좋은 방법으로 보입니다 :D</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

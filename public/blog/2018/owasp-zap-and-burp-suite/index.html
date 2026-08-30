@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Burp suite 중독자가 바라본 OWASP ZAP(Zed Attack Proxy). 이제부터 듀얼이다! | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Burp suite 중독자가 바라본 OWASP ZAP(Zed Attack Proxy). 이제부터 듀얼이다!">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/owasp-zap-and-burp-suite/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Burp suite 중독자가 바라본 OWASP ZAP(Zed Attack Proxy). 이제부터 듀얼이다!">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/owasp-zap-and-burp-suite/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Burp suite 중독자가 바라본 OWASP ZAP(Zed Attack Proxy). 이제부터 듀얼이다!","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/owasp-zap-and-burp-suite/","datePublished":"2018-06-14T00:00:00+00:00","dateModified":"2022-04-24T00:00:00+00:00","image":"https://1.bp.blogspot.com/-ScO90Xo20mE/WyKGj3Zkz8I/AAAAAAAADJE/fYwmoFntLcczz6CBLC3pthT8gusUCsvnwCLcBGAs/s1600/1515.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"Burp suite 중독자가 바라본 OWASP ZAP(Zed Attack Proxy). 이제부터 듀얼이다!"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Burp suite 중독자가 바라본 OWASP ZAP(Zed Attack Proxy). 이제부터 듀얼이다!</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-06-14">
+                        JUNE 14, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>요즘 부쩍 툴에 대한 많은 깊은 고민이 생겼습니다. 어떤 툴을 쓰면 좋을지, 이참에 걍 하나 만들지... 한... 3년? 전쯤에도 같은 고민이 있었죠. 그때는 Burp suite에 올인하기로 마음을 잡았었습니다. 시간이 지난 요즘, 또다시 Burp suite에 대한 지겨움, 새로움을 갈구하는 마음에 여러 고민이 시작되었습니다.</p>
+<p>예전에 어디선가 봤는데, 이런 말이 있었죠. 툴에 대해서 한가지만 고집하지 마라(?) 여러 툴을 사용하고 툴의 철학과 가치관을 이해하면 새로운 시각이 보인다? 뭐 이런 뉘양스였는데요.</p>
+<p>어느정도 동감합니다. 그래서.... 오늘은 Burp suite의 영원한 라이벌 ZAProxy에 대한 이야기를 할까 합니다.</p>
+<h2 id="zap-proxy">ZAP Proxy</h2>
+<p>뭐 툴에 대한 소개를 굳이 할 필요가 없을 것 같습니다. OWASP에서 진행하는 워낙 유명한 오픈소스 툴이며 깊진 않지만 웹 소켓 때문에 종종 쓰곤 했습니다.</p>
+<h2 id="개인적으로-생각하는-burp-suite와-zap-proxy의-차이점">개인적으로 생각하는 Burp suite와 ZAP Proxy의 차이점?</h2>
+<p>우선 전체적인 성능, 아니 분석가의 활용성 자체는 상용인(프로버전) Burp가 좋습니다. 돈이 들어갔으니 좀 더 신경썼을꺼라 생각하고 싶습...
+잡담 집어치우고 개인적으로 생각하는 두 툴의 차이점을 정리해보죠.</p>
+<p>우선 Burp suite는 프록시를 기반으로 테스팅하는데 포커싱이 많이 맞춰진 툴입니다. 덤으로  Active scan,  Passive scan의 성능, 그리고  collaborator 서버의 존재는 엄청난 위압감을 자랑하죠.
+아마 많은 분석가들이 Burp suite를 사용할 것이고(프리~상용, 크랙까지) 저 또한 이 툴을 버리진 않습니다. 어찌되었던 현재 주력일 수 밖에 없습니다.</p>
+<p>ZAP의 경우에는 Spidering 쪽이 좋다고 판단되는 스캐닝 기반의 툴로 보시는게 좋을 것 같습니다. 첫 UI부터 URL 하나 넣을 수 있고 바로 크롤링과 스캐닝을 진행할 수 있도록 되어있다죠.</p>
+<p>그리고 오픈소스이기에 라이센스 가격적인 문제에서 이점이 있다고 봅니다. 물론 Burp suite 자체가 말도 안되게 비싼건 아니지만(솔직히 프로버전 구매가로 버그바운티 하면 충분히 본전뽑고 남겠쬬) 돈이 들어가냐 안들어가냐는 매우 큽니다. 또한 API 지원이 자유로운 편이라 관련 서브 툴들이 많이 나오고 있고 만들기도 쉽습니다. (대표적으론 cli 기반 zap 이나 자동 스캐너 등등)</p>
+<p>나눠쓰긴했지만 둘 다 Proxy, Scanning이 베이스가 되는 훌륭한 툴입니다.</p>
+<h2 id="zap은-burp처럼-쓸-수-없을까">ZAP은 Burp처럼 쓸 수 없을까?</h2>
+<p>가장 먼저 한 고민은 바로 소제목과 같이 Burp 처럼 사용할 수 있을까란 고민입니다. 단축키 부터 UI, 툴이 추구하는 방향까지 완전히 최적화 되었는데 다른 툴의 비중을 늘린다는 건 좀 어려운일이긴하죠.
+그래서 .. Burp의 장점들을 Zap에 적용할 수 있는지가 가장 궁금했습니다.</p>
+<p>우선 Repeater의 부재가 가장 큽니다. 전 대체로 History*Flow + Repeater 기반으로 분석을 많이 하는데, 여기서 가장 핵심은 Repeater입니다. 반복해서 내용을 수정하고 결과를 확인할 수 있기 때문에 서비스의 로직이나 필터링 규칙을 파악하는데 있어 이만한 기능이 없습니다.</p>
+<p>어찌되었던 자동화 테스팅의 결과는 누구나, 많은 사람들이, 기업에선 이미.. 테스트했을 것이기 떄문에 수동, 즉 장인정신으로 한땀한땀 분석하는게 결과를 얻어가기 좋다고 생각합니다.</p>
+<p>그런 면에 있어선 Repeater는 굉장한 기능이죠. 아래에서 한번 더 이야기 드리겠지만 Repeater의 완전한 대체는 어렵습니다. 다만 확장 기능을 통해 어느정도 커버가 가능하다고 생각됩니다.</p>
+<p>자세한 이야기는 아래 Extension 부분에서 한번 더 이야기하도록 하겠습니다.</p>
+<p>두번째는 익숙한 분석 흐름입니다. 프록시를 기반으로 웹 사이트를 돌아다니며 데이터를 수집하고 이를 기반으로 취약점을 분석하는데 익숙해져있는데, 대게 ZAP의 설명 글이나 튜토리얼을 보면 스캔에서 시작합니다.
+개인적으로 스캔은 Burp가 최강이라고 봅니다. 아무튼 다시 본론으로 와서 ZAP에서도 프록시를 기반으로 볼 수 있을까란 생각이 있었는데, 당연히 가능합니다. 프록시 툴이니깐요...</p>
+<p>다만 History 탭에 대해 좀 더 익숙해지고, 확장 기능 개발이나 다운로드로 개선이 필요하긴 합니다. 분석가의 눈에는 불편한점들이 보입니다.</p>
+<h2 id="burp-sutie-중독자에게-꼭-필요한-zap-extension">Burp sutie 중독자에게 꼭 필요한 ZAP Extension</h2>
+<p>저는 Burp suite 중독자입니다. 되도록 모든 취약점 분석을 한군데로 몰아서 하고싶어하고, 이에 Burp의 확장 기능은 엄청난 효과를 줍니다,
+(최근 Frida&amp;Burpsuite 인 Brida 도 대 환영입니다. 언능 정리좀 해야하느데...시간이 안나네요 ㅜ)</p>
+<h3 id="1-requester">1. Requester</h3>
+<p>Repeater의 대안입니다. History나 결과 페이지 등 요청을 반복으로 전송하며 테스트할 수 있는 기능이며 Repeater와 거의 흡사합니다. 단축키도 Ctrl+W로 데이터를 넘기며 익숙해지면 Burp Repeater 쓰는 느낌으로 사용해 볼 수 있을듯합니다.</p>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-KNSf4hcJW18/WyKG802BlKI/AAAAAAAADJQ/t8RoT5rAGngQwn_b3m0aiezHv74AEPS3QCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_069.jpg" alt="" /></p>
+<h3 id="2-call-graph">2. Call Graph</h3>
+<p>Extension list 보다가 우연히 설치한건데, 아주 좋은 도구여서 추가해봤습니다. 웹 사이트의 요청 순서(?) 를 흐름도로 볼 수 있는데, 금융서비스 같이 Flow가 중점적으로 분석하는 경우나 요청에 따라 많은 경우의 수, 흐름이 발생할 떄 참고하기 좋을 것 같습니다.</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-JsW6Iba8WeU/WyKHBVCJDDI/AAAAAAAADJU/2Rh55Se3yXw2aB4g5M0aUs6ieMSEg-ITACLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_070.jpg" alt="" /></p>
+<h3 id="3-scripting">3. Scripting</h3>
+<p>이건 어딜가나 필수입니다. 자신의 주력 언어를 이용한 스크립팅 도구는 무조건 세팅하시는게 좋습니다. Burp suite나 ZAP 모두 Java base 이기 때문에 Java를 다루면 가자 좋겠지만, 아닌 경우 Ruby, Python 등으로 대체가 가능합니다.
+(물론... Jruby, Jython 처럼 결국은 자바를 해야하지만요...)</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-FUXEWjrb7-Q/WyKHINujDOI/AAAAAAAADJY/1xhB7TDtdeYSHNnxnPzkO1ByMr04vJxhACLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_068.jpg" alt="" />
+다만 ZAP에서의 스크립팅 도구는 약간 다릅니다. Fiddler의 스크립팅과 유사하다고 보시는게 좋을 것 같습니다.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>별 내용 아닌걸로 글 하나가 나왔습니다. 물론 Burp =&gt; ZAP 으로 메인 툴을 변경하는건 아니지만 듀얼 체제로 동시에 사용해볼 생각입니다.</p>
+<p>사실 걍 찾아보기 귀찮아서 간단하게 코드로 짜고있었는데 exception 처리랑 버그 잡을 생각 하니깐 프록시랑 UI 구현에서 마음이 닫혔습니다. (a2sv도 수정해달란 내용이 산더미..핳)</p>
+<p>장담컨테, 여러 툴을 써보는건 정말 좋은 선택입니다. 저처럼 Burp 중독자이신 분들, 꼭 한번 ZAP 써보시길 바랍니다. 혹시나 알까요 또 다른 관점이 생길지 :)</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

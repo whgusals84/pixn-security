@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>How to Hack Web Assembly | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="How to Hack Web Assembly">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/how-to-hack/web-assembly/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Hack Web Assembly">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="ko_KR">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/how-to-hack/web-assembly/">
+    <link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/how-to-hack/web-assembly/">
+<link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/sec/how-to-hack/web-assembly/">
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL (KO)" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Hack Web Assembly","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/how-to-hack/web-assembly/","datePublished":"2025-09-12T00:00:00+00:00","dateModified":"2025-09-12T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/ko-sec-how-to-hack-web-assembly.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"How-To: Hacking","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/how-to-hack/"},{"@type":"ListItem","position":4,"name":"How to Hack Web Assembly"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">How to Hack Web Assembly</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2025-09-12">
+                        SEPTEMBER 12, 2025
+                    </time>
+                     
+                    <nav class="language-switcher">
+                         
+                        <span>
+                            <a
+                                href="/sec/how-to-hack/web-assembly/"
+                                title="How to Hack Web Assembly"
+                                >EN</a
+                            >
+                        </span>
+                          
+                        <span>KO</span>
+                         
+                    </nav>
+                    
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Web Assembly(웹 어셈블리)는 웹에서 바이너리 포맷을 처리할 수 있는 로우 레벨의 어셈블리 언어입니다. 웹 위에서 동작하지만 네이티브단에서 동작하는 느낌으로 돌 수 있고, Javascript와 함께 동작할 수 있어 고성능 처리와 빠른 구현 모두 어느정도 잡을 수 있는 언어입니다.</p>
+<p>이 문서는 이러한 Web Assembly에 대해 테스팅하고 보안적인 문제를 찾는 방법에 대해 정리합니다.</p>
+<h3 id="structure">Structure</h3>
+<h4 id="webassembly-개요">WebAssembly 개요</h4>
+<p>WebAssembly는 웹에서 바이너리 포맷을 처리할 수 있는 로우 레벨의 어셈블리 언어입니다. JavaScript와 함께 동작하며, 다음과 같은 특징을 가집니다:</p>
+<ul>
+<li>네이티브에 가까운 성능</li>
+<li>JavaScript와의 상호 운용성</li>
+<li>브라우저의 샌드박스 환경에서 안전한 실행</li>
+<li>C, C++, Rust 등 다양한 언어에서 컴파일 가능</li>
+</ul>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-XnKxEJq5EeU/W7j6RNjT7pI/AAAAAAAADdI/mcfmbNwF03YaaSWyfDBEzSnQi71sGtY-ACLcBGAs/s1600/1415.png" alt="WebAssembly 구조도" /></p>
+<h4 id="기본-예제">기본 예제</h4>
+<pre><code class="language-c hljs"><span class="hljs-meta">#</span><span class="hljs-meta">include</span> <span class="hljs-meta">&lt;stdio.h&gt;</span><span class="hljs-meta">
+</span><span class="hljs-meta"></span><span class="hljs-meta">#</span><span class="hljs-meta">include</span> <span class="hljs-meta">&lt;sys/uio.h&gt;</span><span class="hljs-meta">
+</span><span class="hljs-meta"></span>
+<span class="hljs-meta">#</span><span class="hljs-meta">define WASM_EXPORT __attribute__((visibility(&quot;default&quot;)))</span><span class="hljs-meta">
+</span><span class="hljs-meta"></span>
+WASM_EXPORT
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-punctuation">(</span><span class="hljs-type">void</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-title function_">printf</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">Hello World</span><span class="hljs-string">\n</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment">/* External function that is implemented in JavaScript. */</span>
+<span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> <span class="hljs-title function_">putc_js</span><span class="hljs-punctuation">(</span><span class="hljs-type">char</span> c<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+<span class="hljs-comment">/* Basic implementation of the writev sys call. */</span>
+WASM_EXPORT
+<span class="hljs-type">size_t</span> <span class="hljs-title function_">writev_c</span><span class="hljs-punctuation">(</span><span class="hljs-type">int</span> fd<span class="hljs-punctuation">,</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">struct</span> iovec <span class="hljs-operator">*</span>iov<span class="hljs-punctuation">,</span> <span class="hljs-type">int</span> iovcnt<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-type">size_t</span> cnt <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-keyword">for</span> <span class="hljs-punctuation">(</span><span class="hljs-type">int</span> i <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span> i <span class="hljs-operator">&lt;</span> iovcnt<span class="hljs-punctuation">;</span> i<span class="hljs-operator">+</span><span class="hljs-operator">+</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">for</span> <span class="hljs-punctuation">(</span><span class="hljs-type">int</span> j <span class="hljs-operator">=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span> j <span class="hljs-operator">&lt;</span> iov<span class="hljs-punctuation">[</span>i<span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>iov_len<span class="hljs-punctuation">;</span> j<span class="hljs-operator">+</span><span class="hljs-operator">+</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-title function_">putc_js</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span><span class="hljs-type">char</span> <span class="hljs-operator">*</span><span class="hljs-punctuation">)</span>iov<span class="hljs-punctuation">[</span>i<span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>iov_base<span class="hljs-punctuation">)</span><span class="hljs-punctuation">[</span>j<span class="hljs-punctuation">]</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+    cnt <span class="hljs-operator">+</span><span class="hljs-operator">=</span> iov<span class="hljs-punctuation">[</span>i<span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>iov_len<span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span>
+  <span class="hljs-keyword">return</span> cnt<span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="api-documents">API Documents</h3>
+<ul>
+<li>WebAssembly: <a href="https://webassembly.org/docs/">https://webassembly.org/docs/</a></li>
+<li>MDN WebAssembly: <a href="https://developer.mozilla.org/ko/docs/WebAssembly">https://developer.mozilla.org/ko/docs/WebAssembly</a></li>
+<li>WebAssembly Text Format: <a href="https://webassembly.github.io/spec/core/text/index.html">https://webassembly.github.io/spec/core/text/index.html</a></li>
+</ul>
+<h2 id="hack-mechanism">Hack Mechanism</h2>
+<p>각 브라우저에서 WebAssembly는 동일한 방식으로 동작하며, 전통적인 바이너리 공격과 웹 해킹 기법이 모두 적용될 수 있는 환경입니다.</p>
+<h3 id="security-testing-points">Security Testing Points</h3>
+<p>WebAssembly로 만들어진 어플리케이션은 다음과 같은 보안 테스팅 포인트를 가집니다:</p>
+<ul>
+<li><strong>전통적인 바이너리 관련 공격들</strong>: BOF, FSB, OOB 등 알려진 기법들이 적용될 수 있지만, WebAssembly 자체적으로 보안 로직이 적용되어 있어서 ROP 등은 어렵습니다.</li>
+<li><strong>웹 공격들</strong>: 기존 웹 공격과 차이가 있다면, 추가적으로 웹 페이로드나 공격코드가 C단을 거쳐서 넘어올 수 있다는 점입니다.</li>
+<li><strong>Indirect function call</strong>: XSS 등으로 JS 제어권을 가졌을 때 할 수 있는 공격 벡터가 확장됩니다.</li>
+</ul>
+<h3 id="code-audit">Code audit</h3>
+<p>WebAssembly 파일은 일반적으로 <code>.wasm</code> 확장자를 가지며, 바이너리 형태로 제공됩니다. 분석을 위해서는 이를 디컴파일하고 관련 JavaScript 코드를 함께 살펴봐야 합니다.</p>
+<h4 id="find-wasm-files">Find WASM files</h4>
+<p>WebAssembly 파일을 찾는 방법:</p>
+<ol>
+<li>
+<p><strong>JavaScript에서 WebAssembly instance 찾기</strong>: SWF, ActiveX 처럼 어차피 JS에서 핸들링하기 때문에 결국 코드에는 관련 함수나 주소 정보가 남아있습니다.</p>
+</li>
+<li>
+<p><strong>WebAssembly 로딩 함수 추적</strong>:</p>
+</li>
+</ol>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// instantiateStreaming 사용
+</span><span class="hljs-comment"></span>WebAssembly<span class="hljs-punctuation">.</span>instantiateStreaming<span class="hljs-punctuation">(</span>fetch<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;simple.wasm&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> importObject<span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">.</span>then<span class="hljs-punctuation">(</span>results <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-comment">// Do something with the results!
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+<span class="hljs-comment">// XMLHttpRequest로 가져오는 경우
+</span><span class="hljs-comment"></span>request <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> XMLHttpRequest<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+request<span class="hljs-punctuation">.</span>open<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;GET&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;simple.wasm&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+request<span class="hljs-punctuation">.</span>responseType <span class="hljs-operator">=</span> <span class="hljs-string">&#39;arraybuffer&#39;</span><span class="hljs-punctuation">;</span>
+request<span class="hljs-punctuation">.</span>send<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+request<span class="hljs-punctuation">.</span>onload <span class="hljs-operator">=</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">var</span> bytes <span class="hljs-operator">=</span> request<span class="hljs-punctuation">.</span>response<span class="hljs-punctuation">;</span>
+  WebAssembly<span class="hljs-punctuation">.</span>instantiate<span class="hljs-punctuation">(</span>bytes<span class="hljs-punctuation">,</span> importObject<span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>then<span class="hljs-punctuation">(</span>results <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+    results<span class="hljs-punctuation">.</span>instance<span class="hljs-punctuation">.</span>exports<span class="hljs-punctuation">.</span>exported_func<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<ol start="3">
+<li><strong>브라우저 개발자 도구</strong>: Sources 탭에서 wasm 파일을 직접 확인할 수 있습니다.</li>
+</ol>
+<h4 id="wasm-파일-구조">WASM 파일 구조</h4>
+<p>WASM 파일의 헤더는 <code>.asm</code>으로 시작됩니다:</p>
+<pre><code>hexdump -C fail.wasm
+00000000  00 61 73 6d 01 00 00 00  01 85 80 80 80 00 01 60  |.asm...........`|
+00000010  00 01 7f 03 82 80 80 80  00 01 00 06 81 80 80 80  |................|
+00000020  00 00 07 8b 80 80 80 00  01 07 66 61 69 6c 5f 6d  |..........fail_m|
+00000030  65 00 00 0a 8d 80 80 80  00 01 87 80 80 80 00 00  |e...............|
+00000040  41 01 41 00 6d 0b                                 |A.A.m.|
+00000046
+</code></pre>
+<h4 id="decompile-wasm-find-info">Decompile WASM &amp; find info</h4>
+<p>WASM 디컴파일을 위한 도구 설치:</p>
+<pre><code class="language-bash hljs">git clone --recursive https://github.com/WebAssembly/wabt
+apt install clang     <span class="hljs-comment"># (clang이 없는 경우)</span>
+make
+</code></pre>
+<p><strong>Object dump</strong>:</p>
+<pre><code class="language-bash hljs">./wasm-objdump -xd fail.wasm
+
+fail.wasm:    file format wasm 0x1
+
+Section Details:
+
+Type<span class="hljs-operator">[</span>1<span class="hljs-operator">]</span>:
+- type<span class="hljs-operator">[</span>0<span class="hljs-operator">]</span> <span class="hljs-operator">(</span><span class="hljs-operator">)</span> -&gt; i32
+Function<span class="hljs-operator">[</span>1<span class="hljs-operator">]</span>:
+- func<span class="hljs-operator">[</span>0<span class="hljs-operator">]</span> <span class="hljs-variable">sig</span><span class="hljs-operator">=</span><span class="hljs-number">0</span> &lt;fail_me&gt;
+Global<span class="hljs-operator">[</span>0<span class="hljs-operator">]</span>:
+Export<span class="hljs-operator">[</span>1<span class="hljs-operator">]</span>:
+- func<span class="hljs-operator">[</span>0<span class="hljs-operator">]</span> &lt;fail_me&gt; -&gt; <span class="hljs-string">&quot;fail_me&quot;</span>
+
+Code Disassembly:
+
+00003a &lt;fail_me&gt;:
+000040: <span class="hljs-number">41</span> <span class="hljs-number">01</span>                      <span class="hljs-punctuation">|</span> i32.const <span class="hljs-number">1</span>
+000042: <span class="hljs-number">41</span> <span class="hljs-number">00</span>                      <span class="hljs-punctuation">|</span> i32.const <span class="hljs-number">0</span>
+000044: 6d                         <span class="hljs-punctuation">|</span> i32.div_s
+000045: 0b                         <span class="hljs-punctuation">|</span> end
+</code></pre>
+<p><strong>Decompile to C</strong>:</p>
+<pre><code class="language-bash hljs">./wasm2c fail.wasm
+</code></pre>
+<h3 id="live-audit">Live audit</h3>
+<h4 id="test-with-devtools">Test with devtools</h4>
+<p>웹 브라우저의 개발자 도구에서 WebAssembly 객체에 접근할 수 있습니다:</p>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// WebAssembly 객체 확인
+</span><span class="hljs-comment"></span>WebAssembly
+<span class="hljs-comment">// CompileError: function CompileError()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// Global: function Global()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// Instance: function Instance()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// LinkError: function LinkError()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// Memory: function Memory()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// Module: function Module()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// RuntimeError: function RuntimeError()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// Table: function Table()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// compile: function compile()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// compileStreaming: function compileStreaming()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// instantiate: function instantiate()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// instantiateStreaming: function instantiateStreaming()
+</span><span class="hljs-comment"></span><span class="hljs-comment">// validate: function validate()
+</span><span class="hljs-comment"></span></code></pre>
+<h4 id="function-testing">Function testing</h4>
+<p>JavaScript에서 WASM function을 직접 호출하여 테스트할 수 있습니다. 이는 SWF나 ActiveX 분석과 동일한 방식입니다.</p>
+<p><img loading="lazy" src="https://4.bp.blogspot.com/-8-VATL857N8/W7j6bL8UhWI/AAAAAAAADdM/6L4q2M1SdBQZDlNEIMQ5om9H3eiFDYVoACLcBGAs/s1600/Selection_026.png" alt="Function testing" /></p>
+<h3 id="a-major-weakness">A major weakness</h3>
+<h4 id="memory-safety-issues">Memory Safety Issues</h4>
+<p>WebAssembly는 메모리 안전성을 제공하지만, 여전히 다음과 같은 취약점이 발생할 수 있습니다:</p>
+<ul>
+<li>Buffer overflow in linear memory</li>
+<li>Integer overflow/underflow</li>
+<li>Out-of-bounds memory access</li>
+</ul>
+<h4 id="javascript-interface-vulnerabilities">JavaScript Interface Vulnerabilities</h4>
+<p>WASM과 JavaScript 간의 인터페이스에서 발생할 수 있는 취약점들:</p>
+<ul>
+<li>Type confusion in parameter passing</li>
+<li>Improper input validation</li>
+<li>Memory corruption through shared memory</li>
+</ul>
+<h4 id="sop-same-origin-policy-이슈">SOP (Same-Origin Policy) 이슈</h4>
+<p>WASM 파일을 가져올 때 fetch 등을 이용하기 때문에 강제로 브라우저 SOP를 적용받게 됩니다:</p>
+<pre><code class="language-javascript hljs">fetch<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://pixn-analytics-portfolio.forhm0220.chatgpt.site&#39;</span><span class="hljs-punctuation">)</span>
+<span class="hljs-comment">// 교차 출처 요청 차단: 동일 출처 정책으로 인해 원격 자원을 차단
+</span><span class="hljs-comment"></span></code></pre>
+<p>하지만 WASM에서 JavaScript로 데이터를 줄 수 있기 때문에:</p>
+<ul>
+<li>SOP를 우회할 수 있는 CORS 적용 범위 확인</li>
+<li>동일 도메인에 파일 업로드가 가능한지 확인 (공격자가 재구성한 WASM 파일 로드 가능성)</li>
+</ul>
+<h2 id="environment">🛠 Environment</h2>
+<h3 id="essential-tools">Essential Tools</h3>
+<p><strong>WABT (WebAssembly Binary Toolkit)</strong>:</p>
+<pre><code class="language-bash hljs">git clone --recursive https://github.com/WebAssembly/wabt
+make
+</code></pre>
+<p>포함된 도구들:</p>
+<ul>
+<li><code>wasm-objdump</code>: WASM 파일 구조 분석</li>
+<li><code>wasm2c</code>: WASM을 C 코드로 디컴파일</li>
+<li><code>wasm2wat</code>: WASM을 텍스트 포맷으로 변환</li>
+<li><code>wat2wasm</code>: 텍스트 포맷을 WASM으로 변환</li>
+</ul>
+<p><strong>Emscripten</strong>:</p>
+<pre><code class="language-bash hljs">git clone https://github.com/emscripten-core/emsdk.git
+<span class="hljs-built_in">cd</span> emsdk
+./emsdk install latest
+./emsdk activate latest
+</code></pre>
+<p><strong>Browser DevTools</strong>: 모든 주요 브라우저에서 WebAssembly 디버깅 지원</p>
+<h3 id="testing-methodology">Testing Methodology</h3>
+<ol>
+<li><strong>정적 분석</strong>: WABT 도구를 사용한 WASM 파일 분석</li>
+<li><strong>동적 분석</strong>: 브라우저 개발자 도구를 통한 런타임 분석</li>
+<li><strong>인터페이스 테스팅</strong>: JavaScript-WASM 간 데이터 흐름 분석</li>
+<li><strong>메모리 분석</strong>: Linear memory 접근 패턴 확인</li>
+</ol>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2018/10/06/hacking-security-analysis-web-assembly/">웹 어셈블리(Web Assembly)는 어떻게 보안 취약점 분석을 할까요?</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://webassembly.org/docs/security/">WebAssembly Security</a></li>
+<li><a href="https://i.blackhat.com/us-18/Thu-August-9/us-18-Lukasiewicz-WebAssembly-A-New-World-of-Native_Exploits-On-The-Web-wp.pdf">BlackHat WebAssembly Paper</a></li>
+<li><a href="https://developer.mozilla.org/ko/docs/WebAssembly">MDN WebAssembly</a></li>
+<li><a href="https://github.com/WebAssembly/wabt">WebAssembly Binary Toolkit</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

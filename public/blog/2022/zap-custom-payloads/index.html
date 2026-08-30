@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Custom Payloads로 ZAP 스캐닝 강화 🚀 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Custom Payloads로 ZAP 스캐닝 강화 🚀">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/zap-custom-payloads/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Custom Payloads로 ZAP 스캐닝 강화 🚀">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/zap-custom-payloads/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Custom Payloads로 ZAP 스캐닝 강화 🚀","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/zap-custom-payloads/","datePublished":"2022-02-10T00:00:00+00:00","dateModified":"2022-02-10T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/153249108-7ff804ac-7e5a-40c0-b743-3d327842d802.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/"},{"@type":"ListItem","position":5,"name":"Custom Payloads로 ZAP 스캐닝 강화 🚀"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Custom Payloads로 ZAP 스캐닝 강화 🚀</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2022-02-10">
+                        FEBRUARY 10, 2022
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>오늘은 제가 최근에 ZAP에서 약간 관심있게 보고있던 기능 하나를 소개해드릴까 합니다. 바로 Custom Payloads인데요. Fuzzer나 ZAP의 Scripting engine을 사용하지 않고 조금 더 쉽게 지정된 페이로드 기반으로 테스트를 할 수 있어서 알아두시면 보안 테스팅이나 자동화 구현에서 잘 사용하실 수 있을거란 생각이 듭니다.</p>
+<p>그럼 시작해보죠 :D</p>
+<h2 id="custom-payloads">Custom Payloads</h2>
+<p>Custom Payloads는 ZAP의 Active Scan, Passive Scan에서 사용자가 지정한 Payloads를 기반으로 사용할 수 있도록 제공해주는 기능이자 Addon입니다. 현재까진 2개의 카테고리를 사용할 수 있으며, 스캔에 붙어서 돌기 때문에 카테고리가 늘어날 수록 기능의 이점이 점점 커질거란 생각이 듭니다.</p>
+<ul>
+<li>Hidden-File</li>
+<li>User-Agent</li>
+</ul>
+<p>ZAP 공식 홈에선 이렇게 이야기하고 있습니다.</p>
+<blockquote>
+<p>This addon adds an Options panel from which users are able to add, update, remove payloads of their creation/choosing for use by active or passive scan rules which support custom payloads (accessible via the Tools menu Options menu item). The option panel interface also facilitates addition of multiple payloads from a file.</p>
+</blockquote>
+<p>사용자가 페이로드에 대해 CRUD하고, 이를 Active/Passive 스캔에서 사용한다는 말이죠. 그럼 직접 보면서 어떤 기능인지 살펴봅시다.</p>
+<h3 id="hidden-file">Hidden-File</h3>
+<p>Options &gt; Custom Payloads 로 진입하셔서 Add를 눌러 추가해줍시다.
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241539-d4d2dccd-d04a-49be-b72d-e17bfd13cb6a.png" alt="Hidden-File Payload는 / 뒤로 붙기 떄문에 경로상에서 맨앞에 /는 제외하셔도 됩니다." /></p>
+<p>추가된 Payload는 Active Scan에서 사용됩니다. 별도로 Policy를 지정하지 않으셨다면 기본적으로 포함되는 Scan Rule이고, 저는 2가지 스캔룰을 지정하여 사용합니다.</p>
+<ul>
+<li>전체 스캔용 Policy (그냥 딱 Hidden-File 스캔용)</li>
+<li>개별 URL 단위 스캔용 Policy (점검 중 나온 페이지나 파일을 전체에 공통적으로 체크가 필요할 때 사용)</li>
+</ul>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241556-ab964c15-36cc-4420-950b-fb55715ba815.png" alt="Active Scan &gt; Information Gathering &gt; Hidden File Finder" /></p>
+<p>이제 Active Scan 시 Hidden File Finder Rule에서 우리가 등록한 Payload를 기반으로도 추가 스캔을 진행합니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241614-7cf0af12-10c4-472f-800e-c730f8775d79.png" alt="맨 아래 보면 추가했던 hahwul.json이 있죠" /></p>
+<p>그리고 만약 룰에 따라 Hidden-File을 발견했다고 판단되면 Alerts에 띄어줍니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241680-05362a9c-8cf8-4f63-8cd1-37e40ac25d65.png" alt="제가 제 사이트에 존재하는 페이지로 하나 추가해서 돌려봤어요" /></p>
+<p>기본적으론 Status Code가 <code>200 OK</code>면 Alerts를 띄어줍니다. 만약 사용자가 Custom error 페이지 패턴을 지정하게 되면 같은 200 이라도 에러 페이지면 표기하지 않게 됩니다.</p>
+<h3 id="user-agent">User-Agent</h3>
+<p>Hidden-File과 동일하게 Options &gt; Custom Payloads 로 진입하셔서 Add를 눌러 추가해줍시다.
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241718-6374a1a2-e597-4260-86af-81f5780434ea.png" alt="Save Cancel" /></p>
+<p>User-Agent Payload는 User Agent Fuzzer Rule에서 사용됩니다.
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241757-268b854c-d02d-4b12-b790-4e16db266a09.png" alt="Active Scan &gt; Information Gathering &gt; User Agent Fuzzer" /></p>
+<p>해당 Rule이 동작하면, UA 별로 페이지의 반응을 체크합니다.
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241786-7379d11f-59a7-4a90-bb23-5bfc687c0464.png" alt="" /></p>
+<p>만약 실제로 UA에 따라 결과가 달라진다면 이 또한 Alerts에 표기해줍니다.</p>
+<h3 id="payload-from-the-file">Payload from the file</h3>
+<p>위에 등록 시 이미 보셨겠지만, Add Multiple Payloads 을 통해 파일에서도 읽어올 수 있습니다. 파일을 읽으면 여러개의 Custom Payload가 등록됩니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153241838-a07e5364-6332-485b-8416-3c0c3c91c302.png" alt="Options &gt; Custom Payloads &gt; Add Multiple Payloads" /></p>
+<h2 id="using-in-cli">Using in Cli</h2>
+<p>자 ZAP의 큰 장점 중 하나는 바로 자동화죠? 분석에서는 GUI 의존도가 크지만, 자동화 Flow에선 Cli 나 REST API, Automation Framework의 비중이 매우 큽니다. 하나 아쉬운건 Custom Payloads가 신규 기능들에 빠르게 지원이 들어가는 Addon은 아니다 보니 Automation Framework 지원이 아직되지 않았습니다. 그래도 모든 ZAP의 기능은 Cli로 컨트롤 할 수 있기 때문에 이를 이용해서 가지고 계신 자동화나 CI/CD DAST에 녹일 수 있습니다.</p>
+<p>먼저 config 확인을 위해 config.xml을 확인해봅니다.</p>
+<pre><code class="language-xml hljs"><span class="hljs-name">&lt;custompayloads</span><span class="hljs-name">&gt;</span>
+        <span class="hljs-name">&lt;nextPayloadId</span><span class="hljs-name">&gt;</span>11<span class="hljs-name">&lt;/nextPayloadId&gt;</span>
+        <span class="hljs-name">&lt;confirmRemoveToken</span><span class="hljs-name">&gt;</span>true<span class="hljs-name">&lt;/confirmRemoveToken&gt;</span>
+        <span class="hljs-name">&lt;categories</span><span class="hljs-name">&gt;</span>
+            <span class="hljs-name">&lt;category</span> <span class="hljs-attr">name=</span><span class="hljs-string">&quot;Hidden-File&quot;</span><span class="hljs-name">&gt;</span>
+                <span class="hljs-name">&lt;payloads</span><span class="hljs-name">&gt;</span>
+                    <span class="hljs-name">&lt;payload</span><span class="hljs-name">&gt;</span>
+                        <span class="hljs-name">&lt;id</span><span class="hljs-name">&gt;</span>8<span class="hljs-name">&lt;/id&gt;</span>
+                        <span class="hljs-name">&lt;enabled</span><span class="hljs-name">&gt;</span>true<span class="hljs-name">&lt;/enabled&gt;</span>
+                        <span class="hljs-name">&lt;payload</span><span class="hljs-name">&gt;</span>about/<span class="hljs-name">&lt;/payload&gt;</span>
+                    <span class="hljs-name">&lt;/payload&gt;</span>
+                <span class="hljs-name">&lt;/payloads&gt;</span>
+            <span class="hljs-name">&lt;/category&gt;</span>
+...
+        <span class="hljs-name">&lt;/categories&gt;</span>
+    <span class="hljs-name">&lt;/custompayloads&gt;</span>
+</code></pre>
+<p>custompayloads 하위에 <code>[]category</code> 단위로 묶이고 아래 <code>[]payload</code> 단위로 사용되네요. 그럼 cli flag로 변환하면 이런 형태가 됩니다.</p>
+<pre><code class="language-toml hljs">custompayloads<span class="hljs-punctuation">.</span>categories\(<span class="hljs-number">0</span>\)<span class="hljs-punctuation">.</span>payloads\(<span class="hljs-number">0</span>\)<span class="hljs-punctuation">.</span>payload <span class="hljs-punctuation">=</span> <span class="hljs-string">&quot;YOUR PAYLOAD&quot;</span>
+custompayloads<span class="hljs-punctuation">.</span>categories\(<span class="hljs-number">0</span>\)<span class="hljs-punctuation">.</span>payloads\(<span class="hljs-number">0</span>\)<span class="hljs-punctuation">.</span>enabled <span class="hljs-punctuation">=</span> <span class="hljs-literal">true</span>
+</code></pre>
+<p>매번 모든 flag를 추가하긴 어려우니 따로 config 파일 하나 만들어서 위 구문을 추가하시고, 아래 flag를 포함해 ZAP을 구동하면 자동으로 세팅됩니다 👏🏼</p>
+<pre><code>./zap.sh -configfile myzap.config
+</code></pre>
+<h2 id="vs-fuzzer">VS Fuzzer</h2>
+<p>사실 ZAP의 Fuzzer와 어느정도 유사한면이 있습니다. ZAP의 Fuzzer는 동일하게 Wordlists를 읽을 수 있고, Scripting도 많이 지원하고 있어서, 다양한 형태의 테스팅을 자동화할 수 있습니다.</p>
+<blockquote>
+<p>혹시나 Fuzzer에 대해 궁금하시면 '<a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2021/09/11/zap-fuzzer-and-scripting/">ZAP의 fuzz-script를 이용해 Fuzzing 스킬 올리기</a>' 글을 읽어주세요!</p>
+</blockquote>
+<p>다만 큰 차이가 있다면 Fuzzer는 진짜 Fuzzing을 위해 최적화된 도구이고, Custom Payloads는 Scanning 작업에 붙어서 조금 더 많은 벡터를 테스트하기 위한 도구입니다. 그래서 현재 지원하는 Hidden-File, UA Fuzz는 Custom Payloads를 통해 테스트하는 것이 훨씬 수월하고 편리합니다. 나중에 Custom Payloads의 Category가 늘어갈수록 이 기능의 강점이 많이 살아나겠죠.</p>
+<p>그리고 궁극적으로 DAST, 즉 CI/CD Pipeline 스캔에서 유연하게 붙일 수 있어서 DevSecOps의 일부에 ZAP을 사용하신다면 쉽게 적용할 수 있고 Custom Payloads를 통해 혹시 1개라도 이슈를 이를 통해 잡는다면, 잠깐 시간 투자한 것에 비해 효과는 굉장헀다란 생각이 들겁니다.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Custom Payloads를 알기 전까진 제 커스텀한 Hidden-File 스캔을 Scripting으로 대체하고 있었습니다. 지금 생각해보면.. 왜그랬나 싶네요. (GUI로 슥슥 하면 될껄 괜히 일을 만들어가지고... 😅)</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153247985-7edc89d0-9e94-4885-beae-087546ec6af9.gif" alt="J5jiSSrEkV3Kd8iOwb" /></p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://www.zaproxy.org/docs/desktop/addons/custom-payloads/</li>
+<li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2021/09/11/zap-fuzzer-and-scripting/">ZAP의 fuzz-script를 이용해 Fuzzing 스킬 올리기</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

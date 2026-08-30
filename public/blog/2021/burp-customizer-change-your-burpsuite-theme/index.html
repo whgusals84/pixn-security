@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Burp Customizer! Change your burpsuite theme | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Burp Customizer! Change your burpsuite theme">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/burp-customizer-change-your-burpsuite-theme/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Burp Customizer! Change your burpsuite theme">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/burp-customizer-change-your-burpsuite-theme/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Burp Customizer! Change your burpsuite theme","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/burp-customizer-change-your-burpsuite-theme/","datePublished":"2021-01-05T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/103623559-9c7de480-4f7b-11eb-8a92-2d1d947b6b12.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/"},{"@type":"ListItem","position":5,"name":"Burp Customizer! Change your burpsuite theme"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Burp Customizer! Change your burpsuite theme</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2021-01-05">
+                        JANUARY 5, 2021
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>There has been a significant change in UI since version 2020.12 of Burp site. (Personally, I'm unsure) The most important part is the change of LAF(Look and Feel)'s class to PlateLaf. This class can also support other themes developed for IntelliJ Platform, enabling it to apply different themes to the BuffSuite.</p>
+<p>Burp suite 2020.12 버전부터 UI적으로 크게 변경이 있었습니다. (물론 개인적으론.. 별로)
+가장 핵심인 부분은 LAF(Look and feel)의 Class가 PlatLaf로 변경된 것인데요. 이 Class는 IntelliJ Platform을 위해 개발된 다른 테마들도 지원할 수 있어, BurpSuite에도 여러가지 테마 적용이 가능해졌습니다.</p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>
+<p><a href="https://github.com/CoreyD97/BurpCustomizer">https://github.com/CoreyD97/BurpCustomizer</a> 에서 release 다운로드 (download release file)</p>
+</li>
+<li>
+<p>BurpSuite에서 확장 기능 로드 (loaded add-on file on burpsuite)</p>
+</li>
+<li>
+<p>Customize 탭에서 테마 변경 (go customize tab and change your look and feel)</p>
+</li>
+</ol>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623557-9be54e00-4f7b-11eb-941c-d0da650df6dd.jpg" alt="" /></p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623559-9c7de480-4f7b-11eb-8a92-2d1d947b6b12.jpg" alt="" /></p>
+<h2 id="themes">Themes</h2>
+<p>About 60 themes seem to be supported, but no matter how hard I looked, there was no arrangement for the entire image. So I captured screenshot every single one of them in my lunchtime... 😭</p>
+<p>약 60개의 테마가 지원되는 것 같은데, 아무리 찾아봐도 전체 이미지에 대한 정리는 없었습니다. 그래서.. 하나하나 다 캡쳐했습니다. (내 점심시간 ㅜㅜ)</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623561-9c7de480-4f7b-11eb-9294-2f069cb12097.jpg" alt="노가다..." /></p>
+<h2 id="basic-themes">Basic Themes</h2>
+<h3 id="arc">Arc</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623439-81ab7000-4f7b-11eb-8c47-857b4bb08819.jpg" alt="1_Arc" /></p>
+<h3 id="arc-orange">Arc orange</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623450-853ef700-4f7b-11eb-882b-f620da55d442.jpg" alt="2_arc_orange" /></p>
+<h3 id="arc-dark">Arc dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623453-86702400-4f7b-11eb-9d85-aebbfa71adfb.jpg" alt="3_arc_dark" /></p>
+<h3 id="arc-dark-orange">Arc dark orange</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623455-8708ba80-4f7b-11eb-92d0-a92b6db74c97.jpg" alt="4_arc_dark_orange" /></p>
+<h3 id="carbon">Carbon</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623457-87a15100-4f7b-11eb-8e0e-824caa55eb96.jpg" alt="5_carbon" /></p>
+<h3 id="cobalt2">Cobalt2</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623459-8839e780-4f7b-11eb-86a2-3a05b99e6b19.jpg" alt="6_cobalt2" /></p>
+<h3 id="cyan-light">Cyan light</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623462-8839e780-4f7b-11eb-8282-b7d6e1adc549.jpg" alt="7_cyan_light" /></p>
+<h3 id="dark-flat">Dark flat</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623463-88d27e00-4f7b-11eb-9326-cfebfc6115da.jpg" alt="8_dark_flat" /></p>
+<h3 id="dark-purple">Dark purple</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623465-896b1480-4f7b-11eb-9907-edd61cd9fc01.jpg" alt="9_dark_purple" /></p>
+<h3 id="dracula">Dracula</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623467-896b1480-4f7b-11eb-89ad-11f70676ebca.jpg" alt="10_dracula" /></p>
+<h3 id="gradianto-dark-fuchsia">Gradianto dark fuchsia</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623469-8a03ab00-4f7b-11eb-8bb9-fb769f75d58e.jpg" alt="11_gradianto_dark_fuchsia" /></p>
+<h3 id="gradianto-deep-ocean">Gradianto deep ocean</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623471-8a03ab00-4f7b-11eb-89f7-02e6507c5616.jpg" alt="12_gradianto_deep_ocean" /></p>
+<h3 id="gradianto-midnight-blue">Gradianto midnight blue</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623475-8a9c4180-4f7b-11eb-9c62-1cb23dd0867e.jpg" alt="13_gradianto_midnight_blue" /></p>
+<h3 id="gradianto-midnight-green">Gradianto midnight green</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623477-8b34d800-4f7b-11eb-88c5-966661fb973a.jpg" alt="14_gradianto_midnight_green" /></p>
+<h3 id="gray">Gray</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623479-8b34d800-4f7b-11eb-9f0b-55c27e2321c9.jpg" alt="15_gray" /></p>
+<h3 id="gruvbox-dark-hard">Gruvbox dark hard</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623480-8bcd6e80-4f7b-11eb-814e-7b03f281a623.jpg" alt="16_gruvbox_dark_hard" /></p>
+<h3 id="gruvbox-dark-medium">Gruvbox dark medium</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623481-8bcd6e80-4f7b-11eb-9051-036f886caa5a.jpg" alt="17_gruvbox_dark_medium" /></p>
+<h3 id="gruvbox-dark-soft">Gruvbox dark soft</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623482-8c660500-4f7b-11eb-8b8b-5c159f23fb59.jpg" alt="18_gruvbox_dark_soft" /></p>
+<h3 id="hiberbee-dark">Hiberbee dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623483-8c660500-4f7b-11eb-99fa-09cdc3283c90.jpg" alt="19_hiberbee_dark" /></p>
+<h3 id="high-contrast">High contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623485-8cfe9b80-4f7b-11eb-90c1-e41e1ceb8ddc.jpg" alt="20_high_contrast" /></p>
+<h3 id="light-flat">Light flat</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623486-8d973200-4f7b-11eb-82fd-0ebd6b4f15f8.jpg" alt="21_light_flat" /></p>
+<h3 id="material-design-dark">Material design dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623487-8d973200-4f7b-11eb-8ada-026ee2fb6fc6.jpg" alt="22_material_design_dark" /></p>
+<h3 id="monocai">Monocai</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623488-8e2fc880-4f7b-11eb-9a5b-e18f5c5c63d7.jpg" alt="23_monocai" /></p>
+<h3 id="nord">Nord</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623489-8ec85f00-4f7b-11eb-9d21-70f282067698.jpg" alt="24_nord" /></p>
+<h3 id="one-dark">One dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623491-8ec85f00-4f7b-11eb-8237-3b76029358d2.jpg" alt="25_onedark" /></p>
+<h3 id="solarized-dark">Solarized dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623494-8f60f580-4f7b-11eb-94d5-b39902f2c91a.jpg" alt="26_solarized_dark" /></p>
+<h3 id="solarized-light">Solarized light</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623496-8f60f580-4f7b-11eb-93ae-cfc374e143f1.jpg" alt="27_solarized_light" /></p>
+<h3 id="space-gray">Space gray</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623498-8ff98c00-4f7b-11eb-9fe2-76a18066d14f.jpg" alt="28_space_gray" /></p>
+<h3 id="vuesion">Vuesion</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623503-90922280-4f7b-11eb-82fd-ed2312449615.jpg" alt="29_vuesion" /></p>
+<h2 id="material-themes">Material Themes</h2>
+<h3 id="arc-dark-1">Arc dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623504-90922280-4f7b-11eb-997c-8d1220694eff.jpg" alt="30_arc_dark" /></p>
+<h3 id="arc-dark-contrast">Arc dark contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623506-912ab900-4f7b-11eb-8343-56a6a8f54054.jpg" alt="31_arc_dark_contrast" /></p>
+<h3 id="atom-one-dark">Atom one dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623507-912ab900-4f7b-11eb-893e-cb337cfb4f4f.jpg" alt="32_atom_one_dark" /></p>
+<h3 id="atom-one-dark-contrast">Atom one dark contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623508-91c34f80-4f7b-11eb-8b73-5741b26e84c2.jpg" alt="33_atom_one_dark_contrast" /></p>
+<h3 id="atom-one-light">Atom one light</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623509-925be600-4f7b-11eb-8a5e-00c0074af663.jpg" alt="34_atom_one_light" /></p>
+<h3 id="atom-one-light-contrast">Atom one light contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623510-925be600-4f7b-11eb-9696-5b51ead52518.jpg" alt="35_atom_one_light_contrast" /></p>
+<h3 id="dracula-1">Dracula</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623512-92f47c80-4f7b-11eb-97e0-5c6e1ca95b61.jpg" alt="36_dracula" /></p>
+<h3 id="dracula-contrast">Dracula contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623514-92f47c80-4f7b-11eb-9199-3890bc4f36f1.jpg" alt="37_dracula_contrast" /></p>
+<h3 id="github">Github</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623515-938d1300-4f7b-11eb-8cef-1eacf5eacc14.jpg" alt="38_github" /></p>
+<h3 id="github-contrast">Github contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623516-9425a980-4f7b-11eb-887f-45aaab718406.jpg" alt="39_github_contrast" /></p>
+<h3 id="light-owl">Light owl</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623522-94be4000-4f7b-11eb-8c66-9b62a9dccbf0.jpg" alt="40_light_owl" /></p>
+<h3 id="light-owl-contrast">Light owl contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623524-94be4000-4f7b-11eb-8412-bf3abfe08c55.jpg" alt="41_light_own_contrast" /></p>
+<h3 id="material-darker">Material darker</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623525-9556d680-4f7b-11eb-9b29-5898b451932b.jpg" alt="42_material darker" /></p>
+<h3 id="material-darker-contrast">Material darker contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623526-95ef6d00-4f7b-11eb-98d5-be37719fd278.jpg" alt="43_material_darker_contrast" /></p>
+<h3 id="material-deep-ocean">Material deep ocean</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623529-95ef6d00-4f7b-11eb-85df-3f337e555273.jpg" alt="44_material_deep_ocean" /></p>
+<h3 id="material-deep-ocean-contrast">Material deep ocean contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623530-96880380-4f7b-11eb-8875-cad3c22b9d2a.jpg" alt="45_material_deep_ocean_contrast" /></p>
+<h3 id="material-lighter">Material lighter</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623532-96880380-4f7b-11eb-9f71-0b33877217aa.jpg" alt="46_meterial_lighter" /></p>
+<h3 id="material-lighter-contrast">Material lighter contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623533-97209a00-4f7b-11eb-994f-74203238cb24.jpg" alt="47_material_lighter_contrast" /></p>
+<h3 id="material-ocean">Material ocean</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623534-97b93080-4f7b-11eb-9c07-8351493f3c36.jpg" alt="48_meterial_ocean" /></p>
+<h3 id="material-ocean-contrast">Material ocean contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623536-97b93080-4f7b-11eb-9697-d9b97c0208ab.jpg" alt="49_material_ocean_contrast" /></p>
+<h3 id="material-palenight">Material palenight</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623539-9851c700-4f7b-11eb-8a63-0f7a74185d76.jpg" alt="50_material_palenight" /></p>
+<h3 id="material-palenight-contrast">Material palenight contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623541-9851c700-4f7b-11eb-962b-e40ddd801ceb.jpg" alt="51_material_palenight_contrast" /></p>
+<h3 id="monokai-pro">Monokai pro</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623542-98ea5d80-4f7b-11eb-998b-3739dfc58c9d.jpg" alt="52_monokai_pro" /></p>
+<h3 id="monokai-pro-contrast">Monokai pro contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623545-9982f400-4f7b-11eb-945b-f6e40e24667d.jpg" alt="53_monokai_pro_contrast" /></p>
+<h3 id="night-owl">Night owl</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623549-9a1b8a80-4f7b-11eb-9d57-6750d2bcf14b.jpg" alt="54_night_owl" /></p>
+<h3 id="night-owl-contrast">Night owl contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623550-9a1b8a80-4f7b-11eb-8e16-10eea42cb82a.jpg" alt="55_night_owl_contrast" /></p>
+<h3 id="solarized-dark-1">Solarized dark</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623552-9ab42100-4f7b-11eb-89ed-ae98e5a2f537.jpg" alt="56_solarized_dark" /></p>
+<h3 id="solarized-dark-contrast">Solarized dark contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623554-9b4cb780-4f7b-11eb-87e7-4ec0e5f601c0.jpg" alt="57_solarized_dark_contrast" /></p>
+<h3 id="solarized-light-1">Solarized light</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623555-9b4cb780-4f7b-11eb-9fd8-85456154e46b.jpg" alt="58_solarized_light" /></p>
+<h3 id="solarized-light-contrast">Solarized light contrast</h3>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103623556-9be54e00-4f7b-11eb-8d7e-d632bcd3f973.jpg" alt="59_solarized_light_contrast" /></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>I think I've discovered an extension that I really like after the supported of dark mode. This will analysts to prefer BurpSuite to the ZAP. In fact, the ZAP also changed the FlatLaf as it went over to 2.10. So we can change the design dynamically, but I don't think there's any official support for the outside theme yet.</p>
+<p>I don't like Java. I'll wait for someone with abilities to make it. <a href="https://twitter.com/psiinon">@simon</a> !</p>
+<p>Darkmode 지원에 이어 정말 마음에 드는 확장 기능을 발견한 것 같습니다. 이로인해 미적인 부분까지 따지는 분석가들은 BurpSuite를 더 선호할 수 밖에 없겠네요.</p>
+<p>사실 ZAP 또한 2.10으로 넘어오면서 FlatLaf 변경되었습니다. 그래서 동적으로 디자인은 변경할 수 있긴 합니다만, 아직 외부 테마에 대한 공식적인 지원은 없는 것 같네요.</p>
+<pre><code>Dynamic Look and Feel including Dark Mode. The Desktop UI includes a new set of open source Look and Feel’s c/o FlatLaf including 2 Dark Mode options.You can also dynamically switch the Look and Feel via a button on the Top Level Toolbar. For more details of the dark mode see the Dark Mode in the Weekly Release Blog post.
+</code></pre>
+<p>From <a href="https://owasp.org/2020/12/17/owasp-zap-210-release">https://owasp.org/2020/12/17/owasp-zap-210-release</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

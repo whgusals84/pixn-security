@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>wget stores a file's origin URL vulnerability (CVE-2018-20483) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="wget stores a file&apos;s origin URL vulnerability (CVE-2018-20483)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/wget-stores-files-origin-url/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="wget stores a file&apos;s origin URL vulnerability (CVE-2018-20483)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/wget-stores-files-origin-url/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"wget stores a file's origin URL vulnerability (CVE-2018-20483)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/wget-stores-files-origin-url/","datePublished":"2019-01-03T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2019-wget-stores-files-origin-url.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/"},{"@type":"ListItem","position":5,"name":"wget stores a file's origin URL vulnerability (CVE-2018-20483)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">wget stores a file's origin URL vulnerability (CVE-2018-20483)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2019-01-03">
+                        JANUARY 3, 2019
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>최근에 twitter에서 wget의 문제점에 대해 이야기가 좀 돌았었습니다.
+(<a href="https://twitter.com/gynvael/status/1077671412847046657">https://twitter.com/gynvael/status/1077671412847046657</a> )</p>
+<p>결국은 보안 이슈로 잠정적인 의견이 모이는 분위기였고, 결국 CVE 넘버링을 달게 되었네요. 어떤 이슈고 어떤 리스크를 가질 수 있는지 정리해봅시다.</p>
+<p><a href="https://3.bp.blogspot.com/-YnFDURDW-ak/XC4-BPG2xYI/AAAAAAAADoE/fcHMNqLonS8yNwH5-6hYnPqFrlGbsCuyQCLcBGAs/s1600/Selection_060.png"><img loading="lazy" src="https://3.bp.blogspot.com/-YnFDURDW-ak/XC4-BPG2xYI/AAAAAAAADoE/fcHMNqLonS8yNwH5-6hYnPqFrlGbsCuyQCLcBGAs/s640/Selection_060.png" alt="" /></a></p>
+<h2 id="vulnerability">Vulnerability?</h2>
+<p>1.20.1 버전 이하에서(거의 대부분의 버전입니다.., 패치가 내려간 것 같아요.) wget 으로 파일을 받아오는 경우 파일 메타 데이터 영역에 origin url 이 남게됩니다.</p>
+<pre><code>#&gt; wget https://pixn-analytics-portfolio.forhm0220.chatgpt.site
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: 'index.html'
+</code></pre>
+<p>index.html 파일을 받았는데, 이 html 파일의 메타 데이터를 보면..</p>
+<pre><code>#&gt; getfattr -d index.html
+# file: index.html
+user.xdg.origin.url=&quot;https://pixn-analytics-portfolio.forhm0220.chatgpt.site/&quot;
+</code></pre>
+<p>user.xdg.origin.url에 다운로드된 주소가 남아있습니다.</p>
+<p>여기까지 보면 별다른게 없는 것 같지만, wget을 어떤 방식으로 운영하냐에 따라서 여러가지 케이스가 존재할 것 같습니다.</p>
+<h3 id="1-http-auth를-사용하는-url에-접근하는-경우">1. HTTP Auth를 사용하는 URL에 접근하는 경우</h3>
+<p>간혹 http 인증을 통해 파일을 다운로드 받는 경우 파일의 메타 데이터를 통해 로그인 정보가 노출될 수 있습니다.</p>
+<pre><code>#&gt; wget https://id:pw@www.hahwul.com
+</code></pre>
+<pre><code>#&gt; getfattr -d index.html
+# file: index.html
+user.xdg.origin.url=&quot;https://id:pw@www.hahwul.com/&quot;
+</code></pre>
+<p>메타 데이터 자체가 파일에 기록된 정보다 보니 서버단 이외에 사용자단에서 파일을 접근하거나 가져갈 수 있는 경우 정보가 노출될 가능성이 존재합니다.</p>
+<h3 id="2-private-url에서-파일을-받는-경우">2. private url에서 파일을 받는 경우</h3>
+<p>외부에서 접근 불가능한 도메인에서 파일을 받아 사용자에게 제공하는 형태의 기능이 있다면 url 주소가 노출될 수 있습니다.</p>
+<pre><code>#&gt; wget https://iamprivatedomain/image.png
+</code></pre>
+<h3 id="3-url에-인증정보가-포함된-요청인-경우">3. url에 인증정보가 포함된 요청인 경우</h3>
+<p>wget으로 이런 케이스의 파일을 호출할일이 많진 않을 것 같으나, 그래도 있을법한 케이스라 넣어두었습니다.
+일부 서비스들은 url에 sessionid나 token같은 중요 데이터를 포함하는 경우가 있는데, 이 또한 다운로드된 파일이 노출되었을 때 해당 정보 획득이 가능할 것 같습니다.</p>
+<pre><code>#&gt; wget https://domaindomain/?sessionid=a8a76ba576bb85ab65ab6765a4654d67s5
+</code></pre>
+<h2 id="code-review">Code review</h2>
+<p>wget 코드중 xattr.c 파일 내 set_file_metadata 부분이 문제였습니다.
+https://github.com/mirror/wget/blob/master/src/xattr.c</p>
+<p>아래 함수에서 다운받은 파일에 대해 metadata를 기록하는데, origin_url 값이 쓰여집니다.</p>
+<pre><code>int
+set_file_metadata (const struct url *origin_url, const struct url *referrer_url, FILE *fp)
+{
+  /* Save metadata about where the file came from (requested, final URLs) to
+   * user POSIX Extended Attributes of retrieved file.
+   *
+   * For more details about the user namespace see
+   * [http://freedesktop.org/wiki/CommonExtendedAttributes] and
+   * [http://0pointer.de/lennart/projects/mod_mime_xattr/].
+   */
+  int retval = -1;
+  char *value;
+
+  if (!origin_url || !fp)
+    return retval;
+
+  value = url_string (origin_url, URL_AUTH_HIDE);
+  retval = write_xattr_metadata (&quot;user.xdg.origin.url&quot;, escnonprint_uri (value), fp);
+  xfree (value);
+
+  if (!retval &amp;&amp; referrer_url)
+    {
+  struct url u;
+
+  memset(&amp;u, 0, sizeof(u));
+      u.scheme = referrer_url-&gt;scheme;
+      u.host = referrer_url-&gt;host;
+      u.port = referrer_url-&gt;port;
+
+      value = url_string (&amp;u, 0);
+      retval = write_xattr_metadata (&quot;user.xdg.referrer.url&quot;, escnonprint_uri (value), fp);
+      xfree (value);
+    }
+
+  return retval;
+}
+</code></pre>
+<p>로직 자체에 문제가 있는건 아니지만, 의도했던 기능이 다른 보안적인 문제를 불러오게 되었네요. 그리고 잘 보시면 음? 하셨을 부분이 있는데, referrer.url 또한 조건에 맞으면 메타데이터를 남깁니다. 상황에 따라 이 부분도 문제가 될 수 있겠네요.</p>
+<h2 id="how-to-fix">How to fix?</h2>
+<p>우선 wget이 패치가 나왔으니 업데이트 해주시면 해결 가능합니다.</p>
+<pre><code>#&gt; wget https://pixn-analytics-portfolio.forhm0220.chatgpt.site
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘index.html’
+</code></pre>
+<pre><code>#&gt; getfattr index.html
+# file: index.html
+user.xdg.origin.url
+</code></pre>
+<p>그리고.. 패치와 별개로 취약 버전의 wget 으로 받은 파일에 대해선 중요한 정보가 남아있진 않은지 체크가 필요할 것 같네요.</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

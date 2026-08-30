@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Secure JWT and Slinding Sessions | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Secure JWT and Slinding Sessions">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/sliding-sessions/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Secure JWT and Slinding Sessions">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/sliding-sessions/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Secure JWT and Slinding Sessions","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/sliding-sessions/","datePublished":"2021-05-05T00:00:00+00:00","dateModified":"2021-09-21T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/117156890-17a3ba00-adf9-11eb-8b78-cd0d8fae1f2a.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/"},{"@type":"ListItem","position":5,"name":"Secure JWT and Slinding Sessions"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Secure JWT and Slinding Sessions</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2021-05-05">
+                        MAY 5, 2021
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><h2 id="sessions-이란">Sessions 이란?</h2>
+<p>Sessions은 컴퓨팅에서 비슷하지만 여러 의미로 사용되는 용어입니다. 일반적으로 상태를 의미한다고 보면 될 것 같고, 웹에서는 HTTP가 비 연결형 프로토콜이기 때문에 서버가 기존에 접속했던 클라이언트인지 확인할 수 있는 수단으로 사용됩니다. (파일 쿠키랑 비슷하죠. 다만 처리에선 약간 다르긴합니다.)</p>
+<p>아무튼 이러한 Sessions 정보는 서버가 별도의 스토리지 등을 통해 Sessions 값을 보관 및 접속 시 마다 비교하고, 명식적인 로그아웃 등이 있을 때 폐기하는 형태로 인증이 있는 웹 서비스에서 사용됩니다.</p>
+<h2 id="mpa와-spa">MPA와 SPA</h2>
+<p>옛날에는 전통적인 형태의 웹 서비스 구조인 MPA(Multiple Page App)가 많았다고 하면 최근엔 SPA(Single Page App), 즉 여러 페이지를 가지지 않고 단일 페이지에서 렌더링을 갱신하는 형태의 웹이 점점 많아지고 있는 상태입니다. 물론 각각 MPA와 SPA는 장/단점을 가지겠지만, 페이지 이동이 없이 단일 페이지에서 서비스를 처리하는 SPA가 모바일에 가까운 느낌을 사용자에게 줄 수 있기 때문에 선호되고 있는 상태입니다.</p>
+<p>MPA의 경우 페이지가 이동되면 매번 웹 요청을 발생하기 때문에 서버에서 세션을 통해 사용자를 식별하고 Response로 전달해줄 페이지를 인증 여부애 따라 다르게 구성해줄 수 있습니다. SPA는 페이지 이동을 하지 않는 구조로 인해서 대다수가 사용자의 세션을 체크하지 않는 Stateless 서비스입니다. 그래서 JWT나 Access/Refresh Token등의 인증 토큰을 발급하는 형태로 사용자를 식별하고 관리합니다.</p>
+<h2 id="stateless-service-와-jwt">Stateless service 와 JWT</h2>
+<p>위에서도 이야기했지만 페이지 이동을 하지 않는 구조로 인해서 SPA의 대부분은 Stateless 한 서비스를 구성하고 있고, 보통 이러한 구조에선 JWT(JSON Web Tokens)를 통해 인증을 구현하곤 합니다.</p>
+<p>(JWT 자체가 궁금하신 분은 <a href="https://tools.ietf.org/html/rfc7519">RFC7519</a>를 읽어주세요!)</p>
+<p>JWT의 인증 토큰으로서의 적합성 여부는 아직도 의견 충돌이 있긴 하지만 JWT 자체가 토큰 내부에서 유효시간을 통해 토큰이 최대 사용될 수 있는 시간을 지정할 수 있고, 이에 대한 Signature를 같이 생성하고 검증하기 때문에 별다른 서버 로직 없이 쉽게 인증 서비스를 구현할 수 있어 많이 사용되고 있습니다. 또한 Access/Refresh Token 형태와 다르게 서버에서 토큰 값을 저장하고 검증할 필요가 없기 때문에 백엔드 구성에서 Cache나 DB등의 사용을 줄일 수 있어 구조적으로 심플해집니다.</p>
+<h2 id="how-to-secure-jwt">How to Secure JWT</h2>
+<p>솔직히 JWT에 대한 공격 기법이 최근들어 다시 한번 연구되고 있는 상태라서 다시 한번 체크해보고 대응방안을 고려해볼 필요가 있습니다. 안전하게 JWT를 사용하기 위한 대표적인 방법들은 아래와 같습니다.</p>
+<h3 id="짧은-만료시간">짧은 만료시간</h3>
+<p>JWT 자체가 토큰 내부에 만료 시간을 저장하고 서버가 만료 여부만 체크하기 때문에 명시적 로그아웃이나 브라우징 종료에 대해서 서버가 식별할 수 없습니다. 그래서 중요한 서비스인 경우 JWT 자체의 만료 시간을 짧게 가져가서 혹시라도 다른 취약점으로 인해 토큰이 노출되어도 추가적인 공격으로 이루어지기 어렵도록 할 수 있습니다.</p>
+<h3 id="none-algorithm">None Algorithm</h3>
+<p>JWT의 Signature에 사용되는 알고리즘은 특정한 알고리즘(에를들면 HS256)이 지정되어야 합니다. 만약 none 상태로 사용된다면 쉽게 크랙할 수 있습니다.</p>
+<h3 id="signature-secret의-복잡도">Signature Secret의 복잡도</h3>
+<p>JWT는 내부 값과 유효기간등이 포함된 데이터에 대한 서명을 포함하고 있습니다. 이는 서버에서 발급 시 지정한 알고리즘에 따라서 서명 후 JWT 토큰에 포함되며 서버에서 유효기간과 함께 서명의 정상 여부를 검증하게 됩니다.</p>
+<p>보통 Secret을 지정하지 않고 서명하는 경우, Secret에 대한 크랙 정도의 리스크가 있습니다. 제가 예전에 JWT 테스팅을 위해서 <a href="https://github.com/hahwul/jwt-hack">jwt-hack</a>을 만들고 여러번 테스트 했을때도 JWT 자체가 네트워크 트래픽이 발생하지 않고도 Signature와 Secret의 매핑 여부를 체크할 수 있는지라 많은 수의 workdlist를 빠르게 crack 해볼 수 있었던 것 같습니다.</p>
+<p>아무튼 한번 깨진 secret은 서비스 전체의 JWT 토큰들에 영향을 끼칠 수 있기 떄문에 굉장히 잘 관리되어야 합니다.</p>
+<h3 id="내부에-중요정보를-저장하지-않음">내부에 중요정보를 저장하지 않음</h3>
+<p>JWT는 Base64로 인코딩된 JSON 형태의 값입니다. Base64기 떄문에 쉽게 디코딩해서 볼 수 있고 당연히 중요한 정보는 JWT에 담지 않는 것이 원칙입니다.</p>
+<h3 id="other-attack-technic">Other attack technic</h3>
+<p>예전에는 위 내용 정도면 뭐 나름 안전하게 사용할 수 있었으나 nahamcon에서 나왔던 JWT 공격 방식과 같이 공격 기법이 계속 나오는 상태입니다.
+(제가 따로 블로그에 정리한 줄 알았는데, 안했었네요.. 회사에서만 했었나 🤨...)</p>
+<p>아무튼 공격 방법 자체가 계속 생기고 있어서 최근 기술 동향은 파악하고 서비스에 관련 결함이 있다면 수정하는 식으로 추가적인 대응이 필요하겠네요. jku&amp;x5u 는 아래 문서를 한번 읽어보시면 아하 하실겁니다 :D</p>
+<p><a href="https://www.slideshare.net/snyff/jwt-jku-x5u">https://www.slideshare.net/snyff/jwt-jku-x5u</a></p>
+<h2 id="sliding-sessions">Sliding sessions</h2>
+<p>슬라이딩 세션은 이러한 Stateless 서비스에서의 보안성을 위해 버려지는 편의성을 잡기 위한 세션 전략입니다. 서비스를 계속 사용하는 유저에게는 만료되기 전에 자동으로 만료 기한을 연장시켜주는 방법입니다. 사용자가 웹 페이지에서 활동하는건 JS단에서 쉽게 이벤트 핸들러로 감지할 수 있기 때문에 이러한 코드들을 통해 사용자의 현재 액션 여부를 지속적으로 체크하고 활동 중이라고 판단되면 세션이 만료 시간이 되기 전에 만료시간을 갱신한 토큰을 다시 받아오는 형태로 만료 시간을 연장할 수 있습니다.</p>
+<p>예를들면..이런식으로 구성할 수 있겠네요.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> updateJWT<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>
+  <span class="hljs-comment">// JWT를 갱신하는 함수를 하나 만들고...
+</span><span class="hljs-comment"></span>  <span class="hljs-comment">// 물론 이는 서버로 요청해서 받아와야겠죠.
+</span><span class="hljs-comment"></span>  <span class="hljs-comment">// 단 너무 잦은 요청이 부담스럽다면 현재 JWT의 유효시간을 보고 갱신해도 됩니다.
+</span><span class="hljs-comment"></span>  <span class="hljs-comment">// 예를들면.. 만기가 다와갈 때
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment">// window 전체에 onmouseenter를 걸어서 updateJWT가 호출되도록 합니다.
+</span><span class="hljs-comment"></span><span class="hljs-comment">// 그러면 사용자가 마우스 액션이 있을 때 JWT를 자동으로 갱신 시켜줄 수 있습니다.
+</span><span class="hljs-comment"></span><span class="hljs-comment">// 비슷하게 키보드도 있겠네요.
+</span><span class="hljs-comment"></span><span class="hljs-built_in">window</span><span class="hljs-punctuation">.</span>addEventListener<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;mouseenter&quot;</span><span class="hljs-punctuation">,</span> updateJWT<span class="hljs-punctuation">,</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Session_(computer_science)">https://en.wikipedia.org/wiki/Session_(computer_science)</a></li>
+<li><a href="https://github.com/hahwul/jwt-hack">https://github.com/hahwul/jwt-hack</a></li>
+<li><a href="https://www.slideshare.net/snyff/jwt-jku-x5u">https://www.slideshare.net/snyff/jwt-jku-x5u</a></li>
+<li><a href="https://jwt.io">https://jwt.io</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

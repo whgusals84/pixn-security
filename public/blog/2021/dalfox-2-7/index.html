@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Dalfox 2.7 Released! | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Dalfox 2.7 Released!">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/dalfox-2-7/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dalfox 2.7 Released!">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/dalfox-2-7/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Dalfox 2.7 Released!","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/dalfox-2-7/","datePublished":"2021-12-25T00:00:00+00:00","dateModified":"2021-12-25T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/147363917-ae2e7ed6-256e-4da1-80e1-35320d430be0.GIF"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/"},{"@type":"ListItem","position":5,"name":"Dalfox 2.7 Released!"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Dalfox 2.7 Released!</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2021-12-25">
+                        DECEMBER 25, 2021
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Hi hackers! Dalfox v2.7 has been released 🎉🎉🎉</p>
+<p>There are not many added features this release. But it's better than before, so I recommend an update! Then let's start the review. and Have a great holiday 🧑🏼‍🎄</p>
+<h2 id="thank-you">Thank you ❤️</h2>
+<p>First, Thank you so much all contributors !!</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/147363869-ed87f6ad-04e1-4630-850a-75b036c82b10.png" alt="Thanks to our, this project is getting better and better. Thank you always!" /></p>
+<h2 id="release-note">Release note</h2>
+<p><a href="https://github.com/hahwul/dalfox/releases/tag/v2.7.0">Github</a> | <a href="https://hub.docker.com/layers/hahwul/dalfox/v2.7.0/images/sha256-8def1e1e3e58a805bf19bf9373881854c7c3d04336edaf8031ff425ff0b5c267?context=explore">DockerHub</a></p>
+<ul>
+<li>Add BAV Module
+<ul>
+<li>ESI Injection</li>
+</ul>
+</li>
+<li>Support to windows/arm64</li>
+<li>Upgrade go dependency (1.16 to 1.17)</li>
+<li>Add Severity in PoC Object</li>
+<li>Improve SXSS Mode</li>
+<li>Improve Code Quality</li>
+<li>Improve libraty interface</li>
+<li>Fixed bugs
+<ul>
+<li>Add gzip handling in all func (<a href="https://github.com/hahwul/dalfox/issues/315">#315</a>)</li>
+<li>Fized zero-line bug (<a href="https://github.com/hahwul/dalfox/pull/322">#322</a>)</li>
+</ul>
+</li>
+<li>Update dalfox web page and documentation</li>
+</ul>
+<h2 id="detail-review">Detail Review</h2>
+<h3 id="upgrade-go-version">Upgrade go version</h3>
+<p>I judged that go1.17 was stabilized and raised Golang's dependency from 1.16 to 1.17. Now, dalfox's support to window/arm64 binary.</p>
+<h3 id="add-bav-module-esi-injection">Add BAV Module - ESI Injection</h3>
+<pre><code>[G] Found dalfox-esii via built-in grepping / payload: toGrepping
+    &lt;esii-dalfox&gt;
+[POC][G][GET][BUILTIN] https://******************.hahwul.com/esii\?q\=%3Cesi:assign%20name\=%22var1%22%20value\=%22dalfox%22/%3E%3Cesii-%3Cesi:vars%20name\=%22$\(var1\)%22%3E
+</code></pre>
+<h3 id="add-severity-in-poc-object">Add Severity in PoC Object</h3>
+<p>Severity attribute has been added. It is marked Low, Medium, and High and is subject to both XSS and other vulnerabilities detected by BAV.</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Type of PoC (G/R/V)&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;inject_type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Injected Point&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;poc_type&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;plain/curl/httpie/etc...&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;method&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;HTTP Method&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;data&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;PoC URL&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;param&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Parmeter&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;payload&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Attack Value&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;evidence&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;Evidence with response body&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;cwe&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;CWE ID&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;severity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Severity (Low/Medium/High)&quot;</span>
+   <span class="hljs-punctuation">}</span>
+</code></pre>
+<p>e.g</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+    <span class="hljs-name">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;V&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;inject_type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;inHTML-URL&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;poc_type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;plain&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;method&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;GET&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;http://testphp.vulnweb.com/listproducts.php?cat=%27%22%3E%3Cimg%2Fsrc%2Fonerror%3D.1%7Calert%60%60+class%3Ddalfox%3E&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;param&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;cat&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;payload&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;&#39;\&quot;&gt;&lt;img/src/onerror=.1|alert`` class=dalfox&gt;&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;evidence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;48 line:  syntax to use near &#39;&#39;\&quot;&gt;&lt;img/src/onerror=.1|alert`` class=dalfox&gt;&#39; at line 1&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;cwe&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;CWE-79&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;severity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;High&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="support-to-windows-arm64">Support to windows/arm64</h3>
+<p>Dalfox now releases a binary version of window arm64 as well.</p>
+<h3 id="improve-sxss-mode">Improve SXSS Mode</h3>
+<p>sxss checks two pages simultaneously through target URL and trigger URL. At this time, there was a problem that could not be properly identified when scanning at a high speed with many walkers. So default value and limit were added as below.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Matched Flag</th>
+<th>Default vaule</th>
+<th>Limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>options.Concurrence</td>
+<td>-w or --worker</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>options.Delay</td>
+<td>--delay</td>
+<td>1500 (1.5s)</td>
+<td>&gt;= 1500</td>
+</tr>
+</tbody>
+</table>
+<h3 id="improve-code-quality">Improve Code Quality</h3>
+<p>Dalfox is developed in consideration of code quality and test coverage. It didn't get better, but it also maintained quality for new functions 😅</p>
+<ul>
+<li>Code Coverage: 83.22%
+<ul>
+<li><a href="https://app.codecov.io/gh/hahwul/dalfox/">https://app.codecov.io/gh/hahwul/dalfox/</a></li>
+</ul>
+</li>
+<li>Goreportcard: A+ / Codacy: A
+<ul>
+<li><a href="https://goreportcard.com/report/github.com/hahwul/dalfox">https://goreportcard.com/report/github.com/hahwul/dalfox</a></li>
+<li><a href="https://app.codacy.com/gh/hahwul/dalfox/dashboard">https://app.codacy.com/gh/hahwul/dalfox/dashboard</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="update-library-interface">Update library interface</h3>
+<p>When using Dalfox in code, SXSS mode can now be fully used with options.Sequence using a dalfox interface, and users can control UseHeadless, UseDeepDXSS, and WAFEavision.</p>
+<pre><code class="language-go hljs"><span class="hljs-keyword">package</span> main 
+
+<span class="hljs-keyword">import</span> <span class="hljs-punctuation">(</span>
+	<span class="hljs-string">&quot;fmt&quot;</span>
+
+	dalfox <span class="hljs-string">&quot;github.com/hahwul/dalfox/v2/lib&quot;</span>
+<span class="hljs-punctuation">)</span>
+
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">main</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+	opt <span class="hljs-operator">:=</span> dalfox<span class="hljs-punctuation">.</span>Options<span class="hljs-punctuation">{</span>
+		Cookie<span class="hljs-punctuation">:</span>      <span class="hljs-string">&quot;ABCD=1234&quot;</span><span class="hljs-punctuation">,</span>
+		PoCType<span class="hljs-punctuation">:</span>     <span class="hljs-string">&quot;http-request&quot;</span><span class="hljs-punctuation">,</span>
+    Sequence<span class="hljs-punctuation">:</span>    <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
+    UseHeadless<span class="hljs-punctuation">:</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">,</span>
+    UseDeepDXSS<span class="hljs-punctuation">:</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">,</span>
+    WAFEavasion<span class="hljs-punctuation">:</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">,</span>
+	<span class="hljs-punctuation">}</span>
+	result<span class="hljs-punctuation">,</span> err <span class="hljs-operator">:=</span> dalfox<span class="hljs-punctuation">.</span><span class="hljs-title function_">NewScan</span><span class="hljs-punctuation">(</span>dalfox<span class="hljs-punctuation">.</span>Target<span class="hljs-punctuation">{</span>
+		URL<span class="hljs-punctuation">:</span>     <span class="hljs-string">&quot;https://xss-game.appspot.com/level1/frame&quot;</span><span class="hljs-punctuation">,</span>
+		Method<span class="hljs-punctuation">:</span>  <span class="hljs-string">&quot;GET&quot;</span><span class="hljs-punctuation">,</span>
+		Options<span class="hljs-punctuation">:</span> opt<span class="hljs-punctuation">,</span>
+	<span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span>
+	<span class="hljs-keyword">if</span> err <span class="hljs-operator">!=</span> <span class="hljs-literal">nil</span> <span class="hljs-punctuation">{</span>
+		fmt<span class="hljs-punctuation">.</span><span class="hljs-title function_">Println</span><span class="hljs-punctuation">(</span>err<span class="hljs-punctuation">)</span>
+	<span class="hljs-punctuation">}</span> <span class="hljs-keyword">else</span> <span class="hljs-punctuation">{</span>
+		fmt<span class="hljs-punctuation">.</span><span class="hljs-title function_">Println</span><span class="hljs-punctuation">(</span>result<span class="hljs-punctuation">)</span>
+	<span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="fixed-bugs">Fixed bugs</h3>
+<ul>
+<li>Add gzip handling in all func (<a href="https://github.com/hahwul/dalfox/issues/315">#315</a>)</li>
+<li>Fized zero-line bug (<a href="https://github.com/hahwul/dalfox/pull/322">#322</a>)</li>
+</ul>
+<h2 id="thank-you-1">Thank you</h2>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/147363962-4020e033-55e5-4d14-9102-340f887bd4c0.png" alt="" /></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

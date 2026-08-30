@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>BadIntent - Android 취약점 분석을 위한 Burp Suite Extension 📱 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="BadIntent - Android 취약점 분석을 위한 Burp Suite Extension 📱">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-badintent-android-burp-suite/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BadIntent - Android 취약점 분석을 위한 Burp Suite Extension 📱">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-badintent-android-burp-suite/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"BadIntent - Android 취약점 분석을 위한 Burp Suite Extension 📱","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-badintent-android-burp-suite/","datePublished":"2017-10-30T00:00:00+00:00","dateModified":"2022-04-19T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2017-hacking-badintent-android-burp-suite.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"BadIntent - Android 취약점 분석을 위한 Burp Suite Extension 📱"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">BadIntent - Android 취약점 분석을 위한 Burp Suite Extension 📱</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-10-30">
+                        OCTOBER 30, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>BlackHat 자료 보던 중 괜찮은 Android 취약점 분석 도구가 있어 공유드립니다. 아직 자료가 많이 없어 삽질이 좀 많습니다. 양해 부탁드립니다. 오늘 이야기할 툴은 BadIntent입니다.</p>
+<h2 id="what-is-badintent">What is BadIntent?</h2>
+<p>BadIntent는 Burp suite의 확장기능입니다. Burp에 BadIntent를 붙여놓고 안드로이드 기기에 설치한 Bad Intent 앱으로부터 앱 구동 시 발생하는 정보를 전송받아 분석가에게 테스트를 할 수 있도록 제공해줍니다. 대표적으로 intent sniffing, bf , AIDL Test, GCM Attack, Webview vuln, Insecure logging, ACL Issue, PasteBoard Vuln 에 대해서 체크할 수 있다고 공식홈에 설명되어있습니다.</p>
+<p>다만 Intent 데이터를 받을 수 있기 떄문에 위에 설명된 부분 이외에도 여러가지 방향으로 테스트해 볼 수 있을듯합니다. Burp 확장기능, Android 앱으로 구성되어있으며 각각 maven, gradle로 컴파일이 필요합니다. (개발자가 미리 만들어두지 않았네요)</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-wRx1kWpEkdA/Wfcu0Pe8RqI/AAAAAAAACo0/vvbM3k5j90AKqUJeILOHFRgerLOXaqkhgCLcBGAs/s1600/hwhwhwhw.PNG" alt="" /></p>
+<p>크게 구성을 보면 위와 같습니다. App에서 다른 App의 데이터를 후킹하고, 그 데이터를 Burp Extension을 통해 Burp interface로 전달해줍니다. 분석가는 Burp를 통해 안드로이드 앱에 대한 동적 분석을 할 수 있습니다.</p>
+<p>그럼 다운로드하고 시작해보도록 하죠.</p>
+<pre><code class="language-bash hljs">git clone https://github.com/mateuszk87/BadIntent.git
+<span class="hljs-built_in">cd</span> BadIntent
+</code></pre>
+<h2 id="badintentburp">BadIntentBurp</h2>
+<p>먼저 Burp 확장기능 부터 만들어봅시다. BadIntent 디렉토리 내 BadIntentBurp 디렉토리가 있고 pom.xml 파일이 있는 것으로 보아 maven 프로젝트로 보입니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-built_in">cd</span> BadIntentBurp
+vim pom.xml
+</code></pre>
+<p>pom.xml 내용을 보니 maven이 맞네요. 따로 target.dir 지정하셔도 좋고, 지정 안하면 바로 하위에 target 파일이 생기게 됩니다.</p>
+<pre><code class="language-bash hljs">cat pom.xml 
+</code></pre>
+<pre><code class="language-xml hljs"><span class="hljs-name">&lt;project</span> <span class="hljs-attr">xmlns=</span><span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0&quot;</span> <span class="hljs-attr">xmlns:xsi=</span><span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="hljs-attr">xsi:schemaLocation=</span><span class="hljs-string">&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;</span><span class="hljs-name">&gt;</span>
+  <span class="hljs-name">&lt;modelVersion</span><span class="hljs-name">&gt;</span>4.0.0<span class="hljs-name">&lt;/modelVersion&gt;</span>
+  <span class="hljs-name">&lt;groupId</span><span class="hljs-name">&gt;</span>de.mat3.badintent<span class="hljs-name">&lt;/groupId&gt;</span>
+  <span class="hljs-name">&lt;artifactId</span><span class="hljs-name">&gt;</span>badintent-burp<span class="hljs-name">&lt;/artifactId&gt;</span>
+  <span class="hljs-name">&lt;version</span><span class="hljs-name">&gt;</span>0.9.9.9<span class="hljs-name">&lt;/version&gt;</span>
+  <span class="hljs-name">&lt;name</span><span class="hljs-name">&gt;</span>badintent<span class="hljs-name">&lt;/name&gt;</span>
+  <span class="hljs-name">&lt;description</span><span class="hljs-name">&gt;</span>BadIntent Burp Plugin<span class="hljs-name">&lt;/description&gt;</span>
+    <span class="hljs-name">&lt;properties</span><span class="hljs-name">&gt;</span>
+       <span class="hljs-name">&lt;deploy.target.dir</span><span class="hljs-name">&gt;</span>/home/hahwul/<span class="hljs-name">&lt;/deploy.target.dir&gt;</span>
+        <span class="hljs-name">&lt;project.build.sourceEncoding</span><span class="hljs-name">&gt;</span>UTF-8<span class="hljs-name">&lt;/project.build.sourceEncoding&gt;</span>
+        <span class="hljs-name">&lt;project.reporting.outputEncoding</span><span class="hljs-name">&gt;</span>UTF-8<span class="hljs-name">&lt;/project.reporting.outputEncoding&gt;</span>
+    <span class="hljs-name">&lt;/properties&gt;</span>
+</code></pre>
+<p>mvn을 이용해 패키지를 생성해볼까요?</p>
+<pre><code>mvn clean package
+</code></pre>
+<pre><code>[INFO] Scanning for projects...
+[INFO]                                                                        
+[INFO] ------------------------------------------------------------------------
+[INFO] Building badintent 0.9.9.9
+[INFO] ------------------------------------------------------------------------
+Downloading: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-clean-plugin/2.5/maven-clean-plugin-2.5.pom
+Downloaded: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-clean-plugin/2.5/maven-clean-plugin-2.5.pom (4 KB at 2.4 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugins/22/maven-plugins-22.pom
+Downloaded: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugins/22/maven-plugins-22.pom (13 KB at 23.0 KB/sec)
+Downloading: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/21/maven-parent-21.pom
+...
+</code></pre>
+<p>target 디렉토리로 가서 보면..</p>
+<pre><code class="language-bash hljs"><span class="hljs-built_in">cd</span> target
+ls
+</code></pre>
+<pre><code>archive-tmp  
+badintent-burp-0.9.9.9-jar-with-dependencies.jar  
+badintent-burp-0.9.9.9.jar  
+classes  
+generated-sources  
+maven-archiver
+</code></pre>
+<p>jar 파일이 생성되었습니다. Burp로 들어가서 해당 jar 파일을 로드시켜줍니다. (badintent-burp-0.9.9.9.jar)</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-pTAD6raM3yI/WfcqkQ8ZDWI/AAAAAAAACoY/1JPe9mS8His5U8bfqF2WNkqxSF9q7GdKACLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_162.png" alt="" /></p>
+<h2 id="badintentandroid">BadIntentAndroid</h2>
+<p>안드로이드 디렉토리로 들어가서 gradle로 apk를 만들어줍니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-built_in">cd</span> BadIntentAndroid
+gradle assemble
+</code></pre>
+<p>아래 따로 트러블슈팅 내용도 적긴했지만 혹시 과정에 문제가 많다면 xpose에 올라온 apk 파일로 설치하는 것도 좋습니다.</p>
+<p><a href="http://repo.xposed.info/module/de.mat3.badintent">http://repo.xposed.info/module/de.mat3.badintent</a></p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-lL_tB0aihvk/WfcrWhSAtGI/AAAAAAAACok/VEyWAr4FwPkbvJ9jOtgipNMrS7VFjokKACLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_163.png" alt="" /></p>
+<p>apk 를 받았다면 테스트할 폰에 깔아줍니다.</p>
+<pre><code class="language-bash hljs">adb install badintent.apk 
+</code></pre>
+<pre><code>434 KB/s (2768885 bytes in 6.227s)
+pkg: /data/local/tmp/badintent.apk
+Success
+</code></pre>
+<p><img loading="lazy" src="https://4.bp.blogspot.com/-wTkLLp581QQ/Wfcq-NQ307I/AAAAAAAACoc/6mpiHqDGM5odo7Czdl7KVCoYNwqZMd_nwCLcBGAs/s1600/1.png" alt="" /></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>위에 앱에서 대충 써놓은 것 처럼 후킹할 패키지와 인터페이스에 대해 필터를 건 후 앱 동작 시 Burp Suite로 데이터가 넘어오게 됩니다. 대체로 앱 내 웹, API 요청에 대한 분석도 모바일 취약점 분석에서 많은 부분을 차지하기 떄문에 Burp, Fiddler와 같은 툴과의 연동성은 굉장히 좋은 장점으로 보입니다.</p>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-Wy4UXoQiuuE/WfcrtP7WiOI/AAAAAAAACoo/2q5CqjOrTRM4EGJC-YvGL6wpLuepyfHHACLcBGAs/s1600/main.png" alt="" /></p>
+<h2 id="troubleshooting">TroubleShooting</h2>
+<p>설치 과정 중 발생했던 문제 관련해서 남겨눕니다. maven쪽은 별거 없었는데, gradle 에서 많이 걸렸습니다.</p>
+<h3 id="minimum-supported-gradle-version-is-2141-오류">Minimum supported Gradle version is 2.14.1. 오류</h3>
+<p>apk를 만들기 위해 assemble 과정에서 아래와 같은 에러가 발생합니다.</p>
+<pre><code class="language-bash hljs">gradle assemble
+</code></pre>
+<pre><code>To honour the JVM settings for this build a new JVM will be forked. Please consider using the daemon: https://docs.gradle.org/2.10/userguide/gradle_daemon.html.
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/home/hahwul/Noon/BadIntent/BadIntentAndroid/app/build.gradle' line: 1
+
+* What went wrong:
+A problem occurred evaluating project ':app'.
+&gt; Failed to apply plugin [id 'com.android.application']
+   &gt; Minimum supported Gradle version is 2.14.1. Current version is 2.10. If using the gradle wrapper, try editing the distributionUrl in /home/hahwul/Noon/BadIntent/BadIntentAndroid/gradle/wrapper/gradle-wrapper.properties to gradle-2.14.1-all.zip
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output.
+
+BUILD FAILED
+
+Total time: 3.977 secs
+</code></pre>
+<p>먼저 에러 내용에서 나오는 것과 같이 gradle-wrapper.properties에서 distributionUrl을 2.14 이후로 올려주면 됩니다만, BadIntent의 경우 기본 3.0 대로 지정되어 있습니다.</p>
+<p>고민하고 검색하다보니 간단한데 답이 있었습니다. 바로 gradle 자체 버전으로 인한 문제였습니다.
+아래 블로그를 보시면 각각 gradle 버전에서 지원할 수 있는 plugins의 버전이 다르다는 것을 알 수 있습니다.
+<a href="https://www.blogger.com/goog_854663095">
+</a><a href="http://creaby.tistory.com/6">http://creaby.tistory.com/6</a></p>
+<p>기존 2.1에서 상위버전으로 올려야겠습니다.</p>
+<pre><code>gradle -v
+</code></pre>
+<pre><code>------------------------------------------------------------
+Gradle 2.10
+------------------------------------------------------------
+
+Build time:   2016-01-26 15:17:49 UTC
+Build number: none
+Revision:     UNKNOWN
+
+Groovy:       2.4.5
+Ant:          Apache Ant(TM) version 1.9.6 compiled on July 8 2015
+JVM:          1.8.0_131 (Oracle Corporation 25.131-b11)
+OS:           Linux 4.4.0-97-generic amd64
+</code></pre>
+<p>ppa 등록 후 apt 통해 상위 버전으로 설치합니다.</p>
+<pre><code>add-apt-repository ppa:cwchien/gradle
+apt-get update
+apt-cache search gradle
+</code></pre>
+<pre><code>android-platform-tools-base - base tools for developing applications for the Android system
+gradle-debian-helper - Helper tools for building Debian packages with Gradle
+gradle-doc - Powerful build system for the JVM - Documentations
+gradle-propdeps-plugin - Gradle plugin enhancing the Maven integration
+libgradle-core-java - Powerful build system for the JVM - Core libraries
+libgradle-jflex-plugin-java - Gradle plugin for JFlex, a scanner generator
+libgradle-plugins-java - Powerful build system for the JVM - All plugins
+gradle - Gradle is a Groovy based build system
+gradle-ppa - Gradle is a Groovy based build system
+gradle-3.0 - Gradle is a Groovy based build system
+gradle-3.1 - Gradle is a Groovy based build system
+gradle-3.2 - Gradle is a Groovy based build system
+gradle-3.2.1 - Gradle is a Groovy based build system
+gradle-3.3 - Gradle is a Groovy based build system
+gradle-3.4 - Gradle is a Groovy based build system
+gradle-3.4.1 - Gradle is a Groovy based build system
+gradle-3.5 - Gradle is a Groovy based build system
+gradle-4.0 - Gradle is a Groovy based build system
+gradle-4.0.1 - Gradle is a Groovy based build system
+gradle-3.5.1 - Gradle is a Groovy based build system
+gradle-4.0.2 - Gradle is a Groovy based build system
+gradle-4.1 - Gradle is a Groovy based build system
+gradle-4.2 - Gradle is a Groovy based build system
+gradle-4.2.1 - Gradle is a Groovy based build system
+</code></pre>
+<pre><code class="language-bash hljs">apt-get install gradle-3.0
+gradle -v
+</code></pre>
+<pre><code>------------------------------------------------------------
+Gradle 3.0
+------------------------------------------------------------
+
+Build time:   2016-08-15 13:15:01 UTC
+Revision:     ad76ba00f59ecb287bd3c037bd25fc3df13ca558
+
+Groovy:       2.4.7
+Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+JVM:          1.8.0_131 (Oracle Corporation 25.131-b11)
+OS:           Linux 4.4.0-97-generic amd64
+</code></pre>
+<h3 id="sdk-location-not-found">SDK location not found</h3>
+<blockquote>
+<p>SDK location not found. Define location with sdk.dir in the local.properties file or with an ANDROID_HOME environment variable.</p>
+</blockquote>
+<p>두번째 문제는 ANDROID_HOME 환경변수 관련 문제입니다. 컴파일 시 Android SDK를 사용해야하기 때문에 환경 변수의 값을 참조하게 되어있습니다. 다만 사람에 따라 Android Studio를 사용하지 않을 수 있기 때문에(저 같은 상황) 환경 변수에 SDK가 설치된 경로를 넣어주면 깔끔하게 해결됩니다.</p>
+<pre><code class="language-bash hljs">env <span class="hljs-punctuation">|</span> grep ANDROID_HOME
+<span class="hljs-built_in">export</span> <span class="hljs-variable">ANDROID_HOME</span><span class="hljs-operator">=</span>/home/hahwul/Other/android/sdk/
+env <span class="hljs-punctuation">|</span> grep ANDROID_HOME
+<span class="hljs-variable">ANDROID_HOME</span><span class="hljs-operator">=</span>/home/hahwul/Other/android/sdk/
+</code></pre>
+<h3 id="you-have-not-accepted-the-license-agreements">You have not accepted the license agreements</h3>
+<blockquote>
+<p>You have not accepted the license agreements of the following SDK components:   [Android SDK Build-Tools 25.0.3].</p>
+</blockquote>
+<p>(<a href="http://doctorson0309.tistory.com/42">http://doctorson0309.tistory.com/42</a> , 참고)
+이 문제는 SDK에 라이센스 동의가 되지 았았다는 이야기로 보입니다.</p>
+<pre><code>Warning: License for package Android SDK Build-Tools 25.0.3 not accepted.
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+A problem occurred configuring project ':app'.
+&gt; You have not accepted the license agreements of the following SDK components:
+  [Android SDK Build-Tools 25.0.3].
+  Before building your project, you need to accept the license agreements and complete the installation of the missing components using the Android Studio SDK Manager.
+  Alternatively, to learn how to transfer the license agreements from one workstation to another, go to http://d.android.com/r/studio-ui/export-licenses.html
+</code></pre>
+<p>sdk 디렉토리로 이동 후 license 디렉토리를 만들어줍니다.</p>
+<pre><code class="language-bash hljs">mkdir license
+</code></pre>
+<p>그다음 licenses 디렉토리에 있는 android-sdk-license 파일을 license 디렉토리로 복사해줍니다.</p>
+<pre><code class="language-bash hljs">licenses
+cp android-sdk-license ../license
+</code></pre>
+<p>그러고 다시 해보면..</p>
+<pre><code>gradle assemble
+</code></pre>
+<pre><code>License for package Android SDK Build-Tools 25.0.3 accepted.
+</code></pre>
+<h2 id="reference">Reference</h2>
+<p><a href="https://github.com/mateuszk87/BadIntent">https://github.com/mateuszk87/BadIntent</a>
+<a href="http://creaby.tistory.com/6">http://creaby.tistory.com/6</a>
+<a href="http://doctorson0309.tistory.com/42">http://doctorson0309.tistory.com/42</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

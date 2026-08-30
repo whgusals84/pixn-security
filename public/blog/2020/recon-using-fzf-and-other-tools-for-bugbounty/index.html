@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Recon using fzf and other tools. for bugbounty | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Recon using fzf and other tools. for bugbounty">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/recon-using-fzf-and-other-tools-for-bugbounty/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Recon using fzf and other tools. for bugbounty">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/recon-using-fzf-and-other-tools-for-bugbounty/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Recon using fzf and other tools. for bugbounty","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/recon-using-fzf-and-other-tools-for-bugbounty/","datePublished":"2020-03-30T00:00:00+00:00","dateModified":"2022-04-13T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2020-recon-using-fzf-and-other-tools-for-bugbounty.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/"},{"@type":"ListItem","position":5,"name":"Recon using fzf and other tools. for bugbounty"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Recon using fzf and other tools. for bugbounty</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2020-03-30">
+                        MARCH 30, 2020
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>때때로 버그바운티를 하다보면, 굉장히 많은 파일을 만나게 됩니다. 특히 meg, gospider 등 recon 도구를 사용한 결과의 양은 상상을 초월합니다.</p>
+<p><em>Hi hackers and bugbounty hunters. today, I'm going to share with you how to use fzf for bugbounty.
+Sometimes when you do bugbounty, you get a lot of files. In particular, the amount of results using recon tools such as megg and gospider is beyond imagination.</em></p>
+<pre><code>ll
+합계 6412
+drwxrwxrwx 1377 root   root    69632  3월 28 02:50 ./
+drwxrwxr-x    3 hahwul hahwul   4096  3월 28 02:36 ../
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 3gio-int.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-ahag-bochum.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-ahag-coesfeld.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-ahag-duelmen.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-ahag-gelsenkirchen.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-ahg-gmbh.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-arnold.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-augsburg.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-auto-eggert.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-auto-fischer.bmw.de/
+drwxr-x---    2 hahwul hahwul   4096  3월 28 01:16 ah-auto-motorrad-auer.bmw.de/
+...snip...
+
+</code></pre>
+<p>이 글에선 한 사이트를 예시로 들었지만, 실제로 제가 테스트하는 URL은 150만개가 넘습니다. 오늘은 fzf를 이용하여 버그바운티 엔드포인트를 쉽게 찾는 방법에 대해 이야기할까 합니다.</p>
+<p><em>I used one site as an example in this article, but I actually test more than 1.5 million URLs.</em></p>
+<h2 id="fzf">Fzf</h2>
+<p>fzf는 command-line fuzzy finder 로 대량의 파일을 검색하기 용이한 cli 도구입니다. fzf는 한국분이 만든 도구이고, 한다리 건너 아는분이다 보니 뭔가 반갑고 뿌듯하네요.</p>
+<p><em>fzf is a command-line fuzzy finer that makes it easy to retrieve large directory. This tool was made by a Korean and is close to me.</em></p>
+<ul>
+<li>https://github.com/junegunn/fzf</li>
+</ul>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-tkKXsAUor_M/XoIaWGVSm1I/AAAAAAAAFGc/3GFXsLQYWaQpsZWUZxLXwKz8i_J0VQrWACLcBGAsYHQ/s1600/1414.png" alt="" /></p>
+<h2 id="for-bugbounty">For bugbounty</h2>
+<p>fzf 를 실행하면 아래 화면과 같은 검색 창이 나오며, 원하는 키워드로 쉽게 데이터를 찾을 수 있습니다.</p>
+<p><em>When you run fzf, a search window appears, such as the screen below, and you can easily find data with the keyword you want.</em></p>
+<p>The result of the search is the absolute path of the file.
+찾는 데이터에 커서를 맞춘 후 엔터를 누르면 해당 파일의 경로를 반환합니다.</p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-PQg69ROIKHo/XoIakW0wcsI/AAAAAAAAFGg/sZ0gda0t1yQviw1pg7gWTnFpchF78eDsQCLcBGAsYHQ/s1600/1415.png" alt="I find &quot;test&quot; string" /></p>
+<pre><code>fzf
+mein-test.bmw-motorrad.de/43aa4ed4dc23df89e1b2b251e47901455d7152ee
+</code></pre>
+<p>즉 파일 기반으로 데이터를 관리할 때 이를 이용해서 쉽게 찾을수가 있는데, 아래와 같은 방식으로 경로를 찾아 바로 사용할 수 있습니다.</p>
+<p><em>So when you're managing data based on files, it's easy to find, and you can find the path in the following ways and use it right away.</em></p>
+<pre><code>cat `fzf`
+http://www.essen.mini.de:80/
+
+&gt; GET / HTTP/1.1
+&gt; Host: www.essen.mini.de
+&gt; User-Agent: Mozilla/5.0 (compatible; meg/0.2; +https://github.com/tomnomnom/meg)
+
+&lt; HTTP/1.1 302 Moved Temporarily
+&lt; Server: Apache
+&lt; Cache-Control: max-age=1800
+&lt; Expires: Fri, 27 Mar 2020 17:55:25 GMT
+&lt; Set-Cookie: visitorid=04e43517c37d000005377e5e66030000a5060000; expires=Tue, 26-Mar-2024 17:25:25 GMT
+&lt; X-Frame-Options: SAMEORIGIN
+&lt; Strict-Transport-Security: max-age=63072000; includeSubdomains;
+&lt; Location: http://www.essen.mini.de/de_DE/home.html
+&lt; Content-Length: 224
+&lt; Content-Type: text/html; charset=iso-8859-1
+&lt; Date: Fri, 27 Mar 2020 17:25:25 GMT
+
+&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;302 Found&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Found&lt;/h1&gt;
+&lt;p&gt;The document has moved &lt;a href=&quot;http://www.essen.mini.de/de_DE/home.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;
+
+</code></pre>
+<h2 id="pipeline">Pipeline</h2>
+<h3 id="fzf-waybackurls-or-gau">fzf + waybackurls (or gau)</h3>
+<pre><code>cat `fzf` | head -1 | ~/go/bin/waybackurls
+</code></pre>
+<p>e.g</p>
+<pre><code>cat `fzf` | head -1 | ~/go/bin/waybackurls
+http://essen.mini.de
+http://essen.mini.de:80/360/index.html
+http://essen.mini.de:80/7gruende/index.html
+http://essen.mini.de:80/abschluss/index.html
+http://essen.mini.de:80/accessories/car_care_special/index.html
+http://essen.mini.de:80/accessories/championship/index.html
+http://essen.mini.de:80/accessories/detergents/index.html
+http://essen.mini.de:80/accessories/index.html
+http://essen.mini.de:80/accessories/information/index.html
+</code></pre>
+<h3 id="fzf-burp">fzf + Burp</h3>
+<p>Burp에서 제공하는 API를 이용하면 fzf를 통해 특정 호스트를 스캐닝 큐로 전달할 수 있습니다. 당연히 사용에 앞서 REST API 세팅은 먼저 해주셔야하구요.</p>
+<p><em>The API provided by Burpsuite(pro) allows certain hosts to be passed to the scanning queue through fzf. Of course you have to set up the REST API before using it.</em></p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-MmXYcRx4W4k/XoIa2Wlm-hI/AAAAAAAAFGs/gviapciYtUU8iPvcQNyClUvvJF8YO1v4ACLcBGAsYHQ/s1600/1418.png" alt="" /></p>
+<pre><code>curl -vgw &quot;\n&quot; -X POST 'http://127.0.0.1:1337/v0.1/scan' -d &quot;{\&quot;urls\&quot;:[\&quot;$(cat `fzf` | head -1)\&quot;]}&quot;
+</code></pre>
+<p>e.g
+<img loading="lazy" src="https://1.bp.blogspot.com/-R0uV-v4Yqeg/XoIa9cBVcfI/AAAAAAAAFGw/bB6vM-sA6fMXZvIs-jPCbSeYSIC1sotDQCLcBGAsYHQ/s1600/1416.png" alt="" /></p>
+<pre><code>curl -vgw &quot;\n&quot; -X POST 'http://192.168.0.10:1337/v0.1/scan' -d &quot;{\&quot;urls\&quot;:[\&quot;$(cat `fzf` | head -1)\&quot;]}&quot;
+Note: Unnecessary use of -X or --request, POST is already inferred.
+*   Trying 192.168.0.10...
+* TCP_NODELAY set
+* Connected to 192.168.0.10 (192.168.0.10) port 1337 (#0)
+&gt; POST /v0.1/scan HTTP/1.1
+&gt; Host: 192.168.0.10:1337
+&gt; User-Agent: curl/7.58.0
+&gt; Accept: */*
+&gt; Content-Length: 41
+&gt; Content-Type: application/x-www-form-urlencoded
+&gt;
+* upload completely sent off: 41 out of 41 bytes
+&lt; HTTP/1.1 201 Created
+&lt; Location: 4
+&lt; X-Frame-Options: DENY
+&lt; Content-Security-Policy: default-src 'self'; script-src 'self'; img-src 'self'; style-src 'self'; frame-src 'self'; connect-src 'self' ws://localhost:3333; font-src 'self'; media-src 'self'; object-src 'none'; child-src 'self' blob:
+&lt; X-XSS-Protection: 1; mode=block
+&lt; X-Content-Type-Options: nosniff
+&lt; Cache-Control: no-cache, no-store, must-revalidate
+&lt; Pragma: no-cache
+&lt; Expires: 0
+&lt; X-Burp-Version: 2020.2.1-1699
+&lt; Keep-Alive: timeout=15
+&lt; Content-Length: 0
+&lt;
+* Connection #0 to host 192.168.0.10 left intact
+
+</code></pre>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-nbh2yc3yVKQ/XoIbIL800pI/AAAAAAAAFG4/iJkI_3tBxvsafYFuHpEo2soRDE-Y_-RrgCLcBGAsYHQ/s1600/1417.png" alt="Added scanning" /></p>
+<h3 id="fzf-zap">fzf + ZAP</h3>
+<p>ZAP 또한 za-cli나 REST API를 통해 쉽게 스캐닝으로 넘길 수 있습니다.</p>
+<p><em>ZAP can also be easily add to scanning via za-cli or REST API.</em></p>
+<pre><code>zap-cli quick-scan -s xss,sqli \
+--spider -r \
+-e &quot;some_regex_pattern&quot; $(cat `fzf` | head -1)
+</code></pre>
+<h3 id="fzf-sending-proxy">fzf + sending proxy</h3>
+<pre><code>proxychains4 curl $(cat `fzf` | head -1)
+</code></pre>
+<p>e.g</p>
+<pre><code>proxychains4 curl $(cat `fzf` | head -1)
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/i386-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.12
+[proxychains] Strict chain  ...  192.168.0.10:8080  ...  www.essen.mini.de:80  ...  OK
+&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;302 Found&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Found&lt;/h1&gt;
+&lt;p&gt;The document has moved &lt;a href=&quot;http://www.essen.mini.de/de_DE/home.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>간단한 도구이지만, 때론 정말 쓸만하게 다가옵니다. 잘 활용해서 해피해킹합시다!</p>
+<p><em>It's a simple tool, but sometimes it's really useful. Happy hacking +_+</em></p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-39udACTn200/XdgJ6GBMWnI/AAAAAAAAEqs/rLfkKwPIGeI87yQ7mPr5wm2u625tbRFeQCPcBGAYYCw/s1600/1415.gif" alt="" /></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

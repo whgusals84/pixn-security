@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 2 - Application Fuzzing for Exploit  | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 2 - Application Fuzzing for Exploit ">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/system-hacking-peach-fuzzer-application_26/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 2 - Application Fuzzing for Exploit ">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/system-hacking-peach-fuzzer-application_26/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 2 - Application Fuzzing for Exploit ","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/system-hacking-peach-fuzzer-application_26/","datePublished":"2015-11-25T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2015-system-hacking-peach-fuzzer-application_26.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/"},{"@type":"ListItem","position":5,"name":"[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 2 - Application Fuzzing for Exploit "}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 2 - Application Fuzzing for Exploit </h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2015-11-25">
+                        NOVEMBER 25, 2015
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Peach Fuzzer를 이용한 프로그램 Fuzzing 에 대한 내용을 다룹니다.
+설치 방법은 아래 포스팅 참고하셔서 진행하시면 됩니다.</p>
+<p>[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 1 - Install Peach Fuzzer</p>
+<p>Peach Fuzzer는 여러 플랫폼을 공통으로 지원하는 Fuzzer 입니다.
+파일로만 봐도 Linux, Windows , MacOS까지 두루두루 다 지원합니다.</p>
+<h1 id="ls">ls</h1>
+<p>Aga.Controls.dll                    PacketDotNet.dll                    Peach.Core.Test.OS.Windows.dll              PeachLinuxCrashHandler.exe.config  SuperSocket.SocketBase.dll
+Be.Windows.Forms.HexBox.dll         Peach.Core.ComContainer.exe         Peach.Core.Test.OS.Windows.dll.mdb          PeachLinuxCrashHandler.exe.mdb     SuperSocket.SocketBase.pdb
+Be.Windows.Forms.HexBox.dll.config  Peach.Core.ComContainer.exe.config  Peach.Core.Test.OS.Windows.xml              PeachMinset.exe                    SuperWebSocket.dll
+CrashableServer                     Peach.Core.ComContainer.exe.mdb     Peach.Core.Test.dll                         PeachMinset.exe.config             SuperWebSocket.pdb
+CrashingFileConsumer                Peach.Core.OS.Linux.dll             Peach.Core.Test.dll.mdb                     PeachMinset.exe.mdb                bblocks32.so
+CrashingProgram                     Peach.Core.OS.Linux.dll.mdb         Peach.Core.Test.xml                         PeachNetworkFuzzer.exe             cedge32.so
+Ionic.Zip.dll                       Peach.Core.OS.Linux.xml             Peach.Core.WindowsDebugInstance.exe         PeachNetworkFuzzer.exe.config      gdb
+IronPython.Modules.dll              Peach.Core.OS.OSX.dll               Peach.Core.WindowsDebugInstance.exe.config  PeachNetworkFuzzer.exe.mdb         log4net.dll
+IronPython.dll                      Peach.Core.OS.OSX.dll.mdb           Peach.Core.WindowsDebugInstance.exe.mdb     PeachValidator.exe                 nunit.framework.dll
+IronRuby.Libraries.Yaml.dll         Peach.Core.OS.OSX.xml               Peach.Core.dll                              PeachValidator.exe.config          peach
+IronRuby.Libraries.dll              Peach.Core.OS.Windows.dll           Peach.Core.dll.mdb                          PeachValidator.exe.mdb             peach-3.1.124-linux-x86-debug.zip
+IronRuby.dll                        Peach.Core.OS.Windows.dll.mdb       Peach.Core.xml                              PeachXmlGenerator.exe              peach.xsd
+Lib                                 Peach.Core.OS.Windows.xml           Peach.exe                                   PeachXmlGenerator.exe.config       pin
+Microsoft.Dynamic.dll               Peach.Core.Test.OS.Linux.dll        Peach.exe.config                            PeachXmlGenerator.exe.mdb          samples
+Microsoft.Scripting.Metadata.dll    Peach.Core.Test.OS.Linux.dll.mdb    Peach.exe.mdb                               Renci.SshNet.dll                   samples_png
+Microsoft.Scripting.dll             Peach.Core.Test.OS.Linux.xml        PeachFuzzBang.exe                           SharpPcap.dll                      template.xml
+NLog.config.template                Peach.Core.Test.OS.OSX.dll          PeachFuzzBang.exe.config                    SharpPcap.dll.config               testFile.xml
+NLog.dll                            Peach.Core.Test.OS.OSX.dll.mdb      PeachFuzzBang.exe.mdb                       SuperSocket.Common.dll
+Newtonsoft.Json.dll                 Peach.Core.Test.OS.OSX.xml          PeachLinuxCrashHandler.exe                  SuperSocket.Common.p</p>
+<h2 id="peach-fuzzer를-이용하여-application-fuzzing-하기">Peach Fuzzer를 이용하여 Application Fuzzing 하기</h2>
+<p>PeachFuzzer는 미리 타겟 프로그램과 설정을 xml 파일로 지정하고, 해당 XML 파일을 Peach의 인자값으로 넘겨 Fuzzing 을 수행하게 됩니다.</p>
+<p><a href="http://4.bp.blogspot.com/-Iy9hvFUrvEg/VlXj0qJZf6I/AAAAAAAAA6g/qnj8GoxX0vY/s1600/hacking.jpg"><img loading="lazy" src="http://4.bp.blogspot.com/-Iy9hvFUrvEg/VlXj0qJZf6I/AAAAAAAAA6g/qnj8GoxX0vY/s640/hacking.jpg" alt="" /> </a></p>
+<p>XML에서 사용되는 속성은 아래와 같습니다.</p>
+<p>Data Model: defines the protocol or file format we want to fuzz.
+State Model: used for controlling the flow of the fuzzing process.
+Publisher: I/O interface that we can use to read data from a file/socket, write data to a file/socket, etc.
+Mutators: takes an existing input test case and changes it a little bit to make it invalid.
+Agents: the Peach process that needs to run on the target system, which is used to restart the fuzzed server if it crashes.
+Monitors: are used to capture the network traffic, attaching a debugger to the target process, etc.
+Logger: saves the crashes and input test cases into a file for later analysis.</p>
+<h2 id="1-fuzzing-을-위한-xml-파일-작성">1. Fuzzing 을 위한 XML 파일 작성</h2>
+<h1 id="vim-noonxml">vim noon.xml</h1>
+<pre><code>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;Peach xmlns=&quot;http://peachfuzzer.com/2012/Peach&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+xsi:schemaLocation=&quot;http://peachfuzzer.com/2012/Peach ../peach.xsd&quot;&gt;
+
+&lt;DataModel name=&quot;TestTemplate&quot;&gt;
+&lt;String name=&quot;TheString&quot; value=&quot;Hello World!&quot; /&gt;
+&lt;/DataModel&gt;
+
+&lt;StateModel name=&quot;State&quot; initialState=&quot;Initial&quot;&gt;
+&lt;State name=&quot;Initial&quot;&gt;
+
+&lt;Action name=&quot;SendValue1&quot; type=&quot;output&quot;&gt;
+&lt;DataModel ref=&quot;TestTemplate&quot; /&gt;
+&lt;/Action&gt;
+
+&lt;Action name=&quot;SendValue2&quot; type=&quot;output&quot;&gt;
+&lt;DataModel ref=&quot;TestTemplate&quot; /&gt;
+&lt;/Action&gt;
+
+&lt;/State&gt;
+&lt;/StateModel&gt;
+
+&lt;Agent name=&quot;LocalAgent&quot;&gt;
+&lt;Monitor class=&quot;LinuxDebugger&quot;&gt;
+&lt;Param name=&quot;Executable&quot; value=&quot;./CrashableServer&quot; /&gt;
+&lt;Param name=&quot;Arguments&quot; value=&quot;127.0.0.1 4244&quot; /&gt;
+&lt;/Monitor&gt;
+&lt;/Agent&gt;
+
+&lt;Test name=&quot;Default&quot;&gt;
+&lt;Agent ref=&quot;LocalAgent&quot; /&gt;
+
+&lt;StateModel ref=&quot;State&quot;/&gt;
+&lt;Publisher class=&quot;Tcp&quot;&gt;
+&lt;Param name=&quot;Host&quot; value=&quot;127.0.0.1&quot; /&gt;
+&lt;Param name=&quot;Port&quot; value=&quot;8080&quot; /&gt;
+&lt;/Publisher&gt;
+&lt;Logger class=&quot;Filesystem&quot;&gt;
+&lt;Param name=&quot;Path&quot; value=&quot;Logs&quot; /&gt;
+&lt;/Logger&gt;
+&lt;/Test&gt;
+&lt;/Peach&gt;
+&lt;!-- end --&gt;
+
+</code></pre>
+<h2 id="2-peach-명령을-통해-fuzzing-실행">2. peach 명령을 통해 Fuzzing 실행</h2>
+<h1 id="peach-debug-noonxml">./peach --debug noon.xml</h1>
+<p>[[ Peach v3.1.124.0
+[[ Copyright (c) Michael Eddington</p>
+<p>[*] Test 'Default' starting with random seed 21414.
+Peach.Core.Agent.Agent StartMonitor: Monitor LinuxDebugger
+Peach.Core.Agent.Agent SessionStarting: Monitor
+Peach.Core.OS.Linux.Agent.Monitors.LinuxDebugger Wrote gdb commands to '/tmp/gdb.2gN1C8/gdb.cmd'
+Peach.Core.OS.Linux.Agent.Monitors.LinuxDebugger _Start(): Starting gdb process
+Establishing the listener...</p>
+<p>establish listener error: 98
+[Inferior 1 (process 11801) exited with code 03]</p>
+<p>[R1,-,-] Performing iteration
+Peach.Core.Engine runTest: Performing recording iteration.
+Peach.Core.OS.Linux.Agent.Monitors.LinuxDebugger _Start(): Starting gdb process
+Establishing the listener...</p>
+<p>establish listener error: 98</p>
+<p>Program received signal SIGINT, Interrupt.
+0xf7ea8794 in _exit () from /lib/i386-linux-gnu/libc.so.6
+Crash detected, running exploitable.
+File &quot;/home/noon/Noon/Peach_Fuzzer/gdb/exploitable/exploitable.py&quot;, line 170
+print &quot;\n&quot;.join(disas[max(pos-5,0):pos+5])
+^
+SyntaxError: invalid syntax
+Peach.Core.Dom.Action Run: Adding action to controlRecordingActionsExecuted
+Peach.Core.Dom.Action ActionType.Output
+Peach.Core.Publishers.TcpClientPublisher start()
+Peach.Core.Publishers.TcpClientPublisher open()
+Peach.Core.Publishers.TcpClientPublisher output(12 bytes)
+Peach.Core.Publishers.TcpClientPublisher</p>
+<p>00000000   48 65 6C 6C 6F 20 57 6F  72 6C 64 21               Hello World!</p>
+<p>Peach.Core.Dom.Action Run: Adding action to controlRecordingActionsExecuted
+Peach.Core.Dom.Action ActionType.Output
+Peach.Core.Publishers.TcpClientPublisher output(12 bytes)
+Peach.Core.Publishers.TcpClientPublisher</p>
+<p>00000000   48 65 6C 6C 6F 20 57 6F  72 6C 64 21               Hello World!</p>
+<p>Peach.Core.Publishers.TcpClientPublisher close()
+Peach.Core.Publishers.TcpClientPublisher Shutting down connection to 127.0.0.1:8080
+Peach.Core.Publishers.TcpClientPublisher Read 1732 bytes from 127.0.0.1:8080
+Peach.Core.Publishers.TcpClientPublisher</p>
+<p>00000000   48 54 54 50 2F 31 2E 31  20 32 30 30 20 4F 4B 0D   HTTP/1.1 200 OK·
+00000010   0A 43 6F 6E 6E 65 63 74  69 6F 6E 3A 20 63 6C 6F   ·Connection: clo
+00000020   73 65 0D 0A 43 61 63 68  65 2D 63 6F 6E 74 72 6F   se··Cache-contro
+00000030   6C 3A 20 6E 6F 2D 63 61  63 68 65 0D 0A 50 72 61   l: no-cache··Pra
+00000040   67 6D 61 3A 20 6E 6F 2D  63 61 63 68 65 0D 0A 43   gma: no-cache··C
+00000050   61 63 68 65 2D 63 6F 6E  74 72 6F 6C 3A 20 6E 6F   ache-control: no
+00000060   2D 73 74 6F 72 65 0D 0A  58 2D 46 72 61 6D 65 2D   -store··X-Frame-
+00000070   4F 70 74 69 6F 6E 73 3A  20 44 45 4E 59 0D 0A 0D   Options: DENY···
+00000080   0A 3C 68 74 6D 6C 3E 3C  68 65 61 64 3E 3C 74 69   ·<html><head>&lt;ti
+00000090   74 6C 65 3E 42 75 72 70  20 53 75 69 74 65 20 46   tle&gt;Burp Suite F
+000000A0   72 65 65 20 45 64 69 74  69 6F 6E 3C 2F 74 69 74   ree Edition&lt;/tit
+000000B0   6C 65 3E 0D 0A 3C 73 74  79 6C 65 20 74 79 70 65   le&gt;··&lt;style type
+000000C0   3D 22 74 65 78 74 2F 63  73 73 22 3E 0D 0A 62 6F   =&quot;text/css&quot;&gt;··bo
+000000D0   64 79 20 7B 20 62 61 63  6B 67 72 6F 75 6E 64 3A   dy { background:
+000000E0   20 23 64 65 64 65 64 65  3B 20 66 6F 6E 74 2D 66    #dedede; font-f
+000000F0   61 6D 69 6C 79 3A 20 41  72 69 61 6C 2C 20 73 61   amily: Arial, sa
+00000100   6E 73 2D 73 65 72 69 66  3B 20 63 6F 6C 6F 72 3A   ns-serif; color:
+00000110   20 23 34 30 34 30 34 32  3B 20 2D 77 65 62 6B 69    #404042; -webki
+00000120   74 2D 66 6F 6E 74 2D 73  6D 6F 6F 74 68 69 6E 67   t-font-smoothing
+00000130   3A 20 61 6E 74 69 61 6C  69 61 73 65 64 3B 20 7D   : antialiased;
+...snip..</p>
+<p>./Logs/각각 xml 이름의 폴더 하단에 log 데이터가 저장됩니다.
+Burp Suite 를 켜놓고, Burp Port 에 대해 테스트를 진행해서, burp에도 데이터가 굉장히 많이 넘어왔더군요..</p>
+<p>이런 형태로, XML을 지정하고 peach를 통해 xml을 파싱하여 Fuzzing 작업이 동작합니다.
+TCP/WEB 이외에도 여러가지 포맷을 지원하고, 플랫폼 또한 영향받지 않아 넓은 형태의 Fuzzing 작업을 수행할 수 있네요.</p>
+<h2 id="peach-fuzzer-xml-문법syntax">Peach Fuzzer XML 문법(Syntax)</h2>
+<p>초반에 진행하던 중 가장 막힌 부분이 Peach Fuzzer 만의 문법(?)을 익히는게 어려웠습니다.
+XML 문법을 따라가지만, 각각 속성 별 의미가 다르고 타겟이나 플랫폼에 따라 다양한 형태의 속성 값들을 사용해야 하기 때문에 어느정도 Tutorial 문서에 많이 의존할 수 밖에 없었습니다.</p>
+<p>peach fuzzer 설치 경로 하단의 samples 디렉토리 안 xml 파일들을 보시면 대략적인 구조는 이해가 가실 겁니다.</p>
+<p>크게 분류를 나누어 보자면</p>
+<p>General Conf : Fuzzing 자체 전반적인 설정
+Data Modeling : 데이터 모델링
+State Modeling : 상태 모델링
+Agents : Fuzzing Data 수집을 위한 Agent 에 대한 내용입니다.
+Test : 테스트 Target에 대한 내용입니다.</p>
+<p>로 구성됩니다.
+General Conf, Data Modeling,State Modeling 이 3부분은 Sample 파일이나 Tutorial 보시면 좀 편합니다.</p>
+<p>주로 테스트에서 다뤄야할 부분은 Agents, Test 부분인데요.</p>
+<p>일단 Agents 부터 볼까합니다.
+Agents는 Fuzzing 되는 데이터를 수집하고 분석하는 부분을 나타내며, 크게 각각 OS별 Monitor로 구성되어 있습니다.
+Windows Monitors
+Windows Debugger Monitor
+Cleanup Registry Monitor
+Page Heap Monitor
+Popup Watcher Monitor
+Windows Service Monitor
+OS X Monitors
+OS X Crash Wrangler Monitor
+OS X Crash Reporter Monitor
+Linux Monitors
+Linux Crash Monitor
+Cross Platform Monitors
+CanaKit Relay Monitor
+Cleanup Folder Monitor
+IpPower9258 Monitor
+Memory Monitor
+Pcap Network Monitor
+Ping Monitor
+Process Launcher Monitor
+Process Killer Monitor
+Save File Monitor
+Socket Listener Monitor
+SSH Monitor
+SSH Downloader Monitor
+Vmware Control Monitor</p>
+<p>요기서 LinuxCrash Monitor를 기준으로 보면 아래와 같이 <Agent> 내 <Monitor>를 통해 구성됩니다.</p>
+<pre><code>
+&lt;Agent name=&quot;Local&quot;&gt;
+        &lt;Monitor class=&quot;LinuxCrashMonitor&quot;/&gt;
+
+        &lt;Monitor class=&quot;Process&quot;&gt;
+                &lt;Param name=&quot;Executable&quot; value=&quot;./CrashingProgram&quot; /&gt;  &lt;!-- 수집프로그램 --&gt;
+                &lt;Param name=&quot;StartOnCall&quot; value=&quot;Start&quot; /&gt;   &lt;!-- ??  --&gt;
+                &lt;Param name=&quot;Arguments&quot; value=&quot;fuzzed.bin&quot; /&gt;  &lt;!-- 인자값 --&gt;
+        &lt;/Monitor&gt;
+&lt;/Agent&gt;
+
+</code></pre>
+<p>제가 위에서 사용했던건 LocalAgent의 LinuxDebugger를 사용했고, 이친구는 수집서버 지정 후 인자값으로 서버에 필요한 파라미터를 넘겼습니다.</p>
+<pre><code>
+&lt;Agent name=&quot;LocalAgent&quot;&gt;
+&lt;Monitor class=&quot;LinuxDebugger&quot;&gt;
+&lt;Param name=&quot;Executable&quot; value=&quot;./CrashableServer&quot; /&gt;
+&lt;Param name=&quot;Arguments&quot; value=&quot;127.0.0.1 4244&quot; /&gt;
+&lt;/Monitor&gt;
+&lt;/Agent&gt;
+
+</code></pre>
+<p>이런식으로 각각 OS,상황에 맞는 Agent와 Monitor를 지정하여 세팅합니다.</p>
+<p>두번째는 Test 속성인데요.
+테스트는 2가지로 나누어 볼 수 있습니다.
+Test - Configure a StateModel along with a combination of Publishers, Loggers, Agents, etc.
+Publishers - I/O interface for interacting with the fuzzing target.
+Loggers - Method of collecting fuzzing information used to analyze Faults.</p>
+<p>Publishers 는 IO 입출력 관련하여 target에 fuzzing 될 데이터를 지정하는 부분이고
+Logger 를 Fuzzing을 통해 얻어진 결과를 어떻게 처리할 지 지정하는 부분입니다.</p>
+<p>여기서 Publisher 종류는 보면 아래와 같습니다.</p>
+<p>Publishers
+Com
+Console
+ConsoleHex
+File
+FilePerIteration
+Http
+Null
+RawEther
+RawIPv4
+RawIPv6
+RawV4
+RawV6
+Remote
+TcpClient
+TcpListener
+Udp
+WebService</p>
+<p>각각 종류 별 Publishers를 지원하고, XML 파일에서 지정하여 사용 가능합니다.
+제가 사용했던 부분을 보면 아래와 같네요.</p>
+<pre><code>
+&lt;Test name=&quot;Default&quot;&gt;
+&lt;Agent ref=&quot;LocalAgent&quot; /&gt;
+
+&lt;StateModel ref=&quot;State&quot;/&gt;
+&lt;Publisher class=&quot;Tcp&quot;&gt;
+&lt;Param name=&quot;Host&quot; value=&quot;127.0.0.1&quot; /&gt;
+&lt;Param name=&quot;Port&quot; value=&quot;8080&quot; /&gt;
+&lt;/Publisher&gt;
+&lt;Logger class=&quot;Filesystem&quot;&gt;
+&lt;Param name=&quot;Path&quot; value=&quot;Logs&quot; /&gt;
+&lt;/Logger&gt;
+&lt;/Test&gt;
+
+</code></pre>
+<p>일단 해당 Test 속성에서 Agent를 아까 만들어둔 LocalAgent로 지정하고 Publisher는 TCP로 지정하였습니다.
+그다음 파라미터로 테스트를 위한 Burp의 IP/Port 를 지정하였죠.</p>
+<p>추가로 Logger는 Filesystem 클래스로 지정하고, Path라는 파라미터에 Logs 디렉토리를 지정해 주었습니다.
+이로써 Fuzzing 된 데이터는 실행 디렉토리 하단 Logs 디렉토리에 저장되게 되지요.</p>
+<p>제 글만 보고 Peach Fuzzer를 잘 다룰수는 없다고 생각됩니다.. 생각보다 복잡한 Fuzzer이지만, 활용성이 넓기 때문에 잘 이용하면 되게 좋은 툴로 보이네요.</p>
+<p>Guide Page 첨부하니, 참고하면서 분석해보세요 : )
+http://community.peachfuzzer.com/v3/PeachPit.html</p>
+<p><a href="http://www.codeblack.net/2015/11/system-hacking-peach-fuzzer-application.html">[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 1 - Install Peach Fuzzer</a>
+<a href="http://www.codeblack.net/2015/11/system-hacking-peach-fuzzer-application_26.html">[SYSTEM HACKING] Peach Fuzzer를 통해 Application 분석 2 - Application Fuzzing for Exploit </a>
+<a href="http://www.codeblack.net/2015/11/system-hacking-peach-fuzzer-gui-peach3.html">[SYSTEM HACKING] Peach Fuzzer의 GUI 모드 - Peach3 Fuzz Bang(Run Peach Fuzzer on GUI Interface) </a></p>
+<h2 id="reference">Reference</h2>
+<p>http://community.peachfuzzer.com</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

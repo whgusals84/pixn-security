@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Evasion technique using Wildcards, Quotation marks and backslash, $IFS(WAF, 방어로직 우회) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Evasion technique using Wildcards, Quotation marks and backslash, $IFS(WAF, 방어로직 우회)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/hacking-evasion-technique-using/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Evasion technique using Wildcards, Quotation marks and backslash, $IFS(WAF, 방어로직 우회)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/hacking-evasion-technique-using/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Evasion technique using Wildcards, Quotation marks and backslash, $IFS(WAF, 방어로직 우회)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/hacking-evasion-technique-using/","datePublished":"2018-05-26T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2018-hacking-evasion-technique-using.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"Evasion technique using Wildcards, Quotation marks and backslash, $IFS(WAF, 방어로직 우회)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Evasion technique using Wildcards, Quotation marks and backslash, $IFS(WAF, 방어로직 우회)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-05-26">
+                        MAY 26, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><h2 id="wildcards">WildCards?</h2>
+<p>Wildcard는 OS에서 파일에 대해 다중처리를 위해 사용되는 기호입니다. 보편적으로 많이 사용하는건 * ? 등이 있고 덕분에 번거로운 작업을 한번에 처리할 수 있게 되죠.
+뭐 대충 이런 경우이죠.</p>
+<pre><code>#&gt; rm *.txt
+=&gt; .txt 로 끝나는 모든 파일을 삭제하라.
+</code></pre>
+<p>정리해보면 이정도 문자들이 있습니다.</p>
+<pre><code>.(dot)
+ =&gt; 현재 위치, grep 에선 *과 동일
+?(question mark)
+ =&gt; 내용을 모를 때
+*(asterisk)
+ =&gt; 포함하는 모든
+\(backslash)
+-(dash)
+ =&gt; 해당 범위 (1-5)
+[](square brackets)
+ =&gt; 괄호 내 문자 식별
+[!](not)
+ =&gt; 부정 ㅋㅋㅋ
+</code></pre>
+<p>와일드 카드를 활용하면 완벽하게 기억이 나지 않는 path, command에 대해서도</p>
+<pre><code>/???/?at
+</code></pre>
+<p><a href="https://4.bp.blogspot.com/-9ltxzDutS60/Wwl24KySEGI/AAAAAAAADFk/2nb8ZIpk0cYH4b64Q--4fiOOjqizOJe9wCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_058.jpg"><img loading="lazy" src="https://4.bp.blogspot.com/-9ltxzDutS60/Wwl24KySEGI/AAAAAAAADFk/2nb8ZIpk0cYH4b64Q--4fiOOjqizOJe9wCLcBGAs/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_058.jpg" alt="" /></a></p>
+<pre><code>echo /*/*ss*
+</code></pre>
+<p><a href="https://1.bp.blogspot.com/-CrXSEvqqcZw/Wwl29zw12xI/AAAAAAAADFo/0knSJgiq0nYt-vFFD-ADdxlXuGwlTE6PgCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_059.jpg"><img loading="lazy" src="https://1.bp.blogspot.com/-CrXSEvqqcZw/Wwl29zw12xI/AAAAAAAADFo/0knSJgiq0nYt-vFFD-ADdxlXuGwlTE6PgCLcBGAs/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_059.jpg" alt="" /></a></p>
+<p><a href="http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm">http://tldp.org/LDP/GNU-Linux-Tools-Summary/html/x11655.htm</a></p>
+<h2 id="evasion-1-wildcards">Evasion 1 - Wildcards</h2>
+<p>Wildcard를 이용하면 문자를 적게 사용하면서 명령어를 쓸 수 있습니다. 이것을 이용해서 문자열 기반의 필터링 규칙을 우회할 수 있게 됩니다.</p>
+<p>원본 구문</p>
+<pre><code>#&gt; cat /etc/passwd
+</code></pre>
+<p>Evasion</p>
+<pre><code>#&gt; cat /???/??ss??
+#&gt; cat /???/pass*
+</code></pre>
+<p>모두 passwd 파일을 불러올 수 있습니다.</p>
+<p>Output</p>
+<pre><code>root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+[....]
+</code></pre>
+<h2 id="evasion-2-quotation-marks-and-backslash">Evasion 2 - Quotation marks and backslash</h2>
+<p>quot(&quot; ') 문자와 backslash는 문자열을 표기합니다. 커맨드라인에서도 동일하게 문자열을 표기하는데, quot, slash가 있던 없던 명령으로 보기 때문에 문자열을 자르는 용도로도 사용이 가능합니다.
+아래 명령을 보면..</p>
+<pre><code>#&gt; whoami
+#&gt; who'a'mi
+#&gt; who&quot;a&quot;mi
+</code></pre>
+<p>모두 사용자 계정이 확인됩니다. 위에 wildcard와 조합을 해보면.. 이런 패턴이 가능하겠지요.</p>
+<pre><code>#&gt; cat /???/pas's'??
+#&gt; cat /???/pas&quot;s&quot;??
+#&gt; cat /e*c/pa\s\swd
+</code></pre>
+<p><a href="https://4.bp.blogspot.com/-Xxu4pyHDO6k/Wwl3L_G4CGI/AAAAAAAADFw/N3fneOh4N9IXRFUyARfmqc69rNkbWlmhgCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_060.jpg"><img loading="lazy" src="https://4.bp.blogspot.com/-Xxu4pyHDO6k/Wwl3L_G4CGI/AAAAAAAADFw/N3fneOh4N9IXRFUyARfmqc69rNkbWlmhgCLcBGAs/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_060.jpg" alt="" /></a></p>
+<h2 id="evasion-3-ifs입력필드-구분자">Evasion 3 - $IFS(입력필드 구분자)</h2>
+<p>공백 사용 불가능한 상황에선 내부변수나 특수문자 ,&lt; 등을 이용해서 우회가 가능합니다.
+여기서 $IFS는 입력필드 구분자로 기본적으로 따로 쓰이면 공백과 같은 의미를 지니며 특정 값에 대해 공백으로 치환해줄 수 있습니다.</p>
+<pre><code>#&gt; IFS=,;`cat&lt;&lt;&lt;cat,/etc/passwd`
+#&gt; cat$IFS/etc/passwd
+#&gt; cat${IFS}/etc/passwd
+#&gt; cat&lt;/etc/passwd
+#&gt; {cat,/etc/passwd}
+</code></pre>
+<h2 id="언어에서-사용하는-부분도-똑같이-적용될까">언어에서 사용하는 부분도 똑같이 적용될까?</h2>
+<p>모든 함수가 공통적이진 않겠지만, 기본적으로 os 관련 함수는 동일하게 wildcard 처리를 진행합니다.</p>
+<p>Ruby exec</p>
+<pre><code>irb(main):001:0&gt; exec(&quot;cat /???/??ss??&quot;)
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+</code></pre>
+<p>Python os.system</p>
+<pre><code>&gt;&gt;&gt; os.system(&quot;cat /???/??ss??&quot;)
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+</code></pre>
+<h2 id="추가적인-포인트">추가적인 포인트?</h2>
+<p>쉘에선 wildcard와 같이 여러가지 사용할 수 있는 트릭들이 존재합니다. 잘 활용해보면 또다른 패턴을 만들 수 있을 것 같네요 :)</p>
+<p>$1, $2, $3, ... are the positional parameters.
+&quot;$@&quot; is an array-like construct of all positional parameters, {$1, $2, $3 ...}.
+&quot;$*&quot; is the IFS expansion of all positional parameters, $1 $2 $3 ....
+$# is the number of positional parameters.
+$- current options set for the shell.
+$$ pid of the current shell (not subshell).
+$_ most recent parameter (or the abs path of the command to start the current shell immediately after startup).
+$IFS is the (input) field separator.
+$? is the most recent foreground pipeline exit status.
+$! is the PID of the most recent background command.
+$0 is the name of the shell or shell script.
+(<a href="https://stackoverflow.com/questions/5163144/what-are-the-special-dollar-sign-shell-variables">https://stackoverflow.com/questions/5163144/what-are-the-special-dollar-sign-shell-variables</a> )</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

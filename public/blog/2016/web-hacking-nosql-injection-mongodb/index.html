@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>MongoDB Injection으로 알아보는 NoSQL Injection | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="MongoDB Injection으로 알아보는 NoSQL Injection">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-nosql-injection-mongodb/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MongoDB Injection으로 알아보는 NoSQL Injection">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-nosql-injection-mongodb/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"MongoDB Injection으로 알아보는 NoSQL Injection","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-nosql-injection-mongodb/","datePublished":"2016-01-12T00:00:00+00:00","dateModified":"2022-08-27T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2016-web-hacking-nosql-injection-mongodb.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/"},{"@type":"ListItem","position":5,"name":"MongoDB Injection으로 알아보는 NoSQL Injection"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">MongoDB Injection으로 알아보는 NoSQL Injection</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2016-01-12">
+                        JANUARY 12, 2016
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><blockquote>
+<p>⚠️ NoSQL Injection에 대한 전반적인 내용은 <a href="/cullinan/nosql-injection/">Cullinan &gt; NoSQL Injection</a> 페이지에서 관리하고 있습니다. 해당 페이지에서 최신 데이터가 유지되니 참고 부탁드려요 :D</p>
+</blockquote>
+<p>웹 취약점 분석에서 나름 많은 부분을 차지하는 Injection. 그 중 DB 관련한 NoSQL Injection에 대한 이야기를 할까 합니다. 기존 SQL Injection과 비슷하나, 나름 다른점도 있고 RDBMS 이외 NoSQL DB를 사용하는 서비스도 점점 많아져 알아두고 있어야 할 부분입니다.</p>
+<h2 id="nosql이란">NoSQL이란?</h2>
+<p>NoSQL은 RDBMS와 다르게 Not only SQL, Non-Relational Operational Database로 불리며 말 그대로 SQL로 이루어지지 않은 DB를 의미합니다. Data Model이 단순하기 때문에 가용성과 확장성이 좋습니다. 대표적으로 MongoDB가 있습니다.</p>
+<h2 id="mongodb-injection">MongoDB Injection</h2>
+<p>모든 인젝션 기법이 그렇듯이 문제는 사용자 입력값에 대한 검증 부족에서 발생합니다. Web Request를 통해 넘어온 값에 Special Character에 대해 필터링 없이 DB에서 처리되어 문법의 흐름을 바꿔 공격자가 원하는 이득을 취하는것이 기본 구조입니다.</p>
+<p><img loading="lazy" src="http://2.bp.blogspot.com/-pVARx6TELS8/VpUdsDwknII/AAAAAAAABJQ/4Iix204Vt6w/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_012.png" alt="" /></p>
+<p>NoSQL Injection도 동일한 형태입니다. 적용되는 대상만 다를 뿐입니다. 우리는 특수문자 등을 이용해서 mongodb의 쿼리가 다른 액션을 취하도록 유도만 하면 됩니다.</p>
+<pre><code class="language-ruby hljs">db<span class="hljs-operator">.</span>myCollection<span class="hljs-operator">.</span>find<span class="hljs-punctuation">(</span> <span class="hljs-punctuation">{</span> <span class="hljs-variable">$where</span><span class="hljs-punctuation">:</span> function<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span> <span class="hljs-keyword">return</span> obj<span class="hljs-operator">.</span>credits <span class="hljs-operator">-</span> obj<span class="hljs-operator">.</span>debits <span class="hljs-operator">&lt;</span> <span class="hljs-variable constant_">USER_INPUT</span><span class="hljs-punctuation">;</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> 
+</code></pre>
+<p>위와 같이 db 하단의 myCollection의 find 메소드를 통해 데이터를 찾는 구조를 가지고 있는 NoSQL 구문이 있습니다. 여기서 우리가 입력한 부분은 USER_INPUT 입니다.</p>
+<p><code>;</code>을 통해 line의 끝을 쓰고, 새로 구문을 작성하여 로직의 흐름을 바꿔놓을 수 있습니다. 아래 예제에서는 date에 Date 클래스로 할당받아 while을 돌며 계속 빙빙 도는 코드를 넘겨주게 됩니다.</p>
+<p>Attack</p>
+<pre><code class="language-ruby hljs"><span class="hljs-variable constant_">USER_INPUT</span><span class="hljs-punctuation">;</span>var date<span class="hljs-operator">=</span><span class="hljs-keyword">new</span> <span class="hljs-variable constant_">Date</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-keyword">do</span><span class="hljs-punctuation">{</span>curDate <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">Date</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-keyword">while</span><span class="hljs-punctuation">(</span>curDate<span class="hljs-operator">-</span>date<span class="hljs-operator">&lt;</span><span class="hljs-number">10000</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>실제로 이 부분이 필터링 없이 넘어가게 되면 아래와 같이 우회된 구문이 완성되겠지요.</p>
+<p>Query</p>
+<pre><code class="language-ruby hljs">function<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span> <span class="hljs-keyword">return</span> obj<span class="hljs-operator">.</span>credits <span class="hljs-operator">-</span> obj<span class="hljs-operator">.</span>debits <span class="hljs-operator">&lt;</span> <span class="hljs-variable constant_">USER_INPUT</span><span class="hljs-punctuation">;</span>var date<span class="hljs-operator">=</span><span class="hljs-keyword">new</span> <span class="hljs-variable constant_">Date</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-keyword">do</span><span class="hljs-punctuation">{</span>curDate <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-variable constant_">Date</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-keyword">while</span><span class="hljs-punctuation">(</span>curDate<span class="hljs-operator">-</span>date<span class="hljs-operator">&lt;</span><span class="hljs-number">10000</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-punctuation">}</span>
+
+</code></pre>
+<p>이런 형태로 쉽게 흐름의 변환이 가능합니다. 물론 db 데이터를 보고있는 상태에서 바로 확인이 가능하지만 blackbox test에서도 output이나 error 등을 보고 판단하여 차근차근 구문을 만들어 갈 수도 있습니다. 또 테스트를 해볼까요?</p>
+<pre><code class="language-ruby hljs">db<span class="hljs-operator">.</span>noon<span class="hljs-operator">.</span>findMember<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>이 쿼리는 Member를 찾는 기능을 한다고 가정하고 아래와 같이 인자값을 줄 수 있습니다.</p>
+<pre><code class="language-ruby hljs">db<span class="hljs-operator">.</span>noon<span class="hljs-operator">.</span>findMember<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> <span class="hljs-variable">$or</span> <span class="hljs-punctuation">:</span> <span class="hljs-operator">[</span> <span class="hljs-punctuation">{</span> <span class="hljs-built_in">name</span> <span class="hljs-punctuation">:</span> <span class="hljs-operator">[</span><span class="hljs-variable constant_">INPUT1</span><span class="hljs-operator">]</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span> level <span class="hljs-punctuation">:</span> <span class="hljs-punctuation">(</span><span class="hljs-variable">$lte</span><span class="hljs-operator">[</span><span class="hljs-variable constant_">INPUT2</span><span class="hljs-operator">]</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">}</span> <span class="hljs-operator">]</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">)</span>
+</code></pre>
+<p>여기서 공격자는 테스트를 통해 대략적인 구문 형태를 추측합니다. 우리가 공격구간으로 볼 수 있는 부분은 <code>[INPUT1]</code>, <code>[INPUT2]</code> 정도가 있을 것 같습니다. <code>[INPUT1]</code> 에 공격을 수행한다고 하면 아래와 같이 흐름을 바꿀 수 있는 구문을 만들어야겠지요.</p>
+<p>Input</p>
+<pre><code class="language-ruby hljs"><span class="hljs-punctuation">{</span><span class="hljs-variable">$ne</span><span class="hljs-symbol">:HaHwul</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<p>위와 같이 입력하면 $ne 연산자로 인해 name과 문자열 HaHwul이 같지 않으면 찾게되어 다수 데이터가 나타나게 됩니다.</p>
+<p>Query</p>
+<pre><code class="language-ruby hljs">db<span class="hljs-operator">.</span>noon<span class="hljs-operator">.</span>findMember<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> <span class="hljs-variable">$or</span> <span class="hljs-punctuation">:</span> <span class="hljs-operator">[</span> <span class="hljs-punctuation">{</span> <span class="hljs-built_in">name</span> <span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-variable">$ne</span><span class="hljs-symbol">:&quot;</span><span class="hljs-symbol">HaHwul</span><span class="hljs-symbol">&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span> <span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span> level <span class="hljs-punctuation">:</span> <span class="hljs-punctuation">(</span><span class="hljs-variable">$lte</span><span class="hljs-operator">[</span><span class="hljs-variable constant_">INPUT2</span><span class="hljs-operator">]</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">}</span> <span class="hljs-operator">]</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">)</span>
+</code></pre>
+<p>사실 따지고 보면 SQL Injection이랑 별로 다를게 없습니다. 다만 공격이 수행되는 장소만 다를뿐이지요. 대체로 테스트에선 $ne 연산자 값이 상황을 뒤집을 수 있는 연산자가 많이 사용되니 로직을 파악하는 방법과 연산자에 집중하면 좋습니다.</p>
+<h2 id="어떻게-막아야-할-것인가">어떻게 막아야 할 것인가?</h2>
+<p>상세한 대응방법은 플랫폼, 코드별로 조금씩 다를 수 있곘지만 대부분의 웹 공격의 대안처럼 사용자 입력값에 대한 철저한 필터링입니다.</p>
+<pre><code class="language-ruby hljs">db<span class="hljs-operator">.</span>noon<span class="hljs-operator">.</span>findMember<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> <span class="hljs-variable">$or</span> <span class="hljs-punctuation">:</span> <span class="hljs-operator">[</span> <span class="hljs-punctuation">{</span> <span class="hljs-built_in">name</span> <span class="hljs-punctuation">:</span> <span class="hljs-operator">[</span><span class="hljs-variable constant_">INPUT1</span><span class="hljs-operator">]</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span> level <span class="hljs-punctuation">:</span> <span class="hljs-punctuation">(</span><span class="hljs-variable">$lte</span><span class="hljs-operator">[</span><span class="hljs-variable constant_">INPUT2</span><span class="hljs-operator">]</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">}</span> <span class="hljs-operator">]</span> <span class="hljs-punctuation">}</span> <span class="hljs-punctuation">)</span>
+</code></pre>
+<p><code>[INPUT1]</code> , <code>[INPUT2]</code> 부분 모두 입력될 때 로직 자체를 우회 시킬 수 있는 특수문자 <code>$</code> <code>{</code> <code>}</code> <code>[</code> <code>]</code> <code>(</code> <code>)</code> 등에 대해서 필터링 처리해야합니다.  꼭 필요하다면 db가 처리하지 않도록 검증해야 합니다.</p>
+<h2 id="알아두면-좋은-mongodb-연산자">알아두면 좋은 MongoDB 연산자</h2>
+<ul>
+<li>$ne : 같지않음</li>
+<li>$not : 복수의 데이터간 여집합을 반환</li>
+<li>$exists : 특정키를 가지고 있는지 질의</li>
+<li>$lt : &lt;</li>
+<li>$gt : &gt;</li>
+<li>$lte : &lt;=</li>
+<li>$gte : &gt;=</li>
+</ul>
+<h2 id="reference">Reference</h2>
+<p><a href="https://www.owasp.org/index.php/Testing_for_NoSQL_injection">https://www.owasp.org/index.php/Testing_for_NoSQL_injection</a>
+<a href="http://aroundck.tistory.com/949">http://aroundck.tistory.com/949</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

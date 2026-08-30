@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Arachni optimizing for fast scanning (Arachni 스캔 속도 향상 시키기) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Arachni optimizing for fast scanning (Arachni 스캔 속도 향상 시키기)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/arachni-optimizing-for-fast-scanning/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Arachni optimizing for fast scanning (Arachni 스캔 속도 향상 시키기)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/arachni-optimizing-for-fast-scanning/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Arachni optimizing for fast scanning (Arachni 스캔 속도 향상 시키기)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/arachni-optimizing-for-fast-scanning/","datePublished":"2018-09-01T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2018-arachni-optimizing-for-fast-scanning.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"Arachni optimizing for fast scanning (Arachni 스캔 속도 향상 시키기)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Arachni optimizing for fast scanning (Arachni 스캔 속도 향상 시키기)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-09-01">
+                        SEPTEMBER 1, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Arachni를 가지고 재미있는 것들을 하고있는데, 요즘 참 스캔 속도에 대해 고민이 되네요. Arachni 가 벤치 마킹 기준으로 굉장히 좋은 성능을 가지며 오픈소스이지만 결정적으로 어마어마한 스캔 시간이 발목을 잡는 것 같습니다.</p>
+<p>처음에는 헤드리스 브라우저인 phantomjs를 전 테스팅 구간에 사용(아니 왜... 크롤링만 그걸로 하고 일반 스캐너처럼 해도 나쁘지 않을텐데)하기 떄문에 그런줄만 알았는데요, 찾아보디 몇가지 내용이 있어 더 공유드립니다.</p>
+<p><a href="https://2.bp.blogspot.com/-Ce5tInMYXZw/W4qYkrbuNrI/AAAAAAAADbA/HO19O6QpDFAdahIZorjc06gPsWNrjH6TgCLcBGAs/s1600/arachni.jpg"><img loading="lazy" src="https://2.bp.blogspot.com/-Ce5tInMYXZw/W4qYkrbuNrI/AAAAAAAADbA/HO19O6QpDFAdahIZorjc06gPsWNrjH6TgCLcBGAs/s640/arachni.jpg" alt="" /></a></p>
+<h2 id="solution1-down-scan-performance">Solution1 - Down scan performance</h2>
+<p>Arachni는 자체적으로 서버에 대한 스트레스 테스트를 진행합니다. 만약 스캔에서 발생하는 요청으로 인해 대상 서버가 느려지는 경우(응답 시간으로 판별) 자체적으로 스캔 쓰레드를 조정하거나 요청을 멈춰버립니다.
+약한 서버에 돌렸을 때 스캔 시간이 아주 늘어지는 이유이기도 하죠.(또한 앞단에 보안 장비로 인해서 느려질수도 있겠네요)</p>
+<p>대게 이런 경우는 단시간에 많은 요청이 발생하기 때문에 그렇습니다. 그래서 오히려 스캔 속도를 조정해주는게 총 스캔 시간에서 이득을 볼 수 있는 방법이라고 합니다.</p>
+<p>스캔 시간에 직접 관여되는 것 중 가장 큰건 request-concurrency입니다. 동시에 얼마나 많은 양의 테스트를 할 수 있는지에 대한 항목인데, 오히려 갯수를 줄여서 스캔 퍼포먼스를 줄여서 서버의 스트레스를 낮춰 전체 스캔 시간에서 이득을 볼 수 있습니다. 물론 이 방법은 대상 서버가 스트레스를 받아서 Arachni의 자체적인 속도 타협으로 인해 스캔 시간이 늘어지는 걸 막을 때 사용합니다. (보통은 퍼포먼스가 더 줄겠죠)</p>
+<p>Default: 20</p>
+<p>command line</p>
+<pre><code>--http-request-concurrency=10
+</code></pre>
+<p>REST API</p>
+<pre><code>{
+  &quot;http-request-concurrency&quot;:&quot;10&quot;,
+   ....
+}
+</code></pre>
+<h2 id="solution2-스캔-항목-타협">Solution2 - 스캔 항목 타협</h2>
+<p>Arachni는 기본 옵션으로 모든 스캔 항목에 대해 테스트를 진행합니다. 가장 좋은 결과를 얻을 순 있지만, 스캔 속도에 막대한 영향을 끼칩니다.
+조정이 가능하다면 적절히 타협봐서 사용하는게 속도를 늘리는 좋은 방법입니다.</p>
+<p>Default: *</p>
+<p>command line</p>
+<pre><code>-checks=*,-common_*,-backup_*,-backdoors
+</code></pre>
+<p>REST API</p>
+<pre><code>{
+  &quot;checks&quot;:&quot;*,-xss,csrf&quot;
+}
+</code></pre>
+<p>다만 아쉬운점이 있다면 보편적인 스캐너 입장에선 뺄만한게 없습니다.
+[ check list ]</p>
+<pre><code> [*] session_fixation:
+--------------------
+Name:        Session fixation
+Description:    
+Checks whether or not the session cookie can be set to an arbitrary value.
+
+Severity:    High
+Elements:    form, link, link_template
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/session_fixation.rb
+
+ [*] unvalidated_redirect:
+--------------------
+Name:        Unvalidated redirect
+Description:    
+Injects URLs and checks the `Location` HTTP response header field and/or browser
+URL to determine whether the attack was successful.
+
+Severity:    Medium
+Elements:    link, form, cookie, header, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/unvalidated_redirect.rb
+
+ [*] no_sql_injection:
+--------------------
+Name:        NoSQL Injection
+Description:    
+NoSQL injection check, uses known DB errors to identify vulnerabilities.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/no_sql_injection.rb
+
+ [*] xss_path:
+--------------------
+Name:        XSS in path
+Description:    
+Cross-Site Scripting check for path injection
+
+Severity:    High
+Elements:    path
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.11
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xss_path.rb
+
+ [*] xss_event:
+--------------------
+Name:        XSS in HTML element event attribute
+Description:    
+Cross-Site Scripting in event tag of HTML element.
+
+Severity:    High
+Elements:    form, link, cookie, header
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.9
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xss_event.rb
+
+ [*] code_injection_timing:
+--------------------
+Name:        Code injection (timing)
+Description:    
+Injects code snippets and assess whether or not the injection was successful using
+a time delay.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/code_injection_timing.rb
+
+ [*] xss_dom:
+--------------------
+Name:        DOM XSS
+Description:    
+Injects an HTML element into page DOM inputs and then parses the HTML markup of
+tainted responses to look for proof of vulnerability.
+
+Severity:    High
+Elements:    link_dom, form_dom, cookie_dom, link_template_dom, ui_input_dom, ui_form_dom
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xss_dom.rb
+
+ [*] xss_tag:
+--------------------
+Name:        XSS in HTML tag
+Description:    
+Cross-Site Scripting in HTML tag.
+
+Severity:    High
+Elements:    form, link, cookie, header
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.11
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xss_tag.rb
+
+ [*] csrf:
+--------------------
+Name:        CSRF
+Description:    
+It uses differential analysis to determine which forms affect business logic and
+checks them for lack of anti-CSRF tokens.
+
+(Works best with a valid session.)
+
+Severity:    High
+Elements:    form
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/csrf.rb
+
+ [*] sql_injection_timing:
+--------------------
+Name:        Blind SQL injection (timing attack)
+Description:    
+Blind SQL Injection check using timing attacks.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/sql_injection_timing.rb
+
+ [*] source_code_disclosure:
+--------------------
+Name:        Source code disclosure
+Description:    
+It tries to identify whether or not the web application can be forced to reveal
+source code.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/source_code_disclosure.rb
+
+ [*] xpath_injection:
+--------------------
+Name:        XPath Injection
+Description:    
+XPath injection check
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.6
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xpath_injection.rb
+
+ [*] xss_dom_script_context:
+--------------------
+Name:        DOM XSS in script context
+Description:    
+Injects JS taint code and checks to see if it gets executed as proof of vulnerability.
+
+Severity:    High
+Elements:    link_dom, form_dom, cookie_dom, link_template_dom, ui_input_dom, ui_form_dom
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xss_dom_script_context.rb
+
+ [*] os_cmd_injection:
+--------------------
+Name:        OS command injection
+Description:    
+Tries to find Operating System command injections.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.6
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/os_cmd_injection.rb
+
+ [*] os_cmd_injection_timing:
+--------------------
+Name:        OS command injection (timing)
+Description:    
+Tries to find operating system command injections using timing attacks.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/os_cmd_injection_timing.rb
+
+ [*] rfi:
+--------------------
+Name:        Remote File Inclusion
+Description:    
+Injects a remote URL in all available inputs and checks for relevant content in
+the HTTP response body.
+
+Severity:    High
+Elements:    link, form, cookie, header, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/rfi.rb
+
+ [*] response_splitting:
+--------------------
+Name:        Response Splitting
+Description:    
+Injects arbitrary and checks if any of them end up in the response header.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/response_splitting.rb
+
+ [*] xss_script_context:
+--------------------
+Name:        XSS in script context
+Description:    
+Injects JS taint code and check to see if it gets executed as proof of vulnerability.
+
+Severity:    High
+Elements:    form, link, cookie, header, link_template
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xss_script_context.rb
+
+ [*] xss:
+--------------------
+Name:        XSS
+Description:    
+Injects an HTML element into page inputs and then parses the HTML markup of
+tainted responses to look for proof of vulnerability.
+
+Severity:    High
+Elements:    form, link, cookie, header, link_template
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.4.9
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xss.rb
+
+ [*] xxe:
+--------------------
+Name:        XML External Entity
+Description:    
+Injects a custom External Entity into XML documents prior to submitting them and
+determines the existence of a vulnerability by checking whether that entity was
+processed based on the resulting HTTP response.
+
+Severity:    High
+Elements:    xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/xxe.rb
+
+ [*] no_sql_injection_differential:
+--------------------
+Name:        Blind NoSQL Injection (differential analysis)
+Description:    
+It uses differential analysis to determine how different inputs affect the behavior
+of the web application and checks if the displayed behavior is consistent with
+that of a vulnerable application.
+
+Severity:    High
+Elements:    link, form, cookie
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/no_sql_injection_differential.rb
+
+ [*] file_inclusion:
+--------------------
+Name:        File Inclusion
+Description:    
+Injects paths of common files (like `/etc/passwd` and `boot.ini`) and evaluates
+the existence of a file inclusion vulnerability based on the presence of relevant
+content or errors in the HTTP response body.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.7
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/file_inclusion.rb
+
+ [*] code_injection_php_input_wrapper:
+--------------------
+Name:        Code injection (php://input wrapper)
+Description:    
+Injects PHP code into the HTTP request body and uses the `php://input` wrapper
+to try and load it.
+
+Severity:    High
+Elements:    form, link, cookie, header
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/code_injection_php_input_wrapper.rb
+
+ [*] sql_injection_differential:
+--------------------
+Name:        Blind SQL Injection (differential analysis)
+Description:    
+It uses differential analysis to determine how different inputs affect behavior
+of the web application and checks if the displayed behavior is consistent with
+that of a vulnerable application.
+
+Severity:    High
+Elements:    link, form, cookie
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.4.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/sql_injection_differential.rb
+
+ [*] path_traversal:
+--------------------
+Name:        Path Traversal
+Description:    
+It injects paths of common files ( like `/etc/passwd` and `boot.ini`) and
+evaluates the existence of a path traversal vulnerability based on the presence
+of relevant content in the HTML responses.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.4.8
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/path_traversal.rb
+
+ [*] unvalidated_redirect_dom:
+--------------------
+Name:        Unvalidated DOM redirect
+Description:    
+Injects URLs and checks the browser URL to determine whether the attack was successful.
+
+Severity:    High
+Elements:    link_dom, form_dom, cookie_dom, ui_form_dom
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/unvalidated_redirect_dom.rb
+
+ [*] sql_injection:
+--------------------
+Name:        SQL Injection
+Description:    
+SQL injection check, uses known SQL DB errors to identify vulnerabilities.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/sql_injection.rb
+
+ [*] code_injection:
+--------------------
+Name:        Code injection
+Description:    
+Injects code snippets and assess whether or not execution was successful.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/code_injection.rb
+
+ [*] ldap_injection:
+--------------------
+Name:        LDAPInjection
+Description:    
+It tries to force the web application to return LDAP error messages, in order to
+discover failures in user input validation.
+
+Severity:    High
+Elements:    link, form, cookie, header, link_template, json, xml
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/ldap_injection.rb
+
+ [*] trainer:
+--------------------
+Name:        Trainer
+Description:    
+Pokes and probes all inputs of a given page in order to uncover new input vectors.
+It also forces Arachni to train itself by analyzing the server responses.
+
+Elements:    form, link, cookie, header
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/active/trainer.rb
+
+ [*] password_autocomplete:
+--------------------
+Name:        Password field with auto-complete
+Description:    
+Greps pages for forms which have password fields
+                without explicitly disabling auto-complete.
+
+Severity:    Low
+Elements:    form
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/password_autocomplete.rb
+
+ [*] cookie_set_for_parent_domain:
+--------------------
+Name:        Cookie set for parent domain
+Description:    
+Logs cookies that are accessible by all subdomains.
+
+Severity:    Informational
+Elements:    cookie
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/cookie_set_for_parent_domain.rb
+
+ [*] mixed_resource:
+--------------------
+Name:        Mixed Resource
+Description:    
+Looks for resources served over HTTP when the HTML code is server over HTTPS.
+
+Severity:    Medium
+Elements:    body
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/mixed_resource.rb
+
+ [*] private_ip:
+--------------------
+Name:        Private IP address finder
+Description:    
+Scans pages for private IP addresses.
+
+Severity:    Low
+Elements:    body, header
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/private_ip.rb
+
+ [*] insecure_cors_policy:
+--------------------
+Name:        Insecure CORS policy
+Description:    
+Checks the host for a wildcard (`*`) `Access-Control-Allow-Origin` header.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/insecure_cors_policy.rb
+
+ [*] hsts:
+--------------------
+Name:        HTTP Strict Transport Security
+Description:    
+Checks HTTPS pages for missing `Strict-Transport-Security` headers.
+
+Severity:    Medium
+Elements:    server
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/hsts.rb
+
+ [*] form_upload:
+--------------------
+Name:        Form-based File Upload
+Description:    
+Logs upload forms which require manual testing.
+
+Severity:    Informational
+Elements:    form
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/form_upload.rb
+
+ [*] http_only_cookies:
+--------------------
+Name:        HttpOnly cookies
+Description:    
+Logs cookies that are accessible via JavaScript.
+
+Severity:    Informational
+Elements:    cookie
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/http_only_cookies.rb
+
+ [*] insecure_cookies:
+--------------------
+Name:        Insecure cookies
+Description:    
+Logs cookies that are served over an encrypted channel but without having the
+`secure` flag set.
+
+Severity:    Informational
+Elements:    cookie
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/insecure_cookies.rb
+
+ [*] x_frame_options:
+--------------------
+Name:        Missing X-Frame-Options header
+Description:    
+Checks the host for a missing `X-Frame-Options` header.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/x_frame_options.rb
+
+ [*] cvs_svn_users:
+--------------------
+Name:        CVS/SVN users
+Description:    
+Scans every page for CVS/SVN users.
+
+Severity:    Low
+Elements:    body
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/cvs_svn_users.rb
+
+ [*] unencrypted_password_forms:
+--------------------
+Name:        Unencrypted password forms
+Description:    
+Looks for password inputs that don't submit data
+                over an encrypted channel (HTTPS).
+
+Severity:    Medium
+Elements:    form
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/unencrypted_password_forms.rb
+
+ [*] html_objects:
+--------------------
+Name:        HTML objects
+Description:    
+Logs the existence of HTML object tags.
+                Since Arachni can't execute things like Java Applets and Flash
+                this serves as a heads-up to the penetration tester to review
+                the objects in question using a different method.
+
+Severity:    Informational
+Elements:    body
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/html_objects.rb
+
+ [*] ssn:
+--------------------
+Name:        SSN
+Description:    
+Greps pages for disclosed US Social Security Numbers.
+
+Severity:    High
+Elements:    body
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;, haliphax
+Version:    0.1.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/ssn.rb
+
+ [*] emails:
+--------------------
+Name:        E-mail address
+Description:    
+Greps pages for disclosed e-mail addresses.
+
+Severity:    Informational
+Elements:    body
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/emails.rb
+
+ [*] credit_card:
+--------------------
+Name:        Credit card number disclosure
+Description:    
+Scans pages for credit card numbers.
+
+Severity:    Medium
+Elements:    body
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/credit_card.rb
+
+ [*] captcha:
+--------------------
+Name:        CAPTCHA
+Description:    
+Greps pages for forms with CAPTCHAs.
+
+Severity:    Informational
+Elements:    form
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/grep/captcha.rb
+
+ [*] backdoors:
+--------------------
+Name:        Backdoors
+Description:    
+Tries to find common backdoors on the server.
+
+Severity:    High
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.6
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/backdoors.rb
+
+ [*] allowed_methods:
+--------------------
+Name:        Allowed methods
+Description:    
+Checks for supported HTTP methods.
+
+Severity:    Informational
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/allowed_methods.rb
+
+ [*] htaccess_limit:
+--------------------
+Name:        .htaccess LIMIT misconfiguration
+Description:    
+Checks for misconfiguration in LIMIT directives that blocks
+                GET requests but allows POST.
+
+Severity:    High
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.7
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/htaccess_limit.rb
+
+ [*] xst:
+--------------------
+Name:        XST
+Description:    
+Sends an HTTP TRACE request and checks if it succeeded.
+
+Severity:    Medium
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.8
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/xst.rb
+
+ [*] directory_listing:
+--------------------
+Name:        Directory listing
+Description:    
+Tries to force directory listings.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.7
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/directory_listing.rb
+
+ [*] http_put:
+--------------------
+Name:        HTTP PUT
+Description:    
+Checks if uploading files is possible using the HTTP PUT method.
+
+Severity:    High
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/http_put.rb
+
+ [*] insecure_client_access_policy:
+--------------------
+Name:        Insecure client-access policy
+Description:    
+Checks `clientaccesspolicy.xml` files for wildcard domain policies.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/insecure_client_access_policy.rb
+
+ [*] webdav:
+--------------------
+Name:        WebDAV
+Description:    
+Checks for WebDAV enabled directories.
+
+Severity:    Informational
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.5
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/webdav.rb
+
+ [*] common_files:
+--------------------
+Name:        Common files
+Description:    
+Tries to find common sensitive files on the server.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.4
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/common_files.rb
+
+ [*] insecure_cross_domain_policy_headers:
+--------------------
+Name:        Insecure cross-domain policy (allow-http-request-headers-from)
+Description:    
+Checks `crossdomain.xml` files for wildcard `allow-http-request-headers-from` policies.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/insecure_cross_domain_policy_headers.rb
+
+ [*] localstart_asp:
+--------------------
+Name:        localstart.asp
+Description:    
+Checks for localstart.asp.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/localstart_asp.rb
+
+ [*] interesting_responses:
+--------------------
+Name:        Interesting responses
+Description:    
+Logs all non 200 (OK) server responses.
+
+Severity:    Informational
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/interesting_responses.rb
+
+ [*] backup_directories:
+--------------------
+Name:        Backup directories
+Description:    
+Tries to find backed-up directories.
+
+Severity:    Medium
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/backup_directories.rb
+
+ [*] origin_spoof_access_restriction_bypass:
+--------------------
+Name:        Origin Spoof Access Restriction Bypass
+Description:    
+Retries denied requests with a spoofed origin header
+                to trick the web application into thinking that the request originated
+                from localhost and checks whether the restrictions was bypassed.
+
+Severity:    High
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/origin_spoof_access_restriction_bypass.rb
+
+ [*] common_admin_interfaces:
+--------------------
+Name:        Common administration interfaces
+Description:    
+Tries to find common admin interfaces on the server.
+
+Severity:    Low
+Elements:    server
+Author:        Brendan Coles &lt;bcoles@gmail.com&gt;, Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1.1
+References:
+ [~] Apache.org        http://httpd.apache.org/docs/2.0/mod/mod_access.html
+ [~] WASC        http://projects.webappsec.org/w/page/13246953/Predictable%20Resource%20Location
+Targets:
+ [~] Generic
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/common_admin_interfaces.rb
+
+ [*] common_directories:
+--------------------
+Name:        Common directories
+Description:    
+Tries to find common directories on the server.
+
+Severity:    Medium
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.2.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/common_directories.rb
+
+ [*] backup_files:
+--------------------
+Name:        Backup files
+Description:    
+Tries to identify backup files.
+
+Severity:    Medium
+Elements:    server
+Author:        Tasos &quot;Zapotek&quot; Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.3.3
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/backup_files.rb
+
+ [*] insecure_cross_domain_policy_access:
+--------------------
+Name:        Insecure cross-domain policy (allow-access-from)
+Description:    
+Checks `crossdomain.xml` files for `allow-access-from` wildcard policies.
+
+Severity:    Low
+Elements:    server
+Author:        Tasos Laskos &lt;tasos.laskos@arachni-scanner.com&gt;
+Version:    0.1
+Path:    /home/hahwul/HAHWUL/tool/arachni/arachni-1.5.1-0.5.12/system/gems/gems/arachni-1.5.1/components/checks/passive/insecure_cross_domain_policy_access.rb
+</code></pre>
+<h2 id="solution3-phantomjsbrowser-cluster-자잘한-옵션-조정">Solution3 - phantomjs(Browser cluster), 자잘한 옵션 조정</h2>
+<p>위에서 가장 먼저 이야기드렸지만, 헤드리스 브라우저를 이용해서 Request/Response 테스트를 진행하기 때문에 다르 스캐너보다 느릴 수 밖에 없습니다.</p>
+<p>따지고 보면 가상의 브라우저가 각 웹 페이지를 랜더링 하면서 테스트한다고 생각하면 되니 당연한 결과겠지요.</p>
+<p>가장 현실적인 대안인데요, 전체적인 스캔 퍼포먼스를 조절하는게 아닌 테스팅을 하는 각 모듈에 대한 항목을 조정하는 방법이 있습니다.</p>
+<p>Browser cluster 관련 항목쪽은 헤드리스 브라우저에서 테스트하는 옵션을 조정할 수 있어 브라우저의 갯수를 늘리고 분석 Detph를 낮추면 속도면에서 많이 타협볼 수 있을 것 같습니다.</p>
+<p>그리고.. 이외에도 redirection 갯수, timtout 시간 등을 조정해서 속도를 좀 더 빠르게 떙겨볼 수 있습니다.</p>
+<h2 id="reference">Reference</h2>
+<p><a href="http://support.arachni-scanner.com/kb/general-use/optimizing-for-faster-scans">http://support.arachni-scanner.com/kb/general-use/optimizing-for-faster-scans</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

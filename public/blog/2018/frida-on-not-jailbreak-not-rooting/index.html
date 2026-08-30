@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>비루팅/비탈옥 단말에서 프리다 사용하기 (Frida Inject DL for no-jail, no-root) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="비루팅/비탈옥 단말에서 프리다 사용하기 (Frida Inject DL for no-jail, no-root)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/frida-on-not-jailbreak-not-rooting/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="비루팅/비탈옥 단말에서 프리다 사용하기 (Frida Inject DL for no-jail, no-root)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/frida-on-not-jailbreak-not-rooting/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"비루팅/비탈옥 단말에서 프리다 사용하기 (Frida Inject DL for no-jail, no-root)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/frida-on-not-jailbreak-not-rooting/","datePublished":"2018-11-18T00:00:00+00:00","dateModified":"2022-01-30T00:00:00+00:00","image":"https://2.bp.blogspot.com/-yLvXgalIYTU/W_GBgv1_RUI/AAAAAAAADhk/ytAK9yZ5MIUaeS4TaQjyJ1wg1tMFdik4QCLcBGAs/s1600/123123.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"비루팅/비탈옥 단말에서 프리다 사용하기 (Frida Inject DL for no-jail, no-root)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">비루팅/비탈옥 단말에서 프리다 사용하기 (Frida Inject DL for no-jail, no-root)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-11-18">
+                        NOVEMBER 18, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>앱 취약점 분석 시 엄청나게 활용도 높은 프리다. 예전부터 약간 Jailbreak, rooting 단말에서만 동작한다는 편견이 있었는데요. 재미있는 트릭을 이용하면 비루팅/비탈옥 단말에서도 프리다 사용이 가능합니다. 프리다 공식 홈에도 있는 내용이니 참고하시길 바랍니다 :)</p>
+<h2 id="frida-gadget">Frida Gadget</h2>
+<p>Frida 공식 홈에선 Frida gadget 이란 이름으로 소개되고 있습니다. 그 말인 즉슨 분석할 앱에 Frida의 Dynamic library를 넣어 실행하게 하여 마치 frida-server가 떠있는 것과 동일한 효과를 만들 수 있습니다. 일반적인 frida 사용과 동일하게 대상 어플리케이션에 대해 attach 하고 hooking 할 수 있습니다.</p>
+<p>정리하면 이렇습니다.</p>
+<ul>
+<li>비탈옥/비루팅 단말에선 권한에 제약이 있기 떄문에 frida-server를 띄울 수 없음</li>
+<li>단 앱을 통해 frida-server 처럼 구현할 순 있지만 앱 간 권한으로 간섭이 불가능하기 떄문에 실질직인 분석은 불가능함</li>
+<li>그래서 분석할 앱에 프리다 코드를 넣고 동작시키게 하여 프리다가 해당 앱을 attach 할 수 있도록 함</li>
+</ul>
+<h2 id="step-by-step">Step by step</h2>
+<p>우리가 해야할일은 프리다 라이브러리를 앱에 집어넣고 실행해야 합니다. 우선 프리다 라이브러리를 다운로드 받습니다.</p>
+<h3 id="download-frida-library">Download frida library</h3>
+<p>릴리즈 버전, iOS / Android 유무에 따라 링크는 바뀔 수 있습니다. 아래 깃에서 뒤적뒤적해서 맞는 버전으로 다운로드 하시면 됩니다.</p>
+<pre><code>wget https://github.com/frida/frida/releases/download/9.1.26/frida-gadget-9.1.26-android-arm.so.xz
+unxz frida-gadget-9.1.26-android-arm.so.xz
+</code></pre>
+<p>압축을 받고 풀어주면 .so(ios는 .dylib) 파일 하나가 남습니다. 이제 라이브러리 파일을 앱에 넣어야하기 떄문에 앱을 풀어줍니다.</p>
+<h3 id="extract-applicationapkipa">Extract Application(Apk,Ipa)</h3>
+<h4 id="android">Android</h4>
+<pre><code>apktool d base.apk
+I: Using Apktool 2.3.1 on base.apk
+I: Loading resource table...
+I: Decoding AndroidManifest.xml with resources…
+….
+I: Baksmaling classes7.dex...
+I: Copying assets and libs...
+I: Copying unknown files...
+I: Copying original files...
+</code></pre>
+<h4 id="ios">iOS</h4>
+<pre><code>unzip test.ipa
+</code></pre>
+<h3 id="inject-dynamic-library-and-byte-code">Inject Dynamic Library and Byte code</h3>
+<p>그다음 라이브러리 파일을 넣어줍니다. Android의 경우는 보통 lib 하위, iOS는 바이너리에 직접 주입합니다. (frida 홈에선 따로 앱을 만드는 방식을 추천하네요. 참고)
+그리고 삽입한 라이브러리를 코드단에서 로드할 수 있도록 smail 코드단을 수정해서 라이브러리를 로드해줍니다.</p>
+<h4 id="android-1">Android</h4>
+<pre><code class="language-bash hljs">cp frida-gadget-9.1.26-android-arm.so base/lib/armeabi/libfrida.so
+</code></pre>
+<pre><code class="language-bash hljs">vim splash.smail
+</code></pre>
+<pre><code class="language-bash hljs">....
+const-string v1, <span class="hljs-string">&quot;frida”
+</span><span class="hljs-string">invoke-static {v1}, Ljava/lang/System;-&gt;loadLibrary(Ljava/lang/String;)V
+</span><span class="hljs-string">
+</span><span class="hljs-string">// byte 코드 풀어서 보면 결국 loadLibrary(&quot;</span>frida<span class="hljs-string">&quot;</span><span class="hljs-string">) 이며 앱 라이브러리 디렉토리에서 frida라는 이름의 라이브러리를 읽습니다.
+</span><span class="hljs-string">// 그래서 아까 넣은 libfrida.so가 로드됩니다.
+</span><span class="hljs-string"></span></code></pre>
+<h4 id="ios-sert-dylib">iOS - sert_dylib</h4>
+<p>iOS에선 <a href="https://github.com/Tyilo/insert_dylib">Tyilo의 insert_dylib</a> 를 사용하면 쉽게 inject할 수 있습니다.</p>
+<pre><code>insert_dylib frida.dylib test
+</code></pre>
+<p>아주 먼지같은 팁이지만, loadLibray 시 앱이 죽는 경우도 있을 수 있어(앱이 크면 더더욱) 삽입 구간을 잘 골라야합니다.
+보통은 바로 트리거될 수 있게 splash, main의 oncreate 등에도 많이 넣고 다른 라이브러리 불러오는 구간에서 같이 로드시키면 에러나 비정상 동작할 가능성이 줄어듭니다.
+그래서 코드단에서 grep 으로 포인트 찾아보고 주입하는게 좋습니다.</p>
+<pre><code>grep * -R “loadLibrary&quot;
+</code></pre>
+<h4 id="ios-xcode">iOS - XCode</h4>
+<p>아까 DL Inject 부분에서 iOS는 도구를 사용하여 삽입했었는데요. 정석으로 해보자면 frida 깃에서 FridaGadget 가져온 후 XCode를 이용해 삽입하여 Gadget을 주입할 수 있습니다.</p>
+<p>FridaGadget.dylib를 버전에 맞게 다운로드합니다.</p>
+<pre><code>mkdir Frameworks
+cd Frameworks
+frida_version=x.y.z
+curl https://github.com/frida/frida/releases/download/$frida_version/frida-gadget-$frida_version-ios-univers\al.dylib.xz | xz -d &gt; FridaGadget.dylib
+</code></pre>
+<p>다음 Apple 개발자 계정 사이닝으로 코드 사인합니다. 이후 XCode에서 로드하여 Lib를 포함하면 됩니다.</p>
+<pre><code>security find-identity -p codesigning -v
+  1) A30E15162B3EB979D2572783BF3… &quot;Developer ID Application: …&quot;
+  2) E18BA16DF86318F0ECA4BE17C03… &quot;iPhone Developer: …&quot;
+     2 valid identities found
+</code></pre>
+<pre><code>codesign -f -s E18BA16DF86318F0ECA4BE17C03… FridaGadget.dylib
+FridaGadget.dylib: replacing existing signature
+</code></pre>
+<h3 id="repackaging-app">Repackaging App</h3>
+<p>다시 앱을 묶어 주고 서명합니다. 그럼 일단 본인의 키 파일으로 frida 코드가 주입된 앱은 만들 수 있습니다.</p>
+<h4 id="android-2">Android</h4>
+<pre><code>apktool b -o 123.apk base/
+jarsigner -sigalg SHA1withRSA -digestalg SHA1 \
+-keystore custom.keystore \
+-storepass test1234 123.apk hwul
+</code></pre>
+<h4 id="ios-1">iOS</h4>
+<pre><code>codesign -f -s E18BA16DF86318F0ECA4BE17C03… test/test.app/test
+zip test.zip ./test/ -R
+mv test.zip inject.ipa
+</code></pre>
+<p>이제 frida-ps로 보면..</p>
+<pre><code>frida-ps -U
+Waiting for USB device to appear...
+  PID  Name
+-----  ------
+2025  Gadget
+</code></pre>
+<p>이런식으로 Gadget 이란 이름으로 잡힙니다.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://www.frida.re/docs/ios/#without-jailbreak</li>
+<li>https://github.com/Tyilo/insert_dylib</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

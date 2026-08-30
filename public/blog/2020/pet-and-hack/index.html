@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>pet and hack-pet. managing command snippets for security testing | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="pet and hack-pet. managing command snippets for security testing">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/pet-and-hack/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="pet and hack-pet. managing command snippets for security testing">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/pet-and-hack/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"pet and hack-pet. managing command snippets for security testing","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/pet-and-hack/","datePublished":"2020-07-18T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2020-pet-and-hack.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/"},{"@type":"ListItem","position":5,"name":"pet and hack-pet. managing command snippets for security testing"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">pet and hack-pet. managing command snippets for security testing</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2020-07-18">
+                        JULY 18, 2020
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Hi, hackers and bugbounty hunters :D</p>
+<p>Today, I'd like to talk about how to easily manage your command snippet, and even more about a project that can share and use snippets together.</p>
+<p>오늘은 여러분들의 command snippet을 쉽게 관리하는 방법, 그리고 더 나아가 snippet을 같이 공유하고 사용할 수 있는 프로젝트에 대한 이야기를 하려고 합니다.</p>
+<p><a href="https://user-images.githubusercontent.com/13212227/87844969-7a28d980-c8fd-11ea-9c08-c96230937b19.png"><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/87844969-7a28d980-c8fd-11ea-9c08-c96230937b19.png" alt="" /> </a></p>
+<h2 id="what-is-pet">What is pet?</h2>
+<p>Recently, I found a very interesting tool. It is the command-line snippet manager called pet. It has a fast searchable interface such as fzf, and provides the ability to personalize and synchronize snippets through gist.</p>
+<p>최근, 상당히 흥미로운 도구를 하나 발견했습니다. 바로 pet이라는 command-line snippet manager입니다. fzf 같은 빠른 검색이 가능한 인터페이스를 가지고있고, gist를 통해 snippet들을 개인화하고 동기화하여 관리할 수 있는 기능을 제공합니다.</p>
+<pre><code>pet
+pet - Simple command-line snippet manager.
+
+Usage:
+  pet [command]
+
+Available Commands:
+  configure   Edit config file
+  edit        Edit snippet file
+  exec        Run the selected commands
+  help        Help about any command
+  list        Show all snippets
+  new         Create a new snippet
+  search      Search snippets
+  sync        Sync snippets
+  version     Print the version number
+
+Flags:
+      --config string   config file (default is $HOME/.config/pet/config.toml)
+      --debug           debug mode
+  -h, --help            help for pet
+
+</code></pre>
+<p><a href="https://github.com/knqyf263/pet">https://github.com/knqyf263/pet</a></p>
+<p>Install with go get</p>
+<p>설치는 go get이면 충분합니다.</p>
+<pre><code>go get -u github.com/knqyf263/pet
+
+</code></pre>
+<p>There are several commands, but basically, there are no problems in using them if you know only the four (<code>new``list``exec``search</code>).</p>
+<p>여러 명령이 있지만, 기본적으로 4가지(<code>new``list``exec``search</code>)만 확실하게 알고가면 사용하는데 전혀 지장이 없습니다.</p>
+<pre><code>pet new
+Command&gt; Your command
+Description&gt; Your Desc
+
+</code></pre>
+<p>You can use variables (<code>&lt;param&gt;</code> or <code>&lt;param=default_value&gt;</code> ) in snippets.</p>
+<p>new로 새로운 snippet을 등록할 수 있습니다. 이 때 <code>&lt;&gt;</code> 같은 패턴을 통해 사용자로 부터 인자값을 받을 수 있습니다.</p>
+<pre><code>pet new
+Command&gt; echo &lt;param&gt; | ~/go/bin/gau | grep &quot;=&quot; | qsreplace -a
+Description&gt; Find url included parameter, from gau
+
+</code></pre>
+<p>Show list</p>
+<p>list는 저장된 리스트를 봅니다.</p>
+<pre><code>pet list
+pet list
+Description: ps elf!
+    Command: ps -elf
+------------------------------
+...snip...
+------------------------------
+Description: Find url included parameter, from gau
+    Command: echo &lt;param&gt; | ~/go/bin/gau | grep &quot;=&quot; | qsreplace -a
+
+</code></pre>
+<p>and exec(if you select, run command) or search(if you select, show command)</p>
+<p>exec는 즉시실행, search는 쿼리 보기정도입니다.</p>
+<pre><code>pet exec
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search?updated-max=2019-12-05t02%3A04%3A00+09%3A00
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2015/12/coding-htmljavascript-code-for-popup.html?showcomment=1532047391164
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/11/burp-suite-using-tor-network.html?m=1
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2015/06/operator-overloading-for-python-code.html?showComment=1434687933593
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2015/09/design-sql-injection.html?showComment=1466006407930
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/01/exploit-android-sensord-local-root.html?showComment=1487266696141
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/01/java-java-applet-simle-code-for-java.html?showComment=1482295236658
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/02/metasploit-default-shell-meterpreter.html?showComment=1456212183726
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/07/metasploit-meterpreter-paranoid-mode.html?showComment=1495406771315
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/07/metasploit-meterpreter-railgun-useful.html?showComment=1477038507834
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/07/ruby-writing-web-crawler-with-ruby-and.html?showComment=1467938120314
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/08/hacking-mobile-application.html?showComment=1482063530341
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/01/hacking-microsoft-windows-kernel.html?showComment=1485360093822
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/02/metasploit-hardware-pentest-using.html?showComment=1487524773751
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/02/python-pudbconsole-base-debugger-python.html?showComment=1488463407073
+https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/03/web-hacking-data-xss-filtering-bypass.html?showComment=1491831511270
+....
+
+</code></pre>
+<h2 id="shortcut-key-binding">Shortcut� key binding</h2>
+<p>To use it after registering snippet, you need to issue a command such as <code>pet exec</code> to cli. This is a bit annoying, so it is very convenient to do key mappings through zsh/bash rc. In my case, I mapped it with <code>Ctrl+s</code>.</p>
+<p>snippet을 등록한 이후에 이를 사용하려면 cli에 <code>pet exec</code> 등의 명령을 쳐야합니다. 이는 조금 귀찮은 일이기 때문에 zsh/bash rc를 통해 키 매핑을 해두면 굉장히 편합니다. 저의 경우는 <code>Ctrl+s</code> 로 매핑해두었습니다.</p>
+<p>zsh.rc</p>
+<pre><code>function pet-select() {
+  BUFFER=$(pet search --query &quot;$LBUFFER&quot;)
+  CURSOR=$#BUFFER
+  zle redisplay
+}
+zle -N pet-select
+stty -ixon
+bindkey '^s' pet-select
+
+</code></pre>
+<p>bash.rc</p>
+<pre><code>function pet-select() {
+  BUFFER=$(pet search --query &quot;$READLINE_LINE&quot;)
+  READLINE_LINE=$BUFFER
+  READLINE_POINT=${#BUFFER}
+}
+bind -x '&quot;\C-x\C-r&quot;: pet-select'
+
+</code></pre>
+<p>If you apply it with the source command afterwards, you can see that pet is executed immediately when the shortcut key is pressed.</p>
+<p>이후에 source 명령으로 적용해보면 단축키를 눌렀을 떄 바로 pet이 실행되는 걸 볼 수 있습니다.</p>
+<pre><code>source ~/.zshrc
+source ~/.bashrc
+
+</code></pre>
+<h2 id="um-share-snippet-for-we-for-hackers-for-bounty-hunters">Um.. share snippet? for we for hackers for bounty hunters?</h2>
+<p>As I was using pet, I thought it would be good to use it while sharing. So we looked at the function of <code>pet sync</code> more, but as a result, it is a form that only individuals can share and use (because it is a gist based on their git token..)</p>
+<p>pet을 사용하다보니 공유하면서 사용하면 좋을 것 같다는 생각이 들었습니다. 그래서 <code>pet sync</code> 쪽 기능을 좀 더 알아봤지만, 결과적으론 개인만 공유하며 쓸 수 있는 형태입니다(자신의 git token 기준의 gist라서..)</p>
+<p>So I was thinking about a project similar to the WebHackersWeapons I created earlier. First, if you do <code>pet edit</code>, you can modify the snippet information saved as a text file. Through this, you can check the path and format of the saved file. At this time, the location of the original is <code>~/.config/pet/snippet.toml</code> and I am using TOML.</p>
+<p>그래서 예전에 만든 WebHackersWeapons와 유사한 프로젝트를 고민하게 됬습니다. 우선 <code>pet edit</code> 를 하게 되면 text 파일로 저장된 snippet 정보를 수정할 수 있는데, 이를 통해 저장되는 파일의 경로와 포맷을 확인했습니다.</p>
+<p>이 때 원본의 위치는.. <code>~/.config/pet/snippet.toml</code> 이고 TOML을 사용하고 있네요.</p>
+<pre><code>[[snippets]]
+  description = &quot;Find url included parameter, from gau&quot;
+  command = &quot;echo &lt;param&gt; | ~/go/bin/gau | grep \&quot;=\&quot; | qsreplace -a&quot;
+  output = &quot;&quot;
+
+</code></pre>
+<h2 id="what-is-toml">What is TOML</h2>
+<p>First, let's take a look at the pet behavior a little more. First of all, pet uses TOML when storing all information such as config / snippet.</p>
+<p>자 먼저 pet의 동작에 대해 조금 더 살펴봅시다. 우선 pet은 config / snippet 등 모든 정보를 저장할 떄 TOML을 사용합니다.</p>
+<p>TOML은 YAML, JSON 등과 같은 데이터 포맷이고 개인적으로 가시성이 좋기 때문에 좋아하는 포맷입니다.</p>
+<p>TOML aims to be a minimal configuration file format that's easy to read due to obvious semantics. TOML is designed to map unambiguously to a hash table. TOML should be easy to parse into data structures in a wide variety of languages.</p>
+<p><a href="https://github.com/toml-lang/toml">https://github.com/toml-lang/toml</a></p>
+<h2 id="golang-toml-parse">golang TOML Parse</h2>
+<p>Since I am using go, I searched for a go library that can parse TOML. Typically, <code>toml</code> and <code>go-toml</code> seem to be used, and I chose a go-toml with active commit.</p>
+<p>저는 일단 go를 쓰고 있기 때문에 TOML을 파싱할 수 있는 go library에 대해 찾아봤습니다. 대표적으로 <code>toml</code> 과 <code>go-toml</code> 이 사용되는 것 같고 commit 이 활발한 go-toml을 선택했습니다.</p>
+<p><a href="https://github.com/BurntSushi/toml">https://github.com/BurntSushi/toml</a></p>
+<p>=&gt; last change : 2 years ago</p>
+<p><a href="https://github.com/pelletier/go-toml">https://github.com/pelletier/go-toml</a></p>
+<p>=&gt; last change : 9days ago</p>
+<p>writing simple code...</p>
+<p>이제 테스팅용 코드를 짜보면..</p>
+<pre><code>package main
+
+import (
+	&quot;github.com/pelletier/go-toml&quot;
+	&quot;fmt&quot;
+	&quot;os&quot;
+)
+
+type PetSnippet struct {
+	Description string `toml:&quot;description&quot;`
+	Command     string `toml:&quot;command&quot;`
+	Output      string `toml:&quot;output&quot;`
+}
+
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
+}
+
+func main(){
+	data := PetSnippet{Description: &quot;abcd&quot;,Command: &quot;abcd&quot;,Output: &quot;abcd&quot;}
+	b, err := toml.Marshal(data)
+	check(err)
+	buffer := &quot;[[snippet]]\n&quot;+string(b)+&quot;\n&quot;
+	fmt.Println(buffer)
+	f , err := os.Create(&quot;asdf.daml&quot;)
+	check(err)
+	_, err = f.Write([]byte(buffer))
+}
+
+</code></pre>
+<pre><code>go run main.go
+[[snippet]]
+command = &quot;abcd&quot;
+description = &quot;abcd&quot;
+output = &quot;abcd&quot;
+
+cat asdf.daml
+[[snippet]]
+command = &quot;abcd&quot;
+description = &quot;abcd&quot;
+output = &quot;abcd&quot;
+
+</code></pre>
+<p>Yeaaaaa</p>
+<p>크게 무리없이 잘 되네요!</p>
+<h2 id="hack-pet">hack-pet !</h2>
+<p>So, since last night, I've been writing code. It is a tool to create and manage <code>hackpet.toml</code>, which contains all snippet information, and <code>./snippets</code> directory that stores each individual file.</p>
+<p>그래서, 어제 밤부터 후다닥 코드를 작성해봤습니다. 모든 snippet 정보를 담고있는 <code>hackpet.toml</code> 과 각 개별 파일로 보관하는 <code>./snippets</code> directory 를 만들고 관리할 수 있는 도구입니다.</p>
+<p><a href="https://github.com/hahwul/hack-pet">https://github.com/hahwul/hack-pet</a></p>
+<p><a href="https://1.bp.blogspot.com/-J4IFXKV12xk/XxKxHyagcdI/AAAAAAAAFZM/wnJ7mY-Lb60ng-dDu6PJnN5s9WOkgFfoQCLcBGAsYHQ/s907/1414.png"><img loading="lazy" src="https://1.bp.blogspot.com/-J4IFXKV12xk/XxKxHyagcdI/AAAAAAAAFZM/wnJ7mY-Lb60ng-dDu6PJnN5s9WOkgFfoQCLcBGAsYHQ/d/1414.png" alt="" /> </a></p>
+<p>You can read and apply the desired snippet.toml from <code>./snippets</code> or copy <code>hackpet.toml</code> to pet's snippet.toml file and use it. After copying, hack-pet snippets will appear in the pet command.</p>
+<p><code>./snippets</code> 에서 원하시는 snippet.toml 을 읽어 적용하시거나 <code>hackpet.toml</code> 을 pet의 snippet.toml 파일로 복사하셔서 사용하시면 됩니다.</p>
+<pre><code>cat ./hackpet.toml &gt;&gt; ~/.config/pet/snippet.toml
+
+</code></pre>
+<p>복사한 이후에는 hack-pet의 snippet들이 pet 명령에서 나타나게 됩니다.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>We need your help to share and activate good snippets. Be a good Contributer!</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

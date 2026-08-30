@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[DEBIAN] Geany - deve IDE for hacker and programmer | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[DEBIAN] Geany - deve IDE for hacker and programmer">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/debian-geany-develope-ide-for-hacker/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[DEBIAN] Geany - deve IDE for hacker and programmer">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/debian-geany-develope-ide-for-hacker/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[DEBIAN] Geany - deve IDE for hacker and programmer","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/debian-geany-develope-ide-for-hacker/","datePublished":"2016-07-13T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2016-debian-geany-develope-ide-for-hacker.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/"},{"@type":"ListItem","position":5,"name":"[DEBIAN] Geany - deve IDE for hacker and programmer"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[DEBIAN] Geany - deve IDE for hacker and programmer</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2016-07-13">
+                        JULY 13, 2016
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>우분투 소프트웨어 센터에서 쓸만한 툴이 있나 찾아보던 중 Geany라는 개발 IDE에 대해 알게 되었습니다.</p>
+<h3 id="fast-and-lightweight-ide">&quot;fast and lightweight IDE&quot;</h3>
+<p>즉 가볍고 빠름을 추구하는 이 IDE에 대해 사용해보고, 계속 사용해오던 gedit과의 비교를 하는 시간을 가져볼까 합니다.</p>
+<h2 id="geany">Geany?</h2>
+<p>Geany IDE는 일반 Editor라고 보기는 조금 힘들 것 같습니다. 정말 개발을 위한 IDE이며, Text editor라고 하기에는 너무 강력하지요.</p>
+<p>이 친구는 Text editor에 Compiler, Debugger까지 갖춰진 툴입니다.
+굳이 비교하자면 Eclipse와 같은 IDE 끼리 비교해야 할 정도입니다.</p>
+<p>물론 이 툴은 Linux 이외 Windows에서도 사용이 가능하며 속도와 가벼움이 메인이기 때문에 Ruby, Python 같이 스크립트 언어 개발 시 더더욱 진가를 발휘할 것 같습니다.</p>
+<p><a href="https://4.bp.blogspot.com/-oEabAoHH-Jk/V4Zihhz3-II/AAAAAAAABoc/Wp_Fkx3fwJQB071kNKARGr_IiE7f88rFQCLcB/s1600/1359287902_geany2.png"><img loading="lazy" src="https://4.bp.blogspot.com/-oEabAoHH-Jk/V4Zihhz3-II/AAAAAAAABoc/Wp_Fkx3fwJQB071kNKARGr_IiE7f88rFQCLcB/s400/1359287902_geany2.png" alt="" /> </a></p>
+<h2 id="install-geany">Install Geany</h2>
+<p>일단 Debian 계열의 Linux는 apt 패키지 매니져를 이용하여 쉽게 설치할 수 있습니다.
+아래와 같이 명령을 입력해줍니다.</p>
+<p>Debian 계열(Debian/Ubuntu/Mint ..)</p>
+<p>#&gt; apt-get install geany</p>
+<p>Redhat 계열(redhat/fedora/centos ..)
+#&gt; yum install geany</p>
+<p>Other(Download geany / windows)
+<a href="https://plugins.geany.org/downloads.html">https://plugins.geany.org/downloads.html</a></p>
+<p>저는 가볍게 apt를 통해 설치하였습니다.</p>
+<p><a href="https://1.bp.blogspot.com/-Iaw_dnNrrVA/V4ZekhRZXEI/AAAAAAAABn8/ap4QjugK2aIEJhX2zLThE7QBkwNdB47BACLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_001.png"><img loading="lazy" src="https://1.bp.blogspot.com/-Iaw_dnNrrVA/V4ZekhRZXEI/AAAAAAAABn8/ap4QjugK2aIEJhX2zLThE7QBkwNdB47BACLcB/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_001.png" alt="" /> </a></p>
+<h3 id="using-geany-1-구성">Using Geany 1 - 구성</h3>
+<p>일반적인 IDE, Text Editor과 비슷하게 코드 영역과 코드에 대한 정보, 각종 기능이 있는 영역으로 구분되어 있습니다. 배치는 움직일 수 있어 편한대로 수정해서 쓰시면 됩니다.</p>
+<p><a href="https://1.bp.blogspot.com/-ShXRAj5Y_os/V4ZgaG6QAhI/AAAAAAAABoI/y8VvfUfM1_kqa9kBo3l1wA2l-Y0jsqSGwCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_002.png"><img loading="lazy" src="https://1.bp.blogspot.com/-ShXRAj5Y_os/V4ZgaG6QAhI/AAAAAAAABoI/y8VvfUfM1_kqa9kBo3l1wA2l-Y0jsqSGwCLcB/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_002.png" alt="" /> </a></p>
+<p>항상 IDE에서 가장 원하는 기능인 자동완성도 포함되어 있네요.</p>
+<p><a href="https://3.bp.blogspot.com/-Lp-SkTFUeyU/V4ZhHEIwrdI/AAAAAAAABoM/mlB8m78Cj8Ad9OqdmkIOuHY-Wgjchsq8gCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_003.png"><img loading="lazy" src="https://3.bp.blogspot.com/-Lp-SkTFUeyU/V4ZhHEIwrdI/AAAAAAAABoM/mlB8m78Cj8Ad9OqdmkIOuHY-Wgjchsq8gCLcB/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_003.png" alt="" /> </a></p>
+<h2 id="using-geany-2-컴파일-및-실행compile-code-execute">using Geany 2 - 컴파일 및 실행(Compile &amp; Code Execute)</h2>
+<p>컴파일 / 빌드 및 실행까지 한번에 지원하기 때문에 바로바로 테스트해볼 수 있습니다.
+아래 같단한 Hello world 코드를 짰습니다.</p>
+<pre><code>
+#include &lt;stdio.h&gt;
+
+void main()
+{
+
+printf(&quot;Hello world!&quot;);
+
+}
+
+</code></pre>
+<p>Compile(F8) -&gt; Build(F9)  -&gt; Run(F5)</p>
+<p>위처럼 컴파일 후 빌드, 실행까지 해주시면 작성한 코드를 컴파일하여 .o 파일과 실행파일이 생성되고, 실행하여 터미널을 통해 나타납니다.</p>
+<p><a href="https://3.bp.blogspot.com/-VVPQFX9VwCQ/V4Zh_8Ro9iI/AAAAAAAABoY/hP0W3SLDQb8_s9BDVHTpmnWWgXmQrj_xgCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_004.png"><img loading="lazy" src="https://3.bp.blogspot.com/-VVPQFX9VwCQ/V4Zh_8Ro9iI/AAAAAAAABoY/hP0W3SLDQb8_s9BDVHTpmnWWgXmQrj_xgCLcB/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_004.png" alt="" /> </a></p>
+<h2 id="install-geany-theme">Install Geany Theme</h2>
+<p>테마 적용 글은 아래 포스팅에서 도움 많이 얻었습니다. 감사합니다 :)
+<a href="http://blog.nooree.com/post.cfm/ubuntu-c">http://blog.nooree.com/post.cfm/ubuntu-c</a></p>
+<p>테마 파일은 아래 github에서 받을 수 있습니다.
+<a href="https://github.com/codebrainz/geany-themes">https://github.com/codebrainz/geany-themes</a></p>
+<p>홈 디렉토리 내 ./config 하단에 geany 디렉토리가 존재합니다. 여기에 colorschemes와 filedefs 디렉토리에 각각 다운로드 받은 파일 데이터를 넣어줍니다. (같은 디렉토리 이름 하단 데이터)</p>
+<p>ex) /home/username/.config/geany/colorschemes/
+ex) /home/username/.config/geany/filedefs/</p>
+<p>or (또는)</p>
+<p>git으로 받은 파일 안에 install.sh를 실행시켜줍니다.</p>
+<p>#&gt; git clone https://github.com/codebrainz/geany-themes
+#&gt; cd geany-themes/
+#&gt; ./install.sh
+Installing themes into `/home/username/.config/geany/colorschemes/'...
+=&gt; bespin.conf
+=&gt; black.conf
+=&gt; darcula.conf
+=&gt; dark-colors.conf
+=&gt; dark-fruit-salad.conf
+=&gt; dark.conf
+=&gt; fluffy.conf
+=&gt; gedit.conf
+=&gt; github.conf
+=&gt; himbeere.conf
+=&gt; inkpot.conf
+=&gt; kugel.conf
+..snip..</p>
+<p>그다음 geany 를 열어줍니다.
+상단 메뉴에서 도구 -&gt; Configulation files -&gt; filetype.common 내 내용을 지워주시고 /home/username/.config/geany/colorschemes 내 맘에드는 conf 파일로 붙여넣고 저장하시면 됩니다.</p>
+<p>아래 주소에서 미리 테마에 대해서 살펴볼 수 있습니다.
+<a href="https://github.com/codebrainz/geany-themes/tree/master/screenshots">https://github.com/codebrainz/geany-themes/tree/master/screenshots</a></p>
+<p>설명이 모자랄 수 있으니 자세한 내용은 아래 포스팅 참고하시면 좋습니다.
+<a href="http://blog.nooree.com/post.cfm/ubuntu-c">http://blog.nooree.com/post.cfm/ubuntu-c</a></p>
+<h2 id="gedit-vs-geany">gedit vs geany</h2>
+<p>사실 이 둘을 비교하기는 좀 그렇습니다. 어떻게 보면 성향이 다르죠.
+하나는 Text Editor이고 하나는 IDE이기 때문입니다.</p>
+<p>다만 제가 주로 사용하던 도구가 gedit이기 때문에 저의 생각 그대로 전달해드리려 합니다.</p>
+<p><a href="https://2.bp.blogspot.com/-hdi-h_TEGYE/V4ZjGPsIYvI/AAAAAAAABok/gu9dfdGuwKUAmk-Dx1OBUiBSIvMVJU4ywCLcB/s1600/tumblr_inline_n2ot3n7QeG1qjf2m5.png"><img loading="lazy" src="https://2.bp.blogspot.com/-hdi-h_TEGYE/V4ZjGPsIYvI/AAAAAAAABok/gu9dfdGuwKUAmk-Dx1OBUiBSIvMVJU4ywCLcB/s400/tumblr_inline_n2ot3n7QeG1qjf2m5.png" alt="" /> </a></p>
+<p>솔직히 개발적인 모습만 본다면 geany의 승리입니다. 가벼움과 동시에 여러 기능을 지원하고(대표적으로 autocomplate) 개발을 하는 사람 입장에선 gedit 보다 편리합니다. 다만 Text Editor인 Gedit이 범용적인 면을 봤을땐(예를들어 메모장처럼 사용 등등) Gedit이 우세하겠네요. 누가 메모하려하는데 IDE를 키겠어요.</p>
+<p>저는 이 2개를 섞어 사용하려 합니다. 취향에 따라 사용하시는게 좋을 것 같습니다.</p>
+<p>둘다 빠르고, 편리합니다.</p>
+<h2 id="맺음말">맺음말</h2>
+<p>geany는 굉장히 좋은 툴입니다. 무거운 IDE와는 다르게 가볍고 빠르기 때문에 답답함이 많이 줄 것이고 많은 기능 지원으로 편리하게 개발 환경 구축이 가능합니다.</p>
+<p>모든 프로그램은 사용자에게 잘 맞느냐 아니냐가 중요한 것 같습니다. 당장 웹 브라우저만해도 사람들마다 쓰는게 다르고 활용하기도 다르죠. 여러가지 툴을 경험해보면 자신에게 제일 잘 어울리는 툴을 찾는것이 좋다고 생각듭니다.</p>
+<h2 id="reference">Reference</h2>
+<p><a href="http://blog.nooree.com/post.cfm/ubuntu-c">http://blog.nooree.com/post.cfm/ubuntu-c</a>
+<a href="https://github.com/codebrainz/geany-themes/">https://github.com/codebrainz/geany-themes/</a>
+<a href="http://www.geany.org/manual/current/#id52">http://www.geany.org/manual/current/#id52</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

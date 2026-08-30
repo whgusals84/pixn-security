@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[POWERSHELL] 파워쉘을 이용한 파일 정보 확인하기(Write a get file information script) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[POWERSHELL] 파워쉘을 이용한 파일 정보 확인하기(Write a get file information script)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/powershell-write-get-file-information/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[POWERSHELL] 파워쉘을 이용한 파일 정보 확인하기(Write a get file information script)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/powershell-write-get-file-information/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[POWERSHELL] 파워쉘을 이용한 파일 정보 확인하기(Write a get file information script)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/powershell-write-get-file-information/","datePublished":"2017-08-23T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2017-powershell-write-get-file-information.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"[POWERSHELL] 파워쉘을 이용한 파일 정보 확인하기(Write a get file information script)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[POWERSHELL] 파워쉘을 이용한 파일 정보 확인하기(Write a get file information script)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-08-23">
+                        AUGUST 23, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>파워쉘에 대한 이야기를 잠깐 할까합니다. 윈도우 환경에서 파워쉘 사용 시 batch 파일에 비해 상세하게 시스템에 대해 제어할 수 있고 Ruby, Python 과 같은 언어와 달리 기본적으로 내장되어 있기 때문에 별도의 설치 없이 사용할 수 있는 장점이 있습니다.</p>
+<p>오늘은 파워쉘을 이용해서 파일에 대한 정보를 가져오고, 내용을 보는 방법에 대해 정리하고 이를 통해 간단하게 파일 정보에 대해 확인하는 스크립트를 만들어보도록 하죠.</p>
+<h2 id="get-file-information">Get File information</h2>
+<p>get-itemproperty 를 사용하면 쉽게 파일에 대한 정보를 가져올 수 있습니다. .py 파일에 대해 가져와보면..</p>
+<p>기본적인 정보부터, 생성,수정일 등등 여러가지 정보를 획득할 수 있습니다.</p>
+<p>PS C:&gt;get-itemproperty -Path app.py | Format-list -Property * -Force</p>
+<p>PSPath            : Microsoft.PowerShell.Core\FileSystem::C:\Users\Administrator\Desktop\app.py
+PSParentPath      : Microsoft.PowerShell.Core\FileSystem::C:\Users\Administrator\Desktop
+PSChildName       : app.py
+PSDrive           : C
+PSProvider        : Microsoft.PowerShell.Core\FileSystem
+VersionInfo       : File:             C:\Users\Administrator\Desktop\app.py
+InternalName:
+OriginalFilename:
+FileVersion:
+FileDescription:
+Product:
+ProductVersion:
+Debug:            False
+Patched:          False
+PreRelease:       False
+PrivateBuild:     False
+SpecialBuild:     False
+Language:</p>
+<p>BaseName          : app
+Mode              : -a---
+Name              : app.py
+Length            : 831
+DirectoryName     : C:\Users\Administrator\Desktop
+Directory         : C:\Users\Administrator\Desktop
+IsReadOnly        : False
+Exists            : True
+FullName          : C:\Users\Administrator\Desktop\app.py
+Extension         : .py
+CreationTime      : 2017-05-15 오후 12:01:18
+CreationTimeUtc   : 2017-05-15 오전 3:01:18
+LastAccessTime    : 2017-05-15 오후 12:01:16
+LastAccessTimeUtc : 2017-05-15 오전 3:01:16
+LastWriteTime     : 2017-05-15 오후 1:37:44
+LastWriteTimeUtc  : 2017-05-15 오전 4:37:44
+Attributes        : Archive</p>
+<p>뒤에 Format-list -Property * -Force 부분은 데이터를 조금 더 좋게 표현하기 위해 파이프로 넘겨 출력 형태를 변경한 것입니다. 파워쉘은 각각 출력 데이터가 Object 처럼 지정되어 있기 때문에 출력 형태를 변형하거나 필요한 데이터를 읽기 매우 쉽습니다.</p>
+<h2 id="get-binary-information">Get Binary information</h2>
+<p>get-content를 이용하면 파일 내용을 읽을 수 있습니다.</p>
+<p>PS C:&gt;get-content &quot;File&quot;</p>
+<p>형태로 넘겨주면 파일에 따라 알수없는 값이 나타나기도 합니다. 당연히.. txt 같이 plan text가 들어있다면 잘 보이겠지만 실행 파일처럼 바이너리들은 깨진 문자를 만나게 되죠. 그래서 우린 -Encoding 인자를 넘겨주어 표현할 인코딩을 지정해줍니다. UTF8, Byte 등이 많이 쓰이죠.</p>
+<p>get-content &quot;Path&quot; -Encoding UTF8 | Select-Object -First 50
+get-content &quot;Path&quot; -Encoding Byte | Select-Object -First 50
+get-content &quot;Path&quot; | Select-Object -First 50</p>
+<p>get-content 이외에도 OpenRead()를 통해 파일 데이터를 읽어올 수 있습니다. 편의에 따라 사용하시면 좋을 것 같네요. 아래는 파일을 읽어 Byte로 출력해주는 스크립트 코드입니다. [System.IO.File]::OpenRead()로 대상 파일을 읽은 후 내부 데이터를 Byte 형태로 출력해줍니다.</p>
+<pre><code>$bufferSize = 65536
+$stream = [System.IO.File]::OpenRead(&quot;File Path&quot;)
+while ( $stream.Position -lt $stream.Length ) {
+#BEGIN CALLOUT A
+  $buffer = new-object Byte[] $bufferSize
+  $bytesRead = $stream.Read($buffer, 0, $bufferSize)
+#END CALLOUT A
+  for ( $line = 0; $line -lt [Math]::Floor($bytesRead /
+  16); $line++ ) {
+    $slice = $buffer[($line * 16)..(($line * 16) + 15)]
+    ((&quot;{0:X2} {1:X2} {2:X2} {3:X2} {4:X2} {5:X2} &quot;) +
+    (&quot;{6:X2} {7:X2} {8:X2} {9:X2} {10:X2} {11:X2} &quot;) +
+    (&quot;{12:X2} {13:X2} {14:X2} {15:X2} &quot;)) -f $slice
+  }
+#BEGIN CALLOUT B
+  if ( $bytesRead % 16 -ne 0 ) {
+    $slice = $buffer[($line * 16)..($bytesRead - 1)]
+    $output = &quot;&quot;
+    foreach ( $byte in $slice ) {
+      $output += &quot;{0:X2} &quot; -f $byte
+    }
+    $output
+#END CALLOUT B
+  }
+}
+$stream.Close()
+</code></pre>
+<h2 id="get-file-information-script">Get file information script</h2>
+<p>위 2가지를 조합해보면 파일에 대한 정보를 불러오는 스크립트를 만들 수 있습니다. 사실 다른 수집 코드도 내용만 붙여가면 더 좋은 스크립트가 될거라 생각합니다.</p>
+<p>finfo.ps1</p>
+<pre><code>Param (
+[Parameter(Mandatory=$true)] // 파일 이름을 꼭 받도록 Mandatory 지정
+$path
+)
+
+Write-Host &quot; ---- &lt; File Default Information &gt; &quot;
+get-itemproperty -Path $path | Format-list -Property * -Force
+Write-Host &quot; ---- &lt; Binary Hex Data &gt; &quot;
+$bufferSize = 65536
+$stream = [System.IO.File]::OpenRead($path)
+while ( $stream.Position -lt $stream.Length ) {
+#BEGIN CALLOUT A
+  $buffer = new-object Byte[] $bufferSize
+  $bytesRead = $stream.Read($buffer, 0, $bufferSize)
+#END CALLOUT A
+  for ( $line = 0; $line -lt [Math]::Floor($bytesRead /
+  16); $line++ ) {
+    $slice = $buffer[($line * 16)..(($line * 16) + 15)]
+    ((&quot;{0:X2} {1:X2} {2:X2} {3:X2} {4:X2} {5:X2} &quot;) +
+    (&quot;{6:X2} {7:X2} {8:X2} {9:X2} {10:X2} {11:X2} &quot;) +
+    (&quot;{12:X2} {13:X2} {14:X2} {15:X2} &quot;)) -f $slice
+  }
+#BEGIN CALLOUT B
+  if ( $bytesRead % 16 -ne 0 ) {
+    $slice = $buffer[($line * 16)..($bytesRead - 1)]
+    $output = &quot;&quot;
+    foreach ( $byte in $slice ) {
+      $output += &quot;{0:X2} &quot; -f $byte
+    }
+    $output
+#END CALLOUT B
+  }
+}
+$stream.Close()
+</code></pre>
+<p>실행해보면..</p>
+<p>PS C:&gt; .\finfo.ps1 .\app.py
+---- &lt; File Default Information &gt;</p>
+<p>PSPath            : Microsoft.PowerShell.Core\FileSystem::C:\Users\Administrator\Desktop\app.py
+PSParentPath      : Microsoft.PowerShell.Core\FileSystem::C:\Users\Administrator\Desktop
+PSChildName       : app.py
+PSDrive           : C
+PSProvider        : Microsoft.PowerShell.Core\FileSystem
+VersionInfo       : File:             C:\Users\Administrator\Desktop\app.py
+InternalName:
+OriginalFilename:
+FileVersion:
+FileDescription:
+Product:
+ProductVersion:
+Debug:            False
+Patched:          False
+PreRelease:       False
+PrivateBuild:     False
+SpecialBuild:     False
+Language:</p>
+<p>BaseName          : app
+Mode              : -a---
+Name              : app.py
+Length            : 831
+DirectoryName     : C:\Users\Administrator\Desktop
+Directory         : C:\Users\Administrator\Desktop
+IsReadOnly        : False
+Exists            : True
+FullName          : C:\Users\Administrator\Desktop\app.py
+Extension         : .py
+CreationTime      : 2017-05-15 오후 12:01:18
+CreationTimeUtc   : 2017-05-15 오전 3:01:18
+LastAccessTime    : 2017-05-15 오후 12:01:16
+LastAccessTimeUtc : 2017-05-15 오전 3:01:16
+LastWriteTime     : 2017-05-15 오후 1:37:44
+LastWriteTimeUtc  : 2017-05-15 오전 4:37:44
+Attributes        : Archive</p>
+<p>---- &lt; Binary Hex Data &gt;
+69 6D 70 6F 72 74 20 74 68 72 65 61 64 69 6E 67
+0A 69 6D 70 6F 72 74 20 73 75 62 70 72 6F 63 65
+73 73 0A 69 6D 70 6F 72 74 20 6F 73 0A 69 6D 70
+6F 72 74 20 73 79 73 0A 69 6D 70 6F 72 74 20 67
+6C 6F 62 0A 0A 64 65 66 20 72 75 6E 54 68 72 65
+61 64 28 71 75 65 72 79 29 3A 0A 09 66 6F 72 20
+69 20 69 6E 20 72 61 6E 67 65 28 61 70 70 4C 69
+73 74 43 6F 75 6E 74 29 3A 0A 09 09 70 72 69 6E
+74 20 71 75 65 72 79 2B 61 70 70 4C 69 73 74 5B
+69 5D 0A 09 09 23 6F 73 2E 73 79 73 74 65 6D 28
+71 75 65 72 79 29 0A 09 0A 74 68 72 65 61 64 73
+20 3D 20 5B 5D 0A 63 62 65 20 3D 20 22 61 64 62
+20 2D 73 20 22 0A 63 61 66 20 3D 20 22 20 69 6E
+73 74 61 6C 6C 20 22 0A 71 75 65 72 79 20 3D 5B
+5D 0A 23 61 70 70 6E 61 6D 65 20 3D 20 73 79 73
+2E 61 72 67 76 5B 31 5D 0A 0A 61 70 70 4C 69 73
+74 20 3D 20 67 6C 6F 62 2E 67 6C 6F 62 28 22 2E
+.....</p>
+<p>여기에 파워쉘 Refernce를 참조하며 필요한 데이터 수집 부분을 더한다면 윈도우에서 사용할 수 있는 아주 편리한 파일 분석 스크립트로 만들수도 있을 것 같습니다.</p>
+<p>상세한  Function 에 대한 정보는 MSDN 찾아보시면 잘 나옵니다.
+<a href="https://msdn.microsoft.com/en-us/library/ms714469(v=vs.85).aspx">https://msdn.microsoft.com/en-us/library/ms714469(v=vs.85).aspx</a></p>
+<h2 id="reference">Reference</h2>
+<p><a href="http://windowsitpro.com/powershell/get-hex-dumps-files-powershell">http://windowsitpro.com/powershell/get-hex-dumps-files-powershell</a>
+<a href="https://msdn.microsoft.com/en-us/library/ms714469(v=vs.85).aspx">https://msdn.microsoft.com/en-us/library/ms714469(v=vs.85).aspx</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

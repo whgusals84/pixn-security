@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>CI for Automatic Recon | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="CI for Automatic Recon">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/ci-for-recon-and-bugbounty/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CI for Automatic Recon">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/ci-for-recon-and-bugbounty/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"CI for Automatic Recon","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/ci-for-recon-and-bugbounty/","datePublished":"2020-08-17T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/90536202-b24e6100-e1b6-11ea-975b-d70e962aeea1.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/"},{"@type":"ListItem","position":5,"name":"CI for Automatic Recon"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">CI for Automatic Recon</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2020-08-17">
+                        AUGUST 17, 2020
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Hi hackers and bug bounty hunters 😁</p>
+<p>CI/CD is a critical topic in both DevOps and DevSecOps. Since I work in DevSecOps, I have spent considerable time exploring and testing CI/CD practices. One day, I wondered if the CI concept could be applied to recon tasks. Thus, I decided to give it a try.</p>
+<p>Today, I’m sharing my experience using CI for recon.</p>
+<h2 id="what-is-ci-continuous-integration">What Is CI (Continuous Integration)?</h2>
+<p>Continuous Integration (CI) is an automated process that frequently builds and integrates source code by running tests, merging changes, and updating repositories. This process is triggered by events such as code changes or scheduled intervals.</p>
+<h2 id="why-use-ci-for-recon">Why Use CI for Recon?</h2>
+<p>In my bug bounty work, I use and develop various tools, which generate a lot of data. I found that the results from different devices—for example, my testing server and my MacBook—often vary. I wanted to unify these varying results. That’s why I applied the CI concept to continuously integrate the bug bounty data.</p>
+<h2 id="how-it-works">How It Works</h2>
+<p>When triggered—either by adding a new target or on a weekly schedule—the pipeline uses an existing recon tool to perform analysis, commit the results to GitHub, and send notifications through Slack.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90536202-b24e6100-e1b6-11ea-975b-d70e962aeea1.png" alt="Jenkins Integration" /></p>
+<blockquote>
+<p>Jenkins + My private app + Slack notifications</p>
+</blockquote>
+<h2 id="creating-an-item-template">Creating an Item Template</h2>
+<p>To manage each recon task, I first create a template item.</p>
+<h3 id="connecting-to-the-git-repository">Connecting to the Git Repository</h3>
+<p>The pipeline connects to a Git repository to integrate the recon results seamlessly.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90536977-b9c23a00-e1b7-11ea-9e56-0e920414cd33.png" alt="Connect Git Repository" /></p>
+<h3 id="running-the-recon-tool">Running the Recon Tool</h3>
+<p>Next, the pipeline executes the recon tool. Customize the shell script based on your specific tool requirements. It’s important to use Git commands (for example, <code>git commit -am 'msg'</code>) to update the repository with the new results.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90536986-bc249400-e1b7-11ea-9813-12fa7662871c.png" alt="Execute Shell Command" /></p>
+<h3 id="configuring-git-publisher-and-slack-notifications-in-jenkins">Configuring Git Publisher and Slack Notifications in Jenkins</h3>
+<p>Finally, the pipeline uses the Git publisher to push results to GitHub, and a Slack plugin sends notifications.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90537219-06a61080-e1b8-11ea-9f3a-86b5715abf47.png" alt="Configure Git Publisher" /></p>
+<h2 id="running-the-pipeline-and-viewing-results">Running the Pipeline and Viewing Results</h2>
+<p>When you run the pipeline, you can observe the integration process:</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90538122-14a86100-e1b9-11ea-80c0-9d3d23baf6ad.png" alt="Pipeline Running" /></p>
+<p>After completion, a Slack notification is sent:</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90538129-16722480-e1b9-11ea-8319-89a8db1cdb1e.png" alt="Finish Notify" /></p>
+<p>Finally, you can review the results:</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90538130-17a35180-e1b9-11ea-8dfd-9ea7e88bb961.png" alt="Result View" /></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Although this project started as a fun experiment, the results exceeded my expectations. I believe that continuously integrating analytical data can greatly enhance recon processes.</p>
+<h2 id="later-1-day-after">Later – 1 Day After</h2>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/90596840-d2b80300-e22a-11ea-880b-51eb0c559eb5.png" alt="Integrated as Scanner" /></p>
+<pre><code class="language-bash hljs"><span class="hljs-keyword">if</span> <span class="hljs-operator">[</span> ! -d bugbounty/<span class="hljs-variable">$TARGET</span> <span class="hljs-operator">]</span><span class="hljs-punctuation">;</span> <span class="hljs-keyword">then</span>
+    mkdir bugbounty/<span class="hljs-variable">$TARGET</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">fi</span>
+<span class="hljs-built_in">cd</span> bugbounty/<span class="hljs-variable">$TARGET</span><span class="hljs-punctuation">;</span>
+<span class="hljs-built_in">export</span> <span class="hljs-variable">PATH</span><span class="hljs-operator">=</span><span class="hljs-variable">$PATH</span>:/var/lib/jenkins/go/bin<span class="hljs-punctuation">;</span>
+~/go/bin/D.E.V.I init<span class="hljs-punctuation">;</span>
+touch s_target.txt
+touch w_target.txt
+<span class="hljs-keyword">if</span> <span class="hljs-operator">[</span> -n <span class="hljs-string">&quot;</span><span class="hljs-variable">$STARGET</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">]</span><span class="hljs-punctuation">;</span> <span class="hljs-keyword">then</span>
+  <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;</span><span class="hljs-variable">$STARGET</span><span class="hljs-string">&quot;</span> &gt; s_target.txt
+<span class="hljs-keyword">fi</span>
+<span class="hljs-keyword">if</span> <span class="hljs-operator">[</span> -n <span class="hljs-string">&quot;</span><span class="hljs-variable">$WTARGET</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">]</span><span class="hljs-punctuation">;</span> <span class="hljs-keyword">then</span>
+  <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;</span><span class="hljs-variable">$WTARGET</span><span class="hljs-string">&quot;</span> &gt; w_target.txt
+<span class="hljs-keyword">fi</span>
+~/go/bin/D.E.V.I recon<span class="hljs-punctuation">;</span>
+git add --all<span class="hljs-punctuation">;</span>
+git commit -am <span class="hljs-string">&quot;update&quot;</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<h2 id="later-2-weeks-after">Later – 2 Weeks After</h2>
+<p>Two weeks later, I restructured the process as a Pipeline using a Jenkinsfile. This approach made it easier to manage the entire flow with shell pipelines and Groovy scripts rather than relying solely on the Go application logic.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/91058440-6a6e8480-e663-11ea-92e9-3bfa23e0da94.png" alt="" />
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/91058853-eec10780-e663-11ea-8b8f-ebf06809c0b3.png" alt="" /></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

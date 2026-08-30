@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Untitled | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Untitled">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2023/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Untitled">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2023/">
+    <link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2023/">
+<link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/blog/2023/">
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Untitled","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2023/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+<header class="page-header">
+    
+    <h1 class="page-title">Untitled</h1>
+     
+</header>
+
+
+
+
+    
+
+
+
+
+<ul class="entry-list entry-list--ledger">
+    
+    
+    <li class="entry-year" aria-hidden="true">
+        <span class="entry-year-label">2023</span>
+    </li>
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/dom-handling-with-mutationobserver/">
+            
+            <time class="entry-date" datetime="2023-11-25">
+                NOV 25
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">DOM Handling with MutationObserver</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/iframe-lazyloading-in-firefox/">
+            
+            <time class="entry-date" datetime="2023-11-12">
+                NOV 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Lazy-loading iframe in Firefox</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/fiber-concurrency/">
+            
+            <time class="entry-date" datetime="2023-11-12">
+                NOV 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Fiber concurrency</span>
+                
+                <span class="entry-desc">Crystal로 알아보는 Fiber concurrency</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/webauthn_and_passkey/">
+            
+            <time class="entry-date" datetime="2023-10-22">
+                OCT 22
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">WebAuthn과 Passkey</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/zap-2-14-review/">
+            
+            <time class="entry-date" datetime="2023-10-13">
+                OCT 13
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">ZAP 2.14 Review ⚡️</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/xss-via-reporterror/">
+            
+            <time class="entry-date" datetime="2023-10-12">
+                OCT 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">XSS via reportError</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/map-local-in-zap/">
+            
+            <time class="entry-date" datetime="2023-10-09">
+                OCT 9
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">ZAP Map Local로 쉽게 Fake Response 만들기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/zest-now-supports-yaml/">
+            
+            <time class="entry-date" datetime="2023-09-29">
+                SEP 29
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Zest + YAML = ❤️</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/zap-s-client-side-integration/">
+            
+            <time class="entry-date" datetime="2023-09-22">
+                SEP 22
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">ZAP’s Client Side Integration</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/reborn-xspear/">
+            
+            <time class="entry-date" datetime="2023-08-29">
+                AUG 29
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">XSpear Reborn: Big Changes Coming</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/customize-zap-hud/">
+            
+            <time class="entry-date" datetime="2023-08-13">
+                AUG 13
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Customize ZAP HUD 🎮</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/90days-certificate/">
+            
+            <time class="entry-date" datetime="2023-08-13">
+                AUG 13
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">90-Day Certificate Validity</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/hello-noir/">
+            
+            <time class="entry-date" datetime="2023-08-03">
+                AUG 3
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Hello Noir 👋🏼</span>
+                
+                <span class="entry-desc">Attack surface detector that identifies endpoints by static analysis</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/optimizing-zap-and-burp/">
+            
+            <time class="entry-date" datetime="2023-08-01">
+                AUG 1
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Optimizing ZAP and Burp with JVM</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/zap-2-13-released/">
+            
+            <time class="entry-date" datetime="2023-07-15">
+                JUL 15
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">ZAP 2.13 Review ⚡️</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/various-ways-to-check-ssl-version-of-a-server/">
+            
+            <time class="entry-date" datetime="2023-07-08">
+                JUL 8
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">SSL Version을 체크하는 여러가지 방법들</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/metasploit-pivoting-and-socksproxy/">
+            
+            <time class="entry-date" datetime="2023-06-26">
+                JUN 26
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">MSF Pivoting X SocksProxy</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/cvss-4-0/">
+            
+            <time class="entry-date" datetime="2023-06-15">
+                JUN 15
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">CVSS 4.0 Preview 살펴보기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/attack-types-in-web-fuzzing/">
+            
+            <time class="entry-date" datetime="2023-05-09">
+                MAY 9
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Attack Types in Web Fuzzing</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/import-the-crystal-shard-of-the-github-enterprise/">
+            
+            <time class="entry-date" datetime="2023-04-16">
+                APR 16
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">개인/사설 도메인에서 Crystal Shard 패키지 읽어오기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/hack-the-prompt/">
+            
+            <time class="entry-date" datetime="2023-04-16">
+                APR 16
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Hack the AI Prompt 🤖</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/clearing-404-from-zap-site-tree/">
+            
+            <time class="entry-date" datetime="2023-04-11">
+                APR 11
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">ZAP Site Tree에서 404 페이지 한번에 지우기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/embed-resources-in-crystal/">
+            
+            <time class="entry-date" datetime="2023-03-31">
+                MAR 31
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Embed resources in crystal</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/dalfox-2-9-release/">
+            
+            <time class="entry-date" datetime="2023-03-28">
+                MAR 28
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Dalfox 2.9 Release 🌸</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/crystal-build-flags/">
+            
+            <time class="entry-date" datetime="2023-03-22">
+                MAR 22
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Default vs Release build in Crystal</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/homebrew-formulae-and-cask/">
+            
+            <time class="entry-date" datetime="2023-03-19">
+                MAR 19
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Homebrew로 패키지 제공하기 🍺</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/new-toy-tool-eoyc/">
+            
+            <time class="entry-date" datetime="2023-03-18">
+                MAR 18
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Encoding Only Your Choices, EOYC</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/make-the-vim-more-beautiful/">
+            
+            <time class="entry-date" datetime="2023-02-27">
+                FEB 27
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">LazyVim으로 쉽고 아름답게 vim 설정하기 🌸</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/insomnia-and-httpie-desktop/">
+            
+            <time class="entry-date" datetime="2023-02-09">
+                FEB 9
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Insomnia 와 HTTPie Desktop</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/handling-cookies-in-zest/">
+            
+            <time class="entry-date" datetime="2023-02-07">
+                FEB 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Cross handling Cookies in Zest</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/header-based-authorization-tesing-in-zap/">
+            
+            <time class="entry-date" datetime="2023-01-29">
+                JAN 29
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">ZAP에서 우아하게 Cookie 기반 Auth 테스팅하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2023/cors-bypass-via-dot/">
+            
+            <time class="entry-date" datetime="2023-01-19">
+                JAN 19
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">CORS Bypass via dot</span>
+                
+            </span>
+        </a>
+    </li>
+    
+</ul>
+
+
+
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

@@ -9,6 +9,8 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "wrangler dev --config dist/server/wrangler.json",
+    "mirror:archive": "node scripts/archive-hahwul.mjs --output .mirror-source",
+    "mirror:build": "node scripts/build-mirror.mjs --source .mirror-source --destination public --origin https://pixn-analytics-portfolio.forhm0220.chatgpt.site && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-brand-compat.ps1 -PublicRoot public",
     "lint": "oxlint",
     "format": "oxfmt"
   },

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Rails에서 SuckerPunch를 이용하여 비동기 작업 처리하기 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Rails에서 SuckerPunch를 이용하여 비동기 작업 처리하기">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/rails-suckerpunch/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rails에서 SuckerPunch를 이용하여 비동기 작업 처리하기">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/rails-suckerpunch/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Rails에서 SuckerPunch를 이용하여 비동기 작업 처리하기","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/rails-suckerpunch/","datePublished":"2019-05-07T00:00:00+00:00","dateModified":"2022-09-02T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2019-rails-suckerpunch.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/"},{"@type":"ListItem","position":5,"name":"Rails에서 SuckerPunch를 이용하여 비동기 작업 처리하기"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Rails에서 SuckerPunch를 이용하여 비동기 작업 처리하기</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2019-05-07">
+                        MAY 7, 2019
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Rails 구동중에 쓰레드 처리 시 아래처럼 원래 루비 구문인 Thread로 처리할 수 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-variable constant_">Thread</span><span class="hljs-operator">.</span>new <span class="hljs-keyword">do</span>
+  <span class="hljs-variable constant_">Rails</span><span class="hljs-operator">.</span>application<span class="hljs-operator">.</span>executor<span class="hljs-operator">.</span>wrap <span class="hljs-keyword">do</span>
+    <span class="hljs-built_in">system</span><span class="hljs-punctuation">(</span><span class="hljs-string">&#39;ping -c 5 127.0.0.1&#39;</span><span class="hljs-punctuation">)</span>
+    result <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Net</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">HTTP</span><span class="hljs-operator">.</span>get<span class="hljs-punctuation">(</span><span class="hljs-variable constant_">URI</span><span class="hljs-operator">.</span>parse<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">http://127.0.0.1:3000/zfd</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+    <span class="hljs-built_in">puts</span> result
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>다만 이런 쓰레드에 대한 관리를 매번 해줘야한다는 것과 공통적으로 사용되는 쓰레드를 구현하기 위해선 조금 번거로운 부분들이 있습니다. 오늘 이야기드릴 라이브러리는 레일즈에서 쓰레드 사용을 위한 그런 라이브러리입니다.</p>
+<p>suckerpunch 입니다.</p>
+<h2 id="suckerpunch">SuckerPunch</h2>
+<p>SuckerPunch는 위에서 이야기드린대로 쓰레드 관련 라이브러리이고, 정확히는 단일 Ruby 프로세스에서의 비동기 처리 라이브러리입니다.</p>
+<blockquote>
+<p><a href="https://github.com/brandonhilkert/sucker_punch">https://github.com/brandonhilkert/sucker_punch</a></p>
+</blockquote>
+<p>단일 어플리케이션 내부에서 Jobs을 생성하고 관리할 수 있기 때문에 Heroku같은 PaaS 환경에서 메모리나 비용적으로 효율적으로 사용할 수 있습니다. 다만 단일 프로세스 위에서 동작하기 때문에 부모가프로세스가 재 시작되면 당연히 초기화됩니다.</p>
+<p>해당 라이브러리는 gem 패키지로 <code>gem install</code> 명령또는 Gemfile 이후 <code>bundle install</code>로 설치할 수 있습니다.</p>
+<h3 id="installation">Installation</h3>
+<p>In Shell</p>
+<pre><code class="language-bash hljs">gem install suckerpunch
+</code></pre>
+<p>In Gemfile</p>
+<pre><code class="language-ruby hljs">gem <span class="hljs-string">&#39;sucker_punch&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;~&gt; 2.0&#39;</span>
+</code></pre>
+<h2 id="case-study">Case Study</h2>
+<p>설치 후 앱 내부에선 SuckerPunch를 모듈을 로드하여 사용할 수 있습니다. 아래 Rails 코드는 제가 재미삼아 만드는 앱인데 이를 예시로 한번 보겠습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-keyword">def</span> <span class="hljs-title function_">action</span>
+  <span class="hljs-variable">@log</span> <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Log</span><span class="hljs-operator">.</span>new<span class="hljs-punctuation">(</span>log_params<span class="hljs-punctuation">)</span>
+  url <span class="hljs-operator">=</span> log_params<span class="hljs-operator">[</span><span class="hljs-string">&quot;</span><span class="hljs-string">host</span><span class="hljs-string">&quot;</span><span class="hljs-operator">]</span>
+  hwulTest<span class="hljs-operator">.</span>new<span class="hljs-operator">.</span>scan_spider<span class="hljs-punctuation">(</span>url<span class="hljs-punctuation">,</span> <span class="hljs-variable">@log</span><span class="hljs-punctuation">)</span>
+  <span class="hljs-comment"># 아래 hwulTest class에서 객체를 생성하고 멤버함수를 실행합니다.</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-comment"># ... 생략 ...</span>
+
+<span class="hljs-keyword">class</span> hwulTest
+  <span class="hljs-keyword">include</span> <span class="hljs-variable constant_">SuckerPunch</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Job</span>
+  <span class="hljs-comment"># SuckerPunch =&gt; Job 모듈을 가져옵니다.</span>
+
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">scan_spider</span><span class="hljs-punctuation">(</span>url<span class="hljs-punctuation">,</span> obj<span class="hljs-punctuation">)</span>
+    <span class="hljs-variable constant_">ActiveRecord</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Base</span><span class="hljs-operator">.</span>connection_pool<span class="hljs-operator">.</span>with_connection <span class="hljs-keyword">do</span>
+      payload <span class="hljs-operator">=</span> <span class="hljs-string">&quot;</span><span class="hljs-string">http://127.0.0.1:8081/JSON/~~~blahblah</span><span class="hljs-string">&quot;</span>
+      res <span class="hljs-operator">=</span> <span class="hljs-variable constant_">HTTP</span><span class="hljs-operator">.</span>get<span class="hljs-punctuation">(</span>payload<span class="hljs-punctuation">)</span><span class="hljs-operator">.</span>body
+      res <span class="hljs-operator">=</span> <span class="hljs-variable constant_">ActiveSupport</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">JSON</span><span class="hljs-operator">.</span>decode<span class="hljs-punctuation">(</span>res<span class="hljs-punctuation">)</span>
+
+      <span class="hljs-built_in">p</span> res<span class="hljs-operator">[</span><span class="hljs-string">&quot;</span><span class="hljs-string">scan</span><span class="hljs-string">&quot;</span><span class="hljs-operator">]</span>
+      data <span class="hljs-operator">=</span> obj
+      data<span class="hljs-operator">.</span>update<span class="hljs-punctuation">(</span><span class="hljs-symbol">state</span><span class="hljs-punctuation">:</span><span class="hljs-keyword">true</span><span class="hljs-punctuation">)</span>
+      data<span class="hljs-operator">.</span>update<span class="hljs-punctuation">(</span><span class="hljs-symbol">data</span><span class="hljs-punctuation">:</span> res<span class="hljs-operator">[</span><span class="hljs-string">&quot;</span><span class="hljs-string">scan</span><span class="hljs-string">&quot;</span><span class="hljs-operator">]</span><span class="hljs-operator">.</span>to_i<span class="hljs-punctuation">)</span>
+    <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>해당 컨트롤러에서 action 이 호출됬을 때 레일즈 메인 로직은 원하는 구문 처리 후 정상적으로 결과를 리턴해주고, hwulTest로 정의한 기능은 비동기로 백그라운드 처리됩니다.</p>
+<h2 id="with-activejob">With ActiveJob</h2>
+<p>SuckerPunch는 Rails의 ActiveJob으로도 사용할 수 있습니다. 아래와 같이 gernete로 job을 만들 때 sucker_punch를 지시해주어 만들면 기본적으로 해당 Gem의 기능을 사용할 수 있습니다.</p>
+<pre><code class="language-bash hljs">rails g sucker_punch:job logger
+</code></pre>
+<h2 id="worker-and-job">Worker and Job</h2>
+<p>추가적으로 볼만한 옵션은 worker와 job입니다.</p>
+<p>worker는 동시성을 의미하며 디폴트는 2로 설정되어 있습니다. 그래서 2개의 worker(thread)가 지정한 job을 처리하게 됩니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-keyword">class</span> <span class="hljs-title class_">LogJob</span>
+  <span class="hljs-keyword">include</span> <span class="hljs-variable constant_">SuckerPunch</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Job</span>
+  workers <span class="hljs-number">4</span>
+
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">perform</span><span class="hljs-punctuation">(</span>event<span class="hljs-punctuation">)</span>
+    <span class="hljs-variable constant_">Log</span><span class="hljs-operator">.</span>new<span class="hljs-punctuation">(</span>event<span class="hljs-punctuation">)</span><span class="hljs-operator">.</span>track
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>반대로 Job은 Queue Size를 의미합니다. 그래서 max_jobs를 지정해주면 최대 저장할 수 있는 job의 갯수, 즉 Queue의 크기를 제한할 수 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-keyword">class</span> <span class="hljs-title class_">LogJob</span>
+  <span class="hljs-keyword">include</span> <span class="hljs-variable constant_">SuckerPunch</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Job</span>
+  max_jobs <span class="hljs-number">10</span>
+
+  <span class="hljs-keyword">def</span> <span class="hljs-title function_">perform</span><span class="hljs-punctuation">(</span>event<span class="hljs-punctuation">)</span>
+    <span class="hljs-variable constant_">Log</span><span class="hljs-operator">.</span>new<span class="hljs-punctuation">(</span>event<span class="hljs-punctuation">)</span><span class="hljs-operator">.</span>track
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

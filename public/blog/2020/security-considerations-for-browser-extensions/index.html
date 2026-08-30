@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Security considerations for browser extensions | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Security considerations for browser extensions">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/security-considerations-for-browser-extensions/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Security considerations for browser extensions">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/security-considerations-for-browser-extensions/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Security considerations for browser extensions","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/security-considerations-for-browser-extensions/","datePublished":"2020-12-21T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/102796620-e39f9d80-43f1-11eb-8aa1-bfce5e889ea9.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/"},{"@type":"ListItem","position":5,"name":"Security considerations for browser extensions"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Security considerations for browser extensions</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2020-12-21">
+                        DECEMBER 21, 2020
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>브라우저 확장 기능의 보안 관련하여 테스트할게 필요하여 제가 알던 내용에 조금 더 리서치하여 글로 작성해 봅니다.
+우선 브라우저 확장 기능은 웹 브라우저에 추가되는 작은 단위의 앱으로 Chrome / Safari / Firefox 등등 다수 브라우저에서 웹 브라우징, 광고차단, 각종 테스트 기능 등 여러 사용자들에게 서비스되고 있습니다. 이는 앱 생태계와 동일하게 개인/기업 등등의 개발자가 규격에 따라 만들고 스토어에 업로드 후 승인 절차를 통해 등록되는 것으로 알고 있습니다.</p>
+<p>다만 브라우저 확장 기능을 통해 악성코드가 많이 유포되고 있다는건 많은 사람들이 알고 있는 내용인데요, 오늘은 조금 다른 관점으로 이야기를 풀려고 합니다. 브라우저 확장 기능의 보안성을 테스트하기 위한 엔지니어 그리고 브라우저 확장 기능을 만들 때 고려해야할 사항들, 즉 개발자의 관점에서의 이야기입니다.</p>
+<h2 id="point-of-testing-develop">Point of testing, develop</h2>
+<p>우선 대다수 브라우저의 큰 구조적 부분은 비슷합니다. 물론 자세한 동작 방식은 Chrome / Safari / Firefox 모두 다 다르겠지만, 큰 구조는 아래와 같이 3가지로 나뉩니다.</p>
+<p><code>Content Script</code> / <code>Extension Core</code> / <code>Native Binary</code></p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/102796612-e00c1680-43f1-11eb-99e1-6ce4c3beee4a.png" alt="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/38394.pdf" /></p>
+<p>여기서 Extension Core와 Native Binary는 브라우저 확장기능의 코어적인 부분, 브라우저를 개발하는 입장에서의 포인트이고, 우리는 취약점 점검을 위한, 또는 개발을 위한 입장이기 때문에 Content Script 영역에서의 보안관점이 가장 중요합니다.
+(보통 말하는 확장 기능 개발은 Content Script 영역에서 이루어집니다. 만들어보면 별거 없어요. / 위 그림은 크롬 기준의 그림이긴한데, 다른 브자라우저도 비슷합니다)</p>
+<h2 id="policy">Policy</h2>
+<p>브라우저 확장 기능은 사용자의 브라우저에서 동작하기 때문에 만약에 취약점이 발견됬을 경우 리스크가 상당합니다. 이미 설치된 확장 기능은 어느정도 신뢰받는 위치에 있기 때문에 사용자/시스템적으로 많은 권한을 가지게될 수도 있습니다. 그래서 확장 기능을 만들 때 권한과 정책적인 측면에서 세심한 설정이 필요합니다.</p>
+<h3 id="extension-permissions-and-access-control">Extension Permissions and Access Control</h3>
+<p>우선 각 브라우저사 별로 확장 기능들은 퍼미션을 가지게 됩니다. 이 퍼미션은 해당 확장 기능이 수행할 수 있는 권한의 범위를 의미하며, 너무 과도하지 않은 권한을 할당하여 혹여나 문제가 발생하여도 추가적인 피해를 예방할 수 있도록 설정이 필요합니다.</p>
+<ul>
+<li><a href="https://developer.apple.com/documentation/safariservices/safari_web_extensions/managing_safari_web_extension_permissions">Safari Permissions</a></li>
+<li><a href="https://developer.chrome.com/docs/extensions/reference/permissions/">Chrome Permissions</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions">Firefox Permissions</a></li>
+</ul>
+<p>보통 확장기능이 어떤 기능을 수행할 수 있는지 명시합니다. (예를들면, 웹 요청을 전송할 수 있음, 현재 사용자 페이지를 제어할 수 있음 등)</p>
+<h3 id="개발자-계정-보호">개발자 계정 보호</h3>
+<p>이건 확장 기능 자체의 정책적인 측면은 아니지만 대다수 권장되고 있는 방법입니다. 우선 스토어에 등록된 확장 기능은 개발자 계정을 기준으로 서명되어 사용되는데, 개발자 계정이 탈취됬을 때 리스크는 엄청나게 높습니다. 그래서 확장 기능을 등록하고 관리하는 계정은 2FA 인증 등 조금 더 높은 보안 요구조건을 가집니다. 되도록이면 적용하는게 좋을 것 같긴합니다. (따지고 보면 개인 계정도 2FA또는 OTP를 쓰는 상태인데, 중요한 권한을 가진 계정은 당연한 부분이겠죠.)</p>
+<h3 id="limit-manifest-fields-제한하기">Limit Manifest fields 제한하기</h3>
+<p>이것도 브라우저들이 비슷하게 사용하는 정책인데요, 확장 기능이 호출할 수 있는, 구동할 수 있는 도메인 등의 리스트를 지정할 수 있습니다. 제가 회사에서 확장 기능을 만들 때 잘 인지하지 않고 있다가 고생한 부분이기도 하네요.. (옛날에 개인적으로 만들었을땐 없었는데 😭)</p>
+<p>아무튼 브라우저 확장 기능에서 사용할 수 있는 리소스를 제한할 수 있습니다. Chrome 기준으로 예시를 들어보면 아래와 같습니다.
+Manifest에 web_accessible_resources 부분으로 명시해주어 제한할 수 있습니다.</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-name">&quot;web_accessible_resources&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-string">&quot;images/my-image.png&quot;</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<ul>
+<li><a href="https://developer.chrome.com/docs/extensions/mv2/manifest/web_accessible_resources/">Chrome 참고</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/web_accessible_resources">Firefox 참고</a></li>
+</ul>
+<h2 id="secure-coding">Secure Coding</h2>
+<p>이제 만드는 과정에서 고려해야할 부분들에 대해 이야기하겠습니다. 당연히 그 뒤에 있는 Threat Model , Vulnerability 부분과도 밀접하며 이 부분도 굉장히 중요하기 때문에 적절한 구현이 필요할거라 생각되네요. 다만 이 영역은 일반적인 웹 보안과 거의 동일합니다.</p>
+<h3 id="전구간-https-사용">전구간 HTTPS 사용</h3>
+<p>우선 브라우저 확장기능 또한 웹 기반으로 사용자의 브라우저의 DOM 위에 동작하기 때문에 API, Resource 등의 요청으로 HTTP 포맷을 사용하는 경우가 많습니다. (물론 간혹 Raw 통신하는 케이스도 있었어요. 분석하는 사람 입장에선 짜증...)</p>
+<p>아무튼 https 사용은 거의 기본적인 부분이니 API, Resource 등 외부 서버와의 통신 시 무조건 https로 처리될 수 있도록 개발단에서 고려가 필요합니다. (단순 redirect를 이용한 http =&gt; https도 썩 좋은 방식은 아니에요. 어쩄던 네트워크 트래픽상에서 평문 통신이 일어나니깐요)</p>
+<h3 id="csp">CSP</h3>
+<p>브라우저 확장 기능도 결국 웹 기반이기 때문에 CSP를 설정할 수 있습니다. <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/01/27/csp-bypass-technique-xss/">CSP에 대한 내용과 우회 방법은 예전에 쓴 글</a>에 있으니 참고하시고, 적용 방법에 대해서 가볍게 작성해봅니다.</p>
+<p>Manifest에서 content_security_policy 지시자를 통해 일반 웹 페이지와 동일하게 CSP를 설정할 수 있습니다.</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-name">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Very Secure Extension&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1.0&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Example of a Secure Extension&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;content_security_policy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;default-src &#39;self&#39;&quot;</span>
+  <span class="hljs-string">&quot;manifest_version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>다만 유의해야할 점은 브라우저 확장기능의 주소는 확장 기능 관련 프로토콜+고유주소라서 일반 웹 도메인과는 약간 다른 형태의 URI를 가집니다. 이점 참고하셔서 적용하시는 게 좋을 것 같습니다.</p>
+<h3 id="xss">XSS</h3>
+<p>네 당연히 웹 기반 동작이기 때문에 여러 웹 취약점에 영향을 받겠지만, 그 중 가장 발견 빈도가 높고 리스크 있다고 생각되는건 XSS 입니다. 이 부분에서 대해서는 조금 더 신경써서 대응이 필요할 것 같습니다.</p>
+<p>만약에 Stored XSS 같이 영구/반영구 적으로 확장 기능에 악의적인 스크립트를 남길 수 있다면, UXSS처럼 특정 도메인이 아닌 광범위한 도메인과 페이지에 영향을 줄 수도 있습니다. (물론 이를 제한하기 위해 위 Policy 부분에서 정책을 거는겁니다)</p>
+<p>XSS 관련해서 구글링해보면 많이 나올테니 참고하시고, 개인적으로 위키? 작성중인데 혹시라도 글을 보실 떄 완료 되었다면 요거 참고 하셔도 될 것 같습니다. <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/xss/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/xss/</a></p>
+<h3 id="대다수의-웹-취약점">대다수의 웹 취약점</h3>
+<p>XSS 이외에도 대다수의 웹 취약점과 동일하게 영향받기 떄문에 일반적인 웹 서비스 개발 시 고려해야할 부분들은 같이 고려해서 개발이 필요합니다.</p>
+<h2 id="threat-model-and-attack-vector">⚡️ Threat Model and Attack vector</h2>
+<p>자 테스팅 입장에서도 간단히 써봅시다. 물론 위에서 구구절절 이야기드렸듯이 웹 서비스에 대한 테스팅과 거의 동일합니다. 다만 조금 더 고민하고 살펴봐야할 부분들은 따로 작성해둘테니 참고하시길 바래요.</p>
+<h3 id="xss-1">XSS</h3>
+<p>위에서 이야기드렸듯이 이 취약점이 있는 경우 일반적인 웹에서의 XSS 보다는 높은 리스크를 가집니다. 이 부분에 대해서는 조금 더 심도있게 테스트가 필요하며, 한가지 팁을 드리자면 많은 확장 기능들이 Local Storage를 통한 데이터 관리를 하고있고(Stored XSS 대응에서 잘 놓치는 부분이죠), 프로토콜:고유주소 기반으로 Reflected XSS 또한 가능합니다. 고유주소는 마치 난수처럼 보이지만 고정값이니 크게 놀라지 않으셔도 됩니다.</p>
+<h3 id="replacing-native-apis">Replacing Native APIs</h3>
+<p>요건 구글보안팀에서 이야기하는 부분 중 하나인데요, 확장 기능 내부적으로 쓰이는 API를 바꿔서 동작시킬 수 있는지에 대한 부분입니다. 공격자가 악성 웹 페이지를 만들고, 확장 기능의 DOM 영역을 일부 제어할 수 있어질 때 문제가 발생합니다.(확장 기능의 페이지의 DOM을 활용하는 경우 등)</p>
+<p>다만 이러한 부분들은 브라우저에서 Object 신뢰부분에서 어느정도 제한하고 있기는 하나, 케바케라는 말이 있어서 개발단에서도 고려가 필요한 부분이라고 생각이 드네요.</p>
+<h3 id="javascript-capability-leaks-prototype-pollution">Javascript Capability Leaks, Prototype Pollution</h3>
+<p>보통 Cross-origin javascript capability leakage로 부르는 부분이며,아래 문서 참고하시면 약간이나마 도움될 것 같습니다.</p>
+<ul>
+<li><a href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.153.1883&amp;rep=rep1&amp;type=pdf">https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.153.1883&amp;rep=rep1&amp;type=pdf</a></li>
+<li><a href="https://dl.acm.org/doi/10.5555/1855768.1855780">https://dl.acm.org/doi/10.5555/1855768.1855780</a></li>
+</ul>
+<p>그리고 Javascript / HTML / CSS로 동작하기 때문에 당연히 Prototype Pollution에 영향을 받습니다. 이 부분도 테스팅이 필요합니다.
+<a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/05/01/jqeury-prototype-pollution-cve-2019-11358/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/05/01/jqeury-prototype-pollution-cve-2019-11358/</a></p>
+<h3 id="mixed-contentsnon-https">Mixed Contents(non-https)</h3>
+<p>네 위에서도 이야기헀듯이 https의 사용은 중요합니다.</p>
+<h3 id="api-서버-보안">API 서버 보안</h3>
+<p>마지막으로 확장 기능에 따라 API 서버와의 접점의 가능성이 있는데, 이런 경우 당연히 API 서버 또한 적절한 보안 테스팅과 대응이 되어있어야 합니다. API 서버 자체에선 리스크가 적거나 없는 문제라도 확장 기능의 특성(사용자의 브라우징에 개입하는)과 결합됬을 떈 문제가 될 수 있는 부분이 있으니 이러한 부분도 고민하고 고쳐나가는게 좋습니다.</p>
+<h2 id="conclusion">🙏🏼 Conclusion</h2>
+<p>막상 정리하다 보니 제가 놓쳤던 부분도 있었습니다. 전반적으론 웹 서비스 자체와 거의 동일하지만, 나름의 특색이 있으니 혹시나 개발이던 보안 테스팅이던 관련된 업무를 하실 때 조금이나마 도움 됬으면 하는 바램입니다.</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://developer.chrome.com/docs/extensions/reference/permissions/">https://developer.chrome.com/docs/extensions/reference/permissions/</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions">https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions</a></li>
+<li><a href="https://support.google.com/chrome/a/answer/7515036?hl=en">https://support.google.com/chrome/a/answer/7515036?hl=en</a></li>
+<li><a href="https://developer.chrome.com/docs/extensions/mv2/security/">https://developer.chrome.com/docs/extensions/mv2/security/</a></li>
+<li><a href="https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/38394.pdf">https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/38394.pdf</a></li>
+<li><a href="https://developer.chrome.com/docs/extensions/mv2/manifest/web_accessible_resources/">https://developer.chrome.com/docs/extensions/mv2/manifest/web_accessible_resources/</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/web_accessible_resources">https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/web_accessible_resources</a></li>
+<li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/01/27/csp-bypass-technique-xss/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2019/01/27/csp-bypass-technique-xss/</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

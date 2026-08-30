@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[WEB HACKING] PHP Comparison Operators Vulnerability for Password Cracking | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[WEB HACKING] PHP Comparison Operators Vulnerability for Password Cracking">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-php-comparison-operators/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[WEB HACKING] PHP Comparison Operators Vulnerability for Password Cracking">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-php-comparison-operators/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[WEB HACKING] PHP Comparison Operators Vulnerability for Password Cracking","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/web-hacking-php-comparison-operators/","datePublished":"2017-01-14T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2017-web-hacking-php-comparison-operators.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"[WEB HACKING] PHP Comparison Operators Vulnerability for Password Cracking"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[WEB HACKING] PHP Comparison Operators Vulnerability for Password Cracking</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-01-14">
+                        JANUARY 14, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>개인적으로 프로그래밍의 재미있는 요소는 연산자가 아닐까 싶습니다. 작은 연산자들이 모여 큰 흐름을 만들고, 우리같은 해커는 이 흐름을 틀어 예상치도 못한 행위를 이끌어내니 굉장히 재미있는 부분이죠.</p>
+<p>PHP에는 아주 재미있는 취약점이 하나 있습니다. 간단한 버그일 수 있지만 이 결과가 엄청난 데이터를 불러올 수 있죠. 오늘은 바로 PHP의 비교 연산자에 대한 이야기를 할까 합니다.</p>
+<p>그럼 시작하겠습니다. :)</p>
+<p><a href="https://3.bp.blogspot.com/-oXi0c5G91xY/WHmjfb7w-TI/AAAAAAAAB4k/RgOWpnBwhqs1YqpOLbo7lOcaMogqFhlUgCLcB/s1600/phpcrack.jpg"><img loading="lazy" src="https://3.bp.blogspot.com/-oXi0c5G91xY/WHmjfb7w-TI/AAAAAAAAB4k/RgOWpnBwhqs1YqpOLbo7lOcaMogqFhlUgCLcB/s640/phpcrack.jpg" alt="" /> </a></p>
+<h2 id="comparison-operator">Comparison Operator?</h2>
+<p>개발쪽. 아니 IT인이라면 대부분 아는 연산자입니다. 양쪽 값을 비교하는 연산자로 대표적으로 Equal(==)이 있습니다.</p>
+<p>예시로..</p>
+<pre><code>
+if(1==0)
+{
+  // codecodecode
+}
+
+</code></pre>
+<p>요런 구문에서 ==의 역할이죠.</p>
+<p>관련해서는 아래 링크보시면 조금 더 도움될겁니다
+<a href="http://php.net/manual/kr/language.operators.comparison.php">http://php.net/manual/kr/language.operators.comparison.php</a></p>
+<h2 id="php-comparison-operator-vulnerability">PHP Comparison Operator Vulnerability</h2>
+<p>아래 간단한 코드를 보겠습니다. param1 과 param2에 각각 다른 값의 md5 해쉬를 만들어 비교하는 구문입니다. 이 코드가 동작하면 어떤 결과를 나타낼까요?</p>
+<pre><code>
+&lt;html&gt;&lt;body style=&quot;background-color:black;color:white&quot;&gt;
+&lt;h1&gt;PHP Equal Vulnerability&lt;/h1&gt;
+&lt;hr&gt;
+
+&lt;?php
+
+        $param1 = md5('240610708');  // result: 0e462097431906509019562988736854
+        $param2 = md5('QNKCDZO');    // result: 0e830400451993494058024219903391
+
+        echo &quot;param1 md5 value --&gt; &quot;.$param1.&quot;&lt;br&gt;&quot;;
+        echo &quot;param2 md5 value --&gt; &quot;.$param2.&quot;&lt;br&gt;&quot;;
+        echo &quot;&lt;br&gt;&lt;br&gt;Result is &quot;;
+        if($param1 == $param2)
+        {
+          echo &quot;&lt;font color='red'&gt;Equal&lt;/font&gt;&quot;;
+        }
+        else
+        {
+          echo &quot;&lt;font color='green'&gt;Diff&lt;/font&gt;&quot;;
+        }
+?&gt;
+&lt;/body&gt;&lt;/html&gt;
+
+</code></pre>
+<p>대부분 Diff가 나올 것이라고 생각하실 겁니다. 왜냐하면 두 값의 md5 해쉬는 다르기 때문이죠.
+그러나 실제로 돌려보면...</p>
+<p><a href="https://4.bp.blogspot.com/-EhQ-MW14xpE/WHmkANgS7GI/AAAAAAAAB4s/qvUaL45bTukGQvfjM2fb_F7MwbrGbVEPACLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_023.png"><img loading="lazy" src="https://4.bp.blogspot.com/-EhQ-MW14xpE/WHmkANgS7GI/AAAAAAAAB4s/qvUaL45bTukGQvfjM2fb_F7MwbrGbVEPACLcB/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_023.png" alt="" /> </a></p>
+<p>위와 같이 Equal이 나옵니다(?!)
+이제 뭔가 낌새를 느끼셨을 것 같습니다. 요약해서 먼저 말씀드리면 Equal(==) 자체에 있는 오류로 인해서 의도하지 않은 결과 값이 나타난 거죠.</p>
+<p>Equal은 양쪽의 값을 비교하는 연산자입니다. 이 친구가 비교 연산을 할 때 문자던, 숫자던 다 숫자 형으로 변환한 후 비교를 하게 됩니다.
+<a href="https://1.bp.blogspot.com/-7_Se59iI8f8/WHmm0Q9rBMI/AAAAAAAAB5E/ClhdAFV0khAoigGC2Ea_bruba5hAtRzNACLcB/s1600/2016111814175546d9c9ab5775c1ad.jpg"><img loading="lazy" src="https://1.bp.blogspot.com/-7_Se59iI8f8/WHmm0Q9rBMI/AAAAAAAAB5E/ClhdAFV0khAoigGC2Ea_bruba5hAtRzNACLcB/s200/2016111814175546d9c9ab5775c1ad.jpg" alt="" /> </a> 이 과정에서 맨 앞 숫자가 0e으로 시작되는 값(예시에서는 두 값의 해쉬값)은 숫자로 인식되어 0으로 나타내어집니다.</p>
+<p>0e -&gt; int!</p>
+<p>원리는 간단합니다. 컴퓨터에서 숫자를 표현하는 방식 중 e를 이용한 방식이 있습니다. (엑셀보다보면 가끔 보이는...그런)
+대표적으로</p>
+<p>1E.~~
+0E~~~</p>
+<p>이런식으로 숫자와 e를 혼용한 값인데, 이것은 문자열인 1E, 0E가 비교 시 숫자로 처리된다는 점입니다. 이 때문에 위 두 해시는 같은 값으로 인지되어 같다고 나온겁니다.</p>
+<p>그래서 위 240610708과 QNKCDZO의 해쉬값은 Equal 연산에 의해 같다라고 판단하게 되는겁니다. 이러한 결과는 간단한 버그(?)이지만 시나리오에 따라 큰 결과를 가져올 수도 있습니다.
+아래 시나리오와 함께 보죠.</p>
+<h2 id="attack-scenario">Attack Scenario</h2>
+<p>그럼 실제로 어떤 시나리오에서 사용될 수 있는지 보도록 하겠습니다. 사실 제목부터 중간 이미지까지.. 시나리오에 대한 이야기가 워낙 많아 다들 눈치 채셨을겁니다.
+아까 예제를 이용해서 간단한 로그인 페이지를 만들어보았습니다. php 코드에는 패스워드가 하드 코딩 되어있고 form 태그를 통해 입력 받은 값을 비교하여
+로그인 여부를 판단하는 코드입니다.</p>
+<pre><code>
+&lt;html&gt;&lt;body style=&quot;background-color:black;color:white&quot;&gt;
+&lt;h1&gt;Sample Login page - by hahwul&lt;/h1&gt;
+&lt;hr&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;form action=&quot;&quot; method=&quot;get&quot;&gt;
+&lt;input type=&quot;text&quot; value=&quot;&quot; name=&quot;pw&quot;&gt;
+&lt;input type=&quot;submit&quot; value=&quot;Login&quot;&gt;
+&lt;/form&gt;
+
+&lt;br&gt;&lt;br&gt;
+&lt;h1&gt;Result&lt;/h1&gt;
+&lt;hr&gt;
+
+&lt;?php
+        $user_pw = md5($_GET['pw']);
+        $password = md5('240610708');  // result: 0e462097431906509019562988736854
+
+        if($password == $user_pw)
+        {
+          echo &quot;&lt;font color='red'&gt;Login success&lt;/font&gt;&lt;br&gt;&quot;;
+          echo &quot;Your Input: &quot;.$_GET['pw'].&quot;&lt;br&gt;&quot;;
+          echo &quot;Real Passwd: 201610708&lt;br&gt;&quot;;
+        }
+        else
+        {
+          echo &quot;&lt;font color='green'&gt;Fail..&lt;/font&gt;&quot;;
+        }
+?&gt;
+&lt;/body&gt;&lt;/html&gt;
+
+</code></pre>
+<p>그럼 테스트삼아 아무거나 넣어봅시다.</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-Q_MoopOfMkM/WHmj7uwzjUI/AAAAAAAAB4o/xNC2iOgEBygQJVodalhj-JjlpuFQ130iwCEw/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_021.png" alt="" /></p>
+<p>물론.. Fail이 나오네요.(틀렸으니깐)</p>
+<p>로그인 시 입력한 값과 DB(예제에서는 페이지에 넣어둔 값)에서 가져온 값의 해쉬를 비교하게 되고 if 문과 equal을 통해 로그인 여부를 결정짓게 됩니다.
+아까 우리가 배운 기법을 활용하면.. 쉽게 넘어갈수도 있겠지요 :)</p>
+<p>Password 입력 부분에 아까 0으로 시작하는 해쉬로 확인한 QNKCDZO를 입력하면 로그인이 통과되는걸 알 수 있습니다.</p>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-f17wSUB1Bzw/WHmkUEMGXvI/AAAAAAAAB4w/Bswih1e7IyMYb3htQLck5LX8R5AFv4B3ACLcB/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_022.png" alt="" /></p>
+<p>아주 간단하고 쉽지만.. 상황에 따라 굉장히 큰 영향을 끼칠 수 있습니다.
+QNKCDZO 같이 저런 해쉬값을 가지는 데이터는 꼭 BruteForce 과정에서는 필수로 담아야 하겠죠? 그럼 이만</p>
+<h2 id="reference">Reference</h2>
+<p><a href="http://php.net/manual/kr/language.operators.comparison.php">http://php.net/manual/kr/language.operators.comparison.php</a>
+<a href="http://stackoverflow.com/questions/22140204/why-md5240610708-is-equal-to-md5qnkcdzo">http://stackoverflow.com/questions/22140204/why-md5240610708-is-equal-to-md5qnkcdzo</a>
+<a href="http://hyunmini.tistory.com/76#comment12633578">http://hyunmini.tistory.com/76#comment12633578</a>
+<a href="http://stackoverflow.com/questions/8083034/integer-string-comparison-are-equal-php-bug">http://stackoverflow.com/questions/8083034/integer-string-comparison-are-equal-php-bug</a>
+<a href="http://stackoverflow.com/questions/6843030/why-does-php-consider-0-to-be-equal-to-a-string">http://stackoverflow.com/questions/6843030/why-does-php-consider-0-to-be-equal-to-a-string</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

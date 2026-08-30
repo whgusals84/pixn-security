@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Amass, go deep in the sea with free APIs | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Amass, go deep in the sea with free APIs">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/amass-go-deep-in-the-sea-with-free-apis/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Amass, go deep in the sea with free APIs">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/amass-go-deep-in-the-sea-with-free-apis/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Amass, go deep in the sea with free APIs","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/amass-go-deep-in-the-sea-with-free-apis/","datePublished":"2020-09-23T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/94114360-35806800-fe83-11ea-9d8b-cd662fbc8f2b.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/"},{"@type":"ListItem","position":5,"name":"Amass, go deep in the sea with free APIs"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Amass, go deep in the sea with free APIs</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2020-09-23">
+                        SEPTEMBER 23, 2020
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>There are several types of Subdomains scanning tools. Amass, Subfinder, findomain, etc...
+In my opinion, the tool at its peak is Amass, and many Bugbounty hunters have automated systems through Amass. Today I'm going to talk about ways to expand Amass' datasources and get more results.</p>
+<p>Subdomains 스캐닝 도구에는 여러가지가 있습니다. 대표적으로 Amass, Subfinder, findomain, etc...
+개인적인 생각으론 정점에 있는 도구는 Amass 이며, 많은 버그바운티 헌터들이 Amass를 통한 자동화 시스템을 가지고 있습니다.</p>
+<p>오늘은 Amass의 datasources를 확장을 통해 좀 더 많은 결과를 얻어오기 위한 방법에 대해 이야기하려고 합니다.</p>
+<h2 id="amass-datasource">Amass datasource</h2>
+<p>All of the tools mentioned above call multiple APIs to get a list of subdomains quickly. Of course, it has its own testing function, but as a result, it's a necessary process to get a lot of domains in a short time. Amass also has this logic and supports a number of services.</p>
+<p>위에서 이야기한 도구들 모두 여러 API를 호출하여 서브도메인 리스트를 빠르게 얻어옵니다. 물론 자체적인 테스팅 기능도 갖추고 있지만, 결과적으로 단시간에 많은 도메인을 확보하기 위해선 꼭 필요한 과정이죠. Amass 또한 이러한 로직을 가지고 있고 여러가지 서비스들을 지원하고 있습니다.</p>
+<h2 id="know-yourself-default-available-datasources">Know yourself. default available datasources</h2>
+<blockquote>
+<p>​Know yourself</p>
+</blockquote>
+<p><cite>from Socrates</cite></p>
+<p>First, we need to know our Amass status. The currently installed Amass version is <code>v3.10.3</code>, and the currently active datasources can be obtained through the <code>amass enum -list</code> command.</p>
+<p>먼저 우리의 Amass 상태를 알아야합니다. 현재 설치된 Amass 버전은 <code>v3.10.3</code>이며 <code>amass enum -list</code> 명령을 통해 현재 활성화된 datasources 를 얻어올 수 있습니다.</p>
+<pre><code>amass -version
+v3.10.3
+</code></pre>
+<p>​
+default available apis</p>
+<pre><code>amass enum -list
+Data Source               | Type                    | Available
+--------------------------------------------------------------------------------
+AlienVault                  api                         *
+Alterations                 alt                         *
+ArchiveIt                   archive                     *
+Ask                         scrape                      *
+Baidu                       scrape                      *
+BinaryEdge                  api
+Bing                        scrape                      *
+Brute Forcing               brute                       *
+BufferOver                  api                         *
+BuiltWith                   scrape                      *
+C99                         api
+CIRCL                       api
+Censys                      cert                        *
+CertSpotter                 cert                        *
+Chaos                       api
+Cloudflare                  api                         *
+CommonCrawl                 api                         *
+Crtsh                       cert                        *
+DNSDB                       api
+DNSDumpster                 scrape                      *
+FacebookCT                  cert
+GitHub                      api
+GoogleCT                    cert                        *
+HackerOne                   scrape                      *
+HackerTarget                api                         *
+IPToASN                     api                         *
+LoCArchive                  archive                     *
+Mnemonic                    api                         *
+NetworksDB                  scrape                      *
+PassiveTotal                api
+Pastebin                    api                         *
+RADb                        api                         *
+RapidDNS                    scrape                      *
+ReconDev                    api
+Riddler                     scrape                      *
+Robtex                      api                         *
+SecurityTrails              api
+ShadowServer                api                         *
+Shodan                      api
+SiteDossier                 scrape                      *
+Spyse                       api
+Sublist3rAPI                api                         *
+TeamCymru                   api                         *
+ThreatCrowd                 api                         *
+ThreatMiner                 api                         *
+Twitter                     api
+UKGovArchive                archive                     *
+URLScan                     api                         *
+Umbrella                    api
+ViewDNS                     scrape                      *
+VirusTotal                  api                         *
+Wayback                     archive                     *
+WhoisXML                    none
+Yahoo                       scrape                      *
+ZETAlytics                  api
+ZoomEye                     api
+</code></pre>
+<p>find unabled apis​..</p>
+<p>이제 활성화되지 않은 api 들만 뽑아봅시다.</p>
+<pre><code>amass enum -list | grep -v &quot;\*&quot;
+Data Source                        | Type                             | Available
+--------------------------------------------------------------------------------
+BinaryEdge                           api
+C99                                  api
+CIRCL                                api
+Chaos                                api
+DNSDB                                api
+FacebookCT                           cert
+GitHub                               api
+PassiveTotal                         api
+ReconDev                             api
+SecurityTrails                       api
+Shodan                               api
+Spyse                                api
+Twitter                              api
+Umbrella                             api
+WhoisXML                             none
+ZETAlytics                           api
+ZoomEye                              api
+</code></pre>
+<p>​
+17 datasource is disabled, and let's go enable it.
+17개의 datasource가 비활성화 상태이고, 이를 활성화 시켜봅시다.</p>
+<h2 id="amass-config-flag-and-automatically-tries-to-discover-config-file">Amass <code>-config</code> flag and automatically tries to discover config file</h2>
+<p>It's a good idea to know an option before looking at how to apply it. This is the <code>-config</code> flag, and you can define and use Amass settings in advance. You can also specify API Token here, so you can eliminate the hassle of giving an option every time you scan.</p>
+<p>적용 방법을 알아보기 전에 옵션을 하나 알고가면 좋습니다. <code>-config</code> flag 이고 미리 Amass의 설정을 정의하고 사용할 수 있는데, 여기에 API Token 또한 지정할 수 있어서, 매번 스캐닝 시 옵션을 주어야하는 번거로움을 없앨 수 있습니다.
+​</p>
+<pre><code>amass enum -d target.com -config ~/.conf/your_amass_conf.ini
+</code></pre>
+<p><a href="https://github.com/OWASP/Amass/blob/master/examples/config.ini">https://github.com/OWASP/Amass/blob/master/examples/config.ini</a>
+​</p>
+<p>The path below is the default config that references without the -config option. I think recommend using config separately for services with api limit.</p>
+<p>그리고 아래 경로에 config 생성 시 <code>-config</code> 옵션이 없어도 해당 config를 참조하게 됩니다. 저는 개인적으로 api limit이 있는 서비스를 위해서 config를 분리해서 사용하는걸 추천합니다.</p>
+<table>
+<thead>
+<tr>
+<th>Operating System</th>
+<th>Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux / Unix</td>
+<td><code>$XDG_CONFIG_HOME/amass/config.ini</code> or <code>$HOME/.config/amass/config.ini</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>%AppData%\amass\config.ini</code></td>
+</tr>
+<tr>
+<td>OSX</td>
+<td><code>$HOME/Library/Application Support/amass/config.ini</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="price-and-limit">Price and limit?</h2>
+<p>Summarize the price and limit of the remaining inactive APIs, it looks like this.
+우선 나머지 비활성화 되어있던 APIs들을 가격과 Limit을 정리해보면 이렇습니다.
+​</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Price</th>
+<th>Memo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BinaryEdge</td>
+<td>- Free (Free)&lt;br /&gt;- $10/Month (Starter)&lt;br /&gt;- $500/Month (Business)&lt;br /&gt;- X (Enterprise)</td>
+<td>https://www.binaryedge.io/pricing.html</td>
+</tr>
+<tr>
+<td>C99</td>
+<td>- $5/Month&lt;br /&gt;- $25/Year</td>
+<td>http://api.c99.nl/dashboard/shop</td>
+</tr>
+<tr>
+<td>CIRCL</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Chaos</td>
+<td>- Free</td>
+<td>https://chaos.projectdiscovery.io/#/&lt;br /&gt;but contributed nuclei-template or public-bugbounty-programs</td>
+</tr>
+<tr>
+<td>DNSDB</td>
+<td>- Free (500q/Month)</td>
+<td>https://www.farsightsecurity.com/get-started/</td>
+</tr>
+<tr>
+<td>FacebookCT</td>
+<td>- Free</td>
+<td>https://developers.facebook.com/docs/certificate-transparency-api/</td>
+</tr>
+<tr>
+<td>Github</td>
+<td>- Free</td>
+<td></td>
+</tr>
+<tr>
+<td>PassiveTotal</td>
+<td>- Free</td>
+<td>https://community.riskiq.com/</td>
+</tr>
+<tr>
+<td>ReconDev</td>
+<td>- Free (30q/Month)&lt;br /&gt;- 1$/10q&lt;br /&gt;- 20$/Month (200q/Month)</td>
+<td>https://recon.dev/pricing.html</td>
+</tr>
+<tr>
+<td>SecurityTrails</td>
+<td>- Free (50q/Month)&lt;br /&gt;- $50/Month (1500q/m)&lt;br /&gt;- $500/Month (20000q/m)&lt;br /&gt;- $1500/Month (65000q/m)</td>
+<td>https://securitytrails.com/corp/pricing#api</td>
+</tr>
+<tr>
+<td>Shodan</td>
+<td>- 7$ (Event!)&lt;br /&gt;- $59/Month (Freelancer)&lt;br /&gt;- $299/Month (business)&lt;br /&gt;- $899/Month (corp)</td>
+<td>https://developer.shodan.io/pricing</td>
+</tr>
+<tr>
+<td>Spyse</td>
+<td>- Free&lt;br /&gt;- $50/Month (Standard)&lt;br /&gt;- $250/Month (Pro)</td>
+<td>https://spyse.com/user/subscription</td>
+</tr>
+<tr>
+<td>Twitter</td>
+<td>- Free</td>
+<td></td>
+</tr>
+<tr>
+<td>Umbrella</td>
+<td></td>
+<td>https://umbrella.cisco.com/</td>
+</tr>
+<tr>
+<td>WhoisXML</td>
+<td>- Free (500q/Month)&lt;br /&gt;- $15/Month (2000q/Month)&lt;br /&gt;~&lt;br /&gt;- $1800/Month (2000000/m)</td>
+<td>https://whois.whoisxmlapi.com/pricing</td>
+</tr>
+<tr>
+<td>ZETAlytics</td>
+<td>- $199/Month (4000q/m)</td>
+<td>https://zetalytics.com/#pricetable</td>
+</tr>
+<tr>
+<td>ZoomEye</td>
+<td>- Free (10000/Month)</td>
+<td>https://www.zoomeye.org/business</td>
+</tr>
+</tbody>
+</table>
+<h2 id="all-free-and-how-to-get-key">All Free? and how to get key</h2>
+<p>Chaos , FacebookCT, Github, PassiveTotal, Twitter, ZoomEye
+​</p>
+<h3 id="chaos">Chaos</h3>
+<p>​contribute nuclei-template or public-bugbounty-programs and get key. I am an early Chaos beta user, so I already have a api key</p>
+<p>Chaos는 현재 nuclei 템플릿과 pbp에 컨트리뷰트 하는 사용자에게만 키를 발급해주고 있습니다. 이는 어려운게 아니기 때문에 컨트리뷰트하고 키를 받아서 사용하시면 됩니다. 물론 Amass API가 아니여도 Chaos는 정말 좋은 도구에요 :D
+(아 저는 베타 초기 사용자라 따로 키를 받았습니다.)</p>
+<ul>
+<li><a href="https://github.com/projectdiscovery/nuclei-templates">https://github.com/projectdiscovery/nuclei-templates</a>
+​* <a href="https://github.com/projectdiscovery/public-bugbounty-programs">https://github.com/projectdiscovery/public-bugbounty-programs</a></li>
+</ul>
+<pre><code class="language-toml hljs"><span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>Chaos<span class="hljs-punctuation">]</span>
+ttl <span class="hljs-punctuation">=</span> <span class="hljs-number">4320</span>
+<span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>Chaos<span class="hljs-punctuation">.</span>Credentials<span class="hljs-punctuation">]</span>
+apikey <span class="hljs-punctuation">=</span> <span class="hljs-number">89</span>
+</code></pre>
+<h3 id="facebookct">FacebookCT</h3>
+<p>Open <a href="https://developers.facebook.com">https://developers.facebook.com</a> and ​Sign in facebook account(developer)
+​
+Go <a href="https://developers.facebook.com/apps/">apps</a></p>
+<p>First, create  app</p>
+<p><code>Create app</code> &gt; <code>Your app page</code></p>
+<p>Get apikey</p>
+<p><code>setting</code> &gt; <code>advance setting</code> &gt; <code>security</code> &gt; <code>client token</code></p>
+<p>Get Secret</p>
+<p><code>setting</code> &gt; <code>basic setting</code> &gt; <code>app secret code</code>
+​
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/94111507-23042f80-fe7f-11ea-86fb-c35d5f1bcb16.png" alt="" /></p>
+<pre><code class="language-toml hljs"><span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>FacebookCT<span class="hljs-punctuation">]</span>
+ttl <span class="hljs-punctuation">=</span> <span class="hljs-number">4320</span>
+<span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>FacebookCT<span class="hljs-punctuation">.</span>app1<span class="hljs-punctuation">]</span>
+apikey <span class="hljs-punctuation">=</span> your_api_key
+secret <span class="hljs-punctuation">=</span> yuur_secret_key
+</code></pre>
+<h3 id="github">Github</h3>
+<p>Open your <a href="https://github.com/settings/tokens">github setting tokens</a></p>
+<p><code>Generate Token</code> &gt; <code>if you added token, get token string</code></p>
+<pre><code class="language-toml hljs"><span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>GitHub<span class="hljs-punctuation">]</span>
+ttl <span class="hljs-punctuation">=</span> <span class="hljs-number">4320</span>
+<span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>GitHub<span class="hljs-punctuation">.</span>accountname<span class="hljs-punctuation">]</span>
+apikey <span class="hljs-punctuation">=</span> your_api_key
+</code></pre>
+<p>Amass simply use search queries, so we don't need to add additional permissions.</p>
+<p>단순하게 검색 쿼리만 사용하는거라 추가 권한은 안넣어줘도 되는 것 같습니다.
+​</p>
+<h3 id="passivetotal">PassiveTotal</h3>
+<p>​<a href="https://community.riskiq.com/settings">https://community.riskiq.com/settings</a></p>
+<p><code>Profile</code> &gt; <code>User</code> &gt; <code>Secret</code></p>
+<pre><code class="language-toml hljs"><span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>PassiveTotal<span class="hljs-punctuation">]</span>
+ttl <span class="hljs-punctuation">=</span> <span class="hljs-number">10080</span>
+<span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>PassiveTotal<span class="hljs-punctuation">.</span>Credentials<span class="hljs-punctuation">]</span>
+username <span class="hljs-punctuation">=</span> your_name
+apikey <span class="hljs-punctuation">=</span> your_api_key
+</code></pre>
+<h3 id="twitter">Twitter</h3>
+<p><a href="https://developer.twitter.com/en/apps">​https://developer.twitter.com/en/apps</a></p>
+<p><code>Create an app</code> &gt; <code>Choose any type</code> &gt; <code>If confirmed app, get key!</code></p>
+<pre><code class="language-toml hljs"><span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>Twitter<span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>Twitter<span class="hljs-punctuation">.</span>account1<span class="hljs-punctuation">]</span>
+apikey <span class="hljs-punctuation">=</span> your_api_key
+secret <span class="hljs-punctuation">=</span> your_api_secret
+</code></pre>
+<p>​
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/94111511-2697b680-fe7f-11ea-9b50-7b143d14cd6e.png" alt="" /></p>
+<h3 id="zoomeye">ZoomEye</h3>
+<p>​I don't think I can tell you in detail because most of this datasource is in Chinese. I can't speak Chinese.and I don't use ZoomEye datasource either.</p>
+<h3 id="shodan">Shodan</h3>
+<p>Shodan sometimes put a big discount. Aim for that moment!</p>
+<pre><code class="language-toml hljs"><span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>Shodan<span class="hljs-punctuation">]</span>
+ttl <span class="hljs-punctuation">=</span> <span class="hljs-number">10080</span>
+<span class="hljs-punctuation">[</span>data_sources<span class="hljs-punctuation">.</span>Shodan<span class="hljs-punctuation">.</span>Credentials<span class="hljs-punctuation">]</span>
+apikey <span class="hljs-punctuation">=</span> your_api_key
+</code></pre>
+<h2 id="finally-lets-apply-it">Finally, let's apply it!</h2>
+<p>Add your config data / 설정 넣어주면 잘 나옵니다. 이후 스캔부턴 해당 datasource를 사용합니다.</p>
+<pre><code>vim ~/.config/amass/config.ini
+</code></pre>
+<pre><code>amass enum -list -config ~/.config/amass/config.ini
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/94111520-28617a00-fe7f-11ea-9a15-6a8f9b91526c.png" alt="" /></p>
+<h2 id="other-source-and-conclusion">Other source? and conclusion</h2>
+<p>In fact, there are many other free datasource. However, API limit is short, so it is not included, but if you make and use various configs depending on the conditions, you can get good scan results depending on the situation.</p>
+<p>사실 다른 무료 소스들도 많이 있습니다. 다만 API limit이 짧아서 포함하진 않았는데요, 조건에 따라서 여러가지 config를 만들고 정해서 사용하면 상황에 따라 좋은 스캔 결과를 얻을 수 있습니다.</p>
+<h3 id="eg">e.g</h3>
+<p>for automation scanning</p>
+<pre><code>amass enum -d [TARGET] -config ~/.config/amass/auto.ini
+</code></pre>
+<p>for manual scanning</p>
+<pre><code>amass enum -d [TARGET] -config ~/.config/amass/all.ini
+</code></pre>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

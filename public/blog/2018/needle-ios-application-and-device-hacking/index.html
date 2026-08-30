@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Needle - iOS Application and Device 해킹/보안 분석 프레임워크 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Needle - iOS Application and Device 해킹/보안 분석 프레임워크">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/needle-ios-application-and-device-hacking/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Needle - iOS Application and Device 해킹/보안 분석 프레임워크">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/needle-ios-application-and-device-hacking/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Needle - iOS Application and Device 해킹/보안 분석 프레임워크","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/needle-ios-application-and-device-hacking/","datePublished":"2018-12-03T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2018-needle-ios-application-and-device-hacking.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"Needle - iOS Application and Device 해킹/보안 분석 프레임워크"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Needle - iOS Application and Device 해킹/보안 분석 프레임워크</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-12-03">
+                        DECEMBER 3, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>Needle은 Drozer로 유명한 MWR Lab에서 만든 iOS 분석용 프레임워크입니다. Drozer와 비슷하게 디바이스에 Agent를 내리고 앱과 디바이스에 대한 분석을 할 수 있습니다.</p>
+<p>보통은 Frida + Burp(ZAProxy)의 조합으로 분석을 하는데, 보다보니 Needle이 Frida 사용에 있어 좀 편리한 부분이 있더군요.</p>
+<p>크게 디바이스에 대한 분석(키체인 이런거.) + Frida의 후킹 코드들, Cycript의 코드단 분석 정도를 하나의 명령 행에서 처리할 수 있도록 구성되어 있습니다.</p>
+<p>Needle!</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://1.bp.blogspot.com/-tgAE7tHUjAE/XAVK-S6Rl6I/AAAAAAAADjo/Un_5zWDKvOw9l4Y4RwNp6d1FsHiFmSwtgCLcBGAs/s1600/ResizedImage500161-needle-primary-rev-rgb.png"><img loading="lazy" src="https://1.bp.blogspot.com/-tgAE7tHUjAE/XAVK-S6Rl6I/AAAAAAAADjo/Un_5zWDKvOw9l4Y4RwNp6d1FsHiFmSwtgCLcBGAs/s640/ResizedImage500161-needle-primary-rev-rgb.png" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="setup-agent">Setup - Agent</h2>
+<p>Needle은 Agent &lt;=&gt; Server 방식의 Application으로 대상 디바이스랑 분석기기(서버)에 모두 세팅이 되어야하니다.
+시디아 소스 추가 후 needle agent 받아주시면 끝납니다. ( Cydia &gt; Source &gt; Add )</p>
+<p>http://mobiletools.mwrinfosecurity.com/cydia/ 추가 후</p>
+<p>Search에서 Needle 찾아주시면 Needle agent가 나옵니다. 설치해쥐면 됩니다.</p>
+<h2 id="setup-server">Setup - Server</h2>
+<p>공식 깃허브에서 코드 클론해주시고..</p>
+<pre><code>#&gt; git clone https://github.com/mwrlabs/needle
+</code></pre>
+<p>필수 패키지, python library 설치해줍니다. 리눅스의 경우 apt-get , macos는 brew로 해주시고 python 라이브러리는 모두 pip 지원이 되므로 pip 통해서 설치해줍시다.</p>
+<p>One line script</p>
+<pre><code>git clone https://github.com/mwrlabs/needle
+cd needle; mkdir 3rd 
+if $1 = 'macos'
+then
+  sudo apt-get install python2.7 python2.7-dev sshpass sqlite3 lib32ncurses5-dev ; sudo pip install readline paramiko sshtunnel frida mitmproxy biplist
+else
+  brew install python; brew install libxml2; xcode-select -install; sudo -H pip install --upgrade --user readline; sudo -H pip install --upgrade --user paramiko; sudo -H pip install --upgrade --user sshtunnel; sudo -H pip install --upgrade --user frida; sudo -H pip install --upgrade --user biplist; brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb; wget https://github.com/mitmproxy/mitmproxy/releases/download/v0.17.1/mitmproxy-0.17.1-osx.tar.gz; tar -xvzf mitmproxy-0.17.1-osx.tar.gz; sudo cp mitmproxy-0.17.1-osx/mitm* /usr/local/bin/
+fi
+</code></pre>
+<p>Linux</p>
+<pre><code>#&gt; sudo apt-get install python2.7 python2.7-dev sshpass sqlite3 lib32ncurses5-dev
+#&gt; sudo pip install readline paramiko sshtunnel frida mitmproxy biplist sshtunnel paramiko
+</code></pre>
+<p>macOS</p>
+<pre><code>#&gt; brew install python
+#&gt; brew install libxml2
+#&gt; xcode-select --install
+
+#&gt; sudo -H pip install --upgrade --user readline;
+#&gt; sudo -H pip install --upgrade --user paramiko;
+#&gt; sudo -H pip install --upgrade --user sshtunnel;
+#&gt; sudo -H pip install --upgrade --user frida;
+#&gt; sudo -H pip install --upgrade --user biplist
+
+#&gt; brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb
+
+#&gt; wget https://github.com/mitmproxy/mitmproxy/releases/download/v0.17.1/mitmproxy-0.17.1-osx.tar.gz
+#&gt; tar -xvzf mitmproxy-0.17.1-osx.tar.gz
+#&gt; sudo cp mitmproxy-0.17.1-osx/mitm* /usr/local/bin
+</code></pre>
+<p>설치가 완료되면 needle.py 실행해주시면 대화형 쉘로 바로 넘어가집니다.</p>
+<pre><code>root@de98522c1939:/needle/needle# python needle.py
+
+             __   _ _______ _______ ______         _______
+             | \  | |______ |______ |     \ |      |______
+             |  \_| |______ |______ |_____/ |_____ |______
+
+                   Needle v1.3.2 [mwr.to/needle]
+  [MWR InfoSecurity (@MWRLabs) - Marco Lancini (@LanciniMarco)]
+
+[needle] &gt;
+</code></pre>
+<p>추가로 이후에 Frida쪽 기능 쓰려면 이런 에러가 발생할 수도 있는데요, 이는 Agent가 설치된 단말에 lipo 명령이 없어서 발생하는 문제입니다.
+별도 패키지로 제공되는 명령은 아닌 것 같고, Cydia에서 &quot;Darwin CC Tools&quot; 설치로 해결이 가능합니다.</p>
+<pre><code>[!] sh: lipo: command not found
+참고: https://github.com/mwrlabs/needle/issues/172
+</code></pre>
+<h2 id="how-to-use">How to use?</h2>
+<p>보통의 보안/해킹 툴들과 비슷하게 전반적인 구조는 Metasploit과 동일합니다. 명령어도 거의 비슷하니 익숙하신 분이라면 적응에는 크게 문제없을 것 같네요.
+모든 테스트의 시작인 help를 보면..</p>
+<pre><code>[needle][list_apps] &gt; help
+
+Commands (type [help|?] &lt;topic&gt;):
+---------------------------------
+add_issue     exit  issues  load  reload    search  shell_local  use
+back          help  jobs    pull  resource  set     show
+exec_command  info  kill    push  run       shell   unset
+</code></pre>
+<p>이런식으로 나타나는데요 대충 정리해보면</p>
+<p>[ 기본 명령 ]
+show : 옵션이던 뭐던 볼떄..
+use : 모듈 사용
+(un)set : 인자값 설정(show options으로 본 이후 해당 값들)
+back : 모듈 상위로
+exit : 종료</p>
+<p>[ 자체적인 이슈관리 ]
+issues : 이슈 리스트 보기
+add_issue : 이슈 등록</p>
+<p>[ 나머지 ]
+push : 데이터 밀어넣기
+shell : 디바이스 쉘 연결
+등등... 거의 읽히는 대로의 의미와 Metasploit console의 명령 형태랑 비슷합니다. 특별한건 없어요
+(사실 쓰기 귀찮..)</p>
+<p>모듈을 선택하지 않은 상태(현재?)에서 show options을 보면 global하게 적용된 설정을 볼 수 있습니다. 여기엔 needle agent의 ip / port 등이 있고 설정 후 다른 기능이나 모듈을 사용하면 해당 정보를 기반으로 기능을 수행하게 됩니다.</p>
+<pre><code>[needle] &gt; show options
+
+  Name                      Current Value         Required  Description
+  ------------------------  -------------         --------  -----------
+  AGENT_PORT                4444                  yes       Port on which the Needle Agent is listening
+  APP                                             no        Bundle ID of the target application (e.g., com.example.app). Leave empty to launch wizard
+  DEBUG                     False                 yes       Enable debugging output
+  HIDE_SYSTEM_APPS          False                 yes       If set to True, only 3rd party apps will be shown
+  IP                        192.168.0.6           yes       IP address of the testing device (set to localhost to use USB)
+  OUTPUT_FOLDER             /root/.needle/output  yes       Full path of the output folder, where to store the output of the modules
+  PASSWORD                  ********              yes       SSH Password of the testing device
+  PORT                      22                    yes       Port of the SSH agent on the testing device (needs to be != 22 to use USB)
+  PUB_KEY_AUTH              True                  yes       Use public key auth to authenticate to the device. Key must be present in the ssh-agent if a passphrase is used
+  SAVE_HISTORY              True                  yes       Persists command history across sessions
+  SKIP_OUTPUT_FOLDER_CHECK  False                 no        Skip the check that ensures the output folder does not already contain other files. It will automatically overwrite any file
+  USERNAME                  root                  yes       SSH Username of the testing device
+  VERBOSE                   True                  yes       Enable verbose output
+</code></pre>
+<p>하위 모듈로 가서도 동일하게 필수 인자값등을 확인하려면 show options 으로 보시고 set 명령으로 세팅, run 으로 실행하는 형태로 진행하시면 됩니다.
+(몇번 써보면 어떤 방식인지 금방 감 오실거에요)</p>
+<p>기본적인 쉘 접근부터 해보면.. 우선 Needle Agent에서 Listen을 활성화 해줍니다. (우측 상단에 포트있어요)
+(대다수 기능은 Agent에서 활성화가 되어야 수행 가능하고 간혹 Connection 에러 발생하면 Agent에서 내렸다가 올려주시면 됩니다)</p>
+<p>Server에서 IP랑 PORT 세팅하고 shell 명령 넣어주시면..</p>
+<pre><code>[needle] &gt; shell
+[*] Spawning a shell...
+[*] Checking connection with device...
+[V] Connection not present, creating a new instance
+[V] [AGENT] Connecting to agent (192.268.0.6:4444)...
+[+] [AGENT] Successfully connected to agent (192.268.0.6:4444)...
+[V] [SSH] Connecting (192.268.0.6:22)...
+[+] [SSH] Connected (192.268.0.6:22)
+Warning: Permanently added '192.268.0.6' (RSA) to the list of known hosts.
+Last login: Mon Dec  3 21:44:15 2018 from 192.268.0.4
+vaha:~ root#
+vaha:~ root#
+</code></pre>
+<p>디바이스에 바로 접근이 됩니다. (그냥 ssh로 접근한거)
+이제 neelde의 강점인 module로 테스트를 진행해보죠.</p>
+<h2 id="use-modules">Use modules</h2>
+<p>우선 사용할 모듈을 골라봅시다. show modules로 전체 모듈 리스트를 보거나 search로 필요한 기능을 찾아서 보시면 됩니다.</p>
+<pre><code>[needle] &gt; show modules
+
+  _Templates
+  ----------
+    _templates/template_background
+    _templates/template_base
+    _templates/template_frida
+    _templates/template_frida_script
+    _templates/template_static
+
+  Binary
+  ------
+    binary/info/checksums
+    binary/info/compilation_checks
+    binary/info/metadata
+    binary/info/provisioning_profile
+    binary/info/universal_links
+    binary/installation/install
+    binary/installation/pull_ipa
+    binary/reversing/class_dump
+    binary/reversing/class_dump_frida_enum-all-methods
+    binary/reversing/class_dump_frida_enum-classes
+    binary/reversing/class_dump_frida_find-class-enum-methods
+    binary/reversing/shared_libraries
+    binary/reversing/strings
+
+  Comms
+  -----
+    comms/certs/delete_ca
+    comms/certs/export_ca
+    comms/certs/import_ca
+    comms/certs/install_ca_burp
+    comms/certs/install_ca_mitm
+    comms/certs/list_ca
+    comms/certs/view_cert
+    comms/proxy/pinning_bypass_frida
+    comms/proxy/proxy_regular
+
+  Device
+  ------
+    device/agent_client
+    device/clean_storage
+    device/dependency_installer
+    device/hosts
+    device/list_apps
+
+  Dynamic
+  -------
+    dynamic/detection/jailbreak_detection
+    dynamic/detection/script_jailbreak-detection-bypass
+    dynamic/ipc/open_uri
+    dynamic/memory/heap_dump
+    dynamic/monitor/files
+    dynamic/monitor/pasteboard
+    dynamic/monitor/syslog
+    dynamic/watch/syslog
+
+  Hooking
+  -------
+    hooking/cycript/cycript_shell
+    hooking/cycript/cycript_touchid
+    hooking/frida/frida_launcher
+    hooking/frida/frida_shell
+    hooking/frida/frida_trace
+    hooking/frida/script_anti-hooking-check
+    hooking/frida/script_dump-ui
+    hooking/frida/script_hook-all-methods-of-class
+    hooking/frida/script_hook-method-of-class
+    hooking/frida/script_touch-id-bypass
+    hooking/theos/list_tweaks
+    hooking/theos/theos_tweak
+
+  Mdm
+  ---
+    mdm/effective_user_settings
+
+  Static
+  ------
+    static/code_checks
+
+  Storage
+  -------
+    storage/backup/icloud_content_frida
+    storage/caching/keyboard_autocomplete
+    storage/caching/screenshot
+    storage/data/container
+    storage/data/files_binarycookies
+    storage/data/files_cachedb
+    storage/data/files_plist
+    storage/data/files_sql
+    storage/data/keychain_dump
+    storage/data/keychain_dump_frida
+</code></pre>
+<p>대상 디바이스에 있는 앱 리스트를 뽑아보죠.</p>
+<pre><code>[needle][class_dump_frida_enum-classes] &gt; use device/list_apps
+[+] Resource file successfully loaded
+[needle][list_apps] &gt; show options
+
+  Name              Current Value  Required  Description
+  ----------------  -------------  --------  -----------
+  HIDE_SYSTEM_APPS  False          yes       If set to True, only 3rd party apps will be shown
+
+[needle][list_apps] &gt; run
+[*] Checking connection with device...
+[+] Already connected to: 192.268.0.6
+[*] Looking for apps...
+[+] Apps found:
+        0 - com.apple.CTCarrierSpaceAuth
+        1 - com.apple.MobileAddressBook
+        2 - com.apple.CheckerBoard
+        3 - com.appsolutegames.kubic
+        4 - com.apple.carkit.DNDBuddy
+        5 - com.apple.WebContentFilter.remoteUI.WebContentAnalysisUI
+        
+</code></pre>
+<p>msfconsole 쓰는거랑 거의 비슷하기 떄문에 다른 기능들도 비슷하게 사용하시면 됩니다. needle에서 구현해놓은 frida나 cycript 스크립트로 어느정도 풀리는 앱들이 있겠지만, 아닌 경우도 많을겁니다.
+떄에 따라 직접 코드를 넣어서 사용해야할 때가 많은데, 이 때 template 쪽 코드 수정해서 사용하시면 될 것 같습니다.</p>
+<pre><code>  _Templates
+  ----------
+    _templates/template_background
+    _templates/template_base
+    _templates/template_frida
+    _templates/template_frida_script
+    _templates/template_static
+</code></pre>
+<p>각 종류별로 스크립트 템플릿이 있고, 이를 기반으로 스크립트를 추가할 수 있습니다.</p>
+<p>다른 사용법은 wiki 참조(https://github.com/mwrlabs/needle/wiki) 해주시며 좋을듯 합니다.</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

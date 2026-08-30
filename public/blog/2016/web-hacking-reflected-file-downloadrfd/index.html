@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[WEB HACKING] Reflected File Download(RFD) Attack | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[WEB HACKING] Reflected File Download(RFD) Attack">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-reflected-file-downloadrfd/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[WEB HACKING] Reflected File Download(RFD) Attack">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-reflected-file-downloadrfd/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[WEB HACKING] Reflected File Download(RFD) Attack","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-reflected-file-downloadrfd/","datePublished":"2016-06-02T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2016-web-hacking-reflected-file-downloadrfd.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/"},{"@type":"ListItem","position":5,"name":"[WEB HACKING] Reflected File Download(RFD) Attack"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[WEB HACKING] Reflected File Download(RFD) Attack</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2016-06-02">
+                        JUNE 2, 2016
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>요즘 정신없이 보내다보니 간만에 글을 쓰게 되네요.
+오늘은 BlackHat 2014에서 Hot했던 RFD에 대한 이야기를 하려합니다.
+(벌써 2년이나 지났네요 ㅎㅎ..)</p>
+<p>BlackHat 2014 Europe 에서 발표된 이 내용은 RFD, New Web Attack이란 아젠다고 진행되었고 신뢰할 수 있는 도메인에서 파일을 다운로드하여 제어권을 가져갈 수 있는 공격이라고 발표되었습니다.</p>
+<p><a href="https://4.bp.blogspot.com/-_o9dWD2XKSc/V0-9Ep_5GbI/AAAAAAAABcY/H3bDzKyGOTY_3cwtNRDr2G8WKwBThMATQCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_010.png"><img loading="lazy" src="https://4.bp.blogspot.com/-_o9dWD2XKSc/V0-9Ep_5GbI/AAAAAAAABcY/H3bDzKyGOTY_3cwtNRDr2G8WKwBThMATQCLcB/s640/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_010.png" alt="" /> </a></p>
+<h2 id="rfdreflected-file-download">RFD(Reflected File Download)?</h2>
+<p>이 공격 방법에 대한 내용을 살펴보자면 핵심 키워드는 JSON, 신뢰된 도메인으로 생각되네요.</p>
+<p>일단 신뢰된 도메인에서 우리가 파일을 받을 때 직접 exe롤 호출하기도 하고 api 를 통해 다운로드 받기도 합니다.</p>
+<p>요즘 많은 서비스들이 JSON,JSONP를 사용하고 있고 RFD 또한 이러한 공격 유형에서 많이 발생합니다.</p>
+<p>실제 테스트 페이지를 만들기 전 구글에 제보되었던 취약점에 대해 보면서 이해해 볼까 합니다.</p>
+<p>구글 검색을 통해 발생하는 요청을 살펴보면 아래와 같은 요청이 나가게 됩니다.</p>
+<p>Request</p>
+<pre><code>
+GET /s?q=hwul HTTP/1.1
+Host: google.com
+~~~~
+
+</code></pre>
+<p>Reponse</p>
+<pre><code>
+HTTP/1.1 200 OK
+Content-Type: application/json;
+Content-Disposition: attachment
+
+{&quot;result&quot;:[&quot;q&quot;,&quot;hwul&quot;,&quot;zzzz&quot;]}
+
+</code></pre>
+<p>여기서 주의깊게 보셔야할 것은 json 형태로 데이터를 받는것과 Content-Dispositon 입니다. 해당 부분이 attachment로 구성되어 첨부파일로 떨어질 수 있기 때문입니다.</p>
+<p>공격자는 백슬래쉬() 등을 이용하여 더블쿼테이션(&quot;) 을 나옵니다.
+이 부분은 일반적인 웹 해킹에서 많이 사용하는 방법이죠.</p>
+<p>Request</p>
+<pre><code>
+GET /s?q=hwul\ HTTP/1.1
+Host: google.com
+~~~~
+
+</code></pre>
+<p>Reponse</p>
+<pre><code>
+HTTP/1.1 200 OK
+Content-Type: application/json;
+Content-Disposition: attachment
+
+{&quot;result&quot;:[&quot;q&quot;,&quot;hwul\&quot;,&quot;zzzz&quot;]}
+
+</code></pre>
+<p>공격자는 || 를 통해서 추가적인 값을 넘기게 됩니다.
+(발표 자료에서는 calc, 즉 계산기를 호출했죠)</p>
+<p><a href="https://2.bp.blogspot.com/-CZgvdIbaJVU/V0-9PxfBFqI/AAAAAAAABcc/FBf4Jl4sheInm-crTBNF4sMRlXJTayaDQCLcB/s1600/2.png"><img loading="lazy" src="https://2.bp.blogspot.com/-CZgvdIbaJVU/V0-9PxfBFqI/AAAAAAAABcc/FBf4Jl4sheInm-crTBNF4sMRlXJTayaDQCLcB/s640/2.png" alt="" /> </a></p>
+<p>Request</p>
+<pre><code>
+GET /s?q=hwul\&quot;||calc|| HTTP/1.1
+Host: google.com
+~~~~
+
+</code></pre>
+<p>Reponse</p>
+<pre><code>
+HTTP/1.1 200 OK
+Content-Type: application/json;
+Content-Disposition: attachment
+
+{&quot;result&quot;:[&quot;q&quot;,&quot;hwul\&quot;||calc||&quot;,&quot;zzzz&quot;]}
+
+</code></pre>
+<p>위에 나온 Reponse 값을 Windows CMD에 붙여넣어 보면 아래와 같이 계산기가 뜸을 확인할 수 있습니다. \ 문자열로 잘려고 or 연산으로 인해 calc가 명령행으로 들어가게 되는거지요.</p>
+<pre><code>
+{&quot;result&quot;:[&quot;q&quot;,&quot;hwul\&quot;||calc||&quot;,&quot;zzzz&quot;]}
+
+</code></pre>
+<p>파일 이름, 디렉토리 이름 또는 볼륨 레이블 구문이 잘못되었습니다.
+(The filename, directory name, or voulme label syntax is incorrect)</p>
+<p>위 메시지가 발생하고 바로 calc가 실행되네요.</p>
+<p><a href="https://1.bp.blogspot.com/-dpOxuJBuX8I/V1AjyGtVSmI/AAAAAAAABc8/NJ_rHWQqiiEI4n6mYLSygr8GIN4Ui6YQwCLcB/s1600/%25EC%25BA%25A1%25EC%25B2%2598.PNG"><img loading="lazy" src="https://1.bp.blogspot.com/-dpOxuJBuX8I/V1AjyGtVSmI/AAAAAAAABc8/NJ_rHWQqiiEI4n6mYLSygr8GIN4Ui6YQwCLcB/s640/%25EC%25BA%25A1%25EC%25B2%2598.PNG" alt="" /> </a></p>
+<p>다시 본론으로 돌아와서 방금 Response 중 헤더를 살펴보면
+Content-Disposition이 attachment로 지정되어 있습니다. 아까 말씀드린대로 첨부형태로 떨어질 수 있고 아래 구문이 떨어지면서 역슬래쉬()로 구문우회 후 or 연산을 거쳐 calc가 실행되게 됩니다.</p>
+<p>원격으로 파일을 내리거나 실행할 수 있게 되지요.</p>
+<p>자 이제 사용자를 속일 차례가 되었습니다. 물론 위 방법대로 바로 받는다면 {&quot;result&quot;:[&quot;q&quot;,&quot;hwul&quot;||calc||&quot;,&quot;zzzz&quot;]} 이 남은 의미없는 파일이 생성되기 때문에 사용자를 낚아야 겠지요.</p>
+<p>이제 공격자는 요청에 설치파일인 척 꾸밉니다.</p>
+<p>Request</p>
+<pre><code>
+GET /s;/install.bat;?q=hwul\&quot;||calc|| HTTP/1.1
+Host: google.com
+~~~~
+
+</code></pre>
+<p>Reponse</p>
+<pre><code>
+HTTP/1.1 200 OK
+Content-Type: application/json;
+Content-Disposition: attachment
+
+{&quot;result&quot;:[&quot;q&quot;,&quot;hwul\&quot;||calc||&quot;,&quot;zzzz&quot;]}
+
+</code></pre>
+<p>이럴 때 서버는 사용자에게 아까와 같은 Response를 던지게되고
+사용자 PC는 해당 내용을 install.bat이란 파일로 저장하게 됩니다.</p>
+<p>신뢰된 도메인으로 부터 받은 파일이기 때문에 사용자는 의심없이 해당 bat 파일을 실행하게 되고 아까 받아진 명령행이 넘어가면서 calc가 실행되게 됩니다.</p>
+<p>이러한 공격은 명령행으로 넘길 수 있다면 어떤 상황에서든지 가능합니다.
+대체로 .bat, .cmd에서 동작할 것이며 리눅스도 비슷한 방법으로 가능할 것 같네요.</p>
+<h2 id="rfd의-위험성과-대응방안">RFD의 위험성과 대응방안</h2>
+<p>위에 설명만으로도 충분히 위협적인 공격이라고 인지하셨을 것 같습니다.
+여기에 추가로 활용 가능성에 대한 이야기가 더 있었습니다.</p>
+<p><a href="https://2.bp.blogspot.com/-1sNxVzAt-08/V0-9Y97bgBI/AAAAAAAABcg/gZCJXu0lAs4Hs3M4WvjoDuANBxYrZUCyQCLcB/s1600/1.png"><img loading="lazy" src="https://2.bp.blogspot.com/-1sNxVzAt-08/V0-9Y97bgBI/AAAAAAAABcg/gZCJXu0lAs4Hs3M4WvjoDuANBxYrZUCyQCLcB/s640/1.png" alt="" /> </a></p>
+<p>아래 자료를 보시면 이해가 다른 케이스에 대해서도 참고하실 수 있을 것 같네요.</p>
+<p><a href="https://www.blackhat.com/docs/eu-14/materials/eu-14-Hafif-Reflected-File-Download-A-New-Web-Attack-Vector.pdf">https://www.blackhat.com/docs/eu-14/materials/eu-14-Hafif-Reflected-File-Download-A-New-Web-Attack-Vector.pdf</a></p>
+<p>대응은 다른 웹 취약점과 비슷비슷합니다. 가장 중요한 특수문자 필터링이 꼭 필요하겠지요. 물론 최종적으로 실행하는 것은 사용자이지만 신뢰 도메인에서 떨어지기 때문에 서버 관리적인 측면에서 보안을 하는것이 훨씬 효율적일 것 같습니다. 정기적으로 웹 공격에 대해 점검을 받는게 제일일 것 같네요. (모든 기술에는 허점이 있기 때문에!)</p>
+<h2 id="rfd-check-point">RFD Check Point</h2>
+<p>쉽게 정리해볼까합니다.
+일단 RFD는 Reflected File Download의 약자이며 RXSS와 같이 사용자로 하여금 악성 파일을 다운로드 하여 실행하게 하는 공격 유형입니다.</p>
+<p>다만 특이한점이 있다면 신뢰된 도메인으로 부터 받고, 실제로 파일이 존재하지 않더라고 batch나 스크립트를 통해서 명령을 실행할 수 있다는 점 입니다.</p>
+<p>공격자 입장에서 이 취약점을 찾기 위해 어떤 방법이 있을지 생각해 보았습니다. 일단 제일 중요한 부분은 첨부파일 형태로 만들어낼 수 있는지 확인이 필요합니다. 바로 HTTP Response Header 내 Content-Disposition: attachment 부분입니다.</p>
+<p>attachment로 지원하는 요청중에서 우리의 입력이 Response에 남고, 역슬래시() 등 특수문자를 통해 batch 내 우회구문을 만들 수 있는지 확인이 필요합니다. 위 2 조건이 만족한다면 우리는 가짜 파일을 사용자로 하여금 다운로드 받게 할 수 있고, 사용자는 그 파일이 취약점을 찾아낸 도메인으로 부터 온 파일이기 때문에 신뢰하고 실행하여 공격자가 reverse shell이나 악의적인 명령을 실행할 수 있게합니다.</p>
+<h2 id="reference">Reference</h2>
+<p><a href="https://www.trustwave.com/Resources/SpiderLabs-Blog/Reflected-File-Download---A-New-Web-Attack-Vector/">https://www.trustwave.com/Resources/SpiderLabs-Blog/Reflected-File-Download---A-New-Web-Attack-Vector/</a></p>
+<p><a href="https://www.blackhat.com/docs/eu-14/materials/eu-14-Hafif-Reflected-File-Download-A-New-Web-Attack-Vector.pdf">https://www.blackhat.com/docs/eu-14/materials/eu-14-Hafif-Reflected-File-Download-A-New-Web-Attack-Vector.pdf</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

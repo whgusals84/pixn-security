@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Building AI-Friendly CLIs | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="JSON-First Design with Schema Commands">
+    
+
+    
+    <meta property="og:title" content="Building AI-Friendly CLIs">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/building-ai-friendly-clis/">
+  <meta property="og:description" content="JSON-First Design with Schema Commands">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Building AI-Friendly CLIs">
+  <meta name="twitter:description" content="JSON-First Design with Schema Commands">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="ko_KR">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/building-ai-friendly-clis/">
+    <link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/building-ai-friendly-clis/">
+<link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/building-ai-friendly-clis/">
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL (KO)" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Building AI-Friendly CLIs","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/building-ai-friendly-clis/","datePublished":"2026-03-22T00:00:00+00:00","description":"JSON-First Design with Schema Commands","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/building-ai-friendly-clis/cli.webp"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/"},{"@type":"ListItem","position":2,"name":"Posts","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/"},{"@type":"ListItem","position":3,"name":"2026 Posts","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/"},{"@type":"ListItem","position":4,"name":"Building AI-Friendly CLIs"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper has-toc">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Building AI-Friendly CLIs</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2026-03-22">
+                        MARCH 22, 2026
+                    </time>
+                     
+                    <nav class="language-switcher">
+                         
+                        <span>
+                            <a
+                                href="/posts/2026/building-ai-friendly-clis/"
+                                title="Building AI-Friendly CLIs"
+                                >EN</a
+                            >
+                        </span>
+                          
+                        <span>KO</span>
+                         
+                    </nav>
+                    
+                </div>
+            </div>
+
+            
+            <p class="page-description">JSON-First Design with Schema Commands</p>
+            
+        </header>
+
+        <div class="post-body"><p>요즘 AI 에이전트가 코드를 짜고, 도구를 호출하고, 심지어 배포까지 하는 세상이 되면서 한동안 조용했던 CLI가 다시 주목받고 있습니다. GUI나 웹 대시보드는 사람에겐 편하지만, AI 에이전트 입장에서는 CLI가 훨씬 다루기 좋은 인터페이스거든요.</p>
+<p>그런데 기존 CLI들은 사실 사람을 위해 설계되었습니다. 예쁜 테이블 출력, 컬러 코드, 축약된 플래그 등 사람이 읽기엔 좋지만 에이전트가 파싱하기엔 꽤 고통스러운 부분이 많습니다. 출력 포맷이 버전마다 미묘하게 바뀌기도 하고, 정확한 사용법을 알려면 문서를 따로 읽어야 하는 경우도 많죠.</p>
+<p>이번주 동안 회사에서 팀 내부용으로 사용하는 CLI를 JSON I/O와 schema 명령어 기반으로 대폭 수정했고, 에이전트의 작업 성공률이 눈에 띄게 올라갔습니다. 이 경험을 바탕으로 AI-Friendly CLI를 만드는 방법에 대해 정리해보려 합니다.</p>
+<h2 id="why-json-first-input-output-matters-for-ai-agents">Why JSON-First Input / Output Matters for AI Agents</h2>
+<h3 id="human-vs-ai-cli-usage-patterns">Human vs AI CLI Usage Patterns</h3>
+<p>사람은 CLI를 쓸 때 <code>--help</code>를 보고, man page를 읽고, 에러 메시지를 눈으로 확인하면서 반복적으로 시도합니다. 출력이 좀 달라져도 맥락을 파악해서 적응하죠. 반면 AI 에이전트는 출력을 문자열 그대로 받아서 처리합니다. 테이블 형태의 출력을 정규식으로 파싱해야 하고, 컬럼 순서가 바뀌거나 줄바꿈이 달라지면 바로 깨집니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># 사람에겐 이게 편하지만...</span>
+$ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+my-app-7d4b8c6f5-x2k9z  1/1     Running   <span class="hljs-number">0</span>          3d
+
+<span class="hljs-comment"># 에이전트에겐 이게 필요합니다</span>
+$ kubectl get pods -o json
+<span class="hljs-operator">{</span>
+  <span class="hljs-string">&quot;items&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-operator">{</span>
+    <span class="hljs-string">&quot;metadata&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-app-7d4b8c6f5-x2k9z&quot;</span><span class="hljs-operator">}</span>,
+    <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;phase&quot;</span>: <span class="hljs-string">&quot;Running&quot;</span>, <span class="hljs-string">&quot;containerStatuses&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-operator">{</span><span class="hljs-string">&quot;ready&quot;</span>: true<span class="hljs-operator">}</span><span class="hljs-operator">]</span><span class="hljs-operator">}</span>
+  <span class="hljs-operator">}</span><span class="hljs-operator">]</span>
+<span class="hljs-operator">}</span>
+</code></pre>
+<h3 id="the-pain-of-unstructured-text-output">The Pain of Unstructured Text Output</h3>
+<p>구조화되지 않은 텍스트 출력이 에이전트에게 주는 고통은 생각보다 큽니다. 실제로 제가 겪었던 패턴들을 몇 가지 나열해보면 아래와 같습니다.</p>
+<ul>
+<li>파싱 불안정: 출력에 헤더가 있을 때도 있고 없을 때도 있음</li>
+<li>로케일 의존: 날짜/숫자 포맷이 시스템 로케일에 따라 달라짐</li>
+<li>색상 코드 오염: ANSI escape code가 섞여 들어와서 문자열 비교 실패</li>
+<li>Progress bar 충돌: stderr와 stdout이 섞이면서 출력이 꼬임</li>
+<li>암묵적 truncation: 긴 값이 <code>...</code>으로 잘리는데 이를 알 방법이 없음</li>
+</ul>
+<p>이런 문제를 하나하나 예외 처리하다 보면 에이전트 코드가 CLI 파싱 로직으로 뒤덮이게 됩니다. 본질적인 작업보다 출력을 해석하는 데 더 많은 시간을 쓰게 되는 거죠.</p>
+<h3 id="advantages-of-json">Advantages of JSON</h3>
+<p>JSON 중심 입출력으로 전환하면 이 문제들이 대부분 사라집니다.</p>
+<ul>
+<li>타입 안전성: 숫자는 숫자, 문자열은 문자열. <code>&quot;3&quot;</code> vs <code>3</code>을 구분할 수 있음</li>
+<li>스키마 기반 검증: JSON Schema로 입출력 형태를 사전 정의하고 검증 가능</li>
+<li>체이닝 용이성: <code>jq</code>, 파이프라인, 프로그래밍 언어에서 바로 파싱 가능</li>
+<li>일관성: 로케일, 터미널 설정과 무관하게 동일한 출력 보장</li>
+<li>에러 구조화: 에러도 JSON으로 반환하면 에이전트가 에러 유형을 판단하고 적절히 대응 가능</li>
+</ul>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-name">&quot;error&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-name">&quot;code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;RESOURCE_NOT_FOUND&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Pod &#39;my-app&#39; not found in namespace &#39;default&#39;&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;suggestions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;Check namespace with --namespace flag&quot;</span><span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="real-world-test-results-from-our-project">Real-World Test Results from Our Project</h3>
+<p>CLI에 <code>--json</code> 플래그를 추가하고 에이전트에게 동일한 태스크를 수행시켰을 때의 변화를 간단히 정리하면..</p>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>텍스트 출력</th>
+<th>JSON 출력</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>태스크 성공률</td>
+<td>60% 정도</td>
+<td>90% 정도</td>
+</tr>
+<tr>
+<td>평균 재시도 횟수</td>
+<td>2.3회</td>
+<td>0.4회</td>
+</tr>
+<tr>
+<td>파싱 관련 에러</td>
+<td>전체 에러의 41%</td>
+<td>거의 0%</td>
+</tr>
+</tbody>
+</table>
+<p>물론 이건 제가 테스트한 특정 태스크들 기준이라 일반화하긴 어렵지만, JSON 전환만으로 이 정도의 차이가 나온다는 건 꽤 의미 있는 결과였습니다.</p>
+<h2 id="the-schema-command-letting-ai-learn-and-adapt-at-runtime">The Schema Command: Letting AI Learn and Adapt at Runtime</h2>
+<p>JSON I/O만으로도 큰 개선이 되지만, 여기서 한 단계 더 나아갈 수 있는 방법이 있습니다. 바로 schema 명령어입니다.</p>
+<h3 id="inspiration-from-google-workspace-cli-gws">Inspiration from Google Workspace CLI (gws)</h3>
+<p>이 아이디어는 <a href="https://github.com/googleworkspace/cli">Google Workspace CLI(gws)</a>에서 영감을 받았습니다. gws는 리소스별로 스키마 정보를 런타임에 조회할 수 있는 구조를 가지고 있는데요, 이를 보면서 &quot;에이전트가 문서를 읽는 대신 CLI에 직접 물어보면 되지 않을까?&quot;라는 생각이 들었습니다.</p>
+<h3 id="how-the-schema-subcommand-works">How the Schema Subcommand Works</h3>
+<p>개념은 단순합니다. CLI에 <code>schema</code>라는 서브커맨드를 추가하고, 리소스와 액션을 지정하면 해당 명령어의 입출력 JSON Schema를 반환하는 겁니다.</p>
+<pre><code class="language-bash hljs">$ mytool schema user.create
+<span class="hljs-operator">{</span>
+  <span class="hljs-string">&quot;</span><span class="hljs-variable">$schema</span><span class="hljs-string">&quot;</span>: <span class="hljs-string">&quot;http://json-schema.org/draft-07/schema#&quot;</span>,
+  <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;Create a new user&quot;</span>,
+  <span class="hljs-string">&quot;input&quot;</span>: <span class="hljs-operator">{</span>
+    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-string">&quot;required&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-string">&quot;email&quot;</span>, <span class="hljs-string">&quot;role&quot;</span><span class="hljs-operator">]</span>,
+    <span class="hljs-string">&quot;properties&quot;</span>: <span class="hljs-operator">{</span>
+      <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;format&quot;</span>: <span class="hljs-string">&quot;email&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;enum&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-string">&quot;admin&quot;</span>, <span class="hljs-string">&quot;member&quot;</span>, <span class="hljs-string">&quot;viewer&quot;</span><span class="hljs-operator">]</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;maxLength&quot;</span>: 100<span class="hljs-operator">}</span>
+    <span class="hljs-operator">}</span>
+  <span class="hljs-operator">}</span>,
+  <span class="hljs-string">&quot;output&quot;</span>: <span class="hljs-operator">{</span>
+    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-string">&quot;properties&quot;</span>: <span class="hljs-operator">{</span>
+      <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;format&quot;</span>: <span class="hljs-string">&quot;uuid&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;created_at&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;format&quot;</span>: <span class="hljs-string">&quot;date-time&quot;</span><span class="hljs-operator">}</span>
+    <span class="hljs-operator">}</span>
+  <span class="hljs-operator">}</span>
+<span class="hljs-operator">}</span>
+</code></pre>
+<p>리소스 목록 자체도 조회할 수 있으면 더 좋습니다.</p>
+<pre><code class="language-bash hljs">$ mytool schema --list
+<span class="hljs-operator">[</span><span class="hljs-string">&quot;user.create&quot;</span>, <span class="hljs-string">&quot;user.delete&quot;</span>, <span class="hljs-string">&quot;user.get&quot;</span>, <span class="hljs-string">&quot;user.list&quot;</span>, <span class="hljs-string">&quot;project.create&quot;</span>, ...<span class="hljs-operator">]</span>
+</code></pre>
+<h3 id="benefits-for-agents">Benefits for Agents</h3>
+<p>이 구조가 에이전트에게 주는 이점은 상당합니다.</p>
+<ul>
+<li>외부 문서 불필요: 에이전트가 CLI에 직접 물어보고 정확한 입력을 구성할 수 있음</li>
+<li>API 변경에 자동 적응: CLI가 업데이트되면 schema도 함께 바뀌므로 에이전트가 항상 최신 스펙으로 동작</li>
+<li>Dry-run과 결합: schema로 입력을 만들고 <code>--dry-run</code>으로 검증한 뒤 실행하는 안전한 워크플로우 가능</li>
+<li>Self-describing: 별도의 AGENTS.md나 tool description 없이도 CLI 스스로 자신을 설명할 수 있음</li>
+</ul>
+<h3 id="our-implementation-overview">Our Implementation Overview</h3>
+<p>저희 프로젝트에서는 다음과 같은 구조로 구현했습니다.</p>
+<ol>
+<li>각 명령어 핸들러에 input/output schema를 정의 (Pydantic 모델 기반)</li>
+<li><code>schema</code> 서브커맨드에서 이를 JSON Schema로 직렬화하여 반환</li>
+<li><code>--list</code> 옵션으로 전체 리소스/액션 트리를 탐색 가능하게 구성</li>
+<li>schema 응답에 <code>examples</code> 필드를 포함시켜 에이전트가 참고할 수 있도록 함</li>
+</ol>
+<p>구현 자체는 크게 어렵지 않았습니다. 이미 Pydantic으로 입출력 모델을 정의하고 있었기 때문에 <code>.model_json_schema()</code>를 호출하는 것만으로 대부분 해결됐거든요.</p>
+<h3 id="example-agent-workflow-using-schema">Example Agent Workflow Using Schema</h3>
+<p>실제 에이전트가 schema를 활용하는 흐름을 보면 이런 식입니다.</p>
+<pre><code>1. Agent: mytool schema --list
+   → 사용 가능한 명령어 목록 확인
+
+2. Agent: mytool schema user.create
+   → 입력 스키마 확인 (필수 필드: email, role)
+
+3. Agent: mytool user create --json '{&quot;email&quot;:&quot;new@example.com&quot;,&quot;role&quot;:&quot;member&quot;}' --dry-run
+   → 실행 전 검증
+
+4. Agent: mytool user create --json '{&quot;email&quot;:&quot;new@example.com&quot;,&quot;role&quot;:&quot;member&quot;}'
+   → 실제 실행, JSON 응답 수신
+
+5. Agent: 응답의 id 필드를 다음 작업에 활용
+</code></pre>
+<p>이 흐름에서 에이전트는 단 한 번도 문서를 참조하지 않습니다. CLI 자체가 문서 역할을 하는 거죠.</p>
+<h2 id="practical-design-patterns">Practical Design Patterns</h2>
+<p>JSON I/O와 Schema를 실제로 적용할 때 고려할 패턴들을 정리해봤습니다.</p>
+<h3 id="input-design-choices">Input Design Choices</h3>
+<p>입력 방식은 크게 세 가지가 있고, 상황에 따라 선택하면 됩니다.</p>
+<table>
+<thead>
+<tr>
+<th>방식</th>
+<th>예시</th>
+<th>적합한 경우</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stdin JSON</td>
+<td><code>echo &#39;{&quot;key&quot;:&quot;val&quot;}&#39; | mytool create</code></td>
+<td>큰 페이로드, 파이프라인 체이닝</td>
+</tr>
+<tr>
+<td>argument JSON</td>
+<td><code>mytool create --json &#39;{&quot;key&quot;:&quot;val&quot;}&#39;</code></td>
+<td>단일 명령 실행, 히스토리에 남기고 싶을 때</td>
+</tr>
+<tr>
+<td>Mixed</td>
+<td><code>mytool create --name foo --json &#39;{&quot;extra&quot;:&quot;opts&quot;}&#39;</code></td>
+<td>자주 쓰는 옵션은 플래그로, 나머지는 JSON으로</td>
+</tr>
+</tbody>
+</table>
+<p>개인적으로는 argument JSON 방식을 기본으로 하되, stdin도 지원하는 형태를 추천합니다. 에이전트 입장에서는 하나의 명령어로 완결되는 게 가장 다루기 쉽거든요.</p>
+<h3 id="output-design-best-practices">Output Design Best Practices</h3>
+<p>출력 설계에서 몇 가지 중요한 원칙들이 있습니다.</p>
+<ul>
+<li><code>--json</code> 플래그는 필수: 기본은 사람이 읽기 좋은 형태를 유지하되, <code>--json</code>을 넣으면 구조화된 출력을 반환</li>
+<li>NDJSON 지원: 스트리밍이 필요한 경우 (로그, 이벤트 등) 줄 단위 JSON 지원</li>
+<li>에러도 JSON으로: <code>--json</code> 모드에서는 에러 역시 JSON 형태로 반환. exit code와 함께 사용</li>
+<li>메타데이터 포함: pagination 정보, 요청 ID, 타임스탬프 등을 응답에 포함</li>
+</ul>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># 일반 모드</span>
+$ mytool user list
+EMAIL              ROLE     CREATED
+alice@example.com  admin    2026-01-15
+bob@example.com    member   2026-02-20
+
+<span class="hljs-comment"># JSON 모드</span>
+$ mytool user list --json
+<span class="hljs-operator">{</span>
+  <span class="hljs-string">&quot;data&quot;</span>: <span class="hljs-operator">[</span>
+    <span class="hljs-operator">{</span><span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;alice@example.com&quot;</span>, <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;admin&quot;</span>, <span class="hljs-string">&quot;created_at&quot;</span>: <span class="hljs-string">&quot;2026-01-15T00:00:00Z&quot;</span><span class="hljs-operator">}</span>,
+    <span class="hljs-operator">{</span><span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;bob@example.com&quot;</span>, <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;member&quot;</span>, <span class="hljs-string">&quot;created_at&quot;</span>: <span class="hljs-string">&quot;2026-02-20T00:00:00Z&quot;</span><span class="hljs-operator">}</span>
+  <span class="hljs-operator">]</span>,
+  <span class="hljs-string">&quot;meta&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;total&quot;</span>: 2, <span class="hljs-string">&quot;page&quot;</span>: 1, <span class="hljs-string">&quot;per_page&quot;</span>: 50<span class="hljs-operator">}</span>
+<span class="hljs-operator">}</span>
+</code></pre>
+<p>결과적으로 저는 json 출력을 기본으로 사용하고 --no-json을 추가하는 형태가 되었네요. 사람이 쓰지 않는 도구라면 입출력을 모두 JSON으로 통일하는게 작업 히트율이 가장 좋았습니다.</p>
+<h3 id="versioning-backward-compatibility">Versioning &amp; Backward Compatibility</h3>
+<p>JSON 출력의 버저닝은 신경 써야 할 부분입니다. 몇 가지 전략을 공유하면 아래와 같습니다.</p>
+<ul>
+<li>필드 추가는 자유, 삭제/변경은 신중하게: 새 필드를 추가하는 건 하위 호환을 깨지 않지만, 기존 필드를 제거하거나 타입을 바꾸면 에이전트가 깨질 수 있음</li>
+<li>버전 필드 포함: 응답에 <code>&quot;api_version&quot;: &quot;v1&quot;</code> 같은 필드를 넣어두면 에이전트가 버전에 따라 분기 가능</li>
+<li>Deprecation 경고: 제거 예정인 필드는 별도 warnings 배열에 알림</li>
+</ul>
+<h3 id="using-pydantic-zod-json-schema-for-validation">Using Pydantic / Zod / JSON Schema for Validation</h3>
+<p>스키마 정의에 사용할 수 있는 도구들입니다.</p>
+<ul>
+<li><strong>Python</strong>: Pydantic이 가장 편합니다. 모델 정의 → JSON Schema 자동 생성 → 입력 검증까지 한 번에</li>
+<li><strong>TypeScript/Node</strong>: Zod로 스키마를 정의하고 <code>zod-to-json-schema</code>로 변환</li>
+<li><strong>Go/Rust 등</strong>: JSON Schema 파일을 직접 작성하거나, 코드에서 생성하는 라이브러리 활용</li>
+</ul>
+<p>핵심은 코드에서 사용하는 타입 정의와 schema 명령어가 반환하는 스키마가 동일한 소스에서 나와야 한다는 겁니다. 이 둘이 따로 관리되면 결국 싱크가 깨집니다.</p>
+<blockquote>
+<p>사실 진행하던 개발 프로젝트에선 이 부분을 크게 신경쓰진 않았습니다. 덕분에 여러번의 실패가 있었죠.</p>
+</blockquote>
+<h3 id="ai-friendly-helper-flags">AI-Friendly Helper Flags</h3>
+<p>schema와 JSON 외에도 에이전트 친화적인 플래그들을 추가하면 좋습니다.</p>
+<ul>
+<li><code>--dry-run</code>: 실제 실행 없이 결과를 미리 확인. 에이전트가 안전하게 시도해볼 수 있음</li>
+<li><code>--explain</code>: 명령어가 수행할 작업을 자연어로 설명. 에이전트의 계획 수립에 도움</li>
+<li><code>--output-format</code>: json, yaml, csv 등 출력 포맷 선택</li>
+<li><code>--quiet</code>: 불필요한 배너, 경고를 제거하고 핵심 출력만 반환</li>
+<li><code>--no-color</code>: ANSI escape code 제거 (이건 사실 모든 CLI에 있어야 합니다)</li>
+</ul>
+<h2 id="results-lessons-and-caveats-after-adoption">Results, Lessons, and Caveats After Adoption</h2>
+<h3 id="quantitative-qualitative-outcomes">Quantitative &amp; Qualitative Outcomes</h3>
+<p>앞서 JSON 전환 결과를 공유했는데, schema 명령어까지 추가한 뒤의 변화도 정리해보면 아래와 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>JSON만</th>
+<th>JSON + Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>태스크 성공률</td>
+<td>90% 정도</td>
+<td>~97% (거의 대부분 성공)</td>
+</tr>
+<tr>
+<td>에이전트의 첫 시도 정확도</td>
+<td>~70%</td>
+<td>~90% (솔직히 이 구간이 좋아졌습니다)</td>
+</tr>
+<tr>
+<td>문서 참조 필요 횟수</td>
+<td>태스크당 평균 1.2회</td>
+<td>거의 0회</td>
+</tr>
+</tbody>
+</table>
+<p>빈도가 크진 않아서 의미 있는 수치는 아닐 수 있습니다. 다만 정성적으로 더 크게 느낀 부분은 에이전트 코드의 복잡도가 확 줄었다는 점입니다. 파싱 로직이 사라지고 비즈니스 로직에 집중할 수 있게 됐거든요.</p>
+<h3 id="common-failure-patterns-we-observed">Common Failure Patterns We Observed</h3>
+<p>물론 만능은 아닙니다. 에이전트가 자주 실패하는 패턴과 해결책을 정리하면:</p>
+<ul>
+<li>너무 큰 JSON 응답: 리스트 API에서 수천 개의 항목을 반환하면 에이전트의 컨텍스트 윈도우를 넘어감 → pagination과 필터링 필수</li>
+<li>중첩이 깊은 구조: 5단계 이상 중첩된 JSON은 에이전트가 정확히 탐색하기 어려움 → 가능하면 flat하게</li>
+<li>enum 값 오류: schema에 enum이 정의되어 있어도 에이전트가 가끔 유사하지만 다른 값을 넣음 → 입력 검증 + 명확한 에러 메시지</li>
+<li>optional vs required 혼동: 에이전트가 optional 필드를 빠트리는 건 괜찮지만, required를 빠트리는 경우 발생 → schema에 required를 명확히 표시하고 에러 메시지에서 누락된 필드를 알려주기</li>
+</ul>
+<h3 id="remaining-challenges">Remaining Challenges</h3>
+<p>아직 해결하지 못한 부분도 있습니다.</p>
+<ul>
+<li>복잡한 pagination: cursor 기반 pagination을 에이전트가 자연스럽게 처리하는 건 여전히 까다로움</li>
+<li>Binary data: 파일 업로드/다운로드 같은 바이너리 데이터 처리는 JSON으로 깔끔하게 표현하기 어려움</li>
+<li>Long-running operations: 수 분 이상 걸리는 작업의 상태 추적과 타임아웃 처리</li>
+</ul>
+<p>이런 부분들은 아직 좋은 답을 찾지 못해서 계속 고민 중입니다. 특히 Long-running 부분은 대부분 에이전트가 sleep을 자체적으로 걸면서 체크하고 있던데 상당히 비 효율적으로 보입니다. 반대로 agent가 callback 받을 수 있어야 할텐데, 이게 쉽진 않네요.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>정리하자면, 제가 AI-Friendly CLI를 만드는 핵심은 두 가지입니다.</p>
+<ol>
+<li>JSON-First I/O: 입출력을 구조화하여 에이전트가 안정적으로 파싱하고 활용할 수 있게 하기</li>
+<li>Schema Command: CLI 스스로 자신의 인터페이스를 설명할 수 있게 하여 문서 의존성 제거</li>
+</ol>
+<p>이 두 가지만 갖춰도 에이전트 성능이 크게 향상되는 걸 직관했습니다. 당장 적용해보고 싶다면 가장 쉬운 시작점은 기존 CLI에 <code>--json</code> 플래그 하나를 추가하는 것입니다. 그것만으로도 에이전트와의 연동이 훨씬 수월해집니다.</p>
+<p>다시 한번 CLI의 시대가 열렸습니다.</p>
+<p><img loading="lazy" src="cli.webp" alt="" /></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+        <nav class="post-navigation" aria-label="Post navigation">
+            
+                
+                
+                
+                
+                    
+                    
+                        
+                        
+                    
+                
+            <a href="/ko/posts/2026/10years/" class="nav-prev" rel="prev">
+                <span class="nav-label">← Previous</span>
+                <span class="nav-title">10년의 회고와 새로운 시작</span>
+            </a>
+            
+
+            
+                
+                
+                
+                
+                    
+                    
+                        
+                        
+                    
+                
+            <a href="/ko/posts/2026/traveling-with-hermes-in-japan/" class="nav-next" rel="next">
+                <span class="nav-label">Next →</span>
+                <span class="nav-title">Traveling with Hermes in Japan</span>
+            </a>
+            
+        </nav>
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+    </article>
+
+    
+    <aside class="toc-sidebar" aria-label="On this page">
+        <nav class="toc-nav"><ul><li><a href="#why-json-first-input-output-matters-for-ai-agents">Why JSON-First Input / Output Matters for AI Agents</a><ul><li><a href="#human-vs-ai-cli-usage-patterns">Human vs AI CLI Usage Patterns</a></li><li><a href="#the-pain-of-unstructured-text-output">The Pain of Unstructured Text Output</a></li><li><a href="#advantages-of-json">Advantages of JSON</a></li><li><a href="#real-world-test-results-from-our-project">Real-World Test Results from Our Project</a></li></ul></li><li><a href="#the-schema-command-letting-ai-learn-and-adapt-at-runtime">The Schema Command: Letting AI Learn and Adapt at Runtime</a><ul><li><a href="#inspiration-from-google-workspace-cli-gws">Inspiration from Google Workspace CLI (gws)</a></li><li><a href="#how-the-schema-subcommand-works">How the Schema Subcommand Works</a></li><li><a href="#benefits-for-agents">Benefits for Agents</a></li><li><a href="#our-implementation-overview">Our Implementation Overview</a></li><li><a href="#example-agent-workflow-using-schema">Example Agent Workflow Using Schema</a></li></ul></li><li><a href="#practical-design-patterns">Practical Design Patterns</a><ul><li><a href="#input-design-choices">Input Design Choices</a></li><li><a href="#output-design-best-practices">Output Design Best Practices</a></li><li><a href="#versioning-backward-compatibility">Versioning &amp; Backward Compatibility</a></li><li><a href="#using-pydantic-zod-json-schema-for-validation">Using Pydantic / Zod / JSON Schema for Validation</a></li><li><a href="#ai-friendly-helper-flags">AI-Friendly Helper Flags</a></li></ul></li><li><a href="#results-lessons-and-caveats-after-adoption">Results, Lessons, and Caveats After Adoption</a><ul><li><a href="#quantitative-qualitative-outcomes">Quantitative &amp; Qualitative Outcomes</a></li><li><a href="#common-failure-patterns-we-observed">Common Failure Patterns We Observed</a></li><li><a href="#remaining-challenges">Remaining Challenges</a></li></ul></li><li><a href="#conclusion">Conclusion</a></li></ul></nav>
+    </aside>
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

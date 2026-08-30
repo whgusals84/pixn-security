@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[METASPLOIT] Metasploit에서 generate 명령을 통해 payload 생성하기(generate shellcode on metasploit) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[METASPLOIT] Metasploit에서 generate 명령을 통해 payload 생성하기(generate shellcode on metasploit)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/metasploit-metasploit-generate-payload/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[METASPLOIT] Metasploit에서 generate 명령을 통해 payload 생성하기(generate shellcode on metasploit)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/metasploit-metasploit-generate-payload/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[METASPLOIT] Metasploit에서 generate 명령을 통해 payload 생성하기(generate shellcode on metasploit)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/metasploit-metasploit-generate-payload/","datePublished":"2015-10-14T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2015-metasploit-metasploit-generate-payload.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2015/"},{"@type":"ListItem","position":5,"name":"[METASPLOIT] Metasploit에서 generate 명령을 통해 payload 생성하기(generate shellcode on metasploit)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[METASPLOIT] Metasploit에서 generate 명령을 통해 payload 생성하기(generate shellcode on metasploit)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2015-10-14">
+                        OCTOBER 14, 2015
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>msf에서는 공격에 사용되는 shell을 code 형태로 나타낼 수 있는 기능이 있습니다.
+바로 generate 명령입니다. 이 명령을 통해 shellcode를 육안으로 보고 복사하여 사용할 수 있게 하는 좋은 기능입니다.</p>
+<p><a href="http://4.bp.blogspot.com/-XbEAkI9Y0_k/Vh5HH1j7DaI/AAAAAAAAAyE/aCQuBwfuA7Q/s1600/metasploit.jpg"><img loading="lazy" src="http://4.bp.blogspot.com/-XbEAkI9Y0_k/Vh5HH1j7DaI/AAAAAAAAAyE/aCQuBwfuA7Q/s640/metasploit.jpg" alt="" /> </a></p>
+<h2 id="payload-지정-후-generate-명령으로-shellcode-출력">payload 지정 후 generate 명령으로 shellcode 출력</h2>
+<p>hahwul #&gt; use payload/linux/x64/exec
+hahwul payload(exec) #&gt;
+hahwul payload(exec) #&gt;
+hahwul payload(exec) #&gt; show options</p>
+<p>Module options (payload/linux/x64/exec):</p>
+<p>Name  Current Setting  Required  Description</p>
+<hr />
+<p>CMD                    yes       The command string to execute</p>
+<p>generate 옵션 확인
+hahwul payload(exec) #&gt; generate -h
+Usage: generate [options]</p>
+<p>Generates a payload.</p>
+<p>OPTIONS:</p>
+<pre><code>-E        Force encoding.
+-b &lt;opt&gt;  The list of characters to avoid: '\x00\xff'
+-e &lt;opt&gt;  The name of the encoder module to use.
+-f &lt;opt&gt;  The output file name (otherwise stdout)
+-h        Help banner.
+-i &lt;opt&gt;  the number of encoding iterations.
+-k        Keep the template executable functional
+-o &lt;opt&gt;  A comma separated list of options in VAR=VAL format.
+-p &lt;opt&gt;  The Platform for output.
+-s &lt;opt&gt;  NOP sled length.
+-t &lt;opt&gt;  The output format: bash,c,csharp,dw,dword,hex,java,js_be,js_le,num,perl,pl,powershell,ps1,py,python,raw,rb,ruby,sh,vbapplication,vbscript,asp,aspx,aspx-exe,dll,elf,elf-so,exe,exe-only,exe-service,exe-small,hta-psh,loop-vbs,macho,msi,msi-nouac,osx-app,psh,psh-net,psh-reflection,psh-cmd,vba,vba-exe,vba-psh,vbs,war
+-x &lt;opt&gt;  The executable template to use
+</code></pre>
+<p>CMD를 lspci로 설정 후 generate 명령을 통해 shell code 확인하기
+hahwul payload(exec) #&gt; set CMD lspci
+CMD =&gt; lspci
+hahwul payload(exec) #&gt; generate</p>
+<h1 id="linux-x64-exec-45-bytes">linux/x64/exec - 45 bytes</h1>
+<h1 id="http-wwwmetasploitcom">http://www.metasploit.com</h1>
+<h1 id="verbosefalse-prependforkfalse-prependsetresuidfalse">VERBOSE=false, PrependFork=false, PrependSetresuid=false,</h1>
+<h1 id="prependsetreuidfalse-prependsetuidfalse">PrependSetreuid=false, PrependSetuid=false,</h1>
+<h1 id="prependsetresgidfalse-prependsetregidfalse">PrependSetresgid=false, PrependSetregid=false,</h1>
+<h1 id="prependsetgidfalse-prependchrootbreakfalse">PrependSetgid=false, PrependChrootBreak=false,</h1>
+<h1 id="appendexitfalse-cmdlspci">AppendExit=false, CMD=lspci</h1>
+<p>buf =
+&quot;\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00&quot; +
+&quot;\x53\x48\x89\xe7\x68\x2d\x63\x00\x00\x48\x89\xe6\x52\xe8&quot; +
+&quot;\x06\x00\x00\x00\x6c\x73\x70\x63\x69\x00\x56\x57\x48\x89&quot; +
+&quot;\xe6\x0f\x05&quot;
+hahwul payload(exec) #&gt;</p>
+<h2 id="옵션을-활용한-정교한-shellcode-generate">옵션을 활용한 정교한 shellcode generate</h2>
+<p><a href="http://1.bp.blogspot.com/-BOBmLrQsILA/Vh5G8mBsrII/AAAAAAAAAx8/YTU81Y2WLyc/s1600/payload.jpg"><img loading="lazy" src="http://1.bp.blogspot.com/-BOBmLrQsILA/Vh5G8mBsrII/AAAAAAAAAx8/YTU81Y2WLyc/s640/payload.jpg" alt="" /> </a></p>
+<p>-b 옵션을 통해 제거해야할 데이터가 있다면 제거합니다.
+예시로는 \x00 을 제거하면 아래와 같이 \x00이 제거된 코드로 나타나게됩니다.</p>
+<p>hahwul payload(exec) #&gt;generate -b '\x00'</p>
+<h1 id="linux-x64-exec-87-bytes">linux/x64/exec - 87 bytes</h1>
+<h1 id="http-wwwmetasploitcom-1">http://www.metasploit.com</h1>
+<h1 id="encoder-x64-xor">Encoder: x64/xor</h1>
+<h1 id="verbosefalse-prependforkfalse-prependsetresuidfalse-1">VERBOSE=false, PrependFork=false, PrependSetresuid=false,</h1>
+<h1 id="prependsetreuidfalse-prependsetuidfalse-1">PrependSetreuid=false, PrependSetuid=false,</h1>
+<h1 id="prependsetresgidfalse-prependsetregidfalse-1">PrependSetresgid=false, PrependSetregid=false,</h1>
+<h1 id="prependsetgidfalse-prependchrootbreakfalse-1">PrependSetgid=false, PrependChrootBreak=false,</h1>
+<h1 id="appendexitfalse-cmdlspci-1">AppendExit=false, CMD=lspci</h1>
+<p>buf =
+&quot;\x48\x31\xc9\x48\x81\xe9\xfa\xff\xff\xff\x48\x8d\x05\xef&quot; +
+&quot;\xff\xff\xff\x48\xbb\xc2\x4b\xf7\xf3\x14\x43\x3d\x2c\x48&quot; +
+&quot;\x31\x58\x27\x48\x2d\xf8\xff\xff\xff\xe2\xf4\xa8\x70\xaf&quot; +
+&quot;\x6a\x5c\xf8\x12\x4e\xab\x25\xd8\x80\x7c\x43\x6e\x64\x4b&quot; +
+&quot;\xac\x9f\xde\x77\x43\x3d\x64\x4b\xad\xa5\x1b\x12\x43\x3d&quot; +
+&quot;\x2c\xae\x38\x87\x90\x7d\x43\x6b\x7b\x8a\xc2\x11\xfc\x11&quot; +
+&quot;\x43\x3d\x2c&quot;
+hahwul payload(exec) #&gt;</p>
+<p>-e 옵션을 통해서는 encoder를 지정할 수 있습니다.
+x86/shikata_ga_nai 가 좋지만, 위 설정에서 64비트 기준으로 하였기에 간단한 xor encoder를 이용하겠습니다.</p>
+<p>hahwul payload(exec) #&gt; generate -e x64/xor</p>
+<h1 id="linux-x64-exec-87-bytes-1">linux/x64/exec - 87 bytes</h1>
+<h1 id="http-wwwmetasploitcom-2">http://www.metasploit.com</h1>
+<h1 id="encoder-x64-xor-1">Encoder: x64/xor</h1>
+<h1 id="verbosefalse-prependforkfalse-prependsetresuidfalse-2">VERBOSE=false, PrependFork=false, PrependSetresuid=false,</h1>
+<h1 id="prependsetreuidfalse-prependsetuidfalse-2">PrependSetreuid=false, PrependSetuid=false,</h1>
+<h1 id="prependsetresgidfalse-prependsetregidfalse-2">PrependSetresgid=false, PrependSetregid=false,</h1>
+<h1 id="prependsetgidfalse-prependchrootbreakfalse-2">PrependSetgid=false, PrependChrootBreak=false,</h1>
+<h1 id="appendexitfalse-cmdlspci-2">AppendExit=false, CMD=lspci</h1>
+<p>buf =
+&quot;\x48\x31\xc9\x48\x81\xe9\xfa\xff\xff\xff\x48\x8d\x05\xef&quot; +
+&quot;\xff\xff\xff\x48\xbb\x94\x05\xbe\x56\x5a\x0d\x93\xa2\x48&quot; +
+&quot;\x31\x58\x27\x48\x2d\xf8\xff\xff\xff\xe2\xf4\xfe\x3e\xe6&quot; +
+&quot;\xcf\x12\xb6\xbc\xc0\xfd\x6b\x91\x25\x32\x0d\xc0\xea\x1d&quot; +
+&quot;\xe2\xd6\x7b\x39\x0d\x93\xea\x1d\xe3\xec\xbe\x5c\x0d\x93&quot; +
+&quot;\xa2\xf8\x76\xce\x35\x33\x0d\xc5\xf5\xdc\x8c\x58\x59\x5f&quot; +
+&quot;\x0d\x93\xa2&quot;
+hahwul payload(exec) #&gt;</p>
+<p>-f 옵션을 통해서 데이터로 쓸 수도 있구요.
+hahwul payload(exec) #&gt;generate -b '\x00' -e x64/xor -f ./test.shell
+[*] Writing 701 bytes to ./test.shell...
+hahwul payload(exec) #&gt;</p>
+<p>-i 옵션을 통해서 여러번 처리할 수 있습니다.</p>
+<p>hahwul payload(exec) #&gt; generate -b '\x00' -i 4</p>
+<h1 id="linux-x64-exec-207-bytes">linux/x64/exec - 207 bytes</h1>
+<h1 id="http-wwwmetasploitcom-3">http://www.metasploit.com</h1>
+<h1 id="encoder-x64-xor-2">Encoder: x64/xor</h1>
+<h1 id="verbosefalse-prependforkfalse-prependsetresuidfalse-3">VERBOSE=false, PrependFork=false, PrependSetresuid=false,</h1>
+<h1 id="prependsetreuidfalse-prependsetuidfalse-3">PrependSetreuid=false, PrependSetuid=false,</h1>
+<h1 id="prependsetresgidfalse-prependsetregidfalse-3">PrependSetresgid=false, PrependSetregid=false,</h1>
+<h1 id="prependsetgidfalse-prependchrootbreakfalse-3">PrependSetgid=false, PrependChrootBreak=false,</h1>
+<h1 id="appendexitfalse-cmdlspci-3">AppendExit=false, CMD=lspci</h1>
+<p>buf =
+&quot;\x48\x31\xc9\x48\x81\xe9\xeb\xff\xff\xff\x48\x8d\x05\xef&quot; +
+&quot;\xff\xff\xff\x48\xbb\xfe\x1e\x65\x70\xde\x25\xc7\x50\x48&quot; +
+&quot;\x31\x58\x27\x48\x2d\xf8\xff\xff\xff\xe2\xf4\xb6\x2f\xac&quot; +
+&quot;\x38\x5f\xcc\x37\xaf\x01\xe1\x2d\xfd\xdb\xca\x38\xaf\x01&quot; +
+&quot;\x56\xde\xb2\x2f\xd9\xb1\xb8\x0a\xef\xec\x38\xef\x7d\xe0&quot; +
+&quot;\x18\xd3\xe6\x9a\x8f\x21\xc7\x33\xda\x3e\x2b\x5b\x19\xc3&quot; +
+&quot;\x21\xb1\x6d\xf0\xaa\x9e\x9d\xc5\x2b\xb1\x6d\x47\x59\x3b&quot; +
+&quot;\x2c\x66\x87\xab\xda\x69\xe9\x5b\xa9\x72\xf3\x06\xbf\xf7&quot; +
+&quot;\x1d\xec\x67\xc8\x20\x2e\x17\x8a\xf9\x77\x39\xb6\x20\x99&quot; +
+&quot;\xd9\x0b\x3c\xf3\x3f\xb3\x20\x99\x6e\xf8\x23\xc4\x49\xae&quot; +
+&quot;\x3d\xe8\x40\x3f\xf9\xc7\x88\x6b\x97\x4b\xde\xbc\x4e\x09&quot; +
+&quot;\x32\xb8\x27\x6f\xe7\x38\x1b\xc3\x99\x52\x24\x3a\x90\xd2&quot; +
+&quot;\x3b\x78\xe5\x78\xc4\xb3\xd7\x8c\x30\x78\xb6\x78\xc4\xb2&quot; +
+&quot;\xed\x49\x55\x78\xb6\x30\x21\x27\xcf\xc2\x3a\x78\xe0\x67&quot; +
+&quot;\x05\xdd\x59\xae\x56\x78\xb6\x30\xdf\x4e\x50&quot;</p>
+<p>msfpayload 는 여러 옵션을 포맷을 지원하기에 -t 옵션으로 type 을 지정할 수 있습니다.
+hahwul payload(exec) #&gt; generate -b '\x00' -t python</p>
+<h1 id="linux-x64-exec-87-bytes-2">linux/x64/exec - 87 bytes</h1>
+<h1 id="http-wwwmetasploitcom-4">http://www.metasploit.com</h1>
+<h1 id="encoder-x64-xor-3">Encoder: x64/xor</h1>
+<h1 id="verbosefalse-prependforkfalse-prependsetresuidfalse-4">VERBOSE=false, PrependFork=false, PrependSetresuid=false,</h1>
+<h1 id="prependsetreuidfalse-prependsetuidfalse-4">PrependSetreuid=false, PrependSetuid=false,</h1>
+<h1 id="prependsetresgidfalse-prependsetregidfalse-4">PrependSetresgid=false, PrependSetregid=false,</h1>
+<h1 id="prependsetgidfalse-prependchrootbreakfalse-4">PrependSetgid=false, PrependChrootBreak=false,</h1>
+<h1 id="appendexitfalse-cmdlspci-4">AppendExit=false, CMD=lspci</h1>
+<p>buf =  &quot;&quot;
+buf += &quot;\x48\x31\xc9\x48\x81\xe9\xfa\xff\xff\xff\x48\x8d\x05&quot;
+buf += &quot;\xef\xff\xff\xff\x48\xbb\xc1\x50\xbb\x1a\xa4\x7c\xa3&quot;
+buf += &quot;\xab\x48\x31\x58\x27\x48\x2d\xf8\xff\xff\xff\xe2\xf4&quot;
+buf += &quot;\xab\x6b\xe3\x83\xec\xc7\x8c\xc9\xa8\x3e\x94\x69\xcc&quot;
+buf += &quot;\x7c\xf0\xe3\x48\xb7\xd3\x37\xc7\x7c\xa3\xe3\x48\xb6&quot;
+buf += &quot;\xe9\xf2\xa2\x7c\xa3\xab\xad\x23\xcb\x79\xcd\x7c\xf5&quot;
+buf += &quot;\xfc\x89\xd9\x5d\x15\xa1\x7c\xa3\xab&quot;
+hahwul payload(exec) #&gt; generate -b '\x00' -t c
+/*</p>
+<ul>
+<li>linux/x64/exec - 87 bytes</li>
+<li>http://www.metasploit.com</li>
+<li>Encoder: x64/xor</li>
+<li>VERBOSE=false, PrependFork=false, PrependSetresuid=false,</li>
+<li>PrependSetreuid=false, PrependSetuid=false,</li>
+<li>PrependSetresgid=false, PrependSetregid=false,</li>
+<li>PrependSetgid=false, PrependChrootBreak=false,</li>
+<li>AppendExit=false, CMD=lspci
+*/
+unsigned char buf[] =
+&quot;\x48\x31\xc9\x48\x81\xe9\xfa\xff\xff\xff\x48\x8d\x05\xef\xff&quot;
+&quot;\xff\xff\x48\xbb\x9f\x84\x06\xdd\x08\xb0\xb7\x8d\x48\x31\x58&quot;
+&quot;\x27\x48\x2d\xf8\xff\xff\xff\xe2\xf4\xf5\xbf\x5e\x44\x40\x0b&quot;
+&quot;\x98\xef\xf6\xea\x29\xae\x60\xb0\xe4\xc5\x16\x63\x6e\xf0\x6b&quot;
+&quot;\xb0\xb7\xc5\x16\x62\x54\x35\x0e\xb0\xb7\x8d\xf3\xf7\x76\xbe&quot;
+&quot;\x61\xb0\xe1\xda\xd7\x0d\xe0\xd2\x0d\xb0\xb7\x8d&quot;;
+hahwul payload(exec) #&gt;</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

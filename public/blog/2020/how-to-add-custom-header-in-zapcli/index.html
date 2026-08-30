@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>How to add custom header in ZAP and zap-cli | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="How to add custom header in ZAP and zap-cli">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/how-to-add-custom-header-in-zapcli/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to add custom header in ZAP and zap-cli">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/how-to-add-custom-header-in-zapcli/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to add custom header in ZAP and zap-cli","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/how-to-add-custom-header-in-zapcli/","datePublished":"2020-08-08T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2020-how-to-add-custom-header-in-zapcli.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2020/"},{"@type":"ListItem","position":5,"name":"How to add custom header in ZAP and zap-cli"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">How to add custom header in ZAP and zap-cli</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2020-08-08">
+                        AUGUST 8, 2020
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>The zap-cli is a tool that helps make ZAP easy to use on the command line. From simple scanning to CI/CD Pipeline, it's a tool that's used everywhere. Unlike other scanners, it does not support custom headers.</p>
+<p>This is also the attribute of ZAP itself, which is basically a user credit-based authentication method. (Actually Burp and other use scanners tend to be somewhat similar.)</p>
+<p>So today I'm going to organize how you can use custom headers in ZAP, zap-cli.
+zap-cli는 ZAP을 커맨드라인에서 쉽게 사용할 수 있도록 도와주는 도구입니다. 단순한 스캐닝부터, CI/CD Pipeline 까지 많은 곳에선 활용되는 도구인데요. 다른 스캐너들과는 다르게 커스텀 헤더를 지원해주지 않습니다.</p>
+<p>이는 ZAP 자체가 가지고 있는 속성이기도 한데요, 기본적으로 사용자 Credential 기반의 인증 방식을 사용합니다.
+(사실 Burp나 다른 사용 스캐너들도 어느정도 비슷한 경향은 있어요)</p>
+<p>그래서 오늘은 ZAP, zap-cli에서 커스텀 헤더를 사용할 수 있는 방법에 대해 정리하려고 합니다.</p>
+<h2 id="zap-command-line-options">ZAP Command line options</h2>
+<p>ZAP can use on the various information needed to run an app to options. This allows you to use your personalized ZAP right away.</p>
+<p>ZAP은 앱을 실행할 때 실행에 필요한 여러가지 정보를 옵션으로 넘겨줄 수 있습니다. 이를 이용해 개인화된 상태의 ZAP을 바로 사용할 수 있죠.</p>
+<p>e.g</p>
+<pre><code>./zap.sh -daemon -host 0.0.0.0 -port 4425
+</code></pre>
+<p>(ZAP daemon mode, bind 0.0.0.0:4424)</p>
+<h3 id="options-in-zap-command-line">Options in ZAP Command Line</h3>
+<p>https://www.zaproxy.org/docs/desktop/cmdline/</p>
+<h2 id="but-theres-no-custom-header">But there's no Custom Header.</h2>
+<p>No matter how many times I look for the option, there is no data about the header. I looked up the ZAP API, but there was nothing special. So I've been thinking about going to Google and I've come up with about three ways.</p>
+<p>옵션을 아무리 찾아봐도 헤더에 대한 데이터는 없습니다. ZAP API쪽도 찾아봤지만 특별한게 없었습니다. 그래서 구글링해보고 고민해서 3가지 정도 방법을 뽑아냈었죠.</p>
+<ul>
+<li>Replacer를 cli 에서 활성화하는 방법을 찾는다.</li>
+</ul>
+<pre><code>using replacer on cli
+</code></pre>
+<ul>
+<li>Passive Scripts를 통해 모든 Req의 헤더를 임의로 수정한다.</li>
+</ul>
+<pre><code>Using passive scripts
+</code></pre>
+<ul>
+<li>Addon을 만들어서 로딩한다.</li>
+</ul>
+<pre><code>Using addon
+</code></pre>
+<p>So I asked Simon. And I heard about the -config option.
+그래서 일단 1번 방법이 가장 유력해보여서 Simon에게 물어봤습니다. 그랬더니 <code>-config</code> 옵션에 대한 이야기를 해주더군요.</p>
+<pre><code>-config api.key=12345 -config connection.timeoutInSecs=60 -config scanner.strength=MEDIUM
+</code></pre>
+<p>위키에는 잘 나와있진 않지만, <code>-config</code>를 통해 상세한 옵션 조정도 가능한 것 같습니다. 자 그럼 replacer쪽을 한번 봐봅시다.</p>
+<h2 id="replacer">Replacer</h2>
+<p>First of all, introduce the Replacer, it is an extension that replaces all requests made by ZAP. I remember it as a built-in, and it allows me to change or generate Req/Res information according to the pattern I specify.</p>
+<p>먼저 Replacer에 대한 소개(?)를 하자면, ZAP에서 발생하는 모든 요청에 대해 치환해주는 확장 기능입니다. 제 기억에는 빌트인으로 기억하고 있고, 이를 통해서 지정한 패턴에 따라 Req/Res 정보를 변경하거나 생성할 수도 있죠.</p>
+<p>In '-config', the replacer can be controlled in the form shown below.
+<code>-config</code> 에서 replacer는 아래와 같은 형태로 제어할 수 있습니다.</p>
+<pre><code>-config replacer.full_list\(0\).description=desc \
+-config replacer.full_list\(0\).enabled=true \
+-config replacer.full_list\(0\).matchtype=REQ_HEADER \
+-config replacer.full_list\(0\).matchstr=Authorization \
+-config replacer.full_list\(0\).regex=false \
+-config replacer.full_list\(0\).replacement=1234 \
+</code></pre>
+<p>so, just go code..
+만약 헤더 이름이 기존에 없는 값이라면 새로 생성되어 들어갑니다. 그럼 가볍게 코드로 보면.. 이런식의 구조가 나올 수 있겟네요.</p>
+<pre><code class="language-go hljs"><span class="hljs-keyword">package</span> main
+
+<span class="hljs-keyword">import</span> <span class="hljs-punctuation">(</span>
+	<span class="hljs-string">&quot;log&quot;</span>
+	<span class="hljs-string">&quot;os/exec&quot;</span>
+  <span class="hljs-string">&quot;strings&quot;</span>
+<span class="hljs-punctuation">)</span>
+
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">ParseHeader</span><span class="hljs-punctuation">(</span>h <span class="hljs-type">string</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">(</span><span class="hljs-type">string</span><span class="hljs-punctuation">,</span><span class="hljs-type">string</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>
+  arr <span class="hljs-operator">:=</span> strings<span class="hljs-punctuation">.</span><span class="hljs-title function_">Split</span><span class="hljs-punctuation">(</span>h<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;: &quot;</span><span class="hljs-punctuation">)</span>
+  hn <span class="hljs-operator">:=</span> arr<span class="hljs-punctuation">[</span><span class="hljs-number">0</span><span class="hljs-punctuation">]</span>
+  hv <span class="hljs-operator">:=</span> arr<span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">]</span>
+  <span class="hljs-keyword">return</span> hn<span class="hljs-punctuation">,</span> strings<span class="hljs-punctuation">.</span><span class="hljs-title function_">Join</span><span class="hljs-punctuation">(</span>hv<span class="hljs-punctuation">,</span><span class="hljs-string">&quot;:&quot;</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">func</span> <span class="hljs-title function_">main</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  headerString <span class="hljs-operator">:=</span> <span class="hljs-string">&quot;Authorization: abcd1234&quot;</span>
+  hn<span class="hljs-punctuation">,</span> hv <span class="hljs-operator">:=</span> <span class="hljs-title function_">ParseHeader</span><span class="hljs-punctuation">(</span>headerString<span class="hljs-punctuation">)</span>
+  options <span class="hljs-operator">:=</span> <span class="hljs-string">` -config replacer.full_list\(0\).description=desc \
+</span><span class="hljs-string">  -config replacer.full_list\(0\).enabled=true \
+</span><span class="hljs-string">  -config replacer.full_list\(0\).matchtype=REQ_HEADER \
+</span><span class="hljs-string">  -config replacer.full_list\(0\).matchstr=`</span><span class="hljs-operator">+</span>hn<span class="hljs-operator">+</span><span class="hljs-string">` \
+</span><span class="hljs-string">  -config replacer.full_list\(0\).regex=false \
+</span><span class="hljs-string">  -config replacer.full_list\(0\).replacement=`</span><span class="hljs-operator">+</span>hv	cmd <span class="hljs-operator">:=</span> exec<span class="hljs-punctuation">.</span><span class="hljs-title function_">Command</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;/bin/zsh&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;-c&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;./zap.sh &quot;</span><span class="hljs-operator">+</span>options<span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;5&quot;</span><span class="hljs-punctuation">)</span>
+	err <span class="hljs-operator">:=</span> cmd<span class="hljs-punctuation">.</span><span class="hljs-title function_">Start</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+	<span class="hljs-keyword">if</span> err <span class="hljs-operator">!=</span> <span class="hljs-literal">nil</span> <span class="hljs-punctuation">{</span>
+		log<span class="hljs-punctuation">.</span><span class="hljs-title function_">Fatal</span><span class="hljs-punctuation">(</span>err<span class="hljs-punctuation">)</span>
+	<span class="hljs-punctuation">}</span>
+	log<span class="hljs-punctuation">.</span><span class="hljs-title function_">Printf</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Waiting for command to finish...&quot;</span><span class="hljs-punctuation">)</span>
+	err <span class="hljs-punctuation">=</span> cmd<span class="hljs-punctuation">.</span><span class="hljs-title function_">Wait</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+	log<span class="hljs-punctuation">.</span><span class="hljs-title function_">Printf</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Command finished with error: %v&quot;</span><span class="hljs-punctuation">,</span> err<span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>log</p>
+<pre><code>Found Java version 12.0.1
+Available memory: 16384 MB
+Using JVM args: -Xmx4096m
+0 [main] INFO org.zaproxy.zap.GuiBootstrap  - OWASP ZAP D-2020-05-11 started 08/08/2020, 12:57:30 with home /Users/hahwul/Library/Application Support/ZAP_D/
+188 [AWT-EventQueue-0] INFO org.parosproxy.paros.common.AbstractParam  - Setting config replacer.full_list(0).description = desc was Remove CSP
+189 [AWT-EventQueue-0] INFO org.parosproxy.paros.common.AbstractParam  - Setting config replacer.full_list(0).enabled = true was false
+189 [AWT-EventQueue-0] INFO org.parosproxy.paros.common.AbstractParam  - Setting config replacer.full_list(0).matchtype = REQ_HEADER was RESP_HEADER
+189 [AWT-EventQueue-0] INFO org.parosproxy.paros.common.AbstractParam  - Setting config replacer.full_list(0).matchstr = Authorizationhn was Content-Security-Policy
+</code></pre>
+<p>and success!
+이후 모든 작업에는 Custom header가 적용됩니다 :D</p>
+<h2 id="on-zap-cli">on zap-cli?</h2>
+<p>zap-cli's -o option is sending arguments of zap.sh.You can give a arguments value of sh.
+zap-cli의 -o 옵션으로 zap.sh의 인자값을 줄 수 있습니다. 결국</p>
+<pre><code>zap-cli -o '-config replacer~~~'
+</code></pre>
+<p>같은 형태로 위와 동일하게 만들어줄 수 있겠죠.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://www.zaproxy.org/docs/desktop/cmdline/</li>
+<li>https://www.zaproxy.org/faq/how-do-you-find-out-what-key-to-use-to-set-a-config-value-on-the-command-line/</li>
+<li>https://groups.google.com/forum/#!topic/zaproxy-users/DGw1GYSy_PI</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

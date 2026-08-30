@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Untitled | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Untitled">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Untitled">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/">
+    <link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/">
+<link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/blog/2017/">
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Untitled","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+<header class="page-header">
+    
+    <h1 class="page-title">Untitled</h1>
+     
+</header>
+
+
+
+
+    
+
+
+
+
+<ul class="entry-list entry-list--ledger">
+    
+    
+    <li class="entry-year" aria-hidden="true">
+        <span class="entry-year-label">2017</span>
+    </li>
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-analyzing-burploaderjar-in-burp/">
+            
+            <time class="entry-date" datetime="2017-12-14">
+                DEC 14
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Analyzing BurpLoader.jar in Burp Suite Pro Crack(Larry Lau version) Part3(Bypass Certificate expiration time)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-documentbuilderfactory-xxe/">
+            
+            <time class="entry-date" datetime="2017-12-06">
+                DEC 6
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] DocumentBuilderFactory XXE Vulnerability 분석(ParseDroid, apktool xxe exploit)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-ooxml-xxe-with-burp/">
+            
+            <time class="entry-date" datetime="2017-12-04">
+                DEC 4
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] OOXML XXE with Burp Suite(OOXML XXE 관련 Burp suite Extension)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/coding-bookmarklet-vs-browser-extension/">
+            
+            <time class="entry-date" datetime="2017-12-04">
+                DEC 4
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Bookmarklet이란?</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-burp-suite-reflector/">
+            
+            <time class="entry-date" datetime="2017-12-03">
+                DEC 3
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Reflected XSS를 쉽게 찾자 -  Reflector Burp Suite Extension</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/exploit-macos-high-sierra-root/">
+            
+            <time class="entry-date" datetime="2017-12-01">
+                DEC 1
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[EXPLOIT] macOS High Sierra root privilege escalation 취약점/버그에 대한 이야기(code metasploit)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-sqlite-sql-injection-and/">
+            
+            <time class="entry-date" datetime="2017-11-20">
+                NOV 20
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] SQLite SQL Injection and Payload</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/ruby-ror-db-column-add-column-from-ruby/">
+            
+            <time class="entry-date" datetime="2017-11-20">
+                NOV 20
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Rails에서 DB Column 추가하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-blind-xsscross-site/">
+            
+            <time class="entry-date" datetime="2017-11-12">
+                NOV 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Blind XSS(Cross-Site Scripting)와 보안테스팅</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/exploit-java-se-web-start-jnlp-xxe-cve/">
+            
+            <time class="entry-date" datetime="2017-11-06">
+                NOV 6
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[EXPLOIT] JAVA SE Web start JNLP XXE 취약점 분석(CVE-2017-10309, feat Metasploit)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-badintent-android-burp-suite/">
+            
+            <time class="entry-date" datetime="2017-10-30">
+                OCT 30
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">BadIntent - Android 취약점 분석을 위한 Burp Suite Extension 📱</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-owasp-top-10-2017-rc2-review/">
+            
+            <time class="entry-date" datetime="2017-10-23">
+                OCT 23
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">OWASP Top 10 2017 RC2 Review</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/linux-install-docker-on-kali-linux/">
+            
+            <time class="entry-date" datetime="2017-10-22">
+                OCT 22
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[LINUX] Install docker on kali linux(칼리 리눅스에서 도커 설치하기)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-metasploitable2-feat-dbautopwn/">
+            
+            <time class="entry-date" datetime="2017-10-20">
+                OCT 20
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">가상 Pentest 환경 구성을 위한 metasploitable2 설치</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/system-hacking-lynis-system/">
+            
+            <time class="entry-date" datetime="2017-10-18">
+                OCT 18
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[SYSTEM HACKING] lynis를 이용한 시스템 취약점 스캔(System vulnerability Scanning with lynis)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-bypass-dom-xss/">
+            
+            <time class="entry-date" datetime="2017-10-18">
+                OCT 18
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Bypass DOM XSS Filter/Mitigation via Script Gadgets</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/ios-xcode-simulator-appipa/">
+            
+            <time class="entry-date" datetime="2017-10-17">
+                OCT 17
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">XCode Simulator에 App(.ipa) 파일 설치하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/linux-make-persistent-live-os-usb-live/">
+            
+            <time class="entry-date" datetime="2017-10-12">
+                OCT 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[LINUX] Make a Persistent Live OS USB(비 휘발성 Live OS 만들기)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-metasploit-openvas-feat-docker/">
+            
+            <time class="entry-date" datetime="2017-10-12">
+                OCT 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Metasploit + OpenVAS 연동 (using Docker)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-struts2-rcecve-2017-5638-s2/">
+            
+            <time class="entry-date" datetime="2017-10-11">
+                OCT 11
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] Struts2 RCE(CVE-2017-5638, S2-045) 테스트 및 docker file 공유</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-kali-live-os-windows-linux/">
+            
+            <time class="entry-date" datetime="2017-10-11">
+                OCT 11
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Kali Live OS를 이용한 Windows, Linux 물리 접근 해킹</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/linux-virtualbox/">
+            
+            <time class="entry-date" datetime="2017-10-01">
+                OCT 1
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[LINUX] VirtualBox에서 디스크 크기 변경하기(동적할당, 고정할당)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/linux-plank-dock-dock-application/">
+            
+            <time class="entry-date" datetime="2017-10-01">
+                OCT 1
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[LINUX] Plank Dock - 심플하고 깔끔한 Dock Application</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/linux-how-to-install-xfce-on-blackarch/">
+            
+            <time class="entry-date" datetime="2017-10-01">
+                OCT 1
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[LINUX] How to install xfce on blackarch linux</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/linux-blackarch-linux-install-tip/">
+            
+            <time class="entry-date" datetime="2017-10-01">
+                OCT 1
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[LINUX] BlackArch Linux install tip!</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-kali-linux-20172-release-review/">
+            
+            <time class="entry-date" datetime="2017-09-25">
+                SEP 25
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] KALI Linux 2017.2 Release Review (무엇이 달라졌을까요?)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-new-attack-vectors-in/">
+            
+            <time class="entry-date" datetime="2017-09-14">
+                SEP 14
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] New attack vectors in SSRF(Server-Side Request Forgery) with URL Parser</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-android-cloak-dagger-attack/">
+            
+            <time class="entry-date" datetime="2017-09-12">
+                SEP 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Android Cloak & Dagger Attack과 Toast Overlay Attack(CVE-2017-0752)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-do-you-want-to-build-snowman/">
+            
+            <time class="entry-date" datetime="2017-09-08">
+                SEP 8
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Metasploit ipknock를 이용한 hidden meterpreter shell</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/exploit-struts2-rest-plugin-xstream-rce/">
+            
+            <time class="entry-date" datetime="2017-09-07">
+                SEP 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[EXPLOIT] Struts2 REST Plugin XStream RCE 취약점 분석(feat msf) CVE-2017-9805 / S2-052</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-retirejs-js-library/">
+            
+            <time class="entry-date" datetime="2017-09-04">
+                SEP 4
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] Retire.js를 이용해 JS Library 취약점 찾기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-customize-column-and-tagging/">
+            
+            <time class="entry-date" datetime="2017-09-04">
+                SEP 4
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Metasploit 의 rhosts에서 Column/Tagging 커스터마이징 하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/exploit-openssl-oobout-of-bound-read/">
+            
+            <time class="entry-date" datetime="2017-08-31">
+                AUG 31
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[EXPLOIT] OpenSSL OOB(Out-Of-Bound) Read DOS Vulnerability. Analysis CVE-2017-3731</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-frida-hooking-to-multi-platform/">
+            
+            <time class="entry-date" datetime="2017-08-31">
+                AUG 31
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Frida를 소개합니다! 멀티 플랫폼 후킹을 위한 가장 강력한 도구 😎</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/powershell-write-get-file-information/">
+            
+            <time class="entry-date" datetime="2017-08-23">
+                AUG 23
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[POWERSHELL] 파워쉘을 이용한 파일 정보 확인하기(Write a get file information script)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/powershell-execution-of-scripts-is/">
+            
+            <time class="entry-date" datetime="2017-08-23">
+                AUG 23
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[POWERSHELL] 이 시스템에서 스크립트를 실행할 수 없으므로 파일을 로드할 수 없습니다(execution of scripts is disabled on this system.) 에러 해결 방법</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-using-metasploit-api-with/">
+            
+            <time class="entry-date" datetime="2017-08-22">
+                AUG 22
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Metasploit API와 msfrpcd, 그리고 NodeJS</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-metasploit-aggregator/">
+            
+            <time class="entry-date" datetime="2017-08-17">
+                AUG 17
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Metasploit-Aggregator를 이용한 Meterpreter session 관리하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-automatic-exploit-attack/">
+            
+            <time class="entry-date" datetime="2017-08-17">
+                AUG 17
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Automatic Exploit&Vulnerability Attack Using db_autopwn.rb</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-metadata-payload/">
+            
+            <time class="entry-date" datetime="2017-08-17">
+                AUG 17
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">EXIF를 이용하여 이미지 파일 내 Payload 삽입하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-data-leak-scenario-on/">
+            
+            <time class="entry-date" datetime="2017-08-13">
+                AUG 13
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Data Leak Scenario on Meterpreter using ADS</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-privilege-escalation-on/">
+            
+            <time class="entry-date" datetime="2017-08-10">
+                AUG 10
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Privilege Escalation on Meterpreter</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-web-hacking-and/">
+            
+            <time class="entry-date" datetime="2017-08-09">
+                AUG 9
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] Web hacking and vulnerability analysis with firefox!</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x30-meterpreter/">
+            
+            <time class="entry-date" datetime="2017-08-08">
+                AUG 8
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x30 - Meterpreter?</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x40-anti-forensic/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x40 - Anti Forensic</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x34-persistence-backdoor/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x34 - Persistence Backdoor</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x33-using-post-module/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x33 - Using post module</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x32-privilige-escalation/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x32 - Privilige Escalation</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x31-migrate-hiding/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x31 - Migrate & Hiding process</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x22-malware-and/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x22 - Malware and Infection</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x21-browser-attack/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x21 - Browser attack</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x20-remote-exploit/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x20 - Remote Exploit</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x12-vulnerability/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x12 - Vulnerability Scanning</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x11-network-scanning/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x11 - Network scanning using Auxiliary Module</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x10-port-scanning/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x10 - Port scanning</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x02-database-setting/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x02 - Database setting and workspace</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x01-msf-architecture/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x01 - MSF Architecture</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/mad-metasploit-0x00-metasploit/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[MAD-METASPLOIT] 0x00 - Metasploit?</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-meterpreter-windows7-uac/">
+            
+            <time class="entry-date" datetime="2017-08-07">
+                AUG 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Meterpreter를 이용한 Windows7 UAC 우회하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-db-module-database-cache-not/">
+            
+            <time class="entry-date" datetime="2017-08-05">
+                AUG 5
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[METASPLOIT] DB 연동 이후 발생하는 Module database cache not built yet(slow search) 해결하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-msgrpc-msfconsole-armitage/">
+            
+            <time class="entry-date" datetime="2017-08-01">
+                AUG 1
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[METASPLOIT] msgrpc 서버를 이용하여 msfconsole과 armitage 연동하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-webkit-jsc-sop-webkit-base/">
+            
+            <time class="entry-date" datetime="2017-07-27">
+                JUL 27
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] WebKit JSC 취약점을 통한 SOP 우회(WebKit base browser XSS Technique)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-closed-network-infection/">
+            
+            <time class="entry-date" datetime="2017-07-15">
+                JUL 15
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Closed network infection scenario and Detecting hidden networks (Using USB/Exploit)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-writing-custom-plugin-for/">
+            
+            <time class="entry-date" datetime="2017-07-12">
+                JUL 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[METASPLOIT] Writing Custom Plugin for metasploit</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-angularjs-sandboxdom-based/">
+            
+            <time class="entry-date" datetime="2017-07-12">
+                JUL 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">AngularJS Sandbox Escape XSS</span>
+                
+                <span class="entry-desc">AngularJS Sandbox Escape로 알아보는 constructor XSS와 Prototype Pollution</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-easily-trigger-event/">
+            
+            <time class="entry-date" datetime="2017-07-07">
+                JUL 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] Easily trigger event handler for XSS/ClickJacking" using CSS(or stylesheet)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-make-custom-msfconsole-with/">
+            
+            <time class="entry-date" datetime="2017-07-07">
+                JUL 7
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Metasploit resource script와 ruby code로 커스터마이징 하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-analyzing-burploaderjar-in-burp_20/">
+            
+            <time class="entry-date" datetime="2017-06-20">
+                JUN 20
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Analyzing BurpLoader.jar in Burp Suite Pro Crack(Larry Lau version) Part2</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-symbolic-executionsymbolic/">
+            
+            <time class="entry-date" datetime="2017-06-19">
+                JUN 19
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Symbolic Execution(symbolic evaluation)을 이용한 취약점 분석</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/ruby-rqrcode-qr/">
+            
+            <time class="entry-date" datetime="2017-06-19">
+                JUN 19
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">RUBY에서 RQRCode를 이용하여 QR코드 생성하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-bypass-xss-filter-with-back/">
+            
+            <time class="entry-date" datetime="2017-06-12">
+                JUN 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Bypass XSS filter with back-tick(JS Template Literal String)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-swf-debugging-with/">
+            
+            <time class="entry-date" datetime="2017-06-10">
+                JUN 10
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] SWF Debugging with ffdec(jpexs)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-swfflash-vulnerability/">
+            
+            <time class="entry-date" datetime="2017-05-31">
+                MAY 31
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] SWF(Flash) Vulnerability Analysis Techniques</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-msfconsole-prompt/">
+            
+            <time class="entry-date" datetime="2017-05-29">
+                MAY 29
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[METASPLOIT] msfconsole 내 Prompt 설정하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-ooxml-xxe/">
+            
+            <time class="entry-date" datetime="2017-05-27">
+                MAY 27
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">OOXML XXE Vulnerability (Exploiting XXE In file upload Function!)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/debian-thunder-bird-anigmail-gnupggpg/">
+            
+            <time class="entry-date" datetime="2017-05-25">
+                MAY 25
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[DEBIAN] Thunder Bird에서 Anigmail, GnuPG(gpg)를 통한 이메일 암호화</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-parameter-padding-for/">
+            
+            <time class="entry-date" datetime="2017-05-24">
+                MAY 24
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Parameter Padding for Attack a JSON CSRF</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-eternalblue-vulnerability-and/">
+            
+            <time class="entry-date" datetime="2017-05-21">
+                MAY 21
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Eternalblue vulnerability&exploit and msf code</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/exploit-linux-kernel-packet-socket/">
+            
+            <time class="entry-date" datetime="2017-05-12">
+                MAY 12
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[EXPLOIT] Linux Kernel - Packet Socket Local root Privilege Escalation(CVE-2017-7308,out-of-bound) 분석</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/debian-terminator/">
+            
+            <time class="entry-date" datetime="2017-03-16">
+                MAR 16
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[DEBIAN] terminator를 이용한 창 분할 터미널 사용하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-data-xss-filtering-bypass/">
+            
+            <time class="entry-date" datetime="2017-03-15">
+                MAR 15
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Form action + data:를 이용한 XSS Filtering 우회 기법</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-apache-struts2-remote-code/">
+            
+            <time class="entry-date" datetime="2017-03-08">
+                MAR 8
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Apache Struts2 RCE Vulnerability(CVE-2017-5638/S2-045)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/debian-intro-memcahed-and-accessing/">
+            
+            <time class="entry-date" datetime="2017-02-26">
+                FEB 26
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[DEBIAN] Intro Memcahed and Accessing Memcached from the command line</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/python-pudbconsole-base-debugger-python/">
+            
+            <time class="entry-date" datetime="2017-02-26">
+                FEB 26
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">PuDB 이용하여 cli에서 python 디버깅하기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-bypass-xss-blank-filtering/">
+            
+            <time class="entry-date" datetime="2017-02-20">
+                FEB 20
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">Bypass XSS Blank filtering with Forward Slash</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/metasploit-hardware-pentest-using/">
+            
+            <time class="entry-date" datetime="2017-02-09">
+                FEB 9
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[METASPLOIT] Hardware pentest using metasploit - Hardware-Bridge</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/coding-ruby-telegram-bot/">
+            
+            <time class="entry-date" datetime="2017-01-30">
+                JAN 30
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[CODING] Ruby telegram-bot 을 이용한 텔레그램 봇 만들기</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-lavabit-encrypted-email-service/">
+            
+            <time class="entry-date" datetime="2017-01-25">
+                JAN 25
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Lavabit&Magma - Encrypted Email Service (Dark Mail Alliance)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/hacking-microsoft-windows-kernel/">
+            
+            <time class="entry-date" datetime="2017-01-19">
+                JAN 19
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[HACKING] Microsoft Windows Kernel Win32k.sys Local Privilege Escalation Vulnerability 분석(CVE-2016-7255/MS16-135)</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-php-comparison-operators/">
+            
+            <time class="entry-date" datetime="2017-01-14">
+                JAN 14
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">[WEB HACKING] PHP Comparison Operators Vulnerability for Password Cracking</span>
+                
+            </span>
+        </a>
+    </li>
+    
+    
+    <li>
+        <a class="entry-link" href="/blog/2017/web-hacking-bypass-xssquotation/">
+            
+            <time class="entry-date" datetime="2017-01-10">
+                JAN 10
+            </time>
+            
+            <span class="entry-body">
+                <span class="entry-title">정규표현식을 이용한 XSS 우회 기법</span>
+                
+            </span>
+        </a>
+    </li>
+    
+</ul>
+
+
+
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

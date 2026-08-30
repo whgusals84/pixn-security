@@ -1,0 +1,15 @@
+{
+  "name": "PIXN",
+  "short_name": "PIXN",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#040405",
+  "background_color": "#040405",
+  "display": "standalone"
+}

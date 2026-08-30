@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Task manager app with Ruby on Rails(할일 관리 도구 만들기) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Task manager app with Ruby on Rails(할일 관리 도구 만들기)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/task-manager-app-with-ruby-on-rails/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Task manager app with Ruby on Rails(할일 관리 도구 만들기)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/task-manager-app-with-ruby-on-rails/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Task manager app with Ruby on Rails(할일 관리 도구 만들기)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/task-manager-app-with-ruby-on-rails/","datePublished":"2019-01-19T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2019-task-manager-app-with-ruby-on-rails.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/"},{"@type":"ListItem","position":5,"name":"Task manager app with Ruby on Rails(할일 관리 도구 만들기)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Task manager app with Ruby on Rails(할일 관리 도구 만들기)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2019-01-19">
+                        JANUARY 19, 2019
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>할일 관리 도구? 가 필요해서 뭐 쓸까 고민하다 걍 rails로 만들고 있는데, 별건 아니지만 그냥 글로 남겨둡니다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://4.bp.blogspot.com/-I8OVp5gwI5E/XENf_5nAEEI/AAAAAAAADpk/kMZ_-e5iYI4Tyae2CamEBvdQIUMGkDvRACLcBGAs/s1600/1414.gif"><img loading="lazy" src="https://4.bp.blogspot.com/-I8OVp5gwI5E/XENf_5nAEEI/AAAAAAAADpk/kMZ_-e5iYI4Tyae2CamEBvdQIUMGkDvRACLcBGAs/s640/1414.gif" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>https://gph.is/XGFOUK</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rails-setup">Rails Setup</h2>
+<p>최근에 Vim =&gt; Rubymine 으로 개발 환경 변경을 했던지라 대다수 과정이 자동화되서 엄청 편했음.. 프로젝트 하나 만들어주시고..
+혹시라도 콘솔 작업이시면 ..</p>
+<pre><code>rails new pjpj
+</code></pre>
+<p>이고 저희 경우는 postgresql을 쓸거라 db를 저걸로 맞춰줬습니다. 개인의 취향따라 고고고 합시다.</p>
+<h2 id="dbpostgresql-on-rails-세팅하기">DB(PostgreSQL on Rails) 세팅하기</h2>
+<p>우선 저는 postgresql을 쓰기 때문에, 해당 앱을 위한 계정을 생성해줘야합니다. (사실 뭐 통합으로 써도 되긴하지만, 이왕이면 권한분리)</p>
+<p>계정생성</p>
+<pre><code>createuser hahwul
+</code></pre>
+<p>기본적으로 패스워드 설정이 안되어 있는데 다른 DB와 동일하게 쿼리로 세팅해줄 수 있습니다. psql로 query 진입 후 alter user로 바꿔줍시다.</p>
+<p>패스워드 설정</p>
+<pre><code>psql
+psql=# alter user hahwul with encrypted password ‘your_password'
+</code></pre>
+<p>그러고 다시 쉘로 나와서 db도 생성해줍니다.</p>
+<p>DB 생성</p>
+<pre><code>createdb hwul_db
+</code></pre>
+<p>이제 아까 만든 계정에 이 db 권한을 줍시다.</p>
+<p>권한 부여</p>
+<pre><code>psql
+psql=# grant all privileges on database hwul_db to hahwul
+</code></pre>
+<p>일단 여기까지 하면 postgresql에서의 세팅은 끝입니다. 이제 rails 앱쪽으로 가서 db 정보를 수정해줍시다.</p>
+<pre><code>vim database.yml
+</code></pre>
+<pre><code>production:
+  &lt;
+</code></pre>
+<p>개발환경에서 테스트하거나, 유닛 테스트하려면 develperment랑 test도 지정해 주셔야합니다.
+(개인의 취향따라..)</p>
+<p>이게 예전에는 database.yml에 직접 패스워드를 기입하는 형태로 많이했었는데, 솔직히 썩 좋은 방법은 아닙니다. 환경변수로 지정해주고 로그하는게 훨씬 좋아요 :)
+(혹시라도 git에 올리면 안남으니깐)</p>
+<pre><code>export HAHWUL_DATABASE_PASSWORD=your_password
+</code></pre>
+<p>후우 이제 rails의 db가 postgresql로 연결됩니다.</p>
+<h2 id="전체적인-구조-만들기">전체적인 구조 만들기</h2>
+<p>할일을 관리(?)하는 도구이기 때문에 요정도 있음 어떨까 싶습니다.</p>
+<p>title : 할일 제목
+body : 내용
+state : 상태(false=미진행, true=완료)
+add_date : 등록 날짜
+modified_date : 최근 수정일(나중에 리스트 너무 커지면 날짜 기준으로 정렬하며 어떨까해서..예를들면 한주 ㅋㅋ)
+tag : 이건 실제로 추가는 안했느데, 글쓰다보니 생각나서 포함했습니다. 나중에... db 수정해서 추가해야겠네요.</p>
+<p>rails으 강점은 역시 scaffold!</p>
+<pre><code>rails g scaffold Work title:string body:text state:boolean add_date:datetime modified_date:datetime
+</code></pre>
+<p>db migrate 해주면,</p>
+<pre><code>rake db:migrate
+</code></pre>
+<p>일단 기본적인 CRUD랑 Data model, 아주 기본적인 View는 완료되었네요.
+공통 css랑 index 코드 몇개 수정했습니다.</p>
+<pre><code>.wrapper{
+    width: 100%;
+}
+.wrapper.td{
+    width:33.3%
+}
+</code></pre>
+<pre><code>&lt;p id=&quot;notice&quot;&gt;&lt;%= notice %&gt;&lt;/p&gt;
+
+&lt;%
+  job_success = Array.new
+  job_list = Array.new
+
+  @works.each do |work|
+    if work.state
+      job_success.push(work)
+    else
+      job_list.push(work)
+    end
+  end
+%&gt;
+
+&lt;%= link_to 'New Work', new_work_path %&gt;
+&lt;hr&gt;
+
+&lt;table class=&quot;wrapper&quot;&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Detail&lt;/td&gt;
+    &lt;td&gt;Works&lt;/td&gt;
+    &lt;td&gt;Success&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td style=&quot;border-right: 1px solid #333333&quot;&gt;&lt;/td&gt;
+    &lt;td&gt;
+      &lt;table&gt;
+      &lt;% job_list.each do |work| %&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;%= work.title %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.add_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.modified_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Show', work %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Edit', edit_work_path(work) %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Destroy', work, method: :delete, data: { confirm: 'Are you sure?' } %&gt;&lt;/td&gt;
+          &lt;/tr&gt;
+      &lt;% end %&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+    &lt;td&gt;
+      &lt;table&gt;
+        &lt;% job_success.each do |work| %&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;%= work.title %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.add_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.modified_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Show', work %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Edit', edit_work_path(work) %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Destroy', work, method: :delete, data: { confirm: 'Are you sure?' } %&gt;&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;% end %&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+
+  &lt;/tr&gt;
+&lt;/table&gt;
+</code></pre>
+<p><a href="https://2.bp.blogspot.com/--qz54hgTVrE/XENeOcZuj_I/AAAAAAAADpQ/vOEJIdtwsUIqkEYLvmJcyJDnySbLTDNjwCLcBGAs/s1600/1415+%25281%2529.png"><img loading="lazy" src="https://2.bp.blogspot.com/--qz54hgTVrE/XENeOcZuj_I/AAAAAAAADpQ/vOEJIdtwsUIqkEYLvmJcyJDnySbLTDNjwCLcBGAs/s640/1415+%25281%2529.png" alt="" /></a></p>
+<p>자 빠르게 기능 몇개만 더 추가해보죠.</p>
+<h2 id="상태-변경-버튼-만들기">상태 변경 버튼 만들기</h2>
+<p>버튼 클릭하면 완료 / 재오픈 할 수 있는 기능이 제일 우선이였습니다. (언제 수정 누르고 이썽..)
+일단 버튼을 누르면 자동으로 state 값을 변화시킬거고, 이는 로직만 있는 부분이니 controller 하나 만들어주고 기능을 엮어봅시다.</p>
+<pre><code>rails g controller updatework to_success to_list
+</code></pre>
+<p>네이밍 엄청 거지 같긴한데, updatework 라고 지었어요... updatework controller에 to_success(완료처리), to_list(재오픈) 을 사용할거라고 같이 인자로 넣어줍니다.
+컨트롤러를 만들면 기본적으로 라우팅이 GET으로 잡혀있습니다. 기능 처리 부분이고 HTML 페이지를 렌더링해줄 것도 아니니, POSt로 바꿔줍시다(이게 더 어울린다고 생각했어요)</p>
+<p>route.rb 에서 post로 수정</p>
+<pre><code>Rails.application.routes.draw do
+  post 'updatework/to_success'
+  post 'updatework/to_list'
+  resources :works
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+end
+</code></pre>
+<p>그럼 이제 updatework/to_sucess , updatework/to_list로 POST 요청이 발생하면 해당 controller의 로직을 타게 됩니다.</p>
+<p>우선 index에서 button 포맷을 하나 추가해주고.. updatework를 바라보게 코드 작성합니다. work가 위에 work contoller의 처리 결과(각 개별 데이터)인데, 이를 인자값으로 넘겨줍시다(실제 요청에선 넘버링된 값)</p>
+<p>index.html.erb</p>
+<pre><code>&lt;%= button_to &quot;Success&quot;, updatework_to_list_path, params: {id: work} %&gt;
+</code></pre>
+<p>그리고.. updatework의 controller 내용을 채워줍시다.</p>
+<p>updatework_controller.rb</p>
+<pre><code>class UpdateworkController &lt; ApplicationController
+  before_action :set_list, only: [:to_list, :to_success]
+  # action이 들어오면 set_list 함수를 호출해서
+  # Work 객체에서 id값으로 해당 데이터를 찾아서 @work에 저장합니다
+
+  def to_success
+    # 완료 처리일 때 state 를 true로
+    @work.update(:state =&gt; true)
+    redirect_back fallback_location: 'works'
+  end
+
+  def to_list
+    # 재오픈일 때 false로 변경해줍시다.
+    @work.update(:state =&gt; false)
+    redirect_back fallback_location: 'works'
+  end
+
+  # 모두 redirect는 이전 페이지로 돌려줍시다.
+
+  def set_list
+    @work = Work.find(params[:id])
+  end
+end
+</code></pre>
+<p>혹시 모르니 index 전체 코드를 같이 첨부합니닷.</p>
+<p>index.html.erb 전체 코드</p>
+<pre><code>&lt;p id=&quot;notice&quot;&gt;&lt;%= notice %&gt;&lt;/p&gt;
+
+&lt;%
+  job_success = Array.new
+  job_list = Array.new
+
+  @works.each do |work|
+    if work.state
+      job_success.push(work)
+    else
+      job_list.push(work)
+    end
+  end
+%&gt;
+
+&lt;%= link_to 'New Work', new_work_path %&gt;
+&lt;hr&gt;
+
+&lt;table class=&quot;wrapper&quot;&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Detail&lt;/td&gt;
+    &lt;td&gt;Works&lt;/td&gt;
+    &lt;td&gt;Success&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td style=&quot;border-right: 1px solid #333333&quot;&gt;&lt;/td&gt;
+    &lt;td&gt;
+      &lt;table&gt;
+      &lt;% job_list.each do |work| %&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;%= work.title %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.add_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.modified_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Show', work %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Edit', edit_work_path(work) %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Destroy', work, method: :delete, data: { confirm: 'Are you sure?' } %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= button_to &quot;Success&quot;, updatework_to_success_path, params: {id: work} %&gt;&lt;/td&gt;
+          &lt;/tr&gt;
+      &lt;% end %&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+    &lt;td&gt;
+      &lt;table&gt;
+        &lt;% job_success.each do |work| %&gt;
+          &lt;tr&gt;
+            &lt;td&gt;&lt;%= work.title %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.add_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= work.modified_date %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Show', work %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Edit', edit_work_path(work) %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= link_to 'Destroy', work, method: :delete, data: { confirm: 'Are you sure?' } %&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;%= button_to &quot;Reopen&quot;, updatework_to_list_path, params: {id: work} %&gt;&lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;% end %&gt;
+      &lt;/table&gt;
+    &lt;/td&gt;
+
+  &lt;/tr&gt;
+&lt;/table&gt;
+</code></pre>
+<p><a href="https://3.bp.blogspot.com/-dLZ0Kq5UeyM/XENeVZHf7yI/AAAAAAAADpU/XAuZylF4a7MlUozLqeXqOB3jFtqgQBpEACLcBGAs/s1600/1416.png"><img loading="lazy" src="https://3.bp.blogspot.com/-dLZ0Kq5UeyM/XENeVZHf7yI/AAAAAAAADpU/XAuZylF4a7MlUozLqeXqOB3jFtqgQBpEACLcBGAs/s640/1416.png" alt="" /></a></p>
+<p>자 이제 Success, Reopen 버튼 누를 때 updatework &gt; to_list, to_success 함수 호출로 Work 내 state 값을 업데이트해서 변경이 가능합니다.</p>
+<h2 id="api로-추가-연동하기는-개뿔-걍-나중에-할꺼">API로 추가 연동하기는 개뿔 걍 나중에 할꺼</h2>
+<p>TODO 인데, 뭔가 작업 리스트를 받아올 수 있는 곳에 API를 사용할 수 있으면 연동해서 Works로 밀어넣어주면, 일부는 자동으로 입입되고, 완료될 것 같습니다.
+대충 틀은 나왔으니 이 부분만 추가해서 회사에서 써야겠네요(사실 널린거 받아써도 되는데...)</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

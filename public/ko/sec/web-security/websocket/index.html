@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>How to Securing Web Socket | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="안전하게 WebSocket을 사용하는 방법에 대해 이야기합니다.">
+    
+
+    
+    <meta property="og:title" content="How to Securing Web Socket">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/web-security/websocket/">
+  <meta property="og:description" content="안전하게 WebSocket을 사용하는 방법에 대해 이야기합니다.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Securing Web Socket">
+  <meta name="twitter:description" content="안전하게 WebSocket을 사용하는 방법에 대해 이야기합니다.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="ko_KR">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/web-security/websocket/">
+    <link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/web-security/websocket/">
+<link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/sec/web-security/websocket/">
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL (KO)" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"How to Securing Web Socket","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/web-security/websocket/","datePublished":"2022-07-02T00:00:00+00:00","dateModified":"2025-06-23T00:00:00+00:00","description":"안전하게 WebSocket을 사용하는 방법에 대해 이야기합니다.","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/ko-sec-web-security-websocket.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Web Security","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/sec/web-security/"},{"@type":"ListItem","position":4,"name":"How to Securing Web Socket"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">How to Securing Web Socket</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2022-07-02">
+                        JULY 2, 2022
+                    </time>
+                     
+                    <nav class="language-switcher">
+                         
+                        <span>
+                            <a
+                                href="/sec/web-security/websocket/"
+                                title="How to Securing Web Socket"
+                                >EN</a
+                            >
+                        </span>
+                          
+                        <span>KO</span>
+                         
+                    </nav>
+                    
+                </div>
+            </div>
+
+            
+            <p class="page-description">안전하게 WebSocket을 사용하는 방법에 대해 이야기합니다.</p>
+            
+        </header>
+
+        <div class="post-body"><p>이 글에서는 실시간 양방향 통신을 가능하게 하는 WebSocket의 보안 취약점과 이를 방어하기 위한 핵심적인 방법론을 다룹니다. WebSocket은 HTTP와 달리 한번 연결이 수립되면 계속해서 데이터를 주고받을 수 있어 효율적이지만, 이 특성 때문에 새로운 보안 위협에 노출될 수 있습니다.</p>
+<h2 id="core-principles-of-websocket-security">Core Principles of WebSocket Security</h2>
+<p>WebSocket 보안을 강화하기 위해선 다음의 핵심 원칙들을 반드시 고려해야 합니다. 각 항목은 잠재적인 공격 벡터를 차단하는 데 중요한 역할을 합니다.</p>
+<table>
+<thead>
+<tr>
+<th>원칙</th>
+<th>설명</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Encrypt Communication (WSS)</td>
+<td>항상 <code>wss://</code> 프로토콜을 사용하여 통신을 암호화해야 합니다. <code>ws://</code>는 평문으로 데이터를 전송하여 스니핑 공격에 취약하지만, <code>wss://</code>는 TLS(Transport Layer Security)를 통해 데이터를 암호화하여 중간자(MITM) 공격으로부터 통신을 보호합니다.</td>
+</tr>
+<tr>
+<td>Validate Origin Headers</td>
+<td>Cross-Site WebSocket Hijacking (CSWSH) 공격을 방어하기 위해 서버는 WebSocket 핸드셰이크 요청 시 <code>Origin</code> 헤더를 반드시 검증해야 합니다. 허용된 도메인 목록(Allowlist)을 만들어, 해당 목록에 없는 출처로부터의 연결 요청은 거부해야 합니다.</td>
+</tr>
+<tr>
+<td>Implement Robust Authentication</td>
+<td>WebSocket 프로토콜 자체에는 인증 메커니즘이 없습니다. 따라서 연결 초기 단계인 HTTP 핸드셰이크 과정에서 사용자를 인증해야 합니다. 쿠키, 세션, JWT(JSON Web Token) 등 검증된 방식을 활용할 수 있습니다.</td>
+</tr>
+<tr>
+<td>Sanitize and Validate All Inputs</td>
+<td>클라이언트로부터 수신하는 모든 데이터는 신뢰할 수 없는 것으로 간주해야 합니다. XSS(Cross-Site Scripting), SQL Injection 등과 같은 Injection 공격을 막기 위해 서버 측에서 모든 메시지에 대해 강력한 유효성 검사 및 데이터 Sanitization을 수행해야 합니다.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-vulnerabilities-and-mitigations">Common Vulnerabilities and Mitigations</h2>
+<p>WebSocket 환경에서 자주 발견되는 주요 취약점과 그에 대한 대응 방안은 다음과 같습니다.</p>
+<h3 id="cross-site-websocket-hijacking-cswsh">Cross-Site WebSocket Hijacking (CSWSH)</h3>
+<p>CSWSH는 공격자가 사용자의 브라우저를 이용해 비인가 WebSocket 연결을 수립하도록 유도하는 공격입니다. 사용자가 인증된 세션(예: 쿠키)을 가지고 있을 경우, 공격자의 악성 페이지는 사용자의 권한으로 서버와 통신할 수 있게 됩니다.</p>
+<ul>
+<li>Mitigation: 앞서 언급했듯, 서버는 핸드셰이크 요청의 <code>Origin</code> 헤더를 엄격하게 검증하여 허용된 출처에서 온 요청만 수락해야 합니다.</li>
+</ul>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// Example: Origin header validation in Node.js (ws library)
+</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> allowedOrigins <span class="hljs-operator">=</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&#39;https://hahwul.com&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;https://sub.hahwul.com&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
+
+wsServer<span class="hljs-punctuation">.</span>on<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;request&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">(</span>request<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">const</span> origin <span class="hljs-operator">=</span> request<span class="hljs-punctuation">.</span>origin<span class="hljs-punctuation">;</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span><span class="hljs-operator">!</span>allowedOrigins<span class="hljs-punctuation">.</span>includes<span class="hljs-punctuation">(</span>origin<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-comment">// Reject the connection
+</span><span class="hljs-comment"></span>    request<span class="hljs-punctuation">.</span>reject<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span><span class="hljs-string">`</span><span class="hljs-string">Connection from origin </span><span class="hljs-subst">${</span>origin<span class="hljs-subst">}</span><span class="hljs-string"> rejected.</span><span class="hljs-string">`</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-keyword">return</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span>
+  <span class="hljs-comment">// ... accept connection
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<h3 id="data-injection-attacks-xss-sqli">Data Injection Attacks (XSS, SQLi)</h3>
+<p>WebSocket을 통해 전달되는 데이터가 적절히 처리되지 않으면 서버나 다른 클라이언트에게 악의적인 영향을 미칠 수 있습니다. 예를 들어, 채팅 애플리케이션에서 한 사용자가 보낸 스크립트가 다른 사용자들의 브라우저에서 실행되면 XSS 공격이 성립됩니다.</p>
+<ul>
+<li>Mitigation: 서버는 클라이언트로부터 받은 모든 메시지의 내용을 검증하고, 데이터베이스 쿼리나 HTML 출력에 사용하기 전에 반드시 이스케이프(Escape) 또는 새니타이즈(Sanitize) 해야 합니다. 신뢰할 수 없는 데이터를 다룰 때는 항상 주의를 기울여야 합니다.</li>
+</ul>
+<h3 id="denial-of-service-dos">Denial-of-Service (DoS)</h3>
+<p>공격자는 대량의 연결을 생성하거나, 처리 비용이 높은 메시지를 대량으로 전송하여 서버의 리소스를 고갈시킬 수 있습니다. 이는 정상적인 사용자의 서비스 이용을 방해합니다.</p>
+<ul>
+<li>Mitigation:
+<ul>
+<li>Rate Limiting: 특정 IP 주소나 사용자 계정당 연결 수 및 메시지 전송률을 제한합니다.</li>
+<li>Message Size Limits: 비정상적으로 큰 크기의 메시지를 차단하여 버퍼 오버플로우나 리소스 낭비를 방지합니다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="authentication-and-authorization">Authentication and Authorization</h2>
+<p>WebSocket은 상태를 유지하는(Stateful) 프로토콜이지만, 인증은 상태가 없는(Stateless) HTTP 핸드셰이크를 통해 이루어져야 합니다.</p>
+<pre class="mermaid">
+sequenceDiagram
+    participant Client
+    participant Server
+
+    Client->>Server: HTTP GET /chat (Upgrade: websocket)
+    Note over Server: 1. Verify Origin Header
+    Note over Server: 2. Authenticate User (e.g., via Cookie/JWT)
+    alt Authentication/Origin Check Fails
+        Server-->>Client: HTTP 401/403 Unauthorized
+    else Authentication & Origin OK
+        Server-->>Client: HTTP 101 Switching Protocols
+        Note over Client,Server: WebSocket Connection Established
+        Client-->>Server: WebSocket Message (JSON)
+        Note over Server: 3. Validate & Sanitize Message
+        Server-->>Client: WebSocket Message (Broadcast)
+    end
+</pre>
+<p>일반적으로 사용되는 인증 방식은 다음과 같습니다.</p>
+<ol>
+<li>Cookie-based Authentication: 웹 애플리케이션과 동일한 도메인에서 WebSocket을 운영하는 경우, 브라우저는 자동으로 인증 쿠키를 전송합니다. 서버는 이 쿠키를 검증하여 사용자를 식별할 수 있습니다.</li>
+<li>Token-based Authentication: 클라이언트는 로그인 시 발급받은 Token(예: JWT)을 쿼리 파라미터나 첫 번째 WebSocket 메시지를 통해 서버로 전송합니다. 서버는 이 Token의 유효성을 검증한 후 연결을 허용합니다.</li>
+</ol>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// Token via query parameter
+</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> socket <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> WebSocket<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;wss://api.hahwul.com/ws?token=YOUR_JWT_TOKEN&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+<span class="hljs-comment">// Token as the first message
+</span><span class="hljs-comment"></span>socket<span class="hljs-punctuation">.</span>onopen <span class="hljs-operator">=</span> <span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+  socket<span class="hljs-punctuation">.</span>send<span class="hljs-punctuation">(</span>JSON<span class="hljs-punctuation">.</span>stringify<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> type<span class="hljs-operator">:</span> <span class="hljs-string">&#39;auth&#39;</span><span class="hljs-punctuation">,</span> token<span class="hljs-operator">:</span> <span class="hljs-string">&#39;YOUR_JWT_TOKEN&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>Token을 쿼리 파라미터로 전송하는 방식은 구현이 간단하지만, 서버 로그에 Token이 남을 수 있다는 단점이 있습니다. 반면, 연결 후 첫 메시지로 전송하는 방식은 더 안전하지만, 인증 전까지 다른 메시지를 처리하지 않도록 로직을 구현해야 합니다.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>WebSocket은 현대적인 웹 애플리케이션의 필수 요소로 자리 잡았지만, 그 편리함 이면에는 반드시 고려해야 할 보안 문제들이 존재합니다. 이 글에서 다룬 <code>wss://</code> 사용 의무화, <code>Origin</code> 헤더 검증, 입력 데이터 처리, 그리고 견고한 인증 메커니즘 적용은 안전한 WebSocket 환경을 구축하기 위한 최소한의 요구사항입니다. Red team 관점에서 볼 때, 이러한 기본 방어책이 없는 시스템은 쉽게 공격의 표적이 될 수 있습니다. 따라서 개발 초기 단계부터 보안을 염두에 두고 설계하는 것이 매우 중요합니다.</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

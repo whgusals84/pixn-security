@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>ZAP Structural Modifier | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="ZAP Structural Modifier">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/zap-structural-modifier/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ZAP Structural Modifier">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/zap-structural-modifier/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"ZAP Structural Modifier","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/zap-structural-modifier/","datePublished":"2022-04-02T00:00:00+00:00","dateModified":"2022-04-02T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/161308954-89ce47e7-26ef-458e-a433-9c228d2402f4.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/"},{"@type":"ListItem","position":5,"name":"ZAP Structural Modifier"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">ZAP Structural Modifier</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2022-04-02">
+                        APRIL 2, 2022
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>저는 취약점을 찾을 때 중요한 3가지를 뽑으라고 한다면 아마도 <code>기술에 대한 이해</code>, <code>대상에 대한 이해</code>, 그리고 <code>센스</code>를 택할 것 같습니다. 물론 이외에도 중요한 요소들은 정말 많겠지만 이 3가지는 일할 때 가장 많이 느끼는 부분이였어요.</p>
+<p>갑자기 이런 이야기를 하는건 오늘 주제가 대상에 대한 이해와 연관이 깊기 때문입니다. ZAP에 관련된 부분이지만, Burp 사용자도 충분히 영감을 얻어가실 수 있을거라 생각이 드네요.</p>
+<p>ZAP Structural Modifier 입니다. 그럼 시작하죠 🚀</p>
+<h2 id="structural-modifier">Structural Modifier</h2>
+<p>ZAP은 Site Tree의 구조를 수정할 수 있는 Structural Modifier 란 기능을 지원하고 있습니다. 이를 이용하면 분석 시 구조를 좀 더 직관적으로 볼 수 있도록 변경할 수 있고, Scanning 시 이를 기반으로 동작하도록 유도할 수 있습니다.</p>
+<p>Structural Modifier은 2가지를 지원하고 있습니다.</p>
+<ul>
+<li>Data Driven Nodes</li>
+<li>Structural Parameters</li>
+</ul>
+<h3 id="data-driven-nodes">Data Driven Nodes</h3>
+<p>Data Driven Nodes(DDN)는 정규 표현식을 기반으로 Sites 를 재 구성하는 기능으로 여러 URL 패턴을 하나의 Node로 묶어서 표현할 수 있습니다. 예를들어 웹 서비스의 Pagenation으로 인해 유사한 패턴의 많은 URL이 Sites에 보일 수 있습니다. 이는 우리가 분석하는데 있어서 굉장히 방해가 되죠.</p>
+<ul>
+<li>/comtents/page/1</li>
+<li>/comtents/page/2?sort=1</li>
+<li>/comtents/page/3?sort=1&amp;limit=5</li>
+</ul>
+<p>이 때 DDN을 이용하면 Sites에서 하나의 Node로 표현할 수 있습니다. Context &gt; Structure 에서 Data Driven Nodes 타입으로 Modifier를 등록하면 바로 Sites가 변경됩니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161303744-4d9c427e-37dd-4b20-a3e9-ec4c5cd0a88c.png" alt="" /></p>
+<p>매번 정규표현식을 직접 작성하기에는 굉장히 불편하기 때문에 유사한 URL을 여러개 선택하여 우클릭 후 Flag as Context 메뉴를 통해 정규표현식 패턴을 등록할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161302367-ff52b6f8-36cd-4f17-b1fc-16869a31ff47.png" alt="Select Multiple URLs &gt; Right Click &gt; Flag as Context &gt; DDN" /></p>
+<p>DDN 등록 이후 Sites에는 정규표현식에 따라서 URL들이 그룹화되어 표현됩니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161303487-00691fa2-b3db-4fb0-bcbd-5f3fcda683d5.png" alt="Original" />
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161303477-5f9535a4-9241-48a7-89fc-ad496679343a.png" alt="With DDN" /></p>
+<h3 id="structural-parameters">Structural Parameters</h3>
+<p>Structural Parameters는 파라미터 이름을 기준으로 Sites의 구조를 재 구성하는 기능입니다.</p>
+<p>예를들어 이러한 API 들이 있다고 가정합니다. 이 때 service 파라미터를 기준으로 처리하는 로직이 달라질 수 있다고 한다면 우리의 테스트는 이 파라미터에 따라서 추가적으로 여러 경우의 수를 가지게 됩니다.</p>
+<ul>
+<li>GET /test/users?service=M1&amp;limit=50</li>
+<li>POST /test/setting?service=M1&amp;level=4</li>
+<li>GET /test/users?service=M2&amp;limit=50</li>
+<li>GET /test/users?service=P1&amp;limit=50</li>
+</ul>
+<p>그리고 ZAP의 경우 기본적으로 <code>/test/users</code> 라는 하나의 페이지로 묶어서 표현합니다. 그리고 Burpsuite는 모든 URL 패턴을 표기하기 때문에 두건 모두 가독성이 떨어지게 됩니다. 이 때 ZAP에선 Structural Parameters를 이용하여 조금 더 구조화된 Sites를 만들어 이를 해결할 수 있습니다.</p>
+<p>Context &gt; Structure 에서 Structural Parameters 파라미터 타입으로 Modifier를 추가합니다. 이 때 Name에 들어가는 값이 파라미터의 이름이 됩니다. 원하는 파라미터로 설정하면 이후부터 Sites에서 아래와 같이 원하는 파라미터를 기준으로 대상을 분리해서 구조를 볼 수 있게 됩니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161298042-3f999122-ba19-4ba4-997e-238766935ea8.png" alt="Context &gt; Structure &gt; Add &gt; Structural Parameters" /></p>
+<p>저는 service 파라미터를 기준으로 잡았고, 설정 이후부턴 Sites에서 service 파라미터를 기준으로 분리해서 구조를 표현해줍니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161298056-5bb7b22a-f10d-453f-a9d2-e959d5bbef22.png" alt="Original" />
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161298051-10ef88eb-0507-4020-b906-e2a64f6a3ac1.png" alt="Structural Parameters" /></p>
+<p>SPA 구조의 서비스나 동일한 API, 페이지에서 특정 파라미터를 통해서 분기하는 경우 구조를 알기도 어렵고 테스팅 시 매번 파라미터 값의 의미와 리스트를 알고 있어야하는데, 이렇게 Structural Parameters Modifier를 설정하게 되면 구조를 보는데 있어서 굉장히 편리해집니다.</p>
+<h2 id="more-custom-addon">More custom? AddOn</h2>
+<p>ZAP 2.10 이후 버전부턴 AddOn에서 이를 컨트롤할 수 있게 인터페이스가 제공됩니다.</p>
+<pre><code class="language-java hljs"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Variant</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">void</span> <span class="hljs-title function_">setMessage</span><span class="hljs-punctuation">(</span>HttpMessage msg<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+    <span class="hljs-keyword">public</span> List<span class="hljs-operator">&lt;</span>NameValuePair<span class="hljs-operator">&gt;</span> <span class="hljs-title function_">getParamList</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">setParameter</span><span class="hljs-punctuation">(</span>
+            HttpMessage msg<span class="hljs-punctuation">,</span> NameValuePair originalPair<span class="hljs-punctuation">,</span> String param<span class="hljs-punctuation">,</span> String value<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">setEscapedParameter</span><span class="hljs-punctuation">(</span>
+            HttpMessage msg<span class="hljs-punctuation">,</span> NameValuePair originalPair<span class="hljs-punctuation">,</span> String param<span class="hljs-punctuation">,</span> String value<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+    <span class="hljs-keyword">default</span> String <span class="hljs-title function_">getLeafName</span><span class="hljs-punctuation">(</span>String nodeName<span class="hljs-punctuation">,</span> HttpMessage msg<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+
+    <span class="hljs-keyword">default</span> List<span class="hljs-operator">&lt;</span>String<span class="hljs-operator">&gt;</span> <span class="hljs-title function_">getTreePath</span><span class="hljs-punctuation">(</span>HttpMessage msg<span class="hljs-punctuation">)</span> <span class="hljs-keyword">throws</span> URIException <span class="hljs-punctuation">{</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>자세한 내용은 <a href="https://github.com/zaproxy/zaproxy/blob/main/zap/src/main/java/org/parosproxy/paros/core/scanner/Variant.java">ZAP 쪽 코드</a>를 참고해주세요!</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>이력을 보니 2020년 즉 2.9버전에서 나온 기능이였네요. 미리 알았더라면 정말 유용하게 썼을 기능인데 이제서야 알았다니 아쉬움이 약간 남습니다. 물론 약간은 번거로울 수 있는 작업이겠지만, 결국 나중에 들어갈 삽질 시간을 줄일 수 있고 잘 습관 들이면 시야를 늘릴 수 있을 것 같단 생각이 듭니다.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://www.zaproxy.org/docs/desktop/start/features/structmods/</li>
+<li>https://github.com/zaproxy/zaproxy/blob/main/zap/src/main/java/org/parosproxy/paros/core/scanner/Variant.java</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

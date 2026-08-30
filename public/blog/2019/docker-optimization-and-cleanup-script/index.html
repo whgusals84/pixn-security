@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Docker Optimization and cleanup script (도커 최적화 하기 🐳) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Docker Optimization and cleanup script (도커 최적화 하기 🐳)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/docker-optimization-and-cleanup-script/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Docker Optimization and cleanup script (도커 최적화 하기 🐳)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/docker-optimization-and-cleanup-script/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Docker Optimization and cleanup script (도커 최적화 하기 🐳)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/docker-optimization-and-cleanup-script/","datePublished":"2019-01-19T00:00:00+00:00","dateModified":"2022-04-19T00:00:00+00:00","image":"https://1.bp.blogspot.com/-lV6Jn5ju7AA/XEKXXI-6KlI/AAAAAAAADpE/BcMDA8YXNFkK1iCCgqypb-LMCR7Wo6xHQCLcBGAs/s1600/Selection_062.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2019/"},{"@type":"ListItem","position":5,"name":"Docker Optimization and cleanup script (도커 최적화 하기 🐳)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Docker Optimization and cleanup script (도커 최적화 하기 🐳)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2019-01-19">
+                        JANUARY 19, 2019
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><blockquote>
+<p>이 과정은 <code>docker prune</code> 명령으로도 쉽게 가능합니다. 아래 댓글을 확인해주세요!😁</p>
+</blockquote>
+<p>예전에 도커 용량 관련 문제로 한번 <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2018/08/docker-no-space-left-on-device-in-macos.html">고생한적</a>이 있었습니다. 도커 자체가 많이 사용할수록 리소스를 엄청쓰는데(물론 VM에 비하면 뭐...) 정기적으로 청소해주면 위에 문제나 용량, 속도 면에서 좀 이득이 되는 부분들이 있습니다. 그래서.. 구글링좀 해서 도커 clean up script 정리해봤습니다. 종종 돌려주시는게 좋아요 :)</p>
+<p>크게 이미지, 컨테이터, 네트워크 어댑터를 정리하는 내용입니다.</p>
+<h2 id="clean-script">Clean script</h2>
+<p>아래 부분 확인하고 별 이상 없을거라 생각도시면 하는거 추천드려요(괜한 이미지 날라갈수도</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># clean containers</span>
+docker rm <span class="hljs-keyword">$(</span>docker ps -qa --no-trunc --filter <span class="hljs-string">&quot;status=exited&quot;</span><span class="hljs-keyword">)</span>
+
+<span class="hljs-comment"># clean images</span>
+docker rmi <span class="hljs-keyword">$(</span>docker images <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;none&quot;</span> <span class="hljs-punctuation">|</span> awk <span class="hljs-string">&#39;/ / { print $3 }&#39;</span><span class="hljs-keyword">)</span>
+
+<span class="hljs-comment"># clean networks</span>
+docker network rm <span class="hljs-keyword">$(</span>docker network ls <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;bridge&quot;</span> <span class="hljs-punctuation">|</span> awk <span class="hljs-string">&#39;/ / { print $1 }&#39;</span><span class="hljs-keyword">)</span>
+
+<span class="hljs-comment"># one line(container + images)</span>
+docker rm <span class="hljs-keyword">$(</span>docker ps -qa --no-trunc --filter <span class="hljs-string">&quot;status=exited&quot;</span><span class="hljs-keyword">)</span><span class="hljs-punctuation">;</span>docker rmi <span class="hljs-keyword">$(</span>docker images <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;none&quot;</span> <span class="hljs-punctuation">|</span> awk <span class="hljs-string">&#39;/ / { print $3 }&#39;</span><span class="hljs-keyword">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<h2 id="clean-images">Clean Images</h2>
+<p>우선 images 지우는건 이미지 중에 none 인 항목들만 지웁니다. 이미지를 계속 commit 해서 쓰기 떄문에 none은 쓸데없이 자리 차지하는 경우가 많죠</p>
+<pre><code class="language-bash hljs">docker images <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;none&quot;</span>
+</code></pre>
+<pre><code class="language-bash hljs">docker rmi <span class="hljs-keyword">$(</span>docker images <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;none&quot;</span> <span class="hljs-punctuation">|</span> awk <span class="hljs-string">&#39;/ / { print $3 }&#39;</span><span class="hljs-keyword">)</span>
+</code></pre>
+<p>저도 한 4개 정도 지워졌네요.</p>
+<pre><code class="language-bash hljs">docker rmi <span class="hljs-keyword">$(</span>docker images <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;none&quot;</span> <span class="hljs-punctuation">|</span> awk <span class="hljs-string">&#39;/ / { print $3 }&#39;</span><span class="hljs-keyword">)</span>
+Deleted: sha256:9c74ba29229d47f63fc6ad03d7456f56ec85fe16f7d8f76c5a163e86cea82a8f
+Deleted: sha256:ffcf5074027640d3ec3bebe56d351854c15e98fb72cd3a1c97f3a1a52541836a
+Deleted: sha256:8e7a29744797bdb8ff52137787a836b0df96745e2b33a9e1dbdad6e3ee1835e3
+Deleted: sha256:13b657d393c68096809a6c785e2454709b024a73216a5528e9348b9d5d9459f7
+</code></pre>
+<h2 id="clean-containers">Clean Containers</h2>
+<p>containers는 현재 구동중이지 않은 리스트들도 도커가 가지고 있습니다. 결국은 다 리소스를 차지하는거기 때문에 안쓰는건 지워줍니다.</p>
+<pre><code class="language-bash hljs">docker ps -a --filter <span class="hljs-string">&quot;status=exited&quot;</span>
+</code></pre>
+<p>docker ps 명령 중 --fileter 옵션이 있는데, 이걸로 종료된 컨데이너들을 찾아줍니다. 그리고 삭제해주시면 됩니다.</p>
+<pre><code class="language-bash hljs">docker rm <span class="hljs-keyword">$(</span>docker ps -qa --no-trunc --filter <span class="hljs-string">&quot;status=exited&quot;</span><span class="hljs-keyword">)</span>
+</code></pre>
+<p>저의 경우는....</p>
+<pre><code class="language-bash hljs">docker rm <span class="hljs-keyword">$(</span>docker ps -qa --no-trunc --filter <span class="hljs-string">&quot;status=exited&quot;</span><span class="hljs-keyword">)</span>
+20b0afe8f803cee795fc2a0c6108ad3a45fa1d0e3c22cf0966b3f189aa0bf368
+c6cdacc0f03085d77af4b2c5b16ef8ed6ff1b3174cae31b2fb4ac1eeed855c33
+3a63ed9d5f2c0bbd28b40e39aaef16bff237445ec4b40e89fbf439671c51a7c0
+1c08bb07b51fe19aff4199bf272e7805bce7625cf815397f661652861159e00f
+f76500ff70c9dbc5c0225b0473d3982b8e22e83ffecbf64d3697450b4648fe4d
+e7c988a822ba5e4e2efde653f99ffc3361ee53e3aa4a1e6d31d1f3758f73dadd
+a97e99e3f2852cadf6270ef5b1fc82e54ccf0399ec84c4ab4426765850deefd7
+0fd0d60052bd2502eac6b353790c30d72ace069bbdc73be27f679a82e9ad4115
+9201566aa9d2d852113912fbfde7619b4313a097cfb3e0a3a71b09f00bbd33ec
+2ffe9ff1473d804297ba77828b2fea154746cb9303836b0e0039ba5b9c4f6c28
+7890a5e5465d560834d52202a09bebcee2638b739484ac22a769c1ba52a3ddbe
+879cfa0881cfe706c12ab5124e02032edd7e995ea7735709267a34b65f9c3f91
+034eac7a2d2475f0df1d1ef660944284a711fd430092b12bfe8ddaaca359175c
+76114d4f781665ae92f24159b8372d0e329d673ceb8d35a062198f26cb0c3b41
+044513340cfd7a257ce6d19643b5518f396711a03c527c827b6ef22cd383c528
+4571b27cf1eb356485006235995898ea541c3c140fd52ca672b893652889c12f
+7b394413f9c024b47140b76daaba5cc6d1eecd8f3c91fcd8b0df8ef32e2f53fe
+d7e6d0d13d58c290c545861aaccbacbe7ed0d1656ba413de8e1d395af86241dc
+88cf5f0d648b7f199aa1b1d73ecf35bebfbd545b7b2ce96e6f2f706fc7971043
+2ac5b0a1621878a05550b102ffc2ecda994b126c603a6a0d32490d667a59bb91
+f8d3f27a5ce613ba0237af467751952328c965c53d8fde6f7166937ce404184e
+de98522c19396e1656cf1f8a185e5053dc9adc796de842351002d6b014e09e72
+fa8361d8f4df7c6e3ea1fc099f37839b08a9cecc4a59f52a44a328ef68e1f622
+415344d54e2896f72d76f34e67fe5f23d460c2c2289620a3215058e9c748a199
+0b6df45e0183208437f965dfa63ea77d56faecd7eb1dff4a47f3578b1d4ddb8e
+6c38b35425d4d9213c2219119f1c6cb5c77d4a4feda2f7a604e8037fbb94cdd4
+4eb072ded0b5d4b7cc21527dbdf62c7b51bcbb7f38f6a8171b6a3097cb74a450
+83be6ba78de021264a43f6e8acc14bbe56f06f99a4d3d0b65826cce0c8320ad5
+6933a196fd9a30393b0e4044f5f8540adda0a8f59f8f1954013ebe86a42d0579
+89e0873e5078246c61dd7c790bc182a35a189ed1b2ca6be51565b9da36a22038
+02bb84a3c91d2898f506ece7848997716b305f42f3db8fb63a5f90d87c0dd1b6
+721fa53f9a0fb13d6753250e7e20cd3e3cc963e7ccfd3e349e37d48404f87624
+6d25af19c3d14c408c6645807cd99b6515a354c455c6ae6f3ef22e23bfcddb75
+ee77fc609be607273fdfc3c2f6e8e118135145257081bd40b2942c5c52a7757b
+5354ab39fe82f5fce816fcdfe4369795a1c07db7c6574f1fb7fa5881c9b985ef
+ab4d77f78599ec7d0d6042ece0fe364ff55faa275f174cbd61c39932d7fecaf0
+c3cb8ed41003b648a874fbde4acc27985da19f7e96d9eca50d84e2c95e8387fc
+40c7181aac867a17930c731089763282a86885e38fada4e2cc63daab949ec895
+671f86a6224ee7d8f4cda09e3b55bbed6c7d5938fe6a9d0819c0bf9473978562
+6f150b58387f421cd902338077d1b191914c51b9db3e7128dd8d350227f08330
+ae0dfe8ecae297547d891cbd2086ea65b21ef4ca52ce76ef81575db22e3f5e67
+256a9712498f8c7652f3e8bbc5203a7a382420e0cd3d86e641f4e0889153339b
+43d83b4a6b838dbc7bab132a53d19230ee2766a4d36773411fa406cfa4f7a3fd
+eeca16e526fc81f799b3eb446f9ca358a1b789fa32eba14c75e80602ba857fe5
+0f558f9c4d84c1fb5ebfff93ec6f15461ee1338e02023e1c5b6d5dc5de957948
+5a53197108b4133184ed67fbebde2c77a5fcda6a9b379abc887e44524a010104
+5de10ee4042994aa21d0fcc357e40845d6feea0e158936684b27d8d547ef4815
+3afc89124fc5b55a515d53ee59c8265368efcb4a6720f9c0485198e268f4a4be
+9ee5fa668f345623fe16f53da6ab655ec09a984585ac02cbee4028b32e8cc601
+20e1b885fea27732bf8b5d967af77849be7fde19a27123dfc250389a8fe4d4cc
+2f25af8dd946bbbcdfa7ded706a32b716d8399ea1d526b5ac129d02c56235194
+093fe6124e56c2634ecf5fbf2e60029c12f8de094b4e0052b652d19812e650d3
+8ff228681d681a1da30a11457f01ab8467219905f0f06818fe2508c3ba23a0b4
+1016fc6c75ca7267b7bce6e86f22487451c9b1ebdcd6ea0a34fcac1fb01bc379
+3fac014cc4fe3b76f4d47fcf0f5cdeabdc6ce0b4a70e60165e6fc6684ae8acd7
+0ab030807d187e1b2815c575be26e8ddaec83506158e2c777a22304661b2d174
+49894b99224029eb7b78118979b3c4232ff055b3f0a8172212390a4330f02823
+30e83e558110cdb91c5624fc45b449619333f6e0983d63aa33eb584dbe31b0b8
+86f90a93fdea18e7e4d44e5025bb960e512e988a12ed476e76e9ab991767b0e0
+87090a901a35e780de84aff21b485a3af7878a1ec4f275b56e7a033dfd564857
+38486f5aa65283ab20b0f4969290f213f4d6d05f440fffed95c87fa261280c48
+b9699fd62508902985e8ea28caa8c2e1c48f600b4e5f36fb64b144d707535278
+21d3658f42759f16b9f4a0c15393f74d8bee25899916bbeab9480f8ee64c3f94
+dc1b03b97a659e3185ef073d9d48d5ae08e3e0d96085fab41d647a721637828f
+9cdea79bf9432e1c7a1c9f678742b4a79d422742ec48dce57cfb00edd6a9527e
+a511b38a37551e98a3ed2fb2a4b018dc90d4689db3f4e1e1f1256301067999a0
+c4a8d7fc1703f6f70a6b1ad806fbec84b1be84e16d7a9c1f7c9abed0d194c6d2
+7fc39c478d3eb962267146bebceffa80edd6587a36a08cd5239730279e97569c
+f5792fc56da7f766db47838e41d3e117373993435fd5c4fa0a1ac11c0081e187
+77f3dec34aeb6601f68c1d9a7be6b70d9549c5b1bb7ce100e083680821b0f0cf
+fe266d5d59a7a81736cdeb0bea4ed623c25660fb17b429889cfd2ebfc9d6d075
+cc4d86f42fab70b054a6682e9711af72ba9da21d2543b2473c1afa534f317106
+2834ea8aeffaab33ac8a0647501aa56db5c4bf99acbf6a620fc2ac12e3d82921
+5bab46292b0eb9d2fd93083454ff6beaa392ed6b1bb9548561e60ead0d31c85d
+3618e85ccf892d606cc792bb8d5326da538ac951cab8a193d53c15553d3780f3
+2a7bd4c03cff430535dfb688df8244bea1056edef214c8c560fe6548caa344aa
+74a551f43fb15653d83f31f1484f4a6c578f2bb5e77f19e0f4f63fb3446404d0
+... 생략 ...
+</code></pre>
+<p>😁😫</p>
+<h2 id="clean-networks-adaptor">Clean Networks adaptor</h2>
+<p>마지막으로 bridge 네트워크에 대한 삭제인데, 이건 사용하시는거 체크해보고 하는게 좋을듯해요.
+안해도 뭐 무방하지만, docker network도 네트워크 인터페이스로 잡히기 떄문에 최적화를 위해선 지워주는게 좋습니닷.</p>
+<pre><code class="language-bash hljs">docker network ls <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;bridge&quot;</span> 
+</code></pre>
+<pre><code class="language-bash hljs">docker network rm <span class="hljs-keyword">$(</span>docker network ls <span class="hljs-punctuation">|</span> grep <span class="hljs-string">&quot;bridge&quot;</span> <span class="hljs-punctuation">|</span> awk <span class="hljs-string">&#39;/ / { print $1 }&#39;</span><span class="hljs-keyword">)</span>
+</code></pre>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

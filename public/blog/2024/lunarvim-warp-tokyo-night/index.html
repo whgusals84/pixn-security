@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>LunarVim + Warp + Tokyo Night 🌙 | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Harmoniously Combining Warp Themes and Vim Themes">
+    
+
+    
+    <meta property="og:title" content="LunarVim + Warp + Tokyo Night 🌙">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2024/lunarvim-warp-tokyo-night/">
+  <meta property="og:description" content="Harmoniously Combining Warp Themes and Vim Themes">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LunarVim + Warp + Tokyo Night 🌙">
+  <meta name="twitter:description" content="Harmoniously Combining Warp Themes and Vim Themes">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2024/lunarvim-warp-tokyo-night/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"LunarVim + Warp + Tokyo Night 🌙","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2024/lunarvim-warp-tokyo-night/","datePublished":"2024-06-04T00:00:00+00:00","description":"Harmoniously Combining Warp Themes and Vim Themes","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2024-lunarvim-warp-tokyo-night.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2024/"},{"@type":"ListItem","position":5,"name":"LunarVim + Warp + Tokyo Night 🌙"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">LunarVim + Warp + Tokyo Night 🌙</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2024-06-04">
+                        JUNE 4, 2024
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Harmoniously Combining Warp Themes and Vim Themes</p>
+            
+        </header>
+
+        <div class="post-body"><p>Warp에서 lunarvim, lazyvim 또는 neovim에 직접 테마를 적용하여 사용하다 보면 아래와 같이 여백이 발생하게 됩니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/b9d32085-44c2-44e8-b5bb-7be48ed55834" alt="" /></p>
+<p>이 문제는 Warp에서만 발생하는 문제로 Warp 자체에서 테마를 제공하기 떄문에 차이가 발생하여 보기 살짝 불편한 문제입니다. 다만 저는 크게 신경쓰지 않고 오랜 시간동안 사용했었습니다. 오늘 Vim 세팅을 초기화하면서 문뜩 색을 맞추면 깔끔하겠다 싶어 작업을 시작했고, 짧지만 글로 정리해봅니다.</p>
+<h2 id="warp-lunarvim-and-tokyo-night">Warp, LunarVim and Tokyo night</h2>
+<h3 id="warp">Warp</h3>
+<p>Warp terminal이 세상에 나온지는 좀 됬습니다. 제 기억이 맞다면 초기에 베타 버전일때 부터 쭉 사용했었는데요. 예전에는 단순히 커맨드를 작성하다가도 쉽게 수정할 수 있는 장점에 빠져 사용했었고 지금은 workflow 등 많은 기능을 쓰고 있네요. 편의성은 물론 AI Command 등 새로운 시도들도 많아서 개인적으로 정말 좋아하는 도구 중 하나입니다.</p>
+<blockquote>
+<p>https://www.warp.dev</p>
+</blockquote>
+<h3 id="lunarvim">LunarVim</h3>
+<p>LunarVim은 neovim(vim의 리빌드 버전)을 조금 더 쉽게 사용하기 위한 도구입니다. 전에는 잠깐 <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/2023/02/27/make-the-vim-more-beautiful/">LazyVim도 사용했었지만</a> LunarVim이 필요한 부분만 간결하게 설정하기에 지금은 LunarVim을 주력으로 사용합니다.</p>
+<blockquote>
+<p>https://www.lunarvim.org</p>
+</blockquote>
+<h3 id="tokyo-night">Tokyo night</h3>
+<p>개인적으로 vscode부터 여러 도구에서 애용하는 컬러셋이 바로 Tokyo night입니다. 특히 개발 도구에서는 편안함과 가독성이 좋아서 대다수 도구에서 기본으로 맞춰두고 사용합니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/cb728f45-3d5a-42ac-99f5-a64750cd5db9" alt="" />
+<em>이 글을 작성하고 있는 vscode 또한 tokyo night 테마입니다 😁</em></p>
+<h2 id="tokyo-night-in-lunarvim">Tokyo night in LunarVim</h2>
+<p>먼저 LunarVim에서 tokyo night 플러그인을 설치합니다. <code>~/.config/lvim/lv-config.lua</code> 경로에 파일을 하나 만들고 아래 내용을 작성합니다.</p>
+<pre><code class="language-lua hljs"><span class="hljs-operator">#</span> vim <span class="hljs-operator">~/</span><span class="hljs-punctuation">.</span>config<span class="hljs-operator">/</span>lvim<span class="hljs-operator">/</span>lv<span class="hljs-operator">-</span>config.lua
+
+lvim.plugins <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-string">&quot;</span><span class="hljs-string">folke/tokyonight.nvim</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>그리고 LunarVim(<code>lvim</code>)을 실행해서 Configuration을 선택해서 설정에 <code>lvim.colorscheme = &quot;tokyonight-night&quot;</code> 내용을 추가합니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/02206b49-56c8-4059-af41-4f84a4a6bcc4" alt="" />
+<em><code>lvim</code> &gt; <code>Configuration</code></em></p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/5bc02375-9bbd-46ed-8421-63a3e6d4dd55" alt="" />
+<em><code>lvim.colorscheme = &quot;tokyonight-night&quot;</code></em></p>
+<h2 id="warp-theme-for-tokyo-night">Warp theme for Tokyo night</h2>
+<p>Warp terminal은 기본적인 테마를 가지고 있지만 <code>./warp/</code> 디렉토리 하위에 파일을 추가하여 커스텀한 테마를 설정해줄 수도 있습니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Workdir</span>
+mkdir -p ~/.warp
+<span class="hljs-built_in">cd</span> ~/.warp
+
+<span class="hljs-comment"># Clone warp themes</span>
+git clone https://github.com/warpdotdev/themes.git
+</code></pre>
+<p>기본 제공되는 테마 이외에도 추가적인 테마가 설치됩니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/1f60d4eb-09ec-45ef-821b-56b0494eade3" alt="" /></p>
+<p>이제 Warp에서 tokyo night와 같은 컬러를 가지는 테마 파일 설정이 필요합니다. 테마는 아래와 같이 YAML 포맷입니다.</p>
+<pre><code class="language-yaml hljs"><span class="hljs-name">accent</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#268bd2&#39;</span> <span class="hljs-comment"># Accent color for UI elements</span>
+<span class="hljs-name">background</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#002b36&#39;</span> <span class="hljs-comment"># Terminal background color</span>
+<span class="hljs-name">details</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">darker</span> <span class="hljs-comment"># Whether the theme is lighter or darker.</span>
+<span class="hljs-name">foreground</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#839496&#39;</span> <span class="hljs-comment"># The foreground color.</span>
+<span class="hljs-name">terminal_colors</span><span class="hljs-punctuation">:</span> <span class="hljs-comment"># Ansi escape colors.</span>
+  <span class="hljs-name">bright</span><span class="hljs-punctuation">:</span>
+    <span class="hljs-name">black</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#002b36&#39;</span>
+    <span class="hljs-name">blue</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#839496&#39;</span>
+    <span class="hljs-name">cyan</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#93a1a1&#39;</span>
+    <span class="hljs-name">green</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#586e75&#39;</span>
+    <span class="hljs-name">magenta</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#6c71c4&#39;</span>
+    <span class="hljs-name">red</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#cb4b16&#39;</span>
+    <span class="hljs-name">white</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#fdf6e3&#39;</span>
+    <span class="hljs-name">yellow</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#657b83&#39;</span>
+  <span class="hljs-name">normal</span><span class="hljs-punctuation">:</span>
+    <span class="hljs-name">black</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#073642&#39;</span>
+    <span class="hljs-name">blue</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#268bd2&#39;</span>
+    <span class="hljs-name">cyan</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#2aa198&#39;</span>
+    <span class="hljs-name">green</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#859900&#39;</span>
+    <span class="hljs-name">magenta</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#d33682&#39;</span>
+    <span class="hljs-name">red</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#dc322f&#39;</span>
+    <span class="hljs-name">white</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#eee8d5&#39;</span>
+    <span class="hljs-name">yellow</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;#b58900&#39;</span>
+</code></pre>
+<p>다행히도 tokyo night에 맞춰 테마 파일을 만들어주신 분이 있습니다. themes 하위에 아래 Repo를 클론해줍니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Workdir</span>
+<span class="hljs-built_in">cd</span> ~/.warp/themes
+
+<span class="hljs-comment"># Add warp tokyo night</span>
+git clone https://github.com/bart-krakowski/warp-tokyo-night
+</code></pre>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/21295cac-6909-4134-849e-3960065ee8a7" alt="" />
+<em>warp-tokyo-night는 tokyo-night 색상에 맞게 세팅된 warp theme 파일입니다.</em></p>
+<p>이제 <code>Settings</code> &gt; <code>Appearence</code> &gt; <code>Themes</code> &gt; <code>Current theme</code>을 눌러보면 아까 받은 테마들과 Tokyo night 테마가 추가됩니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/7f1f98ae-2012-4da4-b804-325e8bf074cb" alt="" /></p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/0ef0217c-e49b-472b-a158-ab34c13f9f54" alt="" /></p>
+<p>이제 <code>lvim</code> 으로 파일을 열어보면 LunarVim 테마와 Warp 테마가 잘 어우러지는 것을 볼 수 있습니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/8b4b6890-bde0-44b3-b12f-ef0c62b08214" alt="" /></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

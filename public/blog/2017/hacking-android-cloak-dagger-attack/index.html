@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[HACKING] Android Cloak & Dagger Attack과 Toast Overlay Attack(CVE-2017-0752) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[HACKING] Android Cloak &amp; Dagger Attack과 Toast Overlay Attack(CVE-2017-0752)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-android-cloak-dagger-attack/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[HACKING] Android Cloak &amp; Dagger Attack과 Toast Overlay Attack(CVE-2017-0752)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-android-cloak-dagger-attack/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[HACKING] Android Cloak \u0026 Dagger Attack과 Toast Overlay Attack(CVE-2017-0752)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-android-cloak-dagger-attack/","datePublished":"2017-09-12T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2017-hacking-android-cloak-dagger-attack.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"[HACKING] Android Cloak \u0026 Dagger Attack과 Toast Overlay Attack(CVE-2017-0752)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[HACKING] Android Cloak & Dagger Attack과 Toast Overlay Attack(CVE-2017-0752)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-09-12">
+                        SEPTEMBER 12, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>오늘은 최근 말이 많았었던 Android 취약점 2가지에 대한 이야기를 할까 합니다.
+바로 Cloak &amp; Dagger Attack 과 Toast Overlay Attack 입니다.</p>
+<p>직접 앱으로 만들어서 보여드릴까 하다가.. 그냥 가볍게 포스팅해봅니다.
+(사실 안드로이드 안만든지 너무 오래됨.. | 심지어 대학생때에도 난 서버담당..)</p>
+<p><a href="https://1.bp.blogspot.com/-eR3qRhZGqEM/WbfXhDasOyI/AAAAAAAACdY/FBzfV1n70zoOqYn6r2ENG5FDV-4C6yytACLcBGAs/s1600/123123.jpg"><img loading="lazy" src="https://1.bp.blogspot.com/-eR3qRhZGqEM/WbfXhDasOyI/AAAAAAAACdY/FBzfV1n70zoOqYn6r2ENG5FDV-4C6yytACLcBGAs/s640/123123.jpg" alt="" /></a></p>
+<h2 id="what-is-cloak-dagger-attack">What is Cloak &amp; Dagger Attack?</h2>
+<p>먼저 Cloak &amp; Dagger부터 보면 최근 안드로이드의 새로운 공격 벡터로 나타나 기법입니다.
+엄청 독특하다기 보단 사용자를 낚는 고전적인 방법이긴 하나 적당한 공격 환경이 갖춰졌을 때 권한 탈취가 가능하기 때문에 중요하게 봐야합니다.</p>
+<p>관련해서 black 2017에서도 이야기 나왔으니 참고해주세요.
+<a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Fratantonio-Cloak-And-Dagger-From-Two-Permissions-To-Complete-Control-Of-The-UI-Feedback-Loop.pdf">https://www.blackhat.com/docs/us-17/thursday/us-17-Fratantonio-Cloak-And-Dagger-From-Two-Permissions-To-Complete-Control-Of-The-UI-Feedback-Loop.pdf</a></p>
+<p>Cloak &amp; Dagger 공격은 악성앱이 다른 앱들이 실행될 때 가짜 팝업(업데이트하세요, 새로운 뭐가 나왔어요, 권한 요청)을 띄어서 현혹시켜 권한을 얻어오는 등의 행위를 수행할 수 있습니다.</p>
+<p>다만.. 조건이 필요한데요.</p>
+<ul>
+<li>공식 앱 설치 경로(플레이스토어, 원스토어 등)에 올라가야 함(신뢰성을 얻기 위해)</li>
+<li>앱에서 최상단에 팝업을 띄울 수 있는 옵션이 활성화되어야 함</li>
+</ul>
+<p>여기서 두번째로 언급드린 팝업 활성화에 대한 옵션이 아주 중요합니다. 저 옵션이 켜져있지 않다면 공격 자체가 불가능해지죠. (왜냐면 팝업을 맨위로 못올리니깐 / 그 위에 실행한 다른 앱이 올라가니깐)</p>
+<p>여기서 필요한 권한은 2가지 입니다.</p>
+<p>SYSTEM_ALERT_WINDOW (&quot;draw on top&quot;)
+BIND_ACCESSIBILITY_SERVICE (&quot;a11y&quot;)</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://4.bp.blogspot.com/-V9ZbVaHDSgY/WbfUVHA8W7I/AAAAAAAACdA/wAJNsXekRJwdQQr2eiME8fsvXu83DRujgCLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D%2B%25EC%2598%2581%25EC%2597%25AD_135.png"><img loading="lazy" src="https://4.bp.blogspot.com/-V9ZbVaHDSgY/WbfUVHA8W7I/AAAAAAAACdA/wAJNsXekRJwdQQr2eiME8fsvXu83DRujgCLcBGAs/s400/%25EC%2584%25A0%25ED%2583%259D%2B%25EC%2598%2581%25EC%2597%25AD_135.png" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>blackhat 2017 자료 중 일부</td>
+</tr>
+</tbody>
+</table>
+SYSTEM_ALERT_WINDOW는 시스템에서 팝업을 위로 올릴 수 있는 오버레이 기능이고 BIND_ACCESSIBILITY_SERVICE는 스크린 읽기에 대한 접근성 권한입니다. 이 친구들은 다른 앱보다 최상단으로 올라갈 수 있기 때문에 가짜 페이지나 팝업들을 마치 다른 앱이 실행한 것 처럼 보여줄 수 있죠.
+<p>여러가지 공격 시나리오가 있을 것 같습니다. 대표적으론 클릭재킹 , 입력값 탈취, 피싱 등 사용자의 액션을 이용한 공격 케이스들이 있을 것으로 생각됩니다.</p>
+<p>정보 탈취성 공격도 중요하지만, 사용자의 액션을 통해 권한을 얻어갈 수 있다는게 중요하다고 보입니다.</p>
+<h2 id="what-is-toast">What is Toast?</h2>
+<p>Android 개발을 해보신분이라면.. 아니 관심있으시다면 바로 아실것이고, 안드로이드 사용자라면 내용을 보고 &quot;아!&quot; 하실겁니다. Toast는 Android에서 메시지를 전달하는 방식 중 하나입니다. 메시지라고 하면 폰이 사용자에게 정보를 주는 수단이고, 팝업 창과 비슷한 개념으로 보시면 됩니다.</p>
+<p>바로..</p>
+<p>요런거지요.</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://1.bp.blogspot.com/-2ZJGJd6s5JY/WbfViJtW9wI/AAAAAAAACdM/y19IEc1ZGMIsVNuLNXJSvPO3uCGiy66VwCLcBGAs/s1600/RYpeP.png"><img loading="lazy" src="https://1.bp.blogspot.com/-2ZJGJd6s5JY/WbfViJtW9wI/AAAAAAAACdM/y19IEc1ZGMIsVNuLNXJSvPO3uCGiy66VwCLcBGAs/s320/RYpeP.png" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>https://i.stack.imgur.com/RYpeP.png / Message saved as draft. 부분!</td>
+</tr>
+</tbody>
+</table>
+<h2 id="toast-overlay-attack">Toast overlay attack</h2>
+<p>Toast를 사용하기 위해선 TYPE_TOAST를 사용해야합니다. 다만 TYPE_TOAST에는 재미있는 부분이 있는데..</p>
+<p>권한검사를 제대로 하지 않는다는거죠.</p>
+<p>팔로알토 분석가들이 Cloak &amp; Dagger 에 대해 분석해서 얻어낸 결과물이라고 하네요.</p>
+<p>일반적으로 다른 앱 위에 화면을 씌우기 위해선 권한이 필요합니다. 그래서 PhoneWindowManager에서도 권한 체크를 통해 제어하는데, TYPE_TOAST의 경우 권한 체크가 빠져있습니다.</p>
+<p>아래 코드는 안드로이드의 정책 관련 모듈인 PhoneWindowManager.java 파일입니다. 보시죠.
+(<a href="https://android.googlesource.com/platform/frameworks/base/+/cd92588/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java">https://android.googlesource.com/platform/frameworks/base/+/cd92588/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java</a> )</p>
+<p><a href="https://2.bp.blogspot.com/-pCn9sFbqI7A/WbfVSXXqMpI/AAAAAAAACdI/E5OJH9SBz5EuBPuroQhz3TiQgEEmr959ACLcBGAs/s1600/1111.PNG"><img loading="lazy" src="https://2.bp.blogspot.com/-pCn9sFbqI7A/WbfVSXXqMpI/AAAAAAAACdI/E5OJH9SBz5EuBPuroQhz3TiQgEEmr959ACLcBGAs/s320/1111.PNG" alt="" /></a></p>
+<pre><code> public int checkAddPermission(WindowManager.LayoutParams attrs, int[] outAppOp) {
+        int type = attrs.type;
+        outAppOp[0] = AppOpsManager.OP_NONE;
+        if (type &lt; WindowManager.LayoutParams.FIRST_SYSTEM_WINDOW
+                || type &gt; WindowManager.LayoutParams.LAST_SYSTEM_WINDOW) {
+            return WindowManagerGlobal.ADD_OKAY;
+        }
+        String permission = null;
+        switch (type) {
+            case TYPE_TOAST:
+                // XXX right now the app process has complete control over
+                // this...  should introduce a token to let the system
+                // monitor/control what they are doing.
+                // 아무것도 검사하지 않음
+                break;
+            case TYPE_DREAM:
+            case TYPE_INPUT_METHOD:
+            case TYPE_WALLPAPER:
+            case TYPE_PRIVATE_PRESENTATION:
+                // The window manager will check these.
+                break;
+            case TYPE_PHONE:
+            case TYPE_PRIORITY_PHONE:
+            case TYPE_SYSTEM_ALERT:
+            case TYPE_SYSTEM_ERROR:
+            case TYPE_SYSTEM_OVERLAY:
+                permission = android.Manifest.permission.SYSTEM_ALERT_WINDOW; // 권한 체크
+                outAppOp[0] = AppOpsManager.OP_SYSTEM_ALERT_WINDOW; // 실행여부 확인
+                break;
+            default:
+                permission = android.Manifest.permission.INTERNAL_SYSTEM_WINDOW;
+        }
+        if (permission != null) {
+            if (mContext.checkCallingOrSelfPermission(permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return WindowManagerGlobal.ADD_PERMISSION_DENIED;
+            }
+        }
+        return WindowManagerGlobal.ADD_OKAY;
+    }
+</code></pre>
+<p>checkAddPermission 함수 내용을 보시면 case가 TYPE_TOAST의 경우 권한 체크를 하지 않습니다.</p>
+<pre><code>case TYPE_TOAST:
+    // 아무것도 검사하지 않음
+break;
+</code></pre>
+<p>똑같이 다른 앱에 덮씌우는 TYPE_SYSTEM_OVERLAY를 보면 퍼미션 검사와 실행여부 검사를 수행합니다.</p>
+<pre><code>case TYPE_SYSTEM_OVERLAY:
+                permission = android.Manifest.permission.SYSTEM_ALERT_WINDOW; // 권한 체크
+                outAppOp[0] = AppOpsManager.OP_SYSTEM_ALERT_WINDOW; // 실행여부 확인
+</code></pre>
+<p>다만 TYPE_TOAST 또한 실행 시 창으로 인식되고 화면을 덮을 수 있습니다. 그럼 권한을 사용하지 않고 Cloak &amp; Dagger Attack이 가능하겠지요?!</p>
+<p>마지막으로 blackhat 2017 영상으로 마무리합니다.</p>
+<h2 id="reference">Reference</h2>
+<p><a href="https://researchcenter.paloaltonetworks.com/2017/09/unit42-android-toast-overlay-attack-cloak-and-dagger-with-no-permissions/#table">https://researchcenter.paloaltonetworks.com/2017/09/unit42-android-toast-overlay-attack-cloak-and-dagger-with-no-permissions/#table</a>
+<a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Fratantonio-Cloak-And-Dagger-From-Two-Permissions-To-Complete-Control-Of-The-UI-Feedback-Loop.pdf">https://www.blackhat.com/docs/us-17/thursday/us-17-Fratantonio-Cloak-And-Dagger-From-Two-Permissions-To-Complete-Control-Of-The-UI-Feedback-Loop.pdf</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

