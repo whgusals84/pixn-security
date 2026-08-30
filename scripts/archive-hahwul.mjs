@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { sanitizeSensitiveHtml } from './sanitize-sensitive-html.mjs';
 
 const SOURCE_ORIGIN = 'https://www.hahwul.com';
 const args = parseArgs(process.argv.slice(2));
@@ -176,7 +177,8 @@ let completedPages = 0;
 await mapPool([...pageUrls].sort(), concurrency, async (href) => {
   try {
     const response = await fetchWithRetry(href);
-    const body = await response.text();
+    const rawBody = await response.text();
+    const body = sanitizeSensitiveHtml(new URL(href).pathname, rawBody);
     const finalUrl = new URL(response.url);
     const file = toLocalFile(new URL(href), true);
     await mkdir(path.dirname(file), { recursive: true });

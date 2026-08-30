@@ -70,6 +70,14 @@ if (!Array.isArray(searchDocuments) || searchDocuments.length !== 1078) {
   errors.push(`search index document count is ${searchDocuments?.length ?? 'invalid'}`);
 }
 
+const sensitivePage = await readFile(
+  path.join(publicRoot, 'blog', '2015', 'metasploit-metasploit-generate-payload', 'index.html'),
+  'utf8',
+);
+if (!sensitivePage.includes('endpoint protection classified it as a critical Metasploit payload')) {
+  errors.push('security-sensitive legacy page was not sanitized');
+}
+
 for (const relativePath of [
   'assets/main.8885b746.css',
   'assets/app.1881a2e0.js',

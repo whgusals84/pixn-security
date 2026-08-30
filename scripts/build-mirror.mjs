@@ -1,5 +1,6 @@
 import { copyFile, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { sanitizeSensitiveHtml } from './sanitize-sensitive-html.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 if (!args.source || !args.destination || !args.origin) {
@@ -10,7 +11,6 @@ const sourceRoot = path.resolve(args.source);
 const destinationRoot = path.resolve(args.destination);
 const targetOrigin = new URL(args.origin).origin;
 const previewOnly = Boolean(args.preview);
-const sourceOrigin = 'https://www.hahwul.com';
 const textExtensions = new Set(['.css', '.js', '.json', '.txt', '.webmanifest', '.xml']);
 
 function parseArgs(values) {
@@ -37,8 +37,8 @@ function rewriteOrigin(text) {
     .replaceAll('//www.hahwul.com', targetOrigin);
 }
 
-function transformHtml(input) {
-  let html = rewriteOrigin(input);
+function transformHtml(input, relativePath) {
+  let html = rewriteOrigin(sanitizeSensitiveHtml(relativePath, input));
   html = html
     .replaceAll('/images/h.png', '/images/pixn-mark.svg')
     .replace(/(<span\b[^>]*class=["'][^"']*\bnav-wordmark\b[^"']*["'][^>]*>)[\s\S]*?(<\/span>)/gi, '$1PIXN$2')
@@ -93,7 +93,7 @@ for (const sourceFile of allFiles) {
       : path.join(destinationRoot, relativePath);
     await mkdir(path.dirname(destinationFile), { recursive: true });
     const html = await readFile(sourceFile, 'utf8');
-    await writeFile(destinationFile, transformHtml(html));
+    await writeFile(destinationFile, transformHtml(html, relativePath));
     htmlCount += 1;
     continue;
   }
