@@ -1,5 +1,4 @@
 import { SiteFooter, SiteHeader } from '@/components/site-chrome';
-import { projects, writings } from '@/lib/content';
 
 function SectionTitle({ title, hrefLabel, href }: { title: string; hrefLabel: string; href: string }) {
   return (
@@ -19,19 +18,19 @@ export default function Home() {
       <main>
         <section className="hero" id="about" aria-labelledby="hero-title">
           <div className="hero-mark" aria-hidden="true">PX</div>
-          <p className="eyebrow">DIGITAL ANALYTICS · SEOUL</p>
+          <p className="eyebrow">PIXN · SECURITY KNOWLEDGE ARCHIVE</p>
           <h1 id="hero-title">
-            Digital Analytics,
+            Web Security,
             <br />
-            Growth Strategy and
+            Secure Engineering and
             <br />
-            Better Decisions.
+            Practical Field Notes.
           </h1>
           <p className="hero-copy">
-            안녕하세요. 데이터를 더 나은 질문과 실행으로 연결하는
-            <br className="desktop-break" /> 디지털 분석가이자 개발자입니다.
+            취약점의 원리부터 방어 관점의 테스트와 안전한 개발 방법까지,
+            <br className="desktop-break" /> 기술 자료를 검색하고 연결해서 볼 수 있습니다.
           </p>
-          <a className="text-link" href="/projects">VIEW MY WORK</a>
+          <a className="text-link" href="/sec/">EXPLORE SECURITY GUIDES</a>
         </section>
 
         <section className="featured" aria-label="추천 글">
@@ -44,60 +43,59 @@ export default function Home() {
             <span className="signal-line line-three" />
           </div>
           <div className="featured-copy">
-            <time dateTime="2026-08-28">AUGUST 28, 2026</time>
-            <h2>측정은 숫자보다 질문에서 시작됩니다</h2>
-            <p>좋은 분석 환경을 만드는 네 가지 원칙</p>
-            <a className="text-link" href="/posts/measurement-questions">READ STORY</a>
+            <time>START HERE</time>
+            <h2>웹 보안을 주제별로 탐색하세요</h2>
+            <p>브라우저 보안, OWASP Top 10, Secure SDLC와 보안 테스트 자료를 한곳에서 찾을 수 있습니다.</p>
+            <a className="text-link" href="/sec/web-security/">OPEN FIELD GUIDE</a>
           </div>
         </section>
 
-        <section className="content-section" id="writing">
-          <SectionTitle title="WRITING" hrefLabel="ALL POSTS" href="/posts" />
+        <section className="content-section" id="learning">
+          <SectionTitle title="START LEARNING" hrefLabel="ALL TOPICS" href="/tags/" />
           <div className="writing-list">
-            {writings.map((item) => (
-              <article className="writing-row" key={item.title}>
-                <time>{item.date}</time>
+            {[
+              ['01', 'Web Security', '브라우저·프로토콜·애플리케이션 보안의 핵심 원리', '/sec/web-security/'],
+              ['02', 'Secure SDLC', '위협 모델링과 DevSecOps 기반의 안전한 개발 흐름', '/sec/secure-sdlc/'],
+              ['03', 'Security Testing', '허가된 환경에서 사용하는 방어 목적의 테스트 방법', '/sec/how-to-hack/'],
+            ].map(([index, title, description, href]) => (
+              <a className="writing-row" href={href} key={title}>
+                <time>{index}</time>
                 <div>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
                 </div>
                 <span aria-hidden="true">↗</span>
-              </article>
+              </a>
             ))}
           </div>
         </section>
 
-        <section className="content-section" id="notes">
-          <SectionTitle title="NOTES" hrefLabel="ALL NOTES" href="/notes" />
+        <section className="content-section" id="archive">
+          <SectionTitle title="REFERENCE LIBRARY" hrefLabel="OPEN ARCHIVE" href="/archive/" />
           <article className="note-card">
             <div>
-              <span>MEASUREMENT</span>
-              <h3>UTM 규칙을 팀 전체가 지키게 만드는 작은 장치</h3>
+              <span>2014—2026</span>
+              <h3>보안 연구와 개발 기록을 정리한 기술 아카이브</h3>
             </div>
             <span aria-hidden="true">↗</span>
           </article>
         </section>
 
         <section className="content-section project-section" id="projects">
-          <SectionTitle title="PROJECTS" hrefLabel="ALL PROJECTS" href="/projects" />
+          <SectionTitle title="TOOLS &amp; PROJECTS" hrefLabel="BROWSE ALL" href="/projects/" />
           <div className="project-grid">
-            {projects.map((project) => (
-              <article className={`project-card ${project.featured ? 'project-featured' : ''}`} key={project.name}>
-                {project.featured && (
-                  <div className="project-visual" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                )}
+            {[
+              ['Attack references', '공격 기법을 방어와 검증 관점에서 정리한 참고 자료', '/cullinan/attack/'],
+              ['Security tool catalog', '스캐너와 테스트 도구, 관련 워크플로우 문서', '/cullinan/tool/'],
+              ['Open-source projects', '보안과 개발 분야의 프로젝트 및 도구 모음', '/projects/'],
+            ].map(([name, description, href]) => (
+              <a className="project-card" href={href} key={name}>
                 <div className="project-copy">
-                  <h3>{project.name}</h3>
-                  <p>{project.description}</p>
-                  <span className="project-stat">✦ {project.stat}</span>
+                  <h3>{name}</h3>
+                  <p>{description}</p>
+                  <span className="project-stat">EXPLORE ↗</span>
                 </div>
-              </article>
+              </a>
             ))}
           </div>
         </section>

@@ -8,22 +8,22 @@
     <meta name="theme-color" content="#040405">
 
     
-    <title>Metasploit으로 서버의 SSL 등급을 평가하자 (SSLLab) | HAHWUL</title>
+    <title>Metasploit으로 서버의 SSL 등급을 평가하자 (SSLLab) | PIXN</title>
 
     
     
-        <meta name="description" content="Offensive Security Engineer, Developer and H4cker.">
+        <meta name="description" content="Practical web security knowledge, secure engineering references, and open-source tools.">
     
 
     
     <meta property="og:title" content="Metasploit으로 서버의 SSL 등급을 평가하자 (SSLLab)">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/ssl-labs-scan-api-on-metasploit/">
-  <meta property="og:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta property="og:description" content="Practical web security knowledge, secure engineering references, and open-source tools.">
   <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Metasploit으로 서버의 SSL 등급을 평가하자 (SSLLab)">
-  <meta name="twitter:description" content="Offensive Security Engineer, Developer and H4cker.">
+  <meta name="twitter:description" content="Practical web security knowledge, secure engineering references, and open-source tools.">
   <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og.png">
     <meta property="og:site_name" content="PIXN">
     <meta property="og:locale" content="en_US">
@@ -33,7 +33,7 @@
     
 
     
-    <link rel="alternate" type="application/rss+xml" title="HAHWUL" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
+    <link rel="alternate" type="application/rss+xml" title="PIXN" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
     
 
     
@@ -58,8 +58,8 @@
 
     
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Metasploit으로 서버의 SSL 등급을 평가하자 (SSLLab)","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/ssl-labs-scan-api-on-metasploit/","datePublished":"2018-07-30T00:00:00+00:00","dateModified":"2022-04-24T00:00:00+00:00","image":"https://user-images.githubusercontent.com/13212227/164953308-b3c9e58f-95b7-4491-870f-5ab681e234b7.png"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"HAHWUL","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"Metasploit으로 서버의 SSL 등급을 평가하자 (SSLLab)"}]}</script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"HAHWUL","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Offensive Security Engineer, Developer and H4cker.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"PIXN","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/"},{"@type":"ListItem","position":2,"name":"Archive","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/archive/"},{"@type":"ListItem","position":3,"name":"Blog","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/"},{"@type":"ListItem","position":4,"name":"Untitled","item":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2018/"},{"@type":"ListItem","position":5,"name":"Metasploit으로 서버의 SSL 등급을 평가하자 (SSLLab)"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PIXN","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Practical web security knowledge, secure engineering references, and open-source tools.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
 </head>
 
 <body>
@@ -87,7 +87,7 @@
         <a href="/posts/">Posts</a>
         <a href="/notes/">Notes</a>
         <a href="/projects/">Projects</a>
-        <a href="/about/">About</a>
+        <a href="/sec/">Security</a>
     </div>
 
     <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
@@ -169,7 +169,7 @@
             </div>
 
             
-            <p class="page-description">Offensive Security Engineer, Developer and H4cker.</p>
+            <p class="page-description">Practical web security knowledge, secure engineering references, and open-source tools.</p>
             
         </header>
 
@@ -177,7 +177,7 @@
 <p>SSL 평가(취약점-Cipher 지원 등등) 사이트로 유명한 SSLLab(<a href="https://www.ssllabs.com/">https://www.ssllabs.com</a> )에선 각 도메인에 대한 SSL에 대한 분석 결과 지표를 제공해줍니다.</p>
 <p><img loading="lazy" src="https://4.bp.blogspot.com/-SWeWn8-JQ84/W18ja_hnBQI/AAAAAAAADV4/ntGWC3ojKbIbh_oPNOzVAFySWbQe2Rv1ACLcBGAs/s1600/%25EC%2584%25A0%25ED%2583%259D+%25EC%2598%2581%25EC%2597%25AD_003.png" alt="" /></p>
 <p>보통은 홈페이지에서 직접 돌리거나 따로 코드짜서 돌리실 것 같은데, 찾다보니 Metasploit 모듈로도 제공되고 있었네요.</p>
-<pre><code>HAHWUL (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; search ssl
+<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; search ssl
 
 Matching Modules
 ================
@@ -193,7 +193,7 @@ Matching Modules
 </code></pre>
 <h2 id="options">Options</h2>
 <p>옵션은 정말 단순합니다. HOSTNAME 정도만 지정해 주시면 됩니다.</p>
-<pre><code>HAHWUL (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; show options
+<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; show options
 
 Module options (auxiliary/gather/ssllabs_scan):
 
@@ -206,7 +206,7 @@ Module options (auxiliary/gather/ssllabs_scan):
    USECACHE        true             yes       Use cached results (if available), else force live scan
 </code></pre>
 <p>또한 Advanced도 특별한 건 없습니다.</p>
-<pre><code>HAHWUL (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; show advanced
+<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; show advanced
 
 Module advanced options (auxiliary/gather/ssllabs_scan):
 
@@ -217,10 +217,10 @@ Module advanced options (auxiliary/gather/ssllabs_scan):
 </code></pre>
 <h2 id="scan">Scan</h2>
 <p>HOSTNAME 세팅 후 돌려주시면 끝납니다. 각각 SSL 취약점 항목부터, Rating 까지 제공해주기 떄문에 결과를 잘 파싱하면 대량의 서비스를 쉽게 돌려볼 수 있을듯 합니다.</p>
-<pre><code>HAHWUL (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; set HOSTNAME www.hahwul.com
+<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; set HOSTNAME www.hahwul.com
 HOSTNAME =&gt; www.hahwul.com
 </code></pre>
-<pre><code>HAHWUL (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; show options
+<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; show options
 
 Module options (auxiliary/gather/ssllabs_scan):
 
@@ -233,7 +233,7 @@ Module options (auxiliary/gather/ssllabs_scan):
    USECACHE        true             yes       Use cached results (if available), else force live scan
 </code></pre>
 <p>돌려보면..</p>
-<pre><code>HAHWUL (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; run
+<pre><code>PIXN (Sessions: 0 Jobs: 0) auxiliary(gather/ssllabs_scan) &gt; run
 </code></pre>
 <pre><code>[*] SSL Labs API info
 [*] API version: 1.32.3
@@ -307,63 +307,13 @@ Module options (auxiliary/gather/ssllabs_scan):
         <div class="footer-content">
             <span class="hw-mark footer-mark" aria-hidden="true"></span>
             <nav class="footer-menu" aria-label="Footer">
+                <a href="/sec/">SECURITY</a>
                 <a href="/tags/">TAGS</a>
-                <a href="/about/uses/">USES</a>
-                <a href="/contact/">CONTACT</a>
+                <a href="/projects/">TOOLS</a>
                 <a href="/feeds/">FEEDS</a>
                 <a href="/privacy/">PRIVACY</a>
             </nav>
-            <div class="socials">
-                <a
-                    href="https://github.com/hahwul"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="GitHub"
-                    aria-label="GitHub"
-                    ><svg
-                        aria-hidden="true"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
-                        /></svg
-                ></a>
-                <a
-                    href="https://x.com/hahwul"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="X"
-                    aria-label="X (Twitter)"
-                    ><svg
-                        aria-hidden="true"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-                        /></svg
-                ></a>
-                <a
-                    href="https://www.instagram.com/hahwul_"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Instagram"
-                    aria-label="Instagram"
-                    ><svg
-                        aria-hidden="true"
-                        fill="currentColor"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                        /></svg
-                ></a>
-            </div>
-            <p>Developed and Designed by Me<br />2026 HAHWUL.</p>
+            <p>PIXN<br />Security Knowledge Archive.</p>
         </div>
     </div>
 </footer>

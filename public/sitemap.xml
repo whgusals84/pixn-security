@@ -17,22 +17,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/i-ve-joined-the-kemal-core-team/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/i-ve-joined-the-kemal-core-team/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/i-ve-joined-the-kemal-core-team/" />
-    <lastmod>2026-08-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/i-ve-joined-the-kemal-core-team/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/i-ve-joined-the-kemal-core-team/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/i-ve-joined-the-kemal-core-team/" />
-    <lastmod>2026-08-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/building-ai-friendly-clis/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/building-ai-friendly-clis/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/building-ai-friendly-clis/" />
@@ -45,22 +29,6 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/building-ai-friendly-clis/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/building-ai-friendly-clis/" />
     <lastmod>2026-03-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/" />
-    <lastmod>2026-02-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/" />
-    <lastmod>2026-02-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -302,14 +270,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/blog/2025/owasp-seoul-meetup/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2025/owasp-seoul-meetup/" />
-    <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/blog/2025/owasp-seoul-meetup/" />
-    <lastmod>2025-09-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/blog/2025/agentic-coding/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/blog/2025/agentic-coding/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/blog/2025/agentic-coding/" />
@@ -506,11 +466,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/contact/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/feeds/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -566,17 +521,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/projects/nodecaf/privacy/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/projects/nodecaf/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/projects/nodecaf/support/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -666,17 +611,7 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/projects/textnova/privacy/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/projects/textnova/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/projects/textnova/support/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -764,11 +699,6 @@
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/about/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/about/" />
     <xhtml:link rel="alternate" hreflang="ko" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/about/" />
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/about/uses/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -1053,22 +983,12 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/tags/kemal/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/tags/cli/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/tags/development/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/tags/announcement/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -1488,22 +1408,12 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/tags/kemal/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/tags/cli/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/tags/development/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/tags/announcement/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

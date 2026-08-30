@@ -14,18 +14,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://pixn-analytics-portfolio.forhm0220.chatgpt.site'),
-  title: 'PIXN — Digital Analytics & Growth',
-  description: '데이터를 더 나은 질문과 실행으로 연결하는 디지털 분석가 포트폴리오',
+  title: 'PIXN — Security Knowledge Archive',
+  description: '웹 보안 학습 자료와 안전한 개발 지침, 오픈소스 도구를 정리한 지식 아카이브',
   icons: { icon: '/favicon.svg' },
   openGraph: {
-    title: 'PIXN — Digital Analytics & Growth',
-    description: '데이터를 더 나은 질문과 실행으로 연결하는 디지털 분석가 포트폴리오',
-    images: [{ url: '/og.png', width: 1672, height: 941, alt: 'PIXN digital analytics portfolio' }],
+    title: 'PIXN — Security Knowledge Archive',
+    description: '웹 보안 학습 자료와 안전한 개발 지침, 오픈소스 도구를 정리한 지식 아카이브',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'PIXN Security Knowledge Archive' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PIXN — Digital Analytics & Growth',
-    description: '데이터를 더 나은 질문과 실행으로 연결하는 디지털 분석가 포트폴리오',
+    title: 'PIXN — Security Knowledge Archive',
+    description: '웹 보안 학습 자료와 안전한 개발 지침, 오픈소스 도구를 정리한 지식 아카이브',
     images: ['/og.png'],
   },
 };

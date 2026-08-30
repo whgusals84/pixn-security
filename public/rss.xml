@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>HAHWUL</title>
+    <title>PIXN</title>
     <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/</link>
-    <description>Offensive Security Engineer, Developer and H4cker.</description>
+    <description>Practical web security knowledge, secure engineering references, and open-source tools.</description>
     <atom:link href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>I&apos;ve joined the Kemal Core Team!</title>
-      <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/i-ve-joined-the-kemal-core-team/</link>
-      <guid>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/i-ve-joined-the-kemal-core-team/</guid>
-      <description>A Security Report, and What Came After</description>
-      <content:encoded><![CDATA[<p>Earlier this month, I joined the Core Team of <a href="https://kemalcr.com">Kemal</a>, Crystal’s leading web framework.</p>
-<p>It started with reporting and fixing <a href="https://github.com/kemalcr/kemal/security/advisories/GHSA-gvhf-4v24-f8r5">request smuggling via WebSocket upgrades</a>. From there, one thing led to another and I was invited to join the Core Team. After joining, I spent some time reviewing and fixing various security issues through the <a href="https://github.com/kemalcr/kemal/releases/tag/v1.13.0">v1.13</a> release.</p>
-<p>Anyway, a bit late, but I wanted to share it here on the blog as well :)</p>
-<p><img loading="lazy" src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/i-ve-joined-the-kemal-core-team/images/1.webp" alt="https://x.com/crystalkemal/status/2086725990114369996" /></p>
-]]></content:encoded>
-      <pubDate>Wed, 26 Aug 2026 00:00:00 +0000</pubDate>
-      <category>crystal</category>
-      <category>kemal</category>
-    </item>
     <item>
       <title>Rust and Crystal: My Two Main Languages</title>
       <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/rust-and-crystal/</link>
@@ -420,53 +406,6 @@ $ mytool user list --json
       <category>ai</category>
       <category>cli</category>
       <category>development</category>
-    </item>
-    <item>
-      <title>10 Years of Reflection and a New Beginning</title>
-      <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/</link>
-      <guid>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/</guid>
-      <description>10 years of hahwul.com. Looking back and sharing what’s next.</description>
-      <content:encoded><![CDATA[<p>Hello everyone! This is my first post of 2026. I wanted to publish this back in January, but various things kept piling up and the work took longer than expected, so I'm finally getting it out now.</p>
-<p>As we hit 2026, there's a fun fact: it's been exactly 10 years since I started using this domain and going by the name hahwul. It's a long time when I think about it, but it went by surprisingly fast. Today, along with looking back on these 10 years, I also have some fairly big changes to share regarding the blog's operation, content, and overall direction.</p>
-<pre><code>Domain Name: hahwul.com
-Registry Domain ID: 1992489747_DOMAIN_COM-VRSN
-...
-Updated Date: 2026-01-05T20:29:07Z
-Creation Date: 2016-01-07T23:55:03Z
-</code></pre>
-<h2 id="10-years-ago">10 Years Ago</h2>
-<p>Truth be told, even before using the name hahwul, I ran another domain for about two years, and before that, I had a different blog during my kiddie days. So I've been writing online for well over 15 years now. Of course, those early blogs were just basic development notes where I organized stuff. What brought me to where I am today is the name hahwul and this blog.</p>
-<p>I made up the name hahwul based on my own name, and over these past 10 years, I've written a huge number of posts with it. After a couple of major cleanups here and there, I've still managed around 1,400 articles. Most of them were about security and development topics, along with my personal struggles, thoughts, and reflections. Putting things into writing carves knowledge into you, and I think those moments taught me a lot.</p>
-<p>I couldn't have kept writing all this time through consistency alone. It was possible thanks to all of you who kept coming back to read my posts. Thank you!</p>
-<div class="images-full-width">
-
-
-<div class="images-grid">
-    
-    <div class="images-grid-item">
-        <img src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/images/1.png" alt="" loading="lazy">
-    </div>
-    
-    <div class="images-grid-item">
-        <img src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/images/2.png" alt="" loading="lazy">
-    </div>
-    
-    <div class="images-grid-item">
-        <img src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/images/3.png" alt="" loading="lazy">
-    </div>
-    
-</div>
-</div>
-<h2 id="announcement">Announcement</h2>
-<p>I have one announcement regarding the direction of my content. While the blog has been more of a general resource covering all sorts of information until now, I want to shift toward sharing more of my own stories and thoughts.</p>
-<p>Of course, that doesn't mean the existing style of posts will vanish. They'll just be reorganized. Posts that are too outdated or too light will be removed, and I'll focus on creating more solid, substantial content.</p>
-<p>Under <strong>Posts</strong>, I'll occasionally share my thoughts and opinions on technology. Under <strong>Notes</strong>, I'll keep more standardized and well-polished articles. And if I have enough time and energy, I'd also like to add content in series format (e.g., a ZAP Guide series, etc.).</p>
-<h2 id="conclusion">Conclusion</h2>
-<p>Anyway, I want to say thank you once again. I'll keep writing steadily, so I hope you'll keep following along!</p>
-<p><img loading="lazy" src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/posts/2026/10years/images/2026.jpg" alt="" /></p>
-]]></content:encoded>
-      <pubDate>Sun, 22 Feb 2026 00:00:00 +0000</pubDate>
-      <category>announcement</category>
     </item>
     <item>
       <title>Remove co-authored-by when committing</title>

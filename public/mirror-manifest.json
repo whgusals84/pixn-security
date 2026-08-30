@@ -1,8 +1,7 @@
 {
-  "sourceOrigin": "https://www.hahwul.com",
   "capturedAt": "2026-08-30T06:41:14.622Z",
-  "routeCount": 1248,
-  "successfulRouteCount": 1248,
+  "routeCount": 1231,
+  "successfulRouteCount": 1231,
   "assetCount": 958,
   "routes": [
     "/",
@@ -30,7 +29,6 @@
     "/2022/10/19/the-csrf-is-dying/",
     "/2023/01/19/hello-caido/",
     "/about/",
-    "/about/uses/",
     "/archive/",
     "/archive/projects/",
     "/archive/projects/dalfox/",
@@ -585,7 +583,6 @@
     "/blog/2020/setup-bugbounty-hunting-env-on-termux-d/",
     "/blog/2020/stepper-evolution-repeater-on-burp-suite/",
     "/blog/2020/synchronize-command-snippets-with-pet-and-gist/",
-    "/blog/2020/three-my-goals-for-2020/",
     "/blog/2020/toctou-ssrf/",
     "/blog/2020/transient-events-for-xss/",
     "/blog/2020/use-proxy-in-macos-and-pulse-with-psproxy-for-zapburp/",
@@ -839,10 +836,8 @@
     "/blog/2025/jwt-hack-v2/",
     "/blog/2025/noir-boosts-ai-reach-for-better-analysis/",
     "/blog/2025/owasp-noir-x-llm/",
-    "/blog/2025/owasp-seoul-meetup/",
     "/blog/2025/red-blue-purple/",
     "/blog/2025/zap-2-16-review/",
-    "/contact/",
     "/cullinan/",
     "/cullinan/attack/",
     "/cullinan/attack/bruteforce/",
@@ -969,7 +964,6 @@
     "/ko/blog/2025/hello_urx/",
     "/ko/blog/2025/jekyll-to-zola/",
     "/ko/blog/2025/jwt-hack-v2/",
-    "/ko/blog/2025/owasp-seoul-meetup/",
     "/ko/blog/2025/red-blue-purple/",
     "/ko/cullinan/",
     "/ko/dev/",
@@ -984,9 +978,7 @@
     "/ko/dev/zola/",
     "/ko/dev/zola/mermaid-in-zola/",
     "/ko/dev/zola/search-in-zola/",
-    "/ko/posts/2026/10years/",
     "/ko/posts/2026/building-ai-friendly-clis/",
-    "/ko/posts/2026/i-ve-joined-the-kemal-core-team/",
     "/ko/posts/2026/rust-and-crystal/",
     "/ko/posts/2026/traveling-with-hermes-in-japan/",
     "/ko/sec/",
@@ -1019,7 +1011,6 @@
     "/ko/sec/zap/zest/",
     "/ko/tags/",
     "/ko/tags/ai/",
-    "/ko/tags/announcement/",
     "/ko/tags/api/",
     "/ko/tags/automation/",
     "/ko/tags/beginner/",
@@ -1046,7 +1037,6 @@
     "/ko/tags/hermes/",
     "/ko/tags/http/",
     "/ko/tags/jwt-hack/",
-    "/ko/tags/kemal/",
     "/ko/tags/mermaidjs/",
     "/ko/tags/noir/",
     "/ko/tags/oast/",
@@ -1082,9 +1072,7 @@
     "/notes/hhkb/",
     "/posts/",
     "/posts/2026/",
-    "/posts/2026/10years/",
     "/posts/2026/building-ai-friendly-clis/",
-    "/posts/2026/i-ve-joined-the-kemal-core-team/",
     "/posts/2026/rust-and-crystal/",
     "/posts/2026/traveling-with-hermes-in-japan/",
     "/privacy/",
@@ -1116,8 +1104,6 @@
     "/projects/mobilehackersweapons/",
     "/projects/mzap/",
     "/projects/nodecaf/",
-    "/projects/nodecaf/privacy/",
-    "/projects/nodecaf/support/",
     "/projects/noir/",
     "/projects/omnioast/",
     "/projects/purl-cr/",
@@ -1128,8 +1114,6 @@
     "/projects/smugglex/",
     "/projects/spdx-cr/",
     "/projects/textnova/",
-    "/projects/textnova/privacy/",
-    "/projects/textnova/support/",
     "/projects/urx/",
     "/projects/vex-cr/",
     "/projects/whw/",
@@ -1169,7 +1153,6 @@
     "/tags/",
     "/tags/acp/",
     "/tags/ai/",
-    "/tags/announcement/",
     "/tags/api/",
     "/tags/apple-intelligence/",
     "/tags/apple/",
@@ -1206,7 +1189,6 @@
     "/tags/jekyll/",
     "/tags/jwt-hack/",
     "/tags/jwt/",
-    "/tags/kemal/",
     "/tags/macos/",
     "/tags/mcp/",
     "/tags/menu-bar/",
@@ -1254,142 +1236,37 @@
     "/tags/zest/",
     "/tags/zola/"
   ],
-  "failures": [
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/exploit.mp4",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/dev/zola/search-in-zola/Search%20in%20Zola:%20Fuse.js%20vs.%20Elasticlunr.js",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/ko/dev/zola/search-in-zola/Search%20in%20Zola:%20Fuse.js%20vs.%20Elasticlunr.js",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/projects/devsecops/devsecops.jpg",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/gori/cover.jpg",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/jwt-hack/jwt-hack.jpg",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/noir/noir.jpg",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/dalfox/dalfox.jpg",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/hwaro/cover.jpg",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/$%7BescapeHtml(doc.url)%7D",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/Ctrl%20K",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/Copied!",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/Error",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/require.js",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/$%7Bt%7D",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/s",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/e.url",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/l",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/br",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/t",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/r,this.config",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/$%7Bn%7D",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/r,i",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/+this.href+",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/r,t.quality",
-      "error": "Error: 404 Not Found"
-    },
-    {
-      "type": "asset",
-      "url": "https://www.hahwul.com/assets/js/vendor/e",
-      "error": "Error: 404 Not Found"
-    }
-  ],
   "targetOrigin": "https://pixn-analytics-portfolio.forhm0220.chatgpt.site",
   "builtAt": "2026-08-30T06:49:35.788Z",
   "branding": {
     "mark": "PIXN",
-    "bodyContentPreserved": true
-  }
+    "learningContentPreserved": true,
+    "personalOnlyContentRemoved": true
+  },
+  "sourceRouteCount": 1248,
+  "personalization": {
+    "removedFromDiscovery": [
+      "/about/uses/",
+      "/contact/",
+      "/blog/2020/three-my-goals-for-2020/",
+      "/blog/2025/owasp-seoul-meetup/",
+      "/ko/blog/2025/owasp-seoul-meetup/",
+      "/posts/2026/10years/",
+      "/ko/posts/2026/10years/",
+      "/posts/2026/i-ve-joined-the-kemal-core-team/",
+      "/ko/posts/2026/i-ve-joined-the-kemal-core-team/",
+      "/projects/nodecaf/privacy/",
+      "/projects/nodecaf/support/",
+      "/projects/textnova/privacy/",
+      "/projects/textnova/support/"
+    ],
+    "derivedEmptyRoutes": [
+      "/tags/announcement/",
+      "/ko/tags/announcement/",
+      "/tags/kemal/",
+      "/ko/tags/kemal/"
+    ],
+    "policy": "Keep educational and technical material; remove prior-publisher-only profile, contact, career, award, and event content."
+  },
+  "provenance": "Authorized source archive"
 }

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
+import { PERSONAL_ONLY_ROUTES, REMOVED_DISCOVERY_ROUTES } from './personal-content-policy.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 const publicRoot = path.resolve(args.public ?? 'public');
@@ -43,6 +44,11 @@ const routes = new Set(manifest.routes);
 if (manifest.routeCount !== routes.size) errors.push(`manifest routeCount ${manifest.routeCount} != unique routes ${routes.size}`);
 if (manifest.successfulRouteCount !== manifest.routeCount) errors.push('one or more source routes failed to archive');
 if (manifest.targetOrigin !== expectedOrigin) errors.push(`target origin is ${manifest.targetOrigin}`);
+if ('sourceOrigin' in manifest || 'failures' in manifest) errors.push('public manifest exposes source-only metadata');
+const removedDiscoveryRoutes = REMOVED_DISCOVERY_ROUTES;
+for (const route of removedDiscoveryRoutes) {
+  if (routes.has(route)) errors.push(`personal-only route remains discoverable: ${route}`);
+}
 
 for (const route of routes) {
   try {
@@ -63,12 +69,38 @@ for (const file of htmlFiles) {
   if (html.includes('https://www.hahwul.com') || html.includes('http://www.hahwul.com')) {
     errors.push(`old internal origin: ${path.relative(publicRoot, file)}`);
   }
+  if (/Lee Hwan|이환|hahwul@gmail\.com|https:\/\/x\.com\/hahwul|https:\/\/www\.instagram\.com\/hahwul_|Developed and Designed by Me/i.test(html)) {
+    errors.push(`prior-publisher identity remains: ${path.relative(publicRoot, file)}`);
+  }
+  if (/<title>[\s\S]*?\|\s*HAHWUL<\/title>|"name":"HAHWUL"/i.test(html)) {
+    errors.push(`old site identity metadata: ${path.relative(publicRoot, file)}`);
+  }
 }
 
 const searchDocuments = JSON.parse(await readFile(path.join(publicRoot, 'search_index.json'), 'utf8'));
-if (!Array.isArray(searchDocuments) || searchDocuments.length !== 1078) {
-  errors.push(`search index document count is ${searchDocuments?.length ?? 'invalid'}`);
+const expectedSearchDocumentCount = 1078 - PERSONAL_ONLY_ROUTES.length;
+if (!Array.isArray(searchDocuments) || searchDocuments.length !== expectedSearchDocumentCount) {
+  errors.push(`search index document count is ${searchDocuments?.length ?? 'invalid'}, expected ${expectedSearchDocumentCount}`);
 }
+for (const route of PERSONAL_ONLY_ROUTES) {
+  if (searchDocuments.some((document) => document.url === route)) errors.push(`personal-only search document remains: ${route}`);
+}
+
+const sitemap = await readFile(path.join(publicRoot, 'sitemap.xml'), 'utf8');
+const rss = `${await readFile(path.join(publicRoot, 'rss.xml'), 'utf8')}\n${await readFile(path.join(publicRoot, 'ko', 'rss.xml'), 'utf8')}`;
+for (const route of removedDiscoveryRoutes) {
+  if (sitemap.includes(route)) errors.push(`personal-only sitemap URL remains: ${route}`);
+  if (rss.includes(route)) errors.push(`personal-only RSS item remains: ${route}`);
+  const tombstone = await readFile(routeToFile(route), 'utf8');
+  if (!/noindex, nofollow/i.test(tombstone) || !/Content removed|콘텐츠가 정리되었습니다/i.test(tombstone)) {
+    errors.push(`personal-only route is not a noindex tombstone: ${route}`);
+  }
+}
+
+const homepage = await readFile(path.join(publicRoot, 'index.html'), 'utf8');
+if (!homepage.includes('Web Security Knowledge Base, Tools and Field Notes.')) errors.push('homepage was not personalized');
+const aboutPage = await readFile(path.join(publicRoot, 'about', 'index.html'), 'utf8');
+if (!aboutPage.includes('About PIXN') || /Lee Hwan|HAHWUL/i.test(aboutPage)) errors.push('about page was not neutralized');
 
 const sensitivePage = await readFile(
   path.join(publicRoot, 'blog', '2015', 'metasploit-metasploit-generate-payload', 'index.html'),

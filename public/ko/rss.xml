@@ -1,25 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>HAHWUL (한국어)</title>
+    <title>PIXN (한국어)</title>
     <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/</link>
-    <description>Offensive Security Engineer, Developer and H4cker.</description>
+    <description>Practical web security knowledge, secure engineering references, and open-source tools.</description>
     <language>ko</language>
     <atom:link href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/rss.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>I&apos;ve joined the Kemal Core Team!</title>
-      <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/i-ve-joined-the-kemal-core-team/</link>
-      <guid>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/i-ve-joined-the-kemal-core-team/</guid>
-      <description>보안 제보, 그리고 그 이후</description>
-      <content:encoded><![CDATA[<p>이번 달 초 저는 Crystal의 대표적인 Web Framework인 <a href="https://kemalcr.com">Kemal</a>의 Core Team으로 합류했습니다.</p>
-<p><a href="https://github.com/kemalcr/kemal/security/advisories/GHSA-gvhf-4v24-f8r5">WebSocket에 대한 Request Smuggling</a> 제보와 수정을 시작으로 Core team을 제안받게 되었고, 합류 후에는 <a href="https://github.com/kemalcr/kemal/releases/tag/v1.13.0">v1.13</a> 출시까지 여러 보안 이슈를 검토하고 수정하면서 시간을 보냈네요.</p>
-<p>아무튼 조금 늦었지만, 블로그 글로도 공유드려봅니다 :)</p>
-<p><img loading="lazy" src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/i-ve-joined-the-kemal-core-team/images/1.webp" alt="https://x.com/crystalkemal/status/2086725990114369996" /></p>
-]]></content:encoded>
-      <pubDate>Wed, 26 Aug 2026 00:00:00 +0000</pubDate>
-      <category>crystal</category>
-      <category>kemal</category>
-    </item>
     <item>
       <title>Rust and Crystal: My Two Main Languages</title>
       <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/rust-and-crystal/</link>
@@ -422,52 +408,6 @@ $ mytool user list --json
       <category>ai</category>
       <category>cli</category>
       <category>development</category>
-    </item>
-    <item>
-      <title>10년의 회고와 새로운 시작</title>
-      <link>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/</link>
-      <guid>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/</guid>
-      <description>hahwul.com 10주년. 지난 10년을 돌아보고 앞으로의 방향을 공유합니다.</description>
-      <content:encoded><![CDATA[<p>안녕하세요! 2026년의 첫 글이네요. 1월에 이 글을 내고 싶었으나, 여러가지로 작업이 길어지다 보니 이제서야 글을 올리게 되었습니다.</p>
-<p>2026년이 되면서 하나 재미있는 사실이 있는데여, 놀랍게도 이 도메인을 사용한지, 즉 hahwul이란 이름으로 활동한지 딱 10주년이 되었습니다. 생각보다 긴 시간인데 빠르게 지나가서 놀랍네요. 오늘은 10년의 회고와 함께 블로그 운영, 컨텐츠, 방향성 관련해서 다소 큰 변경이 있어 이 글에서 해당 내용도 공유드릴까 합니다.</p>
-<pre><code>Domain Name: hahwul.com
-Registry Domain ID: 1992489747_DOMAIN_COM-VRSN
-...
-Updated Date: 2026-01-05T20:29:07Z
-Creation Date: 2016-01-07T23:55:03Z
-</code></pre>
-<h2 id="10-years-ago">10 Years Ago</h2>
-<p>사실 hahwul이란 이름을 사용하기 전에도 약 2년정도 따로 사용한 도메인이 있었고, 그 전에도 다른 블로그를 운영(꼬꼬마 시절) 했더지라 온라인에 글을 쓴지는 15년이 넘어갑니다. 물론 당시 블로그는 개발 관련 블로그고 그냥 내용을 정리하는 정도라 현재 모습을 있게 해준건 하훌(hahwul)이란 이름과 이 블로그입니다.</p>
-<p>제 이름을 본 따 hahwul이란 이름을 만들고 이 이름으로 10년이란 시간 동안 정말 많은 글을 작성 했었습니다. 중간에 한두번 크게 정리했지만 약 1400개 정도의 글을 작성했었네요. 대부분 보안, 개발 기술에 대한 정보와 제 고민, 생각들이였고 글로 정리하는 행동은 몸에 지식을 새기기 때문에 많은 것들을 배우고 익힐 수 있는 순간이였다고 생각합니다.</p>
-<p>그리고 제가 이렇게 글을 계속 쓸 수 있었던 것은 나름대로의 꾸준함도 있었겠지만, 계속 찾아봐주시는 많은 분들이 있었기에 가능하지 않았을까 싶습니다. 감사합니다!</p>
-<div class="images-full-width">
-
-
-<div class="images-grid">
-    
-    <div class="images-grid-item">
-        <img src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/images/1.png" alt="" loading="lazy">
-    </div>
-    
-    <div class="images-grid-item">
-        <img src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/images/2.png" alt="" loading="lazy">
-    </div>
-    
-    <div class="images-grid-item">
-        <img src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/images/3.png" alt="" loading="lazy">
-    </div>
-    
-</div>
-</div>
-<h2 id="announcement">Announcement</h2>
-<p>컨텐츠 방향성 관련하여 하나 공지하고 싶은 내용이 있습니다. 기존에 여러 정보를 다뤘던 블로그에 가까웠다면 이제는 좀 더 제 이야기와 생각을 나누고자 합니다.</p>
-<p>물론 기존에 작성하던 형태의 글들이 없어지는 것은 아닙니다. 그저 재편되어 너무 오래되거나 가벼운 정보를 담은 글들은 제거되고 조금 더 탄탄한 형태로 만들어서 작성하려고 합니다. 계획중인 내용으로는 Posts 아래에는 기술에 대한 생각, 의견 등을 종종 남길 예정이고 Notes 하위에는 규격화되고 정리된 글을 남길 예정입니다. 그리고 여력이 된다면 시리즈 형태의 글들을 추가하려고 합니다. (e.g., ZAP 가이드 등)</p>
-<h2 id="conclusion">Conclusion</h2>
-<p>아무튼 결론으로 와서 다시 한번 감사의 인사를 드리고 싶습니다. 앞으로도 계속 글을 써내려갈 예정이니 재미있게 지켜봐주세요!</p>
-<p><img loading="lazy" src="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/ko/posts/2026/10years/images/2026.jpg" alt="" /></p>
-]]></content:encoded>
-      <pubDate>Sun, 22 Feb 2026 00:00:00 +0000</pubDate>
-      <category>announcement</category>
     </item>
   </channel>
 </rss>
