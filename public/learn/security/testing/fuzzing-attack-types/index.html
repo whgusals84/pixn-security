@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attack Types in Web Fuzzing — PIXN</title>
+  <meta name="description" content="Attack Types in Web Fuzzing — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="Attack Types in Web Fuzzing — PIXN"><meta property="og:description" content="Attack Types in Web Fuzzing — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>Attack Types in Web Fuzzing</h1>
+      <time datetime="2023-05-09">MAY 9, 2023</time>
+    </header>
+    <article class="article-body"><p>Fuzzing은 어플리케이션을 테스트하고 보안 취약점을 찾아내기 위해서 가장 일반적으로 사용하는 기술입니다. 보통 Burpsuite의 Intruder, Turbo Intruder 또는 ZAP의 Fuzz, Caido의 Automate와 같이 Proxy 도구에서 제공하는 기능을 사용하거나 ffuf 같은 cli fuzzer를 사용해서 테스트하곤 합니다.</p>
+<p>보통 단순히 지정한 위치에 wordlist 등을 기반으로 무차별 대입한다고 생각하지만, 형태에 따라서 여러가지 Fuzzing 타입들이 존재합니다. 오늘은 각 Fuzzing 타입들은 어떤 역할을 수행하고 어떻게 동작하는지 정리해볼까 합니다.</p>
+<h2 id="fuzzing">Fuzzing</h2>
+<p>간단하게 Fuzzing에 대해 알아보고 시작합시다. 내 정보를 확인하는 <code>GET /myinfo</code> 라는 API가 있다고 가정합니다. 이 때 해당 API는 별다른 파라미터가 없기 떄문에 헤더나 설정 위주로 체크할 수도 있지만, 보통 숨겨진 파라미터나 헤더를 찾기 위해 Param mining을 진행합니다. 이런 과정은 자동화된 도구를 이용하기도 하지만 Fuzzing을 통해 확인하는 것이 정확하여 좋습니다.</p>
+<pre><code>GET /myinfo?&lt;FUZZ&gt;=abcd HTTP/1.1
+</code></pre>
+<p>위와 같이 파라미터 부분에 <code>&lt;FUZZ&gt;</code> 라고 임의로 임력해두었습니다. 그리고 해당 위치에 wordlist 를 기반으로 대입하면서 response의 차이를 확인하여 숨겨진 파라미터를 찾습니다.</p>
+<pre><code>GET /myinfo?id=abcd HTTP/1.1
+ㄴ 200OK, 10 length
+
+GET /myinfo?sort=abcd HTTP/1.1
+ㄴ 200OK, 10 length
+
+GET /myinfo?debug=abcd HTTP/1.1
+ㄴ 200OK, 2214 length
+
+GET /myinfo?admin=abcd HTTP/1.1
+ㄴ 403Forbidden, 0 length
+
+GET /myinfo?callback=abcd HTTP/1.1
+ㄴ 200OK, 10 length
+</code></pre>
+<p>만약 위와 같은 상황이라면 debug, admin 파라미터가 존재한다는 것을 알 수 있겠죠. 이런 행위를 Fuzzing이라고 합니다.</p>
+<h2 id="attack-types">Attack Types</h2>
+<h3 id="snipper-or-sequential">Snipper or Sequential</h3>
+<p>Burpsuite에선 Snipper, Caido에선 Sequential로 불립니다. fuzzing position에 wordlist를 하나씩 대입하면서 테스트합니다. 보통 여러 구간에 대한 동시 param mining이 목적인 경우 유용합니다.</p>
+<pre><code>position: [1,2]
+words: [a,b,c]
+
+1a
+1b
+1c
+2a
+2b
+2c
+</code></pre>
+<pre><code>GET /login?&lt;FUZZ-1&gt;=temp HTTP/1.1
+&lt;FUZZ-2&gt;: Y
+</code></pre>
+<h3 id="battering-ram">Battering ram</h3>
+<p>Burpsuite에만 존재하는 형태입니다. 선택한 fuzzing position에 동일한 페이로드를 사용합니다. 사용할 경우가 많지는 않을 것 같으나 종종 2개 이상 position에 동시 테스팅이 필요한 경우 사용할 수 있을 것 같습니다.</p>
+<pre><code>position: [1,2]
+words: [a,b,c]
+
+1a 2a
+1b 2b
+1c 2c
+</code></pre>
+<pre><code>POST /search HTTP/1.1
+a: abcd
+Connection: close
+
+a=abcd
+</code></pre>
+<h3 id="parallel">Parallel</h3>
+<p>각 position 별로 다른 wordlist를 사용하여 fuzzing 하는 형태입니다. ZAP에선 이 형태가 기본 Fuzzing 방식이며 Burpsuite에선 Pitchfork, Caido에선 Parallel로 불립니다. id/pw 기반의 크랙 등에서 유용합니다.</p>
+<pre><code>position: [1,2]
+words: [a,b,c]
+words: [가,나,다]
+
+1a 2가
+1a 2나
+1a 2다
+</code></pre>
+<pre><code>POST /login HTTP/1.1
+Connection: close
+
+id=&lt;FUZZ-1&gt;&amp;password=&lt;FUZZ-2&gt;
+</code></pre>
+<h3 id="cluster-bomb">Cluster Bomb</h3>
+<p>Burpsuite에선 Cluster Bomb, Caido에선 Matrix로 불립니다. position과 wordlists 간에 모든 조합을 테스트하기 때문에 발생하는 요청이 굉장히 많습니다.</p>
+<pre><code>position: [1,2]
+words: [a,b,c]
+words: [가,나,다]
+
+1a 2가
+2b 2가
+3c 2가
+1a 2나
+1b 2나
+1c 2나
+...
+</code></pre>
+<h2 id="a-single-line-assessment">A single-line assessment</h2>
+<h3 id="burpsuite">Burpsuite</h3>
+<p>Fuzzing 관련 부분도 기능적으론 가장 많은 타입을 처리합니다. 역시나 가장 인기있고, 잘 사용되는 도구일 수 밖에 없네요 :D</p>
+<h3 id="zap">ZAP</h3>
+<p>기능적으론 가장 빈약합니다. 다만 Scripting과의 연계로 사실상 모두 커버되기도 해서 사용자에 역량에 따라 크게 달라질 수 있다고 생각되네요.</p>
+<h3 id="caido">Caido</h3>
+<p>만들어진지 오래되지 않은 도구지만 필요한건 적당히 잘 지원하고 있습니다. 이력 관리에 탁월해서 기능이 점점 보강되면 정말 좋을 것 같네요.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>상황에 따라서 여러가지 Attack Types을 조합하여 Fuzzing 한다면 더 빠르고 정확하게 테스트하고, 좋은 결과를 얻어낼 수 있습니다. 오늘 중점적으로 이야기한 3가지 도구에서 지원하는 형태 이외에도 다양한 형태의 퍼징 방법들이 존재할 수 있으니 본인만의 방법을 찾아가 보는 것도 재미있는 과정이라고 생각됩니다 :D</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/blog/2023/attack-types-in-web-fuzzing/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

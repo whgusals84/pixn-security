@@ -21,6 +21,18 @@ const categoryMeta = {
   },
 };
 
+const curatedSources = [
+  { categoryKey: 'security', relativePath: 'testing/placeholder-trick', sourceUrl: `${sourceOrigin}/blog/2024/optimizing-security-tests-with-match-and-replace/` },
+  { categoryKey: 'security', relativePath: 'testing/fuzzing-attack-types', sourceUrl: `${sourceOrigin}/blog/2023/attack-types-in-web-fuzzing/` },
+  { categoryKey: 'security', relativePath: 'testing/access-control-with-zap', sourceUrl: `${sourceOrigin}/blog/2021/testing-access-control-with-zap/` },
+  { categoryKey: 'security', relativePath: 'browser/browser-extension-security', sourceUrl: `${sourceOrigin}/blog/2020/security-considerations-for-browser-extensions/` },
+  { categoryKey: 'security', relativePath: 'browser/postmessage-security', sourceUrl: `${sourceOrigin}/blog/2020/vulnerability-of-postmessage/` },
+  { categoryKey: 'security', relativePath: 'testing/attack-surface-discovery', sourceUrl: `${sourceOrigin}/blog/2022/attack-surface-detector/` },
+  { categoryKey: 'security', relativePath: 'cryptography/pq3-and-pqc', sourceUrl: `${sourceOrigin}/blog/2024/pq3-post-quantum-cryptographic/` },
+  { categoryKey: 'development', relativePath: 'cli/ai-friendly-clis', sourceUrl: `${sourceOrigin}/posts/2026/building-ai-friendly-clis/` },
+  { categoryKey: 'development', relativePath: 'crystal/fiber-concurrency', sourceUrl: `${sourceOrigin}/blog/2023/fiber-concurrency/` },
+];
+
 const escapeHtml = (value) => value
   .replaceAll('&', '&amp;')
   .replaceAll('<', '&lt;')
@@ -73,6 +85,21 @@ function sanitizeBody(html) {
     .replace(/href=("|')\/(?!\/|learn\/|reference\/)/gi, `href=$1${sourceOrigin}/`);
 }
 
+function removePersonalContext(html) {
+  const personalMarkers = /(최근에 저는|개인적으론|개인적으로|저는 보통|제 개인|제가 일할 때|막상 정리하다|my personal|in my experience|I maintain the|For your information, I use|One of my many personal goals)/i;
+  return html
+    .replace(/<p\b[^>]*>[\s\S]*?<\/p>/gi, (paragraph) => personalMarkers.test(paragraph) ? '' : paragraph)
+    .replaceAll('제가 단순하게 표현하였지만', '여기서는 단순하게 표현했지만')
+    .replaceAll('제가 예전 글에서도 언급했듯이', '관련 사례에서도 확인되듯이')
+    .replaceAll('제가 알던 내용에 조금 더 리서치하여 글로 작성해 봅니다', '검토에 필요한 핵심 항목을 정리합니다')
+    .replaceAll('제가 놓쳤던 부분도 있었습니다', '검토 과정에서 놓치기 쉬운 부분도 있습니다')
+    .replaceAll('저는 이번 테스트에선', '이 테스트에서는')
+    .replaceAll('저는 테스트를 위해', '이 예시에서는')
+    .replaceAll('저는 그냥 default에다가 추가해둬서 default로 진행합니다', '이 예시에서는 default에 추가해 진행합니다')
+    .replaceAll('제가 만든 User', '생성한 User')
+    .replaceAll('제가 지정한 정책', '지정한 정책');
+}
+
 async function fetchText(url) {
   const response = await fetch(url, {
     headers: { 'user-agent': 'PIXN learning importer (authorized republication)' },
@@ -83,11 +110,13 @@ async function fetchText(url) {
 }
 
 const sitemap = await fetchText(`${sourceOrigin}/sitemap.xml`);
-const sourceUrls = [...new Set(
+const sectionSourceUrls = [...new Set(
   [...sitemap.matchAll(/https:\/\/www\.hahwul\.com\/(?:sec|dev)\/[^"<\s]*/g)]
     .map((match) => match[0].split('#')[0].split('?')[0])
     .map((url) => url.endsWith('/') ? url : `${url}/`),
 )];
+const curatedSourceMap = new Map(curatedSources.map((entry) => [entry.sourceUrl, entry]));
+const sourceUrls = [...sectionSourceUrls, ...curatedSourceMap.keys()];
 
 let cursor = 0;
 const imported = [];
@@ -95,12 +124,13 @@ const skipped = [];
 
 async function worker() {
   while (cursor < sourceUrls.length) {
-    const sourceUrl = sourceUrls[cursor++];
+      const sourceUrl = sourceUrls[cursor++];
     try {
       const url = new URL(sourceUrl);
-      const categoryKey = url.pathname.startsWith('/sec/') ? 'security' : 'development';
+      const curatedSource = curatedSourceMap.get(sourceUrl);
+      const categoryKey = curatedSource?.categoryKey ?? (url.pathname.startsWith('/sec/') ? 'security' : 'development');
       const sourcePrefix = categoryMeta[categoryKey].sourcePrefix;
-      const relativePath = url.pathname.slice(sourcePrefix.length).replace(/^\/+|\/+$/g, '');
+      const relativePath = curatedSource?.relativePath ?? url.pathname.slice(sourcePrefix.length).replace(/^\/+|\/+$/g, '');
       if (!relativePath) throw new Error('section index');
       const html = await fetchText(sourceUrl);
       const titleMatch = html.match(/<h1 class="page-title">([\s\S]*?)<\/h1>/i);
@@ -115,7 +145,7 @@ async function worker() {
         title,
         date: dateMatch ? dateMatch[1] : '',
         dateLabel: dateMatch ? dateMatch[2].replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim() : '',
-        content: sanitizeBody(bodyMatch[1].trim()),
+        content: removePersonalContext(sanitizeBody(bodyMatch[1].trim())),
         lang: /[가-힣]/.test(bodyMatch[1]) ? 'ko' : 'en',
       });
     } catch (error) {
@@ -169,9 +199,11 @@ for (const [categoryKey, category] of Object.entries(categoryMeta)) {
   }), 'utf8');
 }
 
+const cryptographyEntries = imported.filter((entry) => entry.categoryKey === 'security' && entry.relativePath.startsWith('cryptography/'));
+const cryptographyRows = cryptographyEntries.map((entry, index) => `<li><a class="ledger-row" href="/learn/security/${entry.relativePath}/"><span class="ledger-key">${String(index + 1).padStart(2, '0')}</span><span class="ledger-body"><span class="ledger-title">${escapeHtml(entry.title)}</span><span class="ledger-desc">${entry.dateLabel ? escapeHtml(entry.dateLabel) : 'Cryptography study note'}</span></span><span aria-hidden="true">↗</span></a></li>`).join('');
 const cryptographyBody = `<main class="page" id="main">
     <header class="page-heading"><p class="eyebrow">Learn / SEC / CRYPTO</p><h1>Cryptography</h1><p>A focused shelf for cryptographic ideas, protocols, and implementation risks.</p></header>
-    <section class="section"><div class="plate-row"><h2>Study notes</h2><span class="plate-rule" aria-hidden="true"></span><span class="plate-link">Growing</span></div><div class="empty-state"><p>The source archive does not contain standalone cryptography guides to republish yet. New notes can be added here as the study continues.</p></div></section>
+    <section class="section"><div class="plate-row"><h2>Study notes</h2><span class="plate-rule" aria-hidden="true"></span><span class="plate-link">${cryptographyEntries.length} ${cryptographyEntries.length === 1 ? 'entry' : 'entries'}</span></div><ul class="home-ledger">${cryptographyRows}</ul></section>
   </main>`;
 const cryptographyDirectory = path.join(learnRoot, 'security', 'cryptography');
 await mkdir(cryptographyDirectory, { recursive: true });

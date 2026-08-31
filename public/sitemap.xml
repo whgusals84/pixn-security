@@ -89,10 +89,14 @@
   <url><loc>https://whgusals84.github.io/pixn-security/learn/development/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/cryptography/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/zap/zest/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/security/testing/attack-surface-discovery/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/security/testing/fuzzing-attack-types/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/development/crystal/noob-beginners-guide-in-crystal/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/development/ruby/noob-beginners-guide-in-ruby/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/development/rust/noob-beginners-guide-in-rust/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/development/cli/ai-friendly-clis/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/web-security/coop/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/development/crystal/fiber-concurrency/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/caido/hello-caido/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/how-to-hack/macos-application/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/how-to-hack/browser-extension/</loc></url>
@@ -105,10 +109,15 @@
   <url><loc>https://whgusals84.github.io/pixn-security/learn/development/zola/mermaid-in-zola/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/web-hacking/oast/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/web-security/owasp-top-10/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/security/testing/placeholder-trick/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/security/cryptography/pq3-and-pqc/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/development/ruby/ruby-cheatsheet/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/development/zola/search-in-zola/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/security/browser/browser-extension-security/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/web-security/sri/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/security/testing/access-control-with-zap/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/secure-sdlc/threat-modeling/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/web-security/csp/</loc></url>
   <url><loc>https://whgusals84.github.io/pixn-security/learn/security/secure-sdlc/devsecops/</loc></url>
+  <url><loc>https://whgusals84.github.io/pixn-security/learn/security/browser/postmessage-security/</loc></url>
 </urlset>

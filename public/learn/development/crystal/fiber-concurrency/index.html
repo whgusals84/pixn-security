@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fiber concurrency — PIXN</title>
+  <meta name="description" content="Fiber concurrency — Practical guides for languages, tools, and software workflows.">
+  <meta property="og:title" content="Fiber concurrency — PIXN"><meta property="og:description" content="Fiber concurrency — Practical guides for languages, tools, and software workflows."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/development/">Development Guides</a></p>
+      <h1>Fiber concurrency</h1>
+      <time datetime="2023-11-12">NOVEMBER 12, 2023</time>
+    </header>
+    <article class="article-body">
+<p>Go, Ruby에 이어 올해는 Crystal로 풀어볼까 합니다. 오늘은 Fiber에 대해 정리해봅니다.</p>
+<h2 id="fiber">Fiber</h2>
+<p>Computer Science(CS)에서 Fiber는 동시성을 위한 경량 스레드(Thread) 의미합니다. 스레드와 비슷하지만 큰 차이가 있는데요, 바로 Context Switching의 영역과 멀티 태스킹의 방식입니다.</p>
+<ul>
+<li>Fiber:
+<ul>
+<li>Context Switching: User Space</li>
+<li>Multitasking: cooperative multitasking (협력적 멀티태스킹)</li>
+</ul>
+</li>
+<li>Thread:
+<ul>
+<li>Context Switching: Kenel</li>
+<li>Multitasking: preemptive multitasking (선점형 멀티태스킹)</li>
+</ul>
+</li>
+</ul>
+<p>뭔가 비교하고 보니 서로 완전 반대되는 기술처럼 보이지만, 사실 Fiber는 Thread 하위에서 동작합니다. 그렇기 때문에 동일 스레드 아래에서 동작하는 Fiber는 Race condition의 위험성이 적습니다.</p>
+<h3 id="cooperative-vs-preemptive">Cooperative vs Preemptive</h3>
+<p>먼저 Cooperative multitasking (협력적 멀티태스킹)과 Preemptive multitasking (선점형 멀티태스킹)에 대한 차이를 살펴보는게 좋습니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/10288715-f69d-4acd-8731-1585cd40f3a5" alt="" /></p>
+<p>Cooperative Multitasking은 각 프로세스나 작업이 제어권을 가지고 있습니다. 그래서 프로그램이 명시적으로 다른 작업에게 양보해야 Context Switching이 발생합니다. 반대로 Preemptive Multitasking은 OS가 제어권을 가지며 시분할로 각 작업이 공평하게 실행되도록 처리합니다.</p>
+<h3 id="coroutine">Coroutine</h3>
+<p>Coroutine은 프로그램이 실행되는 동안 일시 중단되고 다시 시작할 수 있는 함수 또는 루틴을 의미합니다. 언어에서 기능적으로 제공할 수도 있고, 직접 구현하여 패턴으로 사용할 수도 있습니다.</p>
+<h3 id="scheduler">Scheduler</h3>
+<p>Fiber에서 Scheduler는 실행할 작업을 결정하고 조정하는 역할을 수행합니다. Fiber는 비동기적으로 동직하기 때문에 Scheduler를 통해 언제 실행될지 관리가 필요합니다. 이를 통해서 자원을 좀 더 효율적으로 활용할 수 있게 됩니다.</p>
+<pre><code class="language-crystal hljs"><span class="hljs-comment"># Crystal의 runtime에는 Fiber를 위한 Scheduler가 내장되어 있습니다.</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-variable">resume_event</span> : <span class="hljs-variable constant_">Crystal</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">EventLoop</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">Event</span>
+  @resume_event <span class="hljs-operator">||=</span> <span class="hljs-variable constant_">Crystal</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">Scheduler</span>.event_loop.create_resume_event(<span class="hljs-keyword">self</span>)
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-variable">timeout_event</span> : <span class="hljs-variable constant_">Crystal</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">EventLoop</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">Event</span>
+  @timeout_event <span class="hljs-operator">||=</span> <span class="hljs-variable constant_">Crystal</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">Scheduler</span>.event_loop.create_timeout_event(<span class="hljs-keyword">self</span>)
+<span class="hljs-keyword">end</span>
+</code></pre>
+<h3 id="fiber-in-languages">Fiber in languages</h3>
+<p>Fiber를 기본적으로 제공하지 않는 언어도 많습니다. 언어 자체에서 지원하는 것은 대표적으로 Ruby/Crystal의 Fiber, Go는 Goroutine 정도가 있습니다. 다만 Coroutine 패턴이나 Fiber는 라이브러리 등으로 제공될 수 있으니 참고 부탁드립니다.</p>
+<h3 id="utilization-of-fibers">Utilization of Fibers</h3>
+<p>Fiber는 보통 다중 작업 처리에서 사용됩니다. Worker 패턴으로 구성하여 여러가지 작업을 빠르게 처리하거나, 비동기 작업에서도 용이하게 사용할 수 있습니다.</p>
+<h2 id="in-crystal">In crystal</h2>
+<h3 id="spawn">Spawn</h3>
+<p>Crystal에선 spawn이란 예약어를 통해 함수를 Fiber로 실행할 수 있습니다.</p>
+<pre><code class="language-crystal hljs"><span class="hljs-keyword">def</span> <span class="hljs-variable">func_a</span>
+  puts <span class="hljs-string">&quot;</span><span class="hljs-string">this is func A</span><span class="hljs-string">&quot;</span><span class="hljs-string"></span>
+<span class="hljs-keyword">end</span>
+
+spawn func_a
+<span class="hljs-comment"># #&lt;Fiber:0x1118c21e0&gt;</span>
+</code></pre>
+<h3 id="yield">Yield</h3>
+<p>Yield를 통해 대기하고 있는 다른 Fiber에게 스왑할 수 있도록 Scheduler를 양보할 수 있습니다.</p>
+<pre><code class="language-crystal hljs">counter <span class="hljs-operator">=</span> <span class="hljs-number">0</span>
+spawn name: <span class="hljs-string">&quot;</span><span class="hljs-string">status</span><span class="hljs-string">&quot;</span><span class="hljs-string"></span> <span class="hljs-keyword">do</span>
+  loop <span class="hljs-keyword">do</span>
+    puts <span class="hljs-string">&quot;</span><span class="hljs-string">Status: </span><span class="hljs-subst">#{</span>counter<span class="hljs-subst">}</span><span class="hljs-string">&quot;</span><span class="hljs-string"></span>
+    sleep(<span class="hljs-number">2</span>.seconds)
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-keyword">while</span> counter <span class="hljs-operator">&lt;</span> <span class="hljs-variable constant_">Int32</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">MAX</span>
+  counter <span class="hljs-operator">+=</span> <span class="hljs-number">1</span>
+  <span class="hljs-keyword">if</span> counter <span class="hljs-operator">%</span> <span class="hljs-number">1_000_000</span> <span class="hljs-operator">==</span> <span class="hljs-number">0</span>
+    <span class="hljs-comment"># Without this, there would never be an opportunity to resume the status fiber</span>
+    <span class="hljs-variable constant_">Fiber</span>.<span class="hljs-keyword">yield</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>효율적인 동작을 위해선 Fiber의 작업이 끝난 시점 등에서 명시적으로 yield를 수행하여 다른 Fiber의 실행 시간을 보장해주는 것이 좋습니다.</p>
+<p><img loading="lazy" src="https://github.com/hahwul/assets.hahwul.com/assets/13212227/b9981457-001c-47ce-98ae-5307ca346e9f" alt="" /></p>
+<h3 id="my-case">My case</h3>
+<p>아래는 Noir의 detector 코드입니다. Dir.glob로 읽은 디렉토리 및 리스트를 루프돌면서 spawn을 통해 Fiber를 생성하여 병렬로 처리합니다.</p>
+<pre><code class="language-crystal hljs"><span class="hljs-comment"># https://github.com/noir-cr/noir/blob/main/src/detector/detector.cr</span>
+
+<span class="hljs-keyword">begin</span>
+    <span class="hljs-variable constant_">Dir</span>.glob(<span class="hljs-string">&quot;</span><span class="hljs-subst">#{</span>base_path<span class="hljs-subst">}</span><span class="hljs-string">/**/*</span><span class="hljs-string">&quot;</span><span class="hljs-string"></span>) <span class="hljs-keyword">do</span> <span class="hljs-operator">|</span>file<span class="hljs-operator">|</span>
+      spawn <span class="hljs-keyword">do</span>
+        <span class="hljs-keyword">begin</span>
+          <span class="hljs-keyword">next</span> <span class="hljs-keyword">if</span> <span class="hljs-variable constant_">File</span>.directory?(file)
+          content <span class="hljs-operator">=</span> <span class="hljs-variable constant_">File</span>.read(file, encoding: <span class="hljs-string">&quot;</span><span class="hljs-string">utf-8</span><span class="hljs-string">&quot;</span><span class="hljs-string"></span>, invalid: <span class="hljs-symbol">:skip</span>)
+
+          detector_list.each <span class="hljs-keyword">do</span> <span class="hljs-operator">|</span>detector<span class="hljs-operator">|</span>
+            <span class="hljs-keyword">if</span> detector.detect(file, content)
+              techs <span class="hljs-operator">&lt;&lt;</span> detector.name
+            <span class="hljs-keyword">end</span>
+          <span class="hljs-keyword">end</span>
+        <span class="hljs-keyword">rescue</span> e : <span class="hljs-variable constant_">File</span><span class="hljs-variable constant_">::</span><span class="hljs-variable constant_">NotFoundError</span>
+          logger.debug <span class="hljs-string">&quot;</span><span class="hljs-string">File not found: </span><span class="hljs-subst">#{</span>file<span class="hljs-subst">}</span><span class="hljs-string">&quot;</span><span class="hljs-string"></span>
+        <span class="hljs-keyword">end</span>
+      <span class="hljs-keyword">end</span>
+      <span class="hljs-variable constant_">Fiber</span>.<span class="hljs-keyword">yield</span>
+    <span class="hljs-keyword">end</span>
+  <span class="hljs-keyword">rescue</span> e
+    logger.debug e
+  <span class="hljs-keyword">end</span>
+</code></pre>
+<p>병렬 처리라 파일이 많더라도 굉장히 빠르게 처리합니다. 다만 위 구조는 파일 수 만큼 Fiber를 생성하기 때문에 그다지 좋은 처리라곤 생각하지 않습니다. 오히려 <a href="https://www.hahwul.com/2022/09/02/ruby-concurrency/#thread-pool">Worker pool 패턴</a>이 더 안정적일 것 같습니다.</p>
+<pre><code class="language-go hljs"><span class="hljs-comment">// 참고
+</span><span class="hljs-comment"></span><span class="hljs-comment">// Golang의 worker poll 패턴
+</span><span class="hljs-comment"></span>
+concurrency <span class="hljs-operator">:=</span> <span class="hljs-number">10</span>
+<span class="hljs-keyword">var</span> wg sync<span class="hljs-punctuation">.</span>WaitGroup
+<span class="hljs-keyword">for</span> i <span class="hljs-operator">:=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span> i <span class="hljs-punctuation">&lt;</span> concurrency<span class="hljs-punctuation">;</span> i<span class="hljs-operator">++</span> <span class="hljs-punctuation">{</span>
+    wg<span class="hljs-punctuation">.</span><span class="hljs-title function_">Add</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span>
+    <span class="hljs-keyword">go</span> <span class="hljs-keyword">func</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-keyword">for</span> word <span class="hljs-operator">:=</span> <span class="hljs-keyword">range</span> wordlists <span class="hljs-punctuation">{</span>
+            fmt<span class="hljs-punctuation">.</span><span class="hljs-title function_">Println</span><span class="hljs-punctuation">(</span>word<span class="hljs-punctuation">)</span>
+        <span class="hljs-punctuation">}</span>
+        wg<span class="hljs-punctuation">.</span><span class="hljs-title function_">Done</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">for</span> j <span class="hljs-operator">:=</span> <span class="hljs-number">0</span><span class="hljs-punctuation">;</span> j <span class="hljs-punctuation">&lt;</span> <span class="hljs-number">100</span><span class="hljs-punctuation">;</span> j<span class="hljs-operator">++</span> <span class="hljs-punctuation">{</span>
+    wordlists <span class="hljs-operator">&lt;-</span> strconv<span class="hljs-punctuation">.</span><span class="hljs-title function_">Itoa</span><span class="hljs-punctuation">(</span>j<span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+<span class="hljs-built_in">close</span><span class="hljs-punctuation">(</span>wordlists<span class="hljs-punctuation">)</span>
+wg<span class="hljs-punctuation">.</span><span class="hljs-title function_">Wait</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://crystal-lang.org/2022/02/16/bdw-gc-coroutines-support/">https://crystal-lang.org/2022/02/16/bdw-gc-coroutines-support/</a></li>
+<li><a href="https://www.hahwul.com/2022/09/02/ruby-concurrency/">https://www.hahwul.com/2022/09/02/ruby-concurrency/</a></li>
+<li><a href="https://www.hahwul.com/2021/08/15/goroutine-and-sync/">https://www.hahwul.com/2021/08/15/goroutine-and-sync/</a></li>
+<li><a href="https://nikgrozev.com/2015/07/14/overview-of-modern-concurrency-and-parallelism-concepts/">https://nikgrozev.com/2015/07/14/overview-of-modern-concurrency-and-parallelism-concepts/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/blog/2023/fiber-concurrency/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

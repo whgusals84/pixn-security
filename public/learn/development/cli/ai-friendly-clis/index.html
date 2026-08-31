@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building AI-Friendly CLIs — PIXN</title>
+  <meta name="description" content="Building AI-Friendly CLIs — Practical guides for languages, tools, and software workflows.">
+  <meta property="og:title" content="Building AI-Friendly CLIs — PIXN"><meta property="og:description" content="Building AI-Friendly CLIs — Practical guides for languages, tools, and software workflows."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/development/">Development Guides</a></p>
+      <h1>Building AI-Friendly CLIs</h1>
+      <time datetime="2026-03-22">MARCH 22, 2026</time>
+    </header>
+    <article class="article-body"><p>These days, AI agents are writing code, calling tools, and even handling deployments. With that shift, the CLI is getting attention again. GUIs and web dashboards are great for humans, but from an AI agent's perspective, CLIs are a much easier interface to work with.</p>
+<p>But most existing CLIs were designed for humans. Pretty table outputs, color codes, shorthand flags. All nice for human eyes, but painful for agents to parse. Output formats subtly change between versions, and figuring out the exact usage often means reading separate documentation.</p>
+<p>This week, I did a major overhaul of our team's internal CLI at work, rebuilding it around JSON I/O and schema commands. The agent's task success rate jumped noticeably. Based on that experience, I want to share some thoughts on how to build AI-friendly CLIs.</p>
+<h2 id="why-json-first-input-output-matters-for-ai-agents">Why JSON-First Input / Output Matters for AI Agents</h2>
+<h3 id="human-vs-ai-cli-usage-patterns">Human vs AI CLI Usage Patterns</h3>
+<p>When humans use a CLI, they check <code>--help</code>, read man pages, eyeball error messages, and iterate through trial and error. Even if the output changes a bit, they adapt by reading the context. AI agents, on the other hand, take the output as a raw string and process it literally. They have to parse table-formatted output with regex, and the moment column order shifts or line breaks change, things break immediately.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># This is convenient for humans, but...</span>
+$ kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+my-app-7d4b8c6f5-x2k9z  1/1     Running   <span class="hljs-number">0</span>          3d
+
+<span class="hljs-comment"># This is what agents need</span>
+$ kubectl get pods -o json
+<span class="hljs-operator">{</span>
+  <span class="hljs-string">&quot;items&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-operator">{</span>
+    <span class="hljs-string">&quot;metadata&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;my-app-7d4b8c6f5-x2k9z&quot;</span><span class="hljs-operator">}</span>,
+    <span class="hljs-string">&quot;status&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;phase&quot;</span>: <span class="hljs-string">&quot;Running&quot;</span>, <span class="hljs-string">&quot;containerStatuses&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-operator">{</span><span class="hljs-string">&quot;ready&quot;</span>: true<span class="hljs-operator">}</span><span class="hljs-operator">]</span><span class="hljs-operator">}</span>
+  <span class="hljs-operator">}</span><span class="hljs-operator">]</span>
+<span class="hljs-operator">}</span>
+</code></pre>
+<h3 id="the-pain-of-unstructured-text-output">The Pain of Unstructured Text Output</h3>
+<p>Unstructured text output causes more problems for agents than expected. Here are some patterns I actually ran into:</p>
+<ul>
+<li>Inconsistent parsing: sometimes the output has headers, sometimes it doesn't</li>
+<li>Locale dependency: date/number formats change based on system locale</li>
+<li>Color code pollution: ANSI escape codes sneak in and break string comparisons</li>
+<li>Progress bar collisions: stderr and stdout get mixed up, garbling the output</li>
+<li>Silent truncation: long values get clipped to <code>...</code> with no way to detect it</li>
+</ul>
+<p>When you start handling these edge cases one by one, your agent code ends up buried in CLI parsing logic instead of actual work.</p>
+<h3 id="advantages-of-json">Advantages of JSON</h3>
+<p>JSON I/O solves most of these.</p>
+<ul>
+<li>Type safety: numbers are numbers, strings are strings. You can distinguish <code>&quot;3&quot;</code> from <code>3</code></li>
+<li>Schema-based validation: define and validate input/output shapes upfront with JSON Schema</li>
+<li>Easy chaining: instantly parseable by <code>jq</code>, pipelines, and any programming language</li>
+<li>Consistency: identical output regardless of locale or terminal settings</li>
+<li>Structured errors: return errors as JSON so agents can identify error types and respond appropriately</li>
+</ul>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-name">&quot;error&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-name">&quot;code&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;RESOURCE_NOT_FOUND&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Pod &#39;my-app&#39; not found in namespace &#39;default&#39;&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;suggestions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;Check namespace with --namespace flag&quot;</span><span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="real-world-test-results-from-our-project">Real-World Test Results from Our Project</h3>
+<p>Here's a quick summary of what changed after adding a <code>--json</code> flag to the CLI and having agents perform the same tasks:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Text Output</th>
+<th>JSON Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task success rate</td>
+<td>Around 60%</td>
+<td>Around 90%</td>
+</tr>
+<tr>
+<td>Average retries</td>
+<td>2.3 times</td>
+<td>0.4 times</td>
+</tr>
+<tr>
+<td>Parsing-related errors</td>
+<td>41% of all errors</td>
+<td>Nearly 0%</td>
+</tr>
+</tbody>
+</table>
+<p>These numbers are from specific tasks I tested, so your mileage may vary. Still, just switching to JSON making this much difference was surprising.</p>
+<h2 id="the-schema-command-letting-ai-learn-and-adapt-at-runtime">The Schema Command: Letting AI Learn and Adapt at Runtime</h2>
+<p>JSON I/O alone is a huge improvement, but there's a way to take it one step further: the schema command.</p>
+<h3 id="inspiration-from-google-workspace-cli-gws">Inspiration from Google Workspace CLI (gws)</h3>
+<p>This idea was inspired by <a href="https://github.com/googleworkspace/cli">Google Workspace CLI (gws)</a>. gws has a structure that lets you query schema information per resource at runtime. Looking at that, I thought: &quot;Why not let the agent ask the CLI directly instead of reading documentation?&quot;</p>
+<h3 id="how-the-schema-subcommand-works">How the Schema Subcommand Works</h3>
+<p>The concept is simple. Add a <code>schema</code> subcommand to your CLI: specify a resource and action, and it returns the JSON Schema for that command's input and output.</p>
+<pre><code class="language-bash hljs">$ mytool schema user.create
+<span class="hljs-operator">{</span>
+  <span class="hljs-string">&quot;</span><span class="hljs-variable">$schema</span><span class="hljs-string">&quot;</span>: <span class="hljs-string">&quot;http://json-schema.org/draft-07/schema#&quot;</span>,
+  <span class="hljs-string">&quot;description&quot;</span>: <span class="hljs-string">&quot;Create a new user&quot;</span>,
+  <span class="hljs-string">&quot;input&quot;</span>: <span class="hljs-operator">{</span>
+    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-string">&quot;required&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-string">&quot;email&quot;</span>, <span class="hljs-string">&quot;role&quot;</span><span class="hljs-operator">]</span>,
+    <span class="hljs-string">&quot;properties&quot;</span>: <span class="hljs-operator">{</span>
+      <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;format&quot;</span>: <span class="hljs-string">&quot;email&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;enum&quot;</span>: <span class="hljs-operator">[</span><span class="hljs-string">&quot;admin&quot;</span>, <span class="hljs-string">&quot;member&quot;</span>, <span class="hljs-string">&quot;viewer&quot;</span><span class="hljs-operator">]</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;maxLength&quot;</span>: 100<span class="hljs-operator">}</span>
+    <span class="hljs-operator">}</span>
+  <span class="hljs-operator">}</span>,
+  <span class="hljs-string">&quot;output&quot;</span>: <span class="hljs-operator">{</span>
+    <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+    <span class="hljs-string">&quot;properties&quot;</span>: <span class="hljs-operator">{</span>
+      <span class="hljs-string">&quot;id&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;format&quot;</span>: <span class="hljs-string">&quot;uuid&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span><span class="hljs-operator">}</span>,
+      <span class="hljs-string">&quot;created_at&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>, <span class="hljs-string">&quot;format&quot;</span>: <span class="hljs-string">&quot;date-time&quot;</span><span class="hljs-operator">}</span>
+    <span class="hljs-operator">}</span>
+  <span class="hljs-operator">}</span>
+<span class="hljs-operator">}</span>
+</code></pre>
+<p>Even better if you can also query the list of available resources:</p>
+<pre><code class="language-bash hljs">$ mytool schema --list
+<span class="hljs-operator">[</span><span class="hljs-string">&quot;user.create&quot;</span>, <span class="hljs-string">&quot;user.delete&quot;</span>, <span class="hljs-string">&quot;user.get&quot;</span>, <span class="hljs-string">&quot;user.list&quot;</span>, <span class="hljs-string">&quot;project.create&quot;</span>, ...<span class="hljs-operator">]</span>
+</code></pre>
+<h3 id="benefits-for-agents">Benefits for Agents</h3>
+<ul>
+<li>No external docs needed: agents can query the CLI directly and construct accurate inputs</li>
+<li>Auto-adapts to API changes: when the CLI updates, the schema updates with it, so agents always work against the latest spec</li>
+<li>Pairs with dry-run: build input from the schema, validate with <code>--dry-run</code>, then execute</li>
+<li>Self-describing: the CLI can describe itself without needing a separate AGENTS.md or tool description</li>
+</ul>
+<h3 id="our-implementation-overview">Our Implementation Overview</h3>
+<p>In our project, we implemented it with the following structure:</p>
+<ol>
+<li>Define input/output schemas on each command handler (based on Pydantic models)</li>
+<li>The <code>schema</code> subcommand serializes these into JSON Schema and returns them</li>
+<li>A <code>--list</code> option allows browsing the full resource/action tree</li>
+<li>Include an <code>examples</code> field in schema responses so agents have something to reference</li>
+</ol>
+<p>The implementation itself wasn't particularly difficult. Since we were already defining input/output models with Pydantic, most of it was solved just by calling <code>.model_json_schema()</code>.</p>
+<h3 id="example-agent-workflow-using-schema">Example Agent Workflow Using Schema</h3>
+<p>Here's what the actual flow looks like when an agent uses the schema:</p>
+<pre><code>1. Agent: mytool schema --list
+   → Check available commands
+
+2. Agent: mytool schema user.create
+   → Check input schema (required fields: email, role)
+
+3. Agent: mytool user create --json '{&quot;email&quot;:&quot;new@example.com&quot;,&quot;role&quot;:&quot;member&quot;}' --dry-run
+   → Validate before execution
+
+4. Agent: mytool user create --json '{&quot;email&quot;:&quot;new@example.com&quot;,&quot;role&quot;:&quot;member&quot;}'
+   → Execute, receive JSON response
+
+5. Agent: Use the id field from the response for the next task
+</code></pre>
+<p>Throughout this entire flow, the agent never references documentation once. The CLI itself is the documentation.</p>
+<h2 id="practical-design-patterns">Practical Design Patterns</h2>
+<p>Some patterns worth considering when applying JSON I/O and Schema.</p>
+<h3 id="input-design-choices">Input Design Choices</h3>
+<p>Roughly three input approaches, pick based on the situation:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Example</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stdin JSON</td>
+<td><code>echo &#39;{&quot;key&quot;:&quot;val&quot;}&#39; | mytool create</code></td>
+<td>Large payloads, pipeline chaining</td>
+</tr>
+<tr>
+<td>argument JSON</td>
+<td><code>mytool create --json &#39;{&quot;key&quot;:&quot;val&quot;}&#39;</code></td>
+<td>Single command execution, keeping it in shell history</td>
+</tr>
+<tr>
+<td>Mixed</td>
+<td><code>mytool create --name foo --json &#39;{&quot;extra&quot;:&quot;opts&quot;}&#39;</code></td>
+<td>Frequently used options as flags, the rest as JSON</td>
+</tr>
+</tbody>
+</table>
+<p>Personally, I'd recommend argument JSON as the default with stdin support as well. From an agent's perspective, a self-contained single command is the easiest to work with.</p>
+<h3 id="output-design-best-practices">Output Design Best Practices</h3>
+<p>A few important principles for output design:</p>
+<ul>
+<li><code>--json</code> flag: keep the default human-readable, but return structured output when <code>--json</code> is passed</li>
+<li>NDJSON support: for streaming scenarios (logs, events, etc.), support line-delimited JSON</li>
+<li>Errors in JSON too: in <code>--json</code> mode, errors should also be returned as JSON, alongside exit codes</li>
+<li>Include metadata: pagination info, request IDs, timestamps should be part of the response</li>
+</ul>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Normal mode</span>
+$ mytool user list
+EMAIL              ROLE     CREATED
+alice@example.com  admin    2026-01-15
+bob@example.com    member   2026-02-20
+
+<span class="hljs-comment"># JSON mode</span>
+$ mytool user list --json
+<span class="hljs-operator">{</span>
+  <span class="hljs-string">&quot;data&quot;</span>: <span class="hljs-operator">[</span>
+    <span class="hljs-operator">{</span><span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;alice@example.com&quot;</span>, <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;admin&quot;</span>, <span class="hljs-string">&quot;created_at&quot;</span>: <span class="hljs-string">&quot;2026-01-15T00:00:00Z&quot;</span><span class="hljs-operator">}</span>,
+    <span class="hljs-operator">{</span><span class="hljs-string">&quot;email&quot;</span>: <span class="hljs-string">&quot;bob@example.com&quot;</span>, <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;member&quot;</span>, <span class="hljs-string">&quot;created_at&quot;</span>: <span class="hljs-string">&quot;2026-02-20T00:00:00Z&quot;</span><span class="hljs-operator">}</span>
+  <span class="hljs-operator">]</span>,
+  <span class="hljs-string">&quot;meta&quot;</span>: <span class="hljs-operator">{</span><span class="hljs-string">&quot;total&quot;</span>: 2, <span class="hljs-string">&quot;page&quot;</span>: 1, <span class="hljs-string">&quot;per_page&quot;</span>: 50<span class="hljs-operator">}</span>
+<span class="hljs-operator">}</span>
+</code></pre>
+<p>In the end, I actually went with JSON output as the default and added a <code>--no-json</code> flag instead. If the tool isn't meant for human use, unifying all I/O as JSON gave us the best hit rate.</p>
+<h3 id="versioning-backward-compatibility">Versioning &amp; Backward Compatibility</h3>
+<p>Versioning JSON output needs some care. A few strategies:</p>
+<ul>
+<li>Adding fields is safe, removing/changing is not: adding new fields doesn't break backward compatibility, but removing fields or changing types can break agents</li>
+<li>Include a version field: putting something like <code>&quot;api_version&quot;: &quot;v1&quot;</code> in the response lets agents branch based on version</li>
+<li>Deprecation warnings: fields slated for removal should be flagged in a separate warnings array</li>
+</ul>
+<h3 id="using-pydantic-zod-json-schema-for-validation">Using Pydantic / Zod / JSON Schema for Validation</h3>
+<p>Some tools for schema definition:</p>
+<ul>
+<li><strong>Python</strong>: Pydantic is the most convenient. Model definition → automatic JSON Schema generation → input validation, all in one</li>
+<li><strong>TypeScript/Node</strong>: Define schemas with Zod and convert using <code>zod-to-json-schema</code></li>
+<li><strong>Go/Rust etc.</strong>: Write JSON Schema files directly or use code-generation libraries</li>
+</ul>
+<p>The key point is that the type definitions used in your code and the schema returned by the schema command must come from the same source. If these are managed separately, they eventually drift out of sync.</p>
+<blockquote>
+<p>Truth be told, we didn't pay much attention to this in our project. And it led to quite a few failures.</p>
+</blockquote>
+<h3 id="ai-friendly-helper-flags">AI-Friendly Helper Flags</h3>
+<p>Beyond schema and JSON, a few more agent-friendly flags worth adding:</p>
+<ul>
+<li><code>--dry-run</code>: preview results without actually executing. Lets agents safely test things out</li>
+<li><code>--explain</code>: describe what the command will do in natural language. Helps with agent planning</li>
+<li><code>--output-format</code>: choose between json, yaml, csv, etc.</li>
+<li><code>--quiet</code>: strip unnecessary banners and warnings, return only essential output</li>
+<li><code>--no-color</code>: remove ANSI escape codes (honestly, every CLI should have this)</li>
+</ul>
+<h2 id="results-lessons-and-caveats-after-adoption">Results, Lessons, and Caveats After Adoption</h2>
+<h3 id="quantitative-qualitative-outcomes">Quantitative &amp; Qualitative Outcomes</h3>
+<p>I shared the JSON transition results earlier. Here's what changed after adding the schema command:</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>JSON Only</th>
+<th>JSON + Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Task success rate</td>
+<td>Around 90%</td>
+<td>~97% (almost all succeeded)</td>
+</tr>
+<tr>
+<td>Agent first-try accuracy</td>
+<td>~70%</td>
+<td>~90% (honestly, this was the biggest improvement)</td>
+</tr>
+<tr>
+<td>Doc references needed</td>
+<td>Avg 1.2 per task</td>
+<td>Nearly 0</td>
+</tr>
+</tbody>
+</table>
+<p>The sample size wasn't huge, so take the numbers with a grain of salt. But more importantly, the agent code got much simpler. Parsing logic disappeared and we could focus on business logic.</p>
+<h3 id="common-failure-patterns-we-observed">Common Failure Patterns We Observed</h3>
+<p>It's not perfect though. Common failure patterns and their fixes:</p>
+<ul>
+<li>Oversized JSON responses: when a list API returns thousands of items, it blows the agent's context window. Pagination and filtering are essential</li>
+<li>Deeply nested structures: JSON nested 5+ levels deep is hard for agents to navigate accurately. Keep it flat when possible</li>
+<li>Enum value errors: even with enums defined in the schema, agents sometimes insert similar but incorrect values. Input validation + clear error messages help</li>
+<li>optional vs required confusion: agents sometimes skip required fields. Mark required fields clearly in the schema and tell them which fields are missing in error messages</li>
+</ul>
+<h3 id="remaining-challenges">Remaining Challenges</h3>
+<p>Some unsolved problems remain:</p>
+<ul>
+<li>Complex pagination: getting agents to handle cursor-based pagination smoothly remains tricky</li>
+<li>Binary data: file uploads/downloads and other binary data are hard to express cleanly in JSON</li>
+<li>Long-running operations: tracking status and handling timeouts for tasks that take several minutes</li>
+</ul>
+<p>I still haven't found great answers for these. For long-running operations especially, most agents end up polling with their own sleep loops, which is pretty inefficient. Ideally, agents should be able to receive callbacks, but that's not easy to pull off.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Two essentials for building AI-friendly CLIs:</p>
+<ol>
+<li>JSON-First I/O: structure your inputs and outputs so agents can parse and use them reliably</li>
+<li>Schema Command: let the CLI describe its own interface, eliminating the dependency on external docs</li>
+</ol>
+<p>Just these two things made a noticeable difference in agent performance. If you want to start right away, the easiest entry point is adding a single <code>--json</code> flag to your existing CLI. That alone makes agent integration much smoother.</p>
+<p>CLIs are back.</p>
+<p><img loading="lazy" src="cli.webp" alt="" /></p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/posts/2026/building-ai-friendly-clis/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

