@@ -24,6 +24,76 @@ const learningPages = [
 ];
 const learningPageByRoute = new Map(learningPages.map((page) => [page.route, page]));
 const learningRouteSet = new Set(learningPages.map((page) => page.route));
+const sharedStyleMarker = '/* PIXN responsive navigation and progressive lists */';
+const sharedStyleEnhancements = `${sharedStyleMarker}
+@media (max-width:1180px){
+  .site-header{padding:0 var(--spacing-md)}
+  .nav-search{order:1;margin-left:0;padding:0;min-width:40px;min-height:40px;justify-content:center}
+  .nav-toggle{display:flex;order:2}
+  .nav-search svg{width:1.05rem;height:1.05rem}
+  .nav-search-key{display:none}
+  .main-nav .nav-menu{position:fixed;top:0;right:-320px;width:320px;max-width:86vw;height:100vh;flex-direction:column;align-items:flex-start;justify-content:flex-start;padding:calc(var(--spacing-xxl) + var(--spacing-xl)) var(--spacing-xl) var(--spacing-xl);background-color:var(--bg-secondary);border-left:1px solid var(--border-color);z-index:999;transition:right 0.32s cubic-bezier(0.2,0,0,1);gap:0;overflow-y:auto}
+  .main-nav .nav-menu.active{right:0}
+  .main-nav .nav-menu a{width:100%;padding:var(--spacing-md) 0;font-size:var(--font-size-md);letter-spacing:var(--tracking-wider);border-bottom:1px solid var(--border-color)}
+  .main-nav .nav-menu a:first-child{border-top:1px solid var(--border-color)}
+  .main-nav .nav-menu a.active::after{left:0;transform:none}
+  .nav-overlay{display:block;pointer-events:none}
+  .nav-overlay.active{pointer-events:auto}
+}
+.progressive-list > [hidden]{display:none!important}
+.list-reveal{display:flex;align-items:center;justify-content:center;width:100%;margin:var(--spacing-xl) 0 0;padding:0.9rem var(--spacing-md);border:1px solid var(--border-color);background:transparent;color:var(--text-muted);font-family:var(--font-family-mono);font-size:var(--font-size-x-small);letter-spacing:var(--tracking-widest);text-transform:uppercase;cursor:pointer;transition:color .2s ease,border-color .2s ease,background-color .2s ease}
+.list-reveal:hover{color:var(--text-primary);border-color:var(--text-muted);background-color:var(--bg-secondary)}
+.list-reveal:focus-visible{outline:2px solid var(--accent-warm);outline-offset:3px}
+`;
+const sharedScriptMarker = '// PIXN progressive lists';
+const sharedScriptEnhancements = `
+${sharedScriptMarker}
+(() => {
+  const initialLimit = 12;
+  const setupProgressiveLists = () => {
+    document.querySelectorAll('.entry-list, .post-list, .taxonomy-terms').forEach((list) => {
+      if (list.dataset.progressiveReady === 'true') return;
+      const items = Array.from(list.children).filter((item) => !item.classList.contains('entry-year'));
+      if (items.length <= initialLimit) return;
+
+      list.dataset.progressiveReady = 'true';
+      list.classList.add('progressive-list');
+      const reveal = document.createElement('button');
+      reveal.type = 'button';
+      reveal.className = 'list-reveal';
+
+      const update = (expanded) => {
+        items.forEach((item, index) => {
+          item.hidden = !expanded && index >= initialLimit;
+        });
+        Array.from(list.children)
+          .filter((item) => item.classList.contains('entry-year'))
+          .forEach((year) => {
+            let sibling = year.nextElementSibling;
+            let hasVisibleItem = false;
+            while (sibling && !sibling.classList.contains('entry-year')) {
+              if (!sibling.hidden) hasVisibleItem = true;
+              sibling = sibling.nextElementSibling;
+            }
+            year.hidden = !hasVisibleItem;
+          });
+        reveal.setAttribute('aria-expanded', String(expanded));
+        reveal.textContent = expanded ? 'Show less' : 'Show more · ' + (items.length - initialLimit);
+      };
+
+      reveal.addEventListener('click', () => update(reveal.getAttribute('aria-expanded') !== 'true'));
+      list.insertAdjacentElement('afterend', reveal);
+      update(false);
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupProgressiveLists, { once: true });
+  } else {
+    setupProgressiveLists();
+  }
+})();
+`;
 
 function parseArgs(values) {
   const parsed = {};
@@ -898,6 +968,14 @@ async function writeIfChanged(file, next) {
   return current !== next;
 }
 
+function transformSharedStyles(text) {
+  return text.includes(sharedStyleMarker) ? text : `${text.trimEnd()}\n${sharedStyleEnhancements}`;
+}
+
+function transformSharedScript(text) {
+  return text.includes(sharedScriptMarker) ? text : `${text.trimEnd()}${sharedScriptEnhancements}`;
+}
+
 async function ensureLearningPages() {
   const seed = await readFile(path.join(publicRoot, 'about', 'index.html'), 'utf8');
   for (const page of learningPages) {
@@ -961,6 +1039,16 @@ if (previewOnly) {
     if (relativePath === 'rss.xml' || relativePath === 'ko/rss.xml') {
       const text = await readFile(file, 'utf8');
       if (await writeIfChanged(file, transformRss(text))) changed += 1;
+      continue;
+    }
+    if (/^assets\/main\.[\w-]+\.css$/.test(relativePath)) {
+      const text = await readFile(file, 'utf8');
+      if (await writeIfChanged(file, transformSharedStyles(text))) changed += 1;
+      continue;
+    }
+    if (/^assets\/app\.[\w-]+\.js$/.test(relativePath)) {
+      const text = await readFile(file, 'utf8');
+      if (await writeIfChanged(file, transformSharedScript(text))) changed += 1;
       continue;
     }
     if (relativePath === 'mirror-manifest.json') {

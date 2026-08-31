@@ -873,3 +873,49 @@ document.addEventListener("DOMContentLoaded", function () {
   };
   document.head.appendChild(script);
 })();
+// PIXN progressive lists
+(() => {
+  const initialLimit = 12;
+  const setupProgressiveLists = () => {
+    document.querySelectorAll('.entry-list, .post-list, .taxonomy-terms').forEach((list) => {
+      if (list.dataset.progressiveReady === 'true') return;
+      const items = Array.from(list.children).filter((item) => !item.classList.contains('entry-year'));
+      if (items.length <= initialLimit) return;
+
+      list.dataset.progressiveReady = 'true';
+      list.classList.add('progressive-list');
+      const reveal = document.createElement('button');
+      reveal.type = 'button';
+      reveal.className = 'list-reveal';
+
+      const update = (expanded) => {
+        items.forEach((item, index) => {
+          item.hidden = !expanded && index >= initialLimit;
+        });
+        Array.from(list.children)
+          .filter((item) => item.classList.contains('entry-year'))
+          .forEach((year) => {
+            let sibling = year.nextElementSibling;
+            let hasVisibleItem = false;
+            while (sibling && !sibling.classList.contains('entry-year')) {
+              if (!sibling.hidden) hasVisibleItem = true;
+              sibling = sibling.nextElementSibling;
+            }
+            year.hidden = !hasVisibleItem;
+          });
+        reveal.setAttribute('aria-expanded', String(expanded));
+        reveal.textContent = expanded ? 'Show less' : 'Show more · ' + (items.length - initialLimit);
+      };
+
+      reveal.addEventListener('click', () => update(reveal.getAttribute('aria-expanded') !== 'true'));
+      list.insertAdjacentElement('afterend', reveal);
+      update(false);
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupProgressiveLists, { once: true });
+  } else {
+    setupProgressiveLists();
+  }
+})();
