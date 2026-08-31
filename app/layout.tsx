@@ -15,18 +15,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://pixn-analytics-portfolio.forhm0220.chatgpt.site'),
   title: 'PIXN — Web Security & Applied Cryptography',
-  description: 'Field notes from an aspiring security engineer exploring web security, applied cryptography, secure systems, and open-source tooling.',
+  description: 'Field notes from PIXN, a student exploring web security, applied cryptography, secure systems, and open-source tooling.',
   icons: { icon: '/favicon.svg' },
   openGraph: {
     title: 'PIXN — Web Security & Applied Cryptography',
-    description: 'Field notes from an aspiring security engineer exploring web security, applied cryptography, secure systems, and open-source tooling.',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'PIXN Web Security and Applied Cryptography' }],
+    description: 'Field notes from PIXN, a student exploring web security, applied cryptography, secure systems, and open-source tooling.',
+    images: [{ url: '/og-pixn-field-notes.png', width: 1200, height: 630, alt: 'PIXN Web Security and Applied Cryptography' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'PIXN — Web Security & Applied Cryptography',
-    description: 'Field notes from an aspiring security engineer exploring web security, applied cryptography, secure systems, and open-source tooling.',
-    images: ['/og.png'],
+    description: 'Field notes from PIXN, a student exploring web security, applied cryptography, secure systems, and open-source tooling.',
+    images: ['/og-pixn-field-notes.png'],
   },
 };
 

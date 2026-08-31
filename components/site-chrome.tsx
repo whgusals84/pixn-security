@@ -28,7 +28,7 @@ export function SiteFooter() {
         <a href="/archive/">ARCHIVE</a>
         <a href="/about">ABOUT</a>
       </nav>
-      <p>SECURITY KNOWLEDGE ARCHIVE</p>
+      <p>WEB SECURITY · APPLIED CRYPTOGRAPHY</p>
       <p>© 2026 PIXN.</p>
     </footer>
   );

@@ -46,7 +46,7 @@ export function SiteSearch() {
         <CommandInput placeholder="검색어를 입력하세요…" className="search-input" />
         <CommandList className="search-list">
           <CommandEmpty>검색 결과가 없습니다.</CommandEmpty>
-          <CommandGroup heading="PIXN ARCHIVE">
+          <CommandGroup heading="FIELD NOTES">
             {searchItems.map((item) => (
               <CommandItem
                 key={`${item.type}-${item.label}`}

@@ -27,7 +27,7 @@ export default function Home() {
             Built to Understand.
           </h1>
           <p className="hero-copy">
-            Field notes from an aspiring security engineer exploring web vulnerabilities,
+            Field notes from PIXN, a student exploring web vulnerabilities,
             <br className="desktop-break" /> secure systems, cryptographic protocols, and open-source tooling.
           </p>
           <a className="text-link" href="/sec/">EXPLORE THE FIELD NOTES</a>

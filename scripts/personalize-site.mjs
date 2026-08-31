@@ -9,8 +9,8 @@ const previewOnly = Boolean(args.preview);
 
 const removedDiscoveryRoutes = REMOVED_DISCOVERY_ROUTES;
 const removedDiscoveryRouteSet = new Set(REMOVED_DISCOVERY_ROUTES);
-const siteDescription = 'Field notes from an aspiring security engineer exploring web security, applied cryptography, secure systems, and open-source tooling.';
-const koSiteDescription = '웹 보안, 응용 암호학, 안전한 시스템과 오픈소스 도구를 탐구하는 예비 보안 엔지니어의 기술 아카이브입니다.';
+const siteDescription = 'Field notes from PIXN, a student exploring web security, applied cryptography, secure systems, and open-source tooling.';
+const koSiteDescription = '웹 보안, 응용 암호학, 안전한 시스템과 오픈소스 도구를 공부하는 학생 PIXN의 기술 노트입니다.';
 const priorPublisherSocialUrlSource = String.raw`https?:\/\/(?:www\.)?(?:x\.com\/(?:hahwul|hahwul_)|twitter\.com\/(?:hahwul|hahwul_)|instagram\.com\/(?:hahwul|hahwul_)|linkedin\.com\/(?:in\/)?(?:hahwul|hahwul_))(?:\/[^\s"'<>]*)?`;
 const priorPublisherSocialUrlPattern = new RegExp(`^${priorPublisherSocialUrlSource}$`, 'i');
 
@@ -107,7 +107,7 @@ function homeMain() {
         <section class="gallery-hero exhibit is-lit" aria-label="PIXN Web Security and Applied Cryptography">
             <p class="hero-inscription"><span class="hw-mark" role="img" aria-label="PIXN"></span></p>
             <h1 class="hero-statement">Web Security. Applied Cryptography. Built to Understand.</h1>
-            <p class="hero-intro">Field notes from an aspiring security engineer exploring web vulnerabilities, secure systems, cryptographic protocols, and open-source tooling.</p>
+            <p class="hero-intro">Field notes from PIXN, a student exploring web vulnerabilities, secure systems, cryptographic protocols, and open-source tooling.</p>
             <p class="hero-doors"><a class="hero-archive-link" href="/sec/">Explore the field notes</a></p>
         </section>
 
@@ -145,11 +145,11 @@ function aboutMain(language) {
   const title = korean ? 'PIXN 소개' : 'About PIXN';
   const description = korean ? koSiteDescription : siteDescription;
   const paragraphs = korean
-    ? `<p>PIXN은 웹 보안, 응용 암호학, 안전한 시스템을 탐구하는 예비 보안 엔지니어의 기술 아카이브입니다.</p>
-       <p>취약점의 원리, 방어 관점의 테스트 방법, 암호 프로토콜, Secure SDLC와 오픈소스 보안 도구를 주제별로 연결합니다.</p>
+    ? `<p>PIXN은 웹 보안, 응용 암호학, 안전한 시스템을 공부하며 보안 엔지니어를 목표로 하는 학생입니다.</p>
+       <p>이 웹사이트에는 취약점의 원리, 방어 관점의 테스트 방법, 암호 프로토콜, Secure SDLC와 오픈소스 보안 도구를 공부하며 정리한 내용을 기록합니다.</p>
        <p>오래된 자료는 역사적 참고 자료로 제공되며, 실제 시스템에서는 반드시 최신 공식 문서와 안전한 실습 환경을 함께 사용해야 합니다.</p>`
-    : `<p>PIXN is a growing technical archive by an aspiring security engineer focused on web security, applied cryptography, and secure systems.</p>
-       <p>It connects vulnerability research, defensive testing, cryptographic protocols, Secure SDLC guidance, and open-source security tooling.</p>
+    : `<p>PIXN is a student studying web security, applied cryptography, and secure systems while working toward becoming a security engineer.</p>
+       <p>This website is where PIXN organizes field notes on vulnerability research, defensive testing, cryptographic protocols, Secure SDLC guidance, and open-source security tooling.</p>
        <p>Older material is retained as historical reference. Always verify current official guidance and use an authorized lab environment before testing.</p>`;
   return `<main id="main-content">
     <div class="container">
@@ -168,10 +168,10 @@ function privacyMain() {
   return `<main id="main-content">
     <div class="container">
         <div class="post-wrapper"><article class="post-content">
-            <header class="page-header"><h1 class="page-title">Privacy Policy</h1><p class="page-description">Privacy information for the PIXN knowledge archive.</p></header>
+            <header class="page-header"><h1 class="page-title">Privacy Policy</h1><p class="page-description">Privacy information for this personal website.</p></header>
             <div class="post-body">
                 <p><strong>Last updated:</strong> August 2026</p>
-                <p>PIXN currently provides public, read-only reference pages and does not offer visitor accounts or contact forms.</p>
+                <p>This website currently provides public, read-only reference pages and does not offer visitor accounts or contact forms.</p>
                 <h2>Hosting</h2><p>The hosting provider may process basic request information, such as IP addresses and browser details, to deliver and protect the site.</p>
                 <h2>Analytics</h2><p>No analytics policy is declared here until an analytics service is enabled. This notice must be updated before any optional analytics or advertising technology is introduced.</p>
                 <h2>External links</h2><p>External services have their own privacy practices. Review their policies before providing personal information.</p>
@@ -185,8 +185,8 @@ function removedPage(language) {
   const korean = language === 'ko';
   const title = korean ? '콘텐츠가 정리되었습니다' : 'Content removed';
   const message = korean
-    ? '이 경로에는 이전 발행자의 개인 소개, 연락처, 경력 또는 행사 기록이 있어 PIXN 학습 아카이브에서 제외했습니다.'
-    : 'This route contained personal profile, contact, career, or event material from the previous publication and is not part of the PIXN learning archive.';
+    ? '이 경로에는 이전 발행자의 개인 소개, 연락처, 경력 또는 행사 기록이 있어 이 사이트의 학습 자료에서 제외했습니다.'
+    : 'This route contained personal profile, contact, career, or event material from the previous publication and is not part of this site’s learning materials.';
   return `<!DOCTYPE html>
 <html lang="${korean ? 'ko' : 'en'}">
 <head>
@@ -475,10 +475,21 @@ function cleanChrome(html) {
   return neutralizeTechnicalIdentifiers(neutralizePriorPublisherSocialReferences(removePersonalRouteLinks(output)));
 }
 
+function localizeRuntimeAssets(html) {
+  return html
+    .replaceAll(`${targetOrigin}/assets/`, '/assets/')
+    .replaceAll(`${targetOrigin}/search_index.json`, '/search_index.json')
+    .replaceAll(`${targetOrigin}/og.png`, `${targetOrigin}/og-pixn-field-notes.png`)
+    .replace(
+      new RegExp(`${escapeRegExp(targetOrigin)}/og-images/[^"'<>\\s]+\\.png`, 'g'),
+      `${targetOrigin}/og-pixn-field-notes.png`,
+    );
+}
+
 function transformHtml(relativePath, html) {
   const route = relativeFileToRoute(relativePath);
   const language = route.startsWith('/ko/') ? 'ko' : 'en';
-  if (removedDiscoveryRouteSet.has(route)) return removedPage(language);
+  if (removedDiscoveryRouteSet.has(route)) return localizeRuntimeAssets(removedPage(language));
 
   let output = html;
   if (route === '/') output = personalizeHomeMetadata(replaceMain(output, homeMain()));
@@ -513,7 +524,7 @@ function transformHtml(relativePath, html) {
   if (route === '/blog/2021/what-is-wellknown-directory/') {
     output = output.replaceAll('contact information is not published', 'security@example.com');
   }
-  return output;
+  return localizeRuntimeAssets(output);
 }
 
 function transformSearchIndex(text) {
@@ -534,16 +545,16 @@ function transformSearchIndex(text) {
       if (updated.url === '/about/') {
         updated.title = 'About PIXN';
         updated.description = siteDescription;
-        updated.content = 'PIXN is a topic-driven knowledge archive for web security, secure software engineering, and open-source security tools.';
+        updated.content = 'PIXN is a student studying web security, applied cryptography, and secure systems. This website organizes PIXN’s field notes on secure software engineering and open-source security tools.';
       }
       if (updated.url === '/ko/about/') {
         updated.title = 'PIXN 소개';
         updated.description = koSiteDescription;
-        updated.content = 'PIXN은 웹 보안과 안전한 소프트웨어 개발을 위한 학습 자료를 주제별로 정리한 지식 아카이브입니다.';
+        updated.content = 'PIXN은 웹 보안, 응용 암호학, 안전한 시스템을 공부하는 학생입니다. 이 웹사이트에는 공부한 보안 지식과 오픈소스 도구 관련 기술 노트를 정리합니다.';
       }
       if (updated.url === '/privacy/') {
-        updated.description = 'Privacy information for the PIXN knowledge archive.';
-        updated.content = 'PIXN provides public, read-only reference pages without visitor accounts or contact forms. The hosting provider may process basic request information to deliver and protect the site. This notice must be updated before optional analytics or advertising technology is introduced.';
+        updated.description = 'Privacy information for this personal website.';
+        updated.content = 'This website provides public, read-only reference pages without visitor accounts or contact forms. The hosting provider may process basic request information to deliver and protect the site. This notice must be updated before optional analytics or advertising technology is introduced.';
       }
       if (updated.url === '/blog/' || updated.url === '/ko/blog/') {
         updated.content = 'A technical archive of security research, development notes, and practical references.';

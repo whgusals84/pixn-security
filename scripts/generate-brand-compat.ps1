@@ -39,7 +39,7 @@ function New-PixnBitmap {
     $captionBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(124, 124, 116))
     $graphics.DrawString('PX', $markFont, $markBrush, 84, 118)
     $graphics.DrawString('PIXN', $wordFont, $wordBrush, 91, 350)
-    $graphics.DrawString('ARCHIVE', $captionFont, $captionBrush, 94, 430)
+    $graphics.DrawString('WEB SECURITY', $captionFont, $captionBrush, 94, 430)
     $markFont.Dispose()
     $wordFont.Dispose()
     $captionFont.Dispose()
