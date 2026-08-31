@@ -12,6 +12,7 @@
     "mirror:archive": "node scripts/archive-hahwul.mjs --output .mirror-source",
     "mirror:build": "node scripts/build-mirror.mjs --source .mirror-source --destination public --origin https://pixn-analytics-portfolio.forhm0220.chatgpt.site && node scripts/personalize-site.mjs --public public --origin https://pixn-analytics-portfolio.forhm0220.chatgpt.site && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/generate-brand-compat.ps1 -PublicRoot public",
     "site:personalize": "node scripts/personalize-site.mjs --public public --origin https://pixn-analytics-portfolio.forhm0220.chatgpt.site",
+    "github:build": "node scripts/build-github-pages.mjs",
     "lint": "oxlint",
     "format": "oxfmt"
   },
