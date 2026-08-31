@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = {
   metadataBase: new URL("https://pixn-analytics-portfolio.forhm0220.chatgpt.site"),
   title: "PIXN — Personal Blog",
-  description: "보안, 개발, 공부와 일상의 기록을 담는 PIXN의 개인 블로그입니다.",
+  description: "A personal blog by PIXN about security, code, study, and the things worth remembering.",
   openGraph: {
     title: "PIXN — Personal Blog",
     description: "Security, code, study, and life — notes from what PIXN actually learns.",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang="en">
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="stylesheet" href="/assets/style.css" />

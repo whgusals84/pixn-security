@@ -19,7 +19,7 @@
       <a class="skip-link" href="#main">Skip to content</a>
       <div class="nav-shell">
         <a class="brand" href="${to('')}" aria-label="PIXN home">
-          <span class="brand-mark" aria-hidden="true">Px</span>
+          <span class="pixn-mark brand-mark" aria-hidden="true"></span>
           <span class="brand-name">PIXN</span>
         </a>
         <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span></button>
