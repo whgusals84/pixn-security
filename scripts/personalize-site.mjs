@@ -134,8 +134,9 @@ function homeMain() {
             </header>
             <ul class="home-ledger">
                 <li><a class="ledger-row" href="/sec/web-security/"><span class="ledger-key">01</span><span class="ledger-body"><span class="ledger-title">Web Security</span><span class="ledger-desc">Browser, protocol, and application security fundamentals</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/sec/secure-sdlc/"><span class="ledger-key">02</span><span class="ledger-body"><span class="ledger-title">Secure SDLC</span><span class="ledger-desc">Threat modeling, DevSecOps, and secure delivery practices</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/sec/how-to-hack/"><span class="ledger-key">03</span><span class="ledger-body"><span class="ledger-title">Security Testing</span><span class="ledger-desc">Defensive testing methods for web, mobile, and software</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/sec/cryptography/"><span class="ledger-key">02</span><span class="ledger-body"><span class="ledger-title">Cryptography</span><span class="ledger-desc">Cryptographic primitives, protocols, and implementation risks</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/sec/secure-sdlc/"><span class="ledger-key">03</span><span class="ledger-body"><span class="ledger-title">Secure SDLC</span><span class="ledger-desc">Threat modeling, DevSecOps, and secure delivery practices</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/sec/how-to-hack/"><span class="ledger-key">04</span><span class="ledger-body"><span class="ledger-title">Security Testing</span><span class="ledger-desc">Defensive testing methods for web, mobile, and software</span></span><span aria-hidden="true">↗</span></a></li>
             </ul>
         </section>
 
@@ -220,6 +221,79 @@ function writingMain() {
 </main>`;
 }
 
+function securityMain() {
+  return `<main id="main-content">
+    <div class="container">
+        <div class="post-wrapper"><article class="post-content">
+            <header class="page-header"><h1 class="page-title">Security Learning</h1><p class="page-description">Foundations, testing methods, and practical security tooling.</p></header>
+            <div class="post-body">
+                <h2>Core subjects</h2>
+                <ul class="home-ledger">
+                    <li><a class="ledger-row" href="/sec/web-security/"><span class="ledger-key">01</span><span class="ledger-body"><span class="ledger-title">Web Security</span><span class="ledger-desc">Browsers, protocols, headers, and application security</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/cryptography/"><span class="ledger-key">02</span><span class="ledger-body"><span class="ledger-title">Cryptography</span><span class="ledger-desc">Primitives, protocols, and implementation risks</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/secure-sdlc/"><span class="ledger-key">03</span><span class="ledger-body"><span class="ledger-title">Secure SDLC</span><span class="ledger-desc">Threat modeling, DevSecOps, and secure delivery</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/how-to-hack/"><span class="ledger-key">04</span><span class="ledger-body"><span class="ledger-title">Security Testing</span><span class="ledger-desc">Authorized testing methods for web, software, and platforms</span></span><span aria-hidden="true">↗</span></a></li>
+                </ul>
+                <h2>Specialized guides</h2>
+                <ul class="home-ledger">
+                    <li><a class="ledger-row" href="/sec/web-hacking/"><span class="ledger-key">WEB</span><span class="ledger-body"><span class="ledger-title">Web Hacking</span><span class="ledger-desc">Applied web testing and out-of-band techniques</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/mobile-hacking/"><span class="ledger-key">MOB</span><span class="ledger-body"><span class="ledger-title">Mobile Security</span><span class="ledger-desc">Mobile application testing references</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/caido/"><span class="ledger-key">CAIDO</span><span class="ledger-body"><span class="ledger-title">Caido</span><span class="ledger-desc">Web security proxy setup and workflows</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/zap/"><span class="ledger-key">ZAP</span><span class="ledger-body"><span class="ledger-title">OWASP ZAP</span><span class="ledger-desc">Scanning, scripting, and automation guides</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/metasploit/"><span class="ledger-key">MSF</span><span class="ledger-body"><span class="ledger-title">Metasploit</span><span class="ledger-desc">Framework references for authorized labs</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/sec/flipper/"><span class="ledger-key">FLIP</span><span class="ledger-body"><span class="ledger-title">Flipper</span><span class="ledger-desc">Hardware security study notes</span></span><span aria-hidden="true">↗</span></a></li>
+                </ul>
+            </div>
+        </article></div>
+    </div>
+</main>`;
+}
+
+function webSecurityMain() {
+  const topics = [
+    ['/sec/web-security/graphql/', 'GraphQL', 'Query design and API security'],
+    ['/sec/web-security/csp/', 'Content Security Policy', 'Browser-enforced content restrictions'],
+    ['/sec/web-security/owasp-top-10/', 'OWASP Top 10', 'Common web application security risks'],
+    ['/sec/web-security/websocket/', 'WebSocket', 'Persistent connection security'],
+    ['/sec/web-security/cookies/', 'Cookies', 'Session state and browser cookie controls'],
+    ['/sec/web-security/sri/', 'Subresource Integrity', 'Integrity checks for external resources'],
+    ['/sec/web-security/sse/', 'Server-Sent Events', 'One-way event stream security'],
+    ['/sec/web-security/coop/', 'Cross-Origin Opener Policy', 'Browsing-context isolation'],
+  ];
+  return collectionMain('Web Security', 'Browser, protocol, and application security topics.', topics);
+}
+
+function postsMain() {
+  const topics = [
+    ['/posts/2026/', '2026 Posts', 'Browse the current year archive'],
+    ['/posts/2026/rust-and-crystal/', 'Rust and Crystal: My Two Main Languages', 'Programming language notes'],
+    ['/posts/2026/traveling-with-hermes-in-japan/', 'Traveling with Hermes in Japan', 'Remote AI workflow notes'],
+    ['/posts/2026/building-ai-friendly-clis/', 'Building AI-Friendly CLIs', 'JSON-first command-line design'],
+  ];
+  return collectionMain('Posts', 'Finished articles and longer technical explanations.', topics);
+}
+
+function notesMain() {
+  const topics = [
+    ['/notes/claude-code/', 'Claude Code', 'Claude Code workflow notes'],
+    ['/notes/claude-code/remove-co-authored-by/', 'Remove co-authored-by when committing', 'A focused Git configuration note'],
+    ['/notes/grok-build/', 'Grok Build', 'Reserved topic for future notes'],
+    ['/notes/hhkb/', 'HHKB', 'Keyboard documentation and references'],
+  ];
+  return collectionMain('Notes', 'Quick notes, tips, and references recorded while learning.', topics);
+}
+
+function blogMain() {
+  const counts = { 2014: 1, 2015: 66, 2016: 63, 2017: 91, 2018: 128, 2019: 132, 2020: 65, 2021: 117, 2022: 64, 2023: 32, 2024: 15, 2025: 11 };
+  const topics = Object.entries(counts).reverse().map(([year, count]) => [`/blog/${year}/`, year, `${count} technical ${count === 1 ? 'article' : 'articles'}`]);
+  return collectionMain('Technical Library', 'Preserved security, software, and tooling references organized by year.', topics);
+}
+
+function collectionMain(title, description, topics) {
+  const rows = topics.map(([href, label, detail], index) => `<li><a class="ledger-row" href="${href}"><span class="ledger-key">${String(index + 1).padStart(2, '0')}</span><span class="ledger-body"><span class="ledger-title">${label}</span><span class="ledger-desc">${detail}</span></span><span aria-hidden="true">↗</span></a></li>`).join('');
+  return `<main id="main-content"><div class="container"><div class="post-wrapper"><article class="post-content"><header class="page-header"><h1 class="page-title">${title}</h1><p class="page-description">${description}</p></header><div class="post-body"><ul class="home-ledger">${rows}</ul></div></article></div></div></main>`;
+}
+
 function referenceMain() {
   return `<main id="main-content">
     <div class="container">
@@ -231,6 +305,9 @@ function referenceMain() {
                     <li><a class="ledger-row" href="/tags/"><span class="ledger-key">A–Z</span><span class="ledger-body"><span class="ledger-title">Topic Index</span><span class="ledger-desc">Browse security, development, and tooling notes by tag</span></span><span aria-hidden="true">↗</span></a></li>
                     <li><a class="ledger-row" href="/cullinan/attack/"><span class="ledger-key">ATK</span><span class="ledger-body"><span class="ledger-title">Attack References</span><span class="ledger-desc">Techniques organized for study and defensive verification</span></span><span aria-hidden="true">↗</span></a></li>
                     <li><a class="ledger-row" href="/cullinan/tool/"><span class="ledger-key">TOOLS</span><span class="ledger-body"><span class="ledger-title">Security Tool Catalog</span><span class="ledger-desc">Testing utilities, scanners, and supporting workflows</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/cullinan/develop/"><span class="ledger-key">DEV</span><span class="ledger-body"><span class="ledger-title">Development References</span><span class="ledger-desc">Implementation and engineering references</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/cullinan/security/"><span class="ledger-key">SEC</span><span class="ledger-body"><span class="ledger-title">Security References</span><span class="ledger-desc">General defensive security reference material</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/dev/"><span class="ledger-key">CODE</span><span class="ledger-body"><span class="ledger-title">Development Notes</span><span class="ledger-desc">Software development notes preserved in the library</span></span><span aria-hidden="true">↗</span></a></li>
                     <li><a class="ledger-row" href="/archive/"><span class="ledger-key">2014—</span><span class="ledger-body"><span class="ledger-title">Technical Archive</span><span class="ledger-desc">Historical security and development notes</span></span><span aria-hidden="true">↗</span></a></li>
                 </ul>
             </div>
@@ -643,6 +720,11 @@ function transformHtml(relativePath, html) {
 
   let output = html;
   if (route === '/') output = personalizeHomeMetadata(replaceMain(output, homeMain()));
+  if (route === '/sec/') output = replaceMain(output, securityMain());
+  if (route === '/sec/web-security/') output = replaceMain(output, webSecurityMain());
+  if (route === '/posts/') output = replaceMain(output, postsMain());
+  if (route === '/notes/') output = replaceMain(output, notesMain());
+  if (route === '/blog/') output = replaceMain(output, blogMain());
   if (route === '/about/') output = replaceMain(output, aboutMain('en'));
   if (route === '/ko/about/') output = replaceMain(output, aboutMain('ko'));
   if (route === '/privacy/') output = replaceMain(output, privacyMain());

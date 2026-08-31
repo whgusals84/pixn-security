@@ -125,6 +125,23 @@ if (!homepage.includes('href="/reference/"')) errors.push('homepage does not lin
 const aboutPage = await readFile(path.join(publicRoot, 'about', 'index.html'), 'utf8');
 if (!aboutPage.includes('About PIXN') || /Lee Hwan|HAHWUL/i.test(aboutPage)) errors.push('about page was not neutralized');
 
+const hubRequirements = {
+  'sec/index.html': ['/sec/web-security/', '/sec/cryptography/', '/sec/secure-sdlc/', '/sec/how-to-hack/', '/sec/web-hacking/', '/sec/mobile-hacking/', '/sec/caido/', '/sec/zap/', '/sec/metasploit/', '/sec/flipper/'],
+  'sec/web-security/index.html': ['/sec/web-security/graphql/', '/sec/web-security/csp/', '/sec/web-security/owasp-top-10/', '/sec/web-security/websocket/', '/sec/web-security/cookies/', '/sec/web-security/sri/', '/sec/web-security/sse/', '/sec/web-security/coop/'],
+  'posts/index.html': ['/posts/2026/'],
+  'notes/index.html': ['/notes/claude-code/', '/notes/grok-build/', '/notes/hhkb/'],
+  'blog/index.html': Array.from({ length: 12 }, (_, index) => `/blog/${2014 + index}/`),
+  'writing/index.html': ['/posts/', '/notes/', '/blog/'],
+  'labs/index.html': ['/labs/dreamhack/', '/labs/web/', '/labs/crypto/', '/labs/system/'],
+  'reference/index.html': ['/tags/', '/cullinan/attack/', '/cullinan/tool/', '/cullinan/develop/', '/cullinan/security/', '/dev/', '/archive/'],
+};
+for (const [relativePath, requiredLinks] of Object.entries(hubRequirements)) {
+  const hub = await readFile(path.join(publicRoot, relativePath), 'utf8');
+  for (const requiredLink of requiredLinks) {
+    if (!hub.includes(`href="${requiredLink}"`)) errors.push(`hub link missing from ${relativePath}: ${requiredLink}`);
+  }
+}
+
 const sensitivePage = await readFile(
   path.join(publicRoot, 'blog', '2015', 'metasploit-metasploit-generate-payload', 'index.html'),
   'utf8',
