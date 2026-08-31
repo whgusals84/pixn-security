@@ -8,10 +8,13 @@ export function SiteHeader() {
         <span>PIXN</span>
       </a>
       <nav className="main-nav" aria-label="주요 메뉴">
-        <a href="/sec/">SECURITY</a>
-        <a href="/tags/">TOPICS</a>
-        <a href="/projects/">TOOLS</a>
-        <a href="/about">ABOUT</a>
+        <a href="/sec/">LEARN</a>
+        <a href="/writing/">WRITING</a>
+        <a href="/labs/">LABS</a>
+        <a href="/projects/">PROJECTS</a>
+        <a href="/reference/">REFERENCE</a>
+        <a href="/about/">ABOUT</a>
+        <a href="/admin/">MANAGE</a>
       </nav>
       <SiteSearch />
     </header>
@@ -23,10 +26,11 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-mark">PX</div>
       <nav aria-label="하단 메뉴">
-        <a href="/sec/">SECURITY</a>
-        <a href="/projects/">TOOLS</a>
-        <a href="/archive/">ARCHIVE</a>
-        <a href="/about">ABOUT</a>
+        <a href="/journal/">LATEST</a>
+        <a href="/writing/">WRITING</a>
+        <a href="/labs/">LABS</a>
+        <a href="/projects/">PROJECTS</a>
+        <a href="/admin/">MANAGE</a>
       </nav>
       <p>WEB SECURITY · APPLIED CRYPTOGRAPHY</p>
       <p>© 2026 PIXN.</p>
