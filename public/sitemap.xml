@@ -1667,4 +1667,29 @@
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/labs/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/labs/dreamhack/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/labs/web/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/labs/crypto/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pixn-analytics-portfolio.forhm0220.chatgpt.site/labs/system/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

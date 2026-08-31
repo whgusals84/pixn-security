@@ -82,12 +82,7 @@
 
     <div class="nav-overlay"></div>
 
-    <div class="nav-menu" id="nav-menu">
-        <a href="/posts/">Posts</a>
-        <a href="/notes/">Notes</a>
-        <a href="/projects/">Projects</a>
-        <a href="/sec/">Security</a>
-    </div>
+    <div class="nav-menu" id="nav-menu"><a href="/posts/">Posts</a><a href="/notes/">Notes</a><a href="/labs/">Labs</a><a href="/projects/">Projects</a><a href="/sec/">Security</a></div>
 
     <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
         <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
@@ -171,6 +166,20 @@
             </ul>
         </section>
 
+        <section class="home-room exhibit" aria-labelledby="plate-practice">
+            <header class="plate-row">
+                <h2 class="plate" id="plate-practice">Practice &amp; write-ups</h2>
+                <span class="plate-rule" aria-hidden="true"></span>
+                <a class="plate-link" href="/labs/">All labs</a>
+            </header>
+            <ul class="home-ledger">
+                <li><a class="ledger-row" href="/labs/dreamhack/"><span class="ledger-key">DH</span><span class="ledger-body"><span class="ledger-title">Dreamhack Write-ups</span><span class="ledger-desc">Challenge approaches, mistakes, and lessons from authorized practice</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/labs/web/"><span class="ledger-key">WEB</span><span class="ledger-body"><span class="ledger-title">Web Wargame Notes</span><span class="ledger-desc">Browser, authentication, injection, and application-logic challenges</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/labs/crypto/"><span class="ledger-key">CRYP</span><span class="ledger-body"><span class="ledger-title">Cryptography Challenges</span><span class="ledger-desc">Protocols, primitives, encodings, and implementation mistakes</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/labs/system/"><span class="ledger-key">PWN</span><span class="ledger-body"><span class="ledger-title">System &amp; Pwn Challenges</span><span class="ledger-desc">Binary analysis, debugging, and memory-safety practice</span></span><span aria-hidden="true">↗</span></a></li>
+            </ul>
+        </section>
+
         <section class="home-room exhibit" aria-labelledby="plate-resources">
             <header class="plate-row">
                 <h2 class="plate" id="plate-resources">Reference library</h2>
@@ -192,9 +201,11 @@
             <span class="hw-mark footer-mark" aria-hidden="true"></span>
             <nav class="footer-menu" aria-label="Footer">
                 <a href="/sec/">SECURITY</a>
+                <a href="/labs/">LABS</a>
                 <a href="/tags/">TAGS</a>
                 <a href="/projects/">TOOLS</a>
                 <a href="/feeds/">FEEDS</a>
+                <a href="/about/">ABOUT</a>
                 <a href="/privacy/">PRIVACY</a>
             </nav>
             <p>PIXN<br />Web Security &amp; Applied Cryptography.</p>

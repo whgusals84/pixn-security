@@ -83,12 +83,17 @@ for (const file of htmlFiles) {
 }
 
 const searchDocuments = JSON.parse(await readFile(path.join(publicRoot, 'search_index.json'), 'utf8'));
-const expectedSearchDocumentCount = 1078 - PERSONAL_ONLY_ROUTES.length;
+const learningRoutes = ['/labs/', '/labs/dreamhack/', '/labs/web/', '/labs/crypto/', '/labs/system/'];
+const expectedSearchDocumentCount = 1078 - PERSONAL_ONLY_ROUTES.length + learningRoutes.length;
 if (!Array.isArray(searchDocuments) || searchDocuments.length !== expectedSearchDocumentCount) {
   errors.push(`search index document count is ${searchDocuments?.length ?? 'invalid'}, expected ${expectedSearchDocumentCount}`);
 }
 for (const route of PERSONAL_ONLY_ROUTES) {
   if (searchDocuments.some((document) => document.url === route)) errors.push(`personal-only search document remains: ${route}`);
+}
+for (const route of learningRoutes) {
+  if (!routes.has(route)) errors.push(`learning route missing from manifest: ${route}`);
+  if (!searchDocuments.some((document) => document.url === route)) errors.push(`learning route missing from search index: ${route}`);
 }
 for (const document of searchDocuments) {
   const searchableText = `${document.title ?? ''}\n${document.description ?? ''}\n${document.content ?? ''}`;
@@ -114,6 +119,7 @@ for (const route of removedDiscoveryRoutes) {
 const homepage = await readFile(path.join(publicRoot, 'index.html'), 'utf8');
 if (!homepage.includes('Web Security. Applied Cryptography. Built to Understand.')) errors.push('homepage was not personalized');
 if (!homepage.includes('PIXN — Web Security &amp; Applied Cryptography')) errors.push('homepage metadata was not personalized');
+if (!homepage.includes('Dreamhack Write-ups') || !homepage.includes('href="/labs/"')) errors.push('homepage does not link to security labs');
 const aboutPage = await readFile(path.join(publicRoot, 'about', 'index.html'), 'utf8');
 if (!aboutPage.includes('About PIXN') || /Lee Hwan|HAHWUL/i.test(aboutPage)) errors.push('about page was not neutralized');
 

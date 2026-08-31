@@ -1,4 +1,4 @@
-import { access, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { DERIVED_EMPTY_ROUTES, PERSONAL_ONLY_ROUTES, REMOVED_DISCOVERY_ROUTES } from './personal-content-policy.mjs';
 
@@ -13,6 +13,15 @@ const siteDescription = 'Field notes from PIXN, a student exploring web security
 const koSiteDescription = '웹 보안, 응용 암호학, 안전한 시스템과 오픈소스 도구를 공부하는 학생 PIXN의 기술 노트입니다.';
 const priorPublisherSocialUrlSource = String.raw`https?:\/\/(?:www\.)?(?:x\.com\/(?:hahwul|hahwul_)|twitter\.com\/(?:hahwul|hahwul_)|instagram\.com\/(?:hahwul|hahwul_)|linkedin\.com\/(?:in\/)?(?:hahwul|hahwul_))(?:\/[^\s"'<>]*)?`;
 const priorPublisherSocialUrlPattern = new RegExp(`^${priorPublisherSocialUrlSource}$`, 'i');
+const learningPages = [
+  { route: '/labs/', relativePath: 'labs/index.html', title: 'Security Labs', description: 'Authorized challenge write-ups, experiments, and lessons from hands-on security practice.' },
+  { route: '/labs/dreamhack/', relativePath: 'labs/dreamhack/index.html', title: 'Dreamhack Write-ups', description: 'Study notes and solution approaches from authorized Dreamhack challenges.' },
+  { route: '/labs/web/', relativePath: 'labs/web/index.html', title: 'Web Wargame Notes', description: 'Web security challenge notes covering browsers, authentication, injection, and application logic.' },
+  { route: '/labs/crypto/', relativePath: 'labs/crypto/index.html', title: 'Cryptography Challenges', description: 'Challenge notes on cryptographic primitives, protocols, encodings, and implementation mistakes.' },
+  { route: '/labs/system/', relativePath: 'labs/system/index.html', title: 'System & Pwn Challenges', description: 'Authorized binary, debugging, memory-safety, and exploitation lab notes.' },
+];
+const learningPageByRoute = new Map(learningPages.map((page) => [page.route, page]));
+const learningRouteSet = new Set(learningPages.map((page) => page.route));
 
 function parseArgs(values) {
   const parsed = {};
@@ -90,9 +99,11 @@ function neutralFooter() {
             <span class="hw-mark footer-mark" aria-hidden="true"></span>
             <nav class="footer-menu" aria-label="Footer">
                 <a href="/sec/">SECURITY</a>
+                <a href="/labs/">LABS</a>
                 <a href="/tags/">TAGS</a>
                 <a href="/projects/">TOOLS</a>
                 <a href="/feeds/">FEEDS</a>
+                <a href="/about/">ABOUT</a>
                 <a href="/privacy/">PRIVACY</a>
             </nav>
             <p>PIXN<br />Web Security &amp; Applied Cryptography.</p>
@@ -124,6 +135,20 @@ function homeMain() {
             </ul>
         </section>
 
+        <section class="home-room exhibit" aria-labelledby="plate-practice">
+            <header class="plate-row">
+                <h2 class="plate" id="plate-practice">Practice &amp; write-ups</h2>
+                <span class="plate-rule" aria-hidden="true"></span>
+                <a class="plate-link" href="/labs/">All labs</a>
+            </header>
+            <ul class="home-ledger">
+                <li><a class="ledger-row" href="/labs/dreamhack/"><span class="ledger-key">DH</span><span class="ledger-body"><span class="ledger-title">Dreamhack Write-ups</span><span class="ledger-desc">Challenge approaches, mistakes, and lessons from authorized practice</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/labs/web/"><span class="ledger-key">WEB</span><span class="ledger-body"><span class="ledger-title">Web Wargame Notes</span><span class="ledger-desc">Browser, authentication, injection, and application-logic challenges</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/labs/crypto/"><span class="ledger-key">CRYP</span><span class="ledger-body"><span class="ledger-title">Cryptography Challenges</span><span class="ledger-desc">Protocols, primitives, encodings, and implementation mistakes</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/labs/system/"><span class="ledger-key">PWN</span><span class="ledger-body"><span class="ledger-title">System &amp; Pwn Challenges</span><span class="ledger-desc">Binary analysis, debugging, and memory-safety practice</span></span><span aria-hidden="true">↗</span></a></li>
+            </ul>
+        </section>
+
         <section class="home-room exhibit" aria-labelledby="plate-resources">
             <header class="plate-row">
                 <h2 class="plate" id="plate-resources">Reference library</h2>
@@ -138,6 +163,72 @@ function homeMain() {
         </section>
     </div>
 </main>`;
+}
+
+function labsMain() {
+  return `<main id="main-content">
+    <div class="container">
+        <div class="post-wrapper"><article class="post-content">
+            <header class="page-header"><h1 class="page-title">Security Labs</h1><p class="page-description">Practice, verify, document.</p></header>
+            <div class="post-body">
+                <p>Hands-on notes from authorized security challenges and isolated lab environments. Each write-up focuses on the reasoning process, failed attempts, and the defensive lesson—not only the final answer.</p>
+                <p>Challenge flags, private credentials, and solutions restricted by a platform's rules are not published.</p>
+                <ul class="home-ledger">
+                    <li><a class="ledger-row" href="/labs/dreamhack/"><span class="ledger-key">DH</span><span class="ledger-body"><span class="ledger-title">Dreamhack Write-ups</span><span class="ledger-desc">Web, crypto, reversing, and pwn challenge notes</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/labs/web/"><span class="ledger-key">WEB</span><span class="ledger-body"><span class="ledger-title">Web Wargame Notes</span><span class="ledger-desc">Browser and application-security practice</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/labs/crypto/"><span class="ledger-key">CRYP</span><span class="ledger-body"><span class="ledger-title">Cryptography Challenges</span><span class="ledger-desc">Protocols, primitives, and implementation mistakes</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/labs/system/"><span class="ledger-key">PWN</span><span class="ledger-body"><span class="ledger-title">System &amp; Pwn Challenges</span><span class="ledger-desc">Binaries, debugging, and memory-safety labs</span></span><span aria-hidden="true">↗</span></a></li>
+                </ul>
+            </div>
+        </article></div>
+    </div>
+</main>`;
+}
+
+function labCategoryMain(page) {
+  const categoryCopy = {
+    '/labs/dreamhack/': ['Dreamhack', 'Web, crypto, reversing, and pwn challenges solved in an authorized learning environment.'],
+    '/labs/web/': ['Web', 'Notes on XSS, injection, authentication, browser behavior, and application logic.'],
+    '/labs/crypto/': ['Crypto', 'Notes on cryptographic primitives, protocols, encodings, and implementation pitfalls.'],
+    '/labs/system/': ['System · Pwn', 'Notes on binaries, debugging, memory safety, and exploitation inside authorized labs.'],
+  };
+  const [label, introduction] = categoryCopy[page.route];
+  return `<main id="main-content">
+    <div class="container">
+        <div class="post-wrapper"><article class="post-content">
+            <header class="page-header"><p class="post-meta">LABS / ${label}</p><h1 class="page-title">${page.title}</h1><p class="page-description">${page.description}</p></header>
+            <div class="post-body">
+                <p>${introduction}</p>
+                <h2>Write-up format</h2>
+                <ol><li>Challenge and learning objective</li><li>What I observed and tried</li><li>Why the approach worked or failed</li><li>Secure implementation and key lesson</li></ol>
+                <h2>Write-ups</h2>
+                <p>Write-ups will appear here as challenges are completed and reviewed.</p>
+                <p><a href="/labs/">← Back to Security Labs</a></p>
+            </div>
+        </article></div>
+    </div>
+</main>`;
+}
+
+function personalizePageMetadata(html, page) {
+  const absoluteUrl = `${targetOrigin}${page.route}`;
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${page.title} | PIXN</title>`)
+    .replace(/<meta\b(?=[^>]*\bname=["']description["'])[^>]*>/i, `<meta name="description" content="${page.description}">`)
+    .replace(/<meta\b(?=[^>]*\bproperty=["']og:title["'])[^>]*>/i, `<meta property="og:title" content="${page.title}">`)
+    .replace(/<meta\b(?=[^>]*\bproperty=["']og:url["'])[^>]*>/i, `<meta property="og:url" content="${absoluteUrl}">`)
+    .replace(/<meta\b(?=[^>]*\bproperty=["']og:description["'])[^>]*>/i, `<meta property="og:description" content="${page.description}">`)
+    .replace(/<meta\b(?=[^>]*\bname=["']twitter:title["'])[^>]*>/i, `<meta name="twitter:title" content="${page.title}">`)
+    .replace(/<meta\b(?=[^>]*\bname=["']twitter:description["'])[^>]*>/i, `<meta name="twitter:description" content="${page.description}">`)
+    .replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>/i, `<link rel="canonical" href="${absoluteUrl}">`)
+    .replace(/\s*<link\b(?=[^>]*\brel=["']alternate["'])(?=[^>]*\bhreflang=)[^>]*>/gi, '')
+    .replace(/<script type="application\/ld\+json">\{"@context":"https:\/\/schema\.org","@type":"Article"[\s\S]*?<\/script>/i, `<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"${page.title}","url":"${absoluteUrl}","description":"${page.description}","image":"${targetOrigin}/og-pixn-field-notes.png"}</script>`);
+}
+
+function studentNav(route) {
+  const links = [['/posts/', 'Posts'], ['/notes/', 'Notes'], ['/labs/', 'Labs'], ['/projects/', 'Projects'], ['/sec/', 'Security']];
+  const topLevel = route === '/' ? '' : `/${route.split('/').filter(Boolean)[0]}/`;
+  return `<div class="nav-menu" id="nav-menu">${links.map(([href, label]) => `<a href="${href}"${topLevel === href ? ' class="active"' : ''}>${label}</a>`).join('')}</div>`;
 }
 
 function aboutMain(language) {
@@ -205,7 +296,7 @@ function removedPage(language) {
     <div class="site-wrapper">
         <header class="site-header"><div class="header-content"><nav class="main-nav">
             <div class="nav-logo"><a href="/" aria-label="PIXN, home"><span class="hw-mark" aria-hidden="true"></span><span class="nav-wordmark" aria-hidden="true">PIXN</span></a></div>
-            <div class="nav-menu" id="nav-menu"><a href="/posts/">Posts</a><a href="/sec/">Security</a><a href="/projects/">Projects</a><a href="/about/">About</a></div>
+            ${studentNav('/')}
         </nav></div></header>
         <main id="main-content"><div class="container"><div class="post-wrapper"><article class="post-content"><header class="page-header"><h1 class="page-title">${title}</h1></header><div class="post-body"><p>${message}</p><p><a href="/sec/">${korean ? '보안 학습 자료 보기' : 'Browse security guides'}</a></p></div></article></div></div></main>
         ${neutralFooter()}
@@ -434,14 +525,14 @@ function neutralizePriorPublisherArticle(route, html) {
   return output;
 }
 
-function cleanChrome(html) {
+function cleanChrome(html, route) {
   let output = html
     .replace(/(<title>[\s\S]*?)\s*\|\s*HAHWUL(<\/title>)/gi, '$1 | PIXN$2')
     .replace(/title=["']HAHWUL(?: \(KO\)| \(한국어\))?["']/gi, 'title="PIXN"')
     .replaceAll('Offensive Security Engineer, Developer and H4cker.', siteDescription)
     .replace(/"name":"HAHWUL"/g, '"name":"PIXN"')
     .replace(/"name":"HAHWUL \(KO\)"/g, '"name":"PIXN"')
-    .replace(/<a href="\/about\/">About<\/a>/g, '<a href="/sec/">Security</a>')
+    .replace(/<div\b[^>]*class=["'][^"']*\bnav-menu\b[^"']*["'][^>]*id=["']nav-menu["'][^>]*>[\s\S]*?<\/div>/i, studentNav(route))
     .replace(/<footer\b[^>]*class=["'][^"']*\bsite-footer\b[^"']*["'][^>]*>[\s\S]*?<\/footer>/gi, neutralFooter());
 
   output = output
@@ -496,8 +587,13 @@ function transformHtml(relativePath, html) {
   if (route === '/about/') output = replaceMain(output, aboutMain('en'));
   if (route === '/ko/about/') output = replaceMain(output, aboutMain('ko'));
   if (route === '/privacy/') output = replaceMain(output, privacyMain());
+  const learningPage = learningPageByRoute.get(route);
+  if (learningPage) {
+    output = personalizePageMetadata(output, learningPage);
+    output = replaceMain(output, route === '/labs/' ? labsMain() : labCategoryMain(learningPage));
+  }
   output = neutralizePriorPublisherArticle(route, output);
-  output = cleanChrome(output);
+  output = cleanChrome(output, route);
   if (route === '/blog/2018/Security-testing-SAML-SSO-vulnerability-and-pentest/') {
     output = output.replaceAll('security@example.com', 'alice@example.com');
   }
@@ -529,7 +625,7 @@ function transformHtml(relativePath, html) {
 
 function transformSearchIndex(text) {
   const documents = JSON.parse(text)
-    .filter((document) => !isPersonalUrl(document.url))
+    .filter((document) => !isPersonalUrl(document.url) && !learningRouteSet.has(document.url))
     .map((document) => {
       const updated = { ...document };
       for (const key of ['title', 'content', 'description']) {
@@ -562,16 +658,32 @@ function transformSearchIndex(text) {
       }
       return updated;
     });
+  for (const page of learningPages) {
+    documents.push({
+      title: page.title,
+      content: page.route === '/labs/'
+        ? 'Authorized security challenge write-ups and isolated lab notes covering Dreamhack, web security, cryptography, systems, and pwn. Each note records observations, attempts, failures, and defensive lessons.'
+        : `${page.description} Write-ups document the learning objective, observations, attempted approaches, why they worked or failed, and the secure implementation lesson.`,
+      tags: ['security-labs', page.route.split('/').filter(Boolean).at(-1)],
+      url: page.route,
+      section: 'labs',
+      description: page.description,
+      lang: 'en',
+    });
+  }
   return `${JSON.stringify(documents)}\n`;
 }
 
 function transformSitemap(text) {
-  return text.replace(/\s*<url>[\s\S]*?<\/url>/gi, (block) => {
+  let output = text.replace(/\s*<url>[\s\S]*?<\/url>/gi, (block) => {
     const locations = [...block.matchAll(/<(?:loc|xhtml:link)\b[^>]*(?:href=["']([^"']+)["'])?[^>]*>([^<]*)/gi)]
       .flatMap((match) => [match[1], match[2]])
       .filter(Boolean);
-    return locations.some(isPersonalUrl) ? '' : block;
+    return locations.some(isPersonalUrl) || locations.some((value) => learningRouteSet.has(pathFromAbsoluteUrl(value))) ? '' : block;
   });
+  const entries = learningPages.map((page) => `  <url>\n    <loc>${targetOrigin}${page.route}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>${page.route === '/labs/' ? '0.8' : '0.7'}</priority>\n  </url>`).join('\n');
+  output = output.replace(/\s*<\/urlset>\s*$/i, `\n${entries}\n</urlset>\n`);
+  return output;
 }
 
 function transformRss(text) {
@@ -594,7 +706,7 @@ function transformManifest(text) {
   delete publicManifest.sourceOrigin;
   delete publicManifest.failures;
   const sourceRouteCount = manifest.sourceRouteCount ?? manifest.routeCount;
-  const routes = manifest.routes.filter((route) => !removedDiscoveryRouteSet.has(route));
+  const routes = [...new Set([...manifest.routes.filter((route) => !removedDiscoveryRouteSet.has(route)), ...learningPages.map((page) => page.route)])].sort();
   return `${JSON.stringify(
     {
       ...publicManifest,
@@ -635,6 +747,19 @@ async function writeIfChanged(file, next) {
   return current !== next;
 }
 
+async function ensureLearningPages() {
+  const seed = await readFile(path.join(publicRoot, 'about', 'index.html'), 'utf8');
+  for (const page of learningPages) {
+    const target = path.join(publicRoot, page.relativePath);
+    try {
+      await access(target);
+    } catch {
+      await mkdir(path.dirname(target), { recursive: true });
+      await writeFile(target, seed);
+    }
+  }
+}
+
 async function removePersonalAssets() {
   const exactAssets = [
     path.join(publicRoot, 'images', 'about', 'h.webp'),
@@ -662,6 +787,7 @@ if (previewOnly) {
   const html = await readFile(home, 'utf8');
   if (await writeIfChanged(home, transformHtml('index.html', html))) changed += 1;
 } else {
+  await ensureLearningPages();
   const files = await walk(publicRoot);
   for (const file of files) {
     const relativePath = path.relative(publicRoot, file).replaceAll('\\', '/');

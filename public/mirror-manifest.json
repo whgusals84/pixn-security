@@ -1,7 +1,7 @@
 {
   "capturedAt": "2026-08-30T06:41:14.622Z",
-  "routeCount": 1231,
-  "successfulRouteCount": 1231,
+  "routeCount": 1236,
+  "successfulRouteCount": 1236,
   "assetCount": 958,
   "routes": [
     "/",
@@ -1065,6 +1065,11 @@
     "/ko/tags/zap/",
     "/ko/tags/zest/",
     "/ko/tags/zola/",
+    "/labs/",
+    "/labs/crypto/",
+    "/labs/dreamhack/",
+    "/labs/system/",
+    "/labs/web/",
     "/notes/",
     "/notes/claude-code/",
     "/notes/claude-code/remove-co-authored-by/",
