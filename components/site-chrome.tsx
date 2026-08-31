@@ -25,7 +25,6 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-mark">PX</div>
       <nav aria-label="하단 메뉴">
-        <a href="/journal/">LATEST</a>
         <a href="/writing/">WRITING</a>
         <a href="/labs/">LABS</a>
         <a href="/projects/">PROJECTS</a>
