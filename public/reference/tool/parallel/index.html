@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parallel — PIXN</title>
+  <meta name="description" content="Parallel — Working notes and command references for security tooling.">
+  <meta property="og:title" content="Parallel — PIXN"><meta property="og:description" content="Parallel — Working notes and command references for security tooling."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/tool/">Security Tools</a></p>
+      <h1>Parallel</h1>
+      <time datetime="2021-08-12">AUGUST 12, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Parallel은 병렬 실행을 위한 cli 도구입니다. 이를 활용하면 다수의 반복 작업등을 병렬 처리할 수 있어서 cli 기반의 자동화에 큰 도움을 줄 수 있습니다.</p>
+<h2 id="installation">Installation</h2>
+<h3 id="macos">MacOS</h3>
+<pre><code>brew install parallel
+</code></pre>
+<h3 id="linux">Linux</h3>
+<pre><code>sudo apt install parallel
+</code></pre>
+<h2 id="usage">Usage</h2>
+<h3 id="옵션-정리">옵션 정리</h3>
+<p>자주 사용되는 옵션 정리</p>
+<ul>
+<li><code>-k</code> : 순서를 유지하여 진행</li>
+<li><code>-j</code> : 동시에 실행할 작업 수 (e.g <code>-j 5</code> 시 5개 단위로 병렬 실행)</li>
+<li><code>-X</code> : 여러개의 인자값 처리</li>
+<li><code>-S</code> : ssh 기반 (e.g <code>-S root@192.168.0.1</code> 시 해당 ssh 서버에서 실행)</li>
+</ul>
+<h2 id="parallel-scanning">Parallel scanning</h2>
+<h3 id="paramspider-parallel-scanning">Paramspider parallel scanning</h3>
+<pre><code>cat domains | parallel -k -q python3 ~/tools/ParamSpider/paramspider.py -d {} -l high -e gif,jpg,jpeg,png,woff,txt,avi,mov,mpeg,webp,gif
+</code></pre>
+<h3 id="smuggler-parallel-scanning-with-5-jobs">Smuggler parallel scanning with 5 jobs</h3>
+<pre><code>cat urls | parallel -j 5 -k -q python3 ~/tools/smuggler/smuggler.py -u {}
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.gnu.org/software/parallel/">https://www.gnu.org/software/parallel/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/tool/parallel/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

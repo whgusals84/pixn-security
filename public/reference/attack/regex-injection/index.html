@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regex Injection — PIXN</title>
+  <meta name="description" content="Regex Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Regex Injection — PIXN"><meta property="og:description" content="Regex Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Regex Injection</h1>
+      <time datetime="2022-03-30">MARCH 30, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Regex Injection은 공격자가 Regex가 compile 되기 전 regex 패턴에 영향을 줄 수 있는 Injection 공격을 의미합니다. Injection 공격으로 큰 영향력이 발생하는건 아니지만, 이를 통해 ReDOS를 쉽게 발생시킬 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<h4 id="with-sourcecode">With Sourcecode</h4>
+<p>소스코드가 있다면 사용자 입력값이 정규표현식 문법에 영향을 주는지 체크하면 됩니다. 대표적으로 정규표현식 문법을 외부 파라미터로 생성하는 경우 이에 해당됩니다.</p>
+<p>Code</p>
+<pre><code class="language-go hljs">data <span class="hljs-operator">:=</span> c<span class="hljs-punctuation">.</span><span class="hljs-title function_">Param</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;user_data&quot;</span><span class="hljs-punctuation">)</span>
+body <span class="hljs-operator">:=</span> c<span class="hljs-punctuation">.</span><span class="hljs-title function_">Param</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;user_body&quot;</span><span class="hljs-punctuation">)</span>
+r<span class="hljs-punctuation">,</span> _ <span class="hljs-operator">:=</span> regexp<span class="hljs-punctuation">.</span><span class="hljs-title function_">Compile</span><span class="hljs-punctuation">(</span>data<span class="hljs-punctuation">)</span>
+r<span class="hljs-punctuation">.</span><span class="hljs-title function_">FindString</span><span class="hljs-punctuation">(</span>body<span class="hljs-punctuation">)</span>
+</code></pre>
+<p>Request</p>
+<pre><code>GET /target?user_data=/[a-z]/g&amp;user_body=abcd
+</code></pre>
+<h4 id="without-sourcecode">Without Sourcecode</h4>
+<p>소스코드가 없다면 ReDOS 구문과 문자를 포함시켜 점유율을 높인 후 Response, Response Time 등을 이용해 추측하는 것이 최선입니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="redos">ReDOS</h4>
+<p>Regexp 패턴을 수정할 수 있는 경우 아래 패턴과 같이 큰 오버헤드를 발생시키는 ReDOS 패턴으로 으로 변경합니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-operator">(</span>a+<span class="hljs-operator">)</span>+
+<span class="hljs-operator">(</span><span class="hljs-operator">[</span>a-zA-Z<span class="hljs-operator">]</span>+<span class="hljs-operator">)</span>*
+<span class="hljs-operator">(</span>a<span class="hljs-punctuation">|</span>aa<span class="hljs-operator">)</span>+
+<span class="hljs-operator">(</span>a<span class="hljs-punctuation">|</span>a?<span class="hljs-operator">)</span>+
+<span class="hljs-operator">(</span>.*a<span class="hljs-operator">)</span><span class="hljs-operator">{</span>x<span class="hljs-operator">}</span> <span class="hljs-keyword">for</span> x <span class="hljs-string">\&gt;</span> <span class="hljs-number">10</span>
+</code></pre>
+<p>ReDOS에 대한 자세한 내용은 <a href="/reference/attack/redos/">Cullinan &gt; ReDOS</a>를 참고해주세요!</p>
+<h4 id="other">Other</h4>
+<p>아직은 ReDOS 이외에 특별한 Exploting 방법이 있는건 아닙니다. 다만 어떻게 활용될지는 아직 모르는 일이기 때문에 시큐어코딩 관점에서라도 고치는게 좋을거란 생각이 드네요. 아래 daily-swig에도 비슷한 내용의 글이 있으니 참고해주세요!</p>
+<ul>
+<li>https://portswigger.net/daily-swig/blind-regex-injection-theoretical-exploit-offers-new-way-to-force-web-apps-to-spill-secrets</li>
+</ul>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>정규표현식은 가급적 사용자 입력값으로 생성되지 않도록 주의해야합니다. 만약 사용자 입력값으로 부터 정규표현식 생성이 필요하다면 허용할 수 있는 패턴의 범위 등 ReDOS를 완화할 수 있는 검증 로직이 필요합니다.</p>
+<p>Worst-case</p>
+<pre><code class="language-go hljs">data <span class="hljs-operator">:=</span> c<span class="hljs-punctuation">.</span><span class="hljs-title function_">Param</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;user_data&quot;</span><span class="hljs-punctuation">)</span>
+body <span class="hljs-operator">:=</span> c<span class="hljs-punctuation">.</span><span class="hljs-title function_">Param</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;user_body&quot;</span><span class="hljs-punctuation">)</span>
+r<span class="hljs-punctuation">,</span> _ <span class="hljs-operator">:=</span> regexp<span class="hljs-punctuation">.</span><span class="hljs-title function_">Compile</span><span class="hljs-punctuation">(</span>data<span class="hljs-punctuation">)</span>
+r<span class="hljs-punctuation">.</span><span class="hljs-title function_">FindString</span><span class="hljs-punctuation">(</span>body<span class="hljs-punctuation">)</span>
+</code></pre>
+<p>Better-case</p>
+<pre><code class="language-go hljs">allowList <span class="hljs-operator">:=</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-type">string</span><span class="hljs-punctuation">{</span>
+	<span class="hljs-string">&quot;[a-z]&quot;</span><span class="hljs-punctuation">,</span>
+	<span class="hljs-string">&quot;[1-9]&quot;</span><span class="hljs-punctuation">,</span>
+	<span class="hljs-string">&quot;abcd&quot;</span><span class="hljs-punctuation">,</span>
+<span class="hljs-punctuation">}</span>
+
+data <span class="hljs-operator">:=</span> c<span class="hljs-punctuation">.</span><span class="hljs-title function_">Param</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;user_data&quot;</span><span class="hljs-punctuation">)</span>
+body <span class="hljs-operator">:=</span> c<span class="hljs-punctuation">.</span><span class="hljs-title function_">Param</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;user_body&quot;</span><span class="hljs-punctuation">)</span>
+<span class="hljs-keyword">if</span> <span class="hljs-title function_">checkAllowList</span><span class="hljs-punctuation">(</span>data<span class="hljs-punctuation">,</span> allowList<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+	r<span class="hljs-punctuation">,</span> _ <span class="hljs-operator">:=</span> regexp<span class="hljs-punctuation">.</span><span class="hljs-title function_">Compile</span><span class="hljs-punctuation">(</span>data<span class="hljs-punctuation">)</span>
+	r<span class="hljs-punctuation">.</span><span class="hljs-title function_">FindString</span><span class="hljs-punctuation">(</span>body<span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li>https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS</li>
+<li>https://portswigger.net/daily-swig/blind-regex-injection-theoretical-exploit-offers-new-way-to-force-web-apps-to-spill-secrets</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/regex-injection/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RFD Attack — PIXN</title>
+  <meta name="description" content="RFD Attack — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="RFD Attack — PIXN"><meta property="og:description" content="RFD Attack — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>RFD Attack</h1>
+      <time datetime="2021-11-01">NOVEMBER 1, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>RFD(Remote File Download)는 확장자, 파일 내용에 대해 통제 가능한 다운로드 기능을 이용한 공격 기법으로 신뢰 도메인에서 사용자가 공격코드가 포함된 파일을 다운로드하고 실행하도록 유도하여 사용자단 영역에서 명령을 실행할 수 있습니다.</p>
+<p>실행을 유도한다는 점에서 마치 피싱 공격과 비슷해보이지만 신뢰 도메인을 사용한다는 점, 이로인한 결과가 명령 실행이라는 점에서 CSV Injection과 매우 유사한 형태의 공격입니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>RFD 공격 성공을 위해선 필수 조건이 존재하며, 이는 RFD 취약점을 식별하는데 있어서 가장 우선 체크되어야할 부분입니다.</p>
+<h4 id="content-disposition-attachment">Content-Disposition: attachment</h4>
+<p>RFD는 사용자가 신뢰 도메인에서의 링크로 인해 파일을 다운로드하고, 실행하도록 유도하는 공격이기 때문에 신뢰 도메인 내 페이지에서 파일 다운로드가 일어나야 합니다.</p>
+<p>웹 서비스에선 Content-Disposition 헤더를 통해 파일 내용이 어떻게 처리될지 명시하고, 이 값이 attachment인 경우 다운로드를 실행하기 때문에 Response header 내 해당 헤더가 있는지 체크가 필요합니다.</p>
+<pre><code>Content-Disposition: attachment
+</code></pre>
+<h4 id="파일-확장자를-컨트롤할-수-있어야-함">파일 확장자를 컨트롤할 수 있어야 함</h4>
+<p>사용자단에서 파일을 실행하여 명령을 실행하기 때문에 다운로드되는 파일의 확장자를 컨트롤할 수 있어야 합니다.</p>
+<h4 id="response를-컨트롤할-수-있어야함">Response를 컨트롤할 수 있어야함</h4>
+<p>파일 다운로드 후 실행 시 명령 실행을 위한 코드를 삽입하기 위해선 Response body를 컨트롤할 수 있어야 합니다. 이는 Reflected XSS와 선행조건이 비슷합니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="macos-and-linux">MacOS and Linux</h4>
+<p><strong>Request</strong></p>
+<pre><code class="language-css hljs"><span class="hljs-name">GET</span> <span class="hljs-operator">/</span><span class="hljs-name">s</span><span class="hljs-operator">;</span><span class="hljs-operator">/</span><span class="hljs-name">install</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">sh</span><span class="hljs-operator">;</span><span class="hljs-operator">?</span><span class="hljs-name">q</span><span class="hljs-operator">=</span><span class="hljs-name">hwul</span>\&quot;`<span class="hljs-name">ls</span>` <span class="hljs-name">HTTP</span><span class="hljs-operator">/</span><span class="hljs-name">1</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">1</span>
+<span class="hljs-name">Host</span><span class="hljs-operator">:</span> <span class="hljs-name">example</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">com</span>
+</code></pre>
+<p><strong>Response</strong></p>
+<pre><code class="language-css hljs"><span class="hljs-name">HTTP</span><span class="hljs-operator">/</span><span class="hljs-name">1</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">1</span> <span class="hljs-name">200</span> <span class="hljs-name">OK</span>
+<span class="hljs-name">Content-Type</span><span class="hljs-operator">:</span> <span class="hljs-name">application</span><span class="hljs-operator">/</span><span class="hljs-name">json</span><span class="hljs-operator">;</span>
+<span class="hljs-name">Content-Disposition</span><span class="hljs-operator">:</span> <span class="hljs-name">attachment</span>
+
+<span class="hljs-punctuation">{</span>&quot;result&quot;:[&quot;q&quot;,&quot;hwul\&quot;`ls`&quot;,&quot;zzzz&quot;]<span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="windows">Windows</h4>
+<p><strong>Request</strong></p>
+<pre><code class="language-css hljs"><span class="hljs-name">GET</span> <span class="hljs-operator">/</span><span class="hljs-name">s</span><span class="hljs-operator">;</span><span class="hljs-operator">/</span><span class="hljs-name">install</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">bat</span><span class="hljs-operator">;</span><span class="hljs-operator">?</span><span class="hljs-name">q</span><span class="hljs-operator">=</span><span class="hljs-name">hwul</span>\&quot;<span class="hljs-operator">|</span><span class="hljs-operator">|</span><span class="hljs-name">calc</span><span class="hljs-operator">|</span><span class="hljs-operator">|</span> <span class="hljs-name">HTTP</span><span class="hljs-operator">/</span><span class="hljs-name">1</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">1</span>
+<span class="hljs-name">Host</span><span class="hljs-operator">:</span> <span class="hljs-name">example</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">com</span>
+</code></pre>
+<p><strong>Response</strong></p>
+<pre><code class="language-css hljs"><span class="hljs-name">HTTP</span><span class="hljs-operator">/</span><span class="hljs-name">1</span><span class="hljs-punctuation">.</span><span class="hljs-title class_">1</span> <span class="hljs-name">200</span> <span class="hljs-name">OK</span>
+<span class="hljs-name">Content-Type</span><span class="hljs-operator">:</span> <span class="hljs-name">application</span><span class="hljs-operator">/</span><span class="hljs-name">json</span><span class="hljs-operator">;</span>
+<span class="hljs-name">Content-Disposition</span><span class="hljs-operator">:</span> <span class="hljs-name">attachment</span>
+
+<span class="hljs-punctuation">{</span>&quot;result&quot;:[&quot;q&quot;,&quot;hwul\&quot;||calc||&quot;,&quot;zzzz&quot;]<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="bypass-protection">Bypass protection</h3>
+<h4 id="bypass-filename-protection">Bypass filename protection</h4>
+<ul>
+<li>/get_user_profile.bat</li>
+<li>/get_user_profile;setup.bat</li>
+<li>/get_user_profile/setup.bat</li>
+<li>/get_user_profile;/setup.bat</li>
+<li>/get_user_profile;/setup.bat;</li>
+</ul>
+<h4 id="bypass-command">Bypass command</h4>
+<p>명령이 실행되는 구간이 사용자 구간일 뿐이지 전반적인 메커니즘은 Command Injection과 동일합니다. 만약 서비스에서 특수문자를 기반으로 차단했다면 Command Injection 우회와 유사한 방법으로 공격을 시도해볼 수 있습니다.</p>
+<p><a href="/reference/attack/command-injection/#bypass-protection">https://www.hahwul.com/cullinan/command-injection/#bypass-protection</a></p>
+<h3 id="chain-attack">Chain attack</h3>
+<p>해당 취약점이 공개된 2014년 당시에는 단순히 링크를 이용한 공격 기법이였지만, 현재(2021기준) Web Cache Poisoning, HTTP Request Smuggling 등 광범위의 사용자를 대상으로 공격자가 의도한 Response를 전달할 수 있는 공격 방법이 많이 나와있는 상태라 다른 취약점과 연계시 파급력을 쉽게 올릴 수 있습니다.</p>
+<ul>
+<li>Web Cache Poisoning</li>
+<li>Web Cache Deception</li>
+<li>HTTP Request Smuggling</li>
+<li>H2C Smuggling</li>
+<li>Etc...</li>
+</ul>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<h3 id="protect-user-controlled-filename">Protect user-controlled filename</h3>
+<p>File Download 구간(Content-Disposition을 사용하는 구간)에서 사용자가 filename을 컨트롤할 수 있도록 static하게 제한합니다. 만약 filename의 통제권을 제공해야 하는 경우 악의적인 filename(e.g .sh .bat)을 사용할 수 없도록 제한이 필요합니다.</p>
+<h3 id="using-auth-header">Using auth header</h3>
+<p>해당 기능이 API인 경우 별도의 인증 헤더 등을 통해 검증하는 것이 좋습니다. RFD는 Reflected XSS, Open Redirect와 같이 URL을 기반으로 한 공격이라 헤더 기반으로 API Key 등을 검증하게 되면 해당 요청으로 타 사용자에게 영향을 끼칠 수 없게 됩니다.</p>
+<h3 id="crosssite-crossorigin-protection">CrossSite, CrossOrigin protection</h3>
+<p>SOP, CSRF Token, Referer Check 등 Cross-site, Cross-origin에서의 보안 정책들을 이용하여 방어할 수 있습니다. 메커니즘은 이것이 정상적인 페이지로 부터 발생한 요청인지 검증하는 형태입니다.</p>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2016/06/02/web-hacking-reflected-file-downloadrfd/">https://www.hahwul.com/2016/06/02/web-hacking-reflected-file-downloadrfd/</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.blackhat.com/docs/eu-14/materials/eu-14-Hafif-Reflected-File-Download-A-New-Web-Attack-Vector.pdf">https://www.blackhat.com/docs/eu-14/materials/eu-14-Hafif-Reflected-File-Download-A-New-Web-Attack-Vector.pdf</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/rfd/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

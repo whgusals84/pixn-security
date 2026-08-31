@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Redirect — PIXN</title>
+  <meta name="description" content="Open Redirect — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Open Redirect — PIXN"><meta property="og:description" content="Open Redirect — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Open Redirect</h1>
+      <time datetime="2021-09-10">SEPTEMBER 10, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Open Redirect는 웹 서비스에서 사용자의 입력을 기반으로 redirect 하는 기능을 이용하여 공격자가 의도한 도메인으로 사용자를 이동시키는 공격 방법을 의미합니다.</p>
+<p>보통의 사람들은 웹 서비스의 URL을 볼 떄 도메인을 신뢰하기 때문에 해당 도메인의 링크를 신뢰하고 클릭하는데, 이 때 Open Redirect가 있는 경우 공격자가 의도한 사이트로 이동시킬 수 있기 때문에 가볍게는 피싱부터 연계되어 XSS나 계정 탈취등에도 충분히 이용될 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>탐지 방법은 간단합니다. 사용자의 입력을 기반으로한 redirect 페이지를 찾으면 되는데, 서비스에 따라서 스펙으로 보는 경우도 있어서 리스크를 증명하여 해결해야 합니다.</p>
+<p><strong>Request</strong></p>
+<pre><code>GET /redirect?url=https://untrusted.domain HTTP/1.1
+</code></pre>
+<p><strong>Response</strong></p>
+<pre><code>HTTP/1.1 302 Found
+Location: https://untrusted.domain
+</code></pre>
+<h4 id="redirect-status-code">Redirect status code</h4>
+<table>
+<thead>
+<tr>
+<th>Status code</th>
+<th>Msg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>300</td>
+<td>Multiple Choices</td>
+</tr>
+<tr>
+<td>301</td>
+<td>Moved Permanetly</td>
+</tr>
+<tr>
+<td>302</td>
+<td>Found</td>
+</tr>
+<tr>
+<td>303</td>
+<td>See Other</td>
+</tr>
+<tr>
+<td>304</td>
+<td>Not Modified</td>
+</tr>
+<tr>
+<td>305</td>
+<td>Use Proxy</td>
+</tr>
+<tr>
+<td>307</td>
+<td>Temporary Redirect</td>
+</tr>
+<tr>
+<td>308</td>
+<td>Permanent Redirec</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="phishing">Phishing</h4>
+<p>기본적으로 Open redirect는 피싱에 사용될 수 있습니다. 사용자는 신뢰하는 도메인의 링크만 보고 접근하기 때문에 redirect를 통해 사용자의 정보를 탈취하려는 위장된 페이지로 이동시켜 정보를 탈취할 수 있습니다.</p>
+<h4 id="xss">XSS</h4>
+<p>Open redirect는 보통 Location 헤더나 js단에서 redirect를 진행하는데, 이 때 protocol 까지 제어가 가능한 경우 아래와 같은 형태로 XSS도 가능합니다.</p>
+<pre><code>GET /redirect?url=javascript:alert(45) HTTP/1.1
+GET /redirect?url=data:(45) HTTP/1.1
+</code></pre>
+<p>다만 최신 브라우저에서는 대다수가 Location 헤더 기반의 XSS는 차단하고 있기 때문에 JS단에서 이동되는 경우나 아래 글과 같이 Location + JS의 경우에만 유효한 방법입니다.</p>
+<ul>
+<li>https://www.hahwul.com/2020/10/03/forcing-http-redirect-xss/</li>
+</ul>
+<h3 id="bypass-protection">Bypass protection</h3>
+<h4 id="host-validation-bypass">Host validation bypass</h4>
+<p>Host bypass에 자주 사용하는 패턴은 아래와 같습니다.</p>
+<pre><code>/redirect?url=javascript:alert(45) HTTP/1.1 url=https://allow_domain.hahwul.com
+/redirect?url=https://allow_domain@hahwul.com
+/redirect?url=https://www.hahwul.com#allow_domain
+/redirect?url=https://www.hahwul.com?allow_domain
+/redirect?url=https://www.hahwul.com\allow_domain
+/redirect?url=https://www.hahwul.com&amp;allow_domain
+/redirect?url=https:///////////www.hahwul.com
+/redirect?url=https:\\www.hahwul.com
+/redirect?url=https:\/\/www.hahwul.com
+</code></pre>
+<p><em>https://www.hahwul.com/phoenix/ssrf-open-redirect/#openredirect</em></p>
+<h4 id="parameter-pollution">Parameter Pollution</h4>
+<pre><code>/redirect?url=allow_domain&amp;url=https:\\www.hahwul.com
+</code></pre>
+<p><em>https://www.hahwul.com/2021/06/21/bypass-host-validation-with-parameter-pollution/</em></p>
+<h4 id="with-normalization">With Normalization</h4>
+<pre><code>https://evil.c℀.example.com . ---&gt; https://evil.ca/c.example.com
+http://a.com／X.b.com
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>Redirect 기능이 있는 페이지는 가급적 허용된 주소를 제외하곤 접근하지 못하도록 제한하는게 좋습니다. 만약 외부 링크 접근이 필요한 경우 사용자에게 안내 메시지를 주는 것도 좋은 방법 중 하나 입니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/132868023-122457a9-9d6c-4c9a-959a-76d9b81ea238.jpg" alt="NIST의 외부 링크 팝업" /></p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>https://github.com/hahwul/dalfox (in BAV)</li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li>https://www.hahwul.com/2019/09/23/bypass-host-validation-technique-in-android/</li>
+<li>https://www.hahwul.com/2019/02/19/bypass-ssrf-protection-using-domain-cname-arecord/</li>
+<li>https://www.hahwul.com/phoenix/ssrf-open-redirect/</li>
+<li>https://www.hahwul.com/2021/06/21/bypass-host-validation-with-parameter-pollution/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Open%20Redirect</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/open-redirect/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

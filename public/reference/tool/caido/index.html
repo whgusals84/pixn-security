@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caido — PIXN</title>
+  <meta name="description" content="Caido — Working notes and command references for security tooling.">
+  <meta property="og:title" content="Caido — PIXN"><meta property="og:description" content="Caido — Working notes and command references for security tooling."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/tool/">Security Tools</a></p>
+      <h1>Caido</h1>
+      <time datetime="2024-04-03">APRIL 3, 2024</time>
+    </header>
+    <article class="article-body"><h2 id="how-to-make-plugin">How to make plugin</h2>
+<p>Create a new repository using the <a href="https://github.com/caido/starterkit-plugin">Caido's starterkit-plugin</a> GitHub template feature. Then, you can install dependencies and build it using the following command.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Install dependencies</span>
+pnpm install
+
+<span class="hljs-comment"># Build, you can find script.js in dist directory</span>
+pnpm build
+</code></pre>
+<p>Now, you're ready to start coding and create features. You can easily add UI components using predefined functions and objects.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// src/index.ts
+</span><span class="hljs-comment"></span>
+<span class="hljs-keyword">import</span> <span class="hljs-punctuation">{</span> Caido <span class="hljs-punctuation">}</span> from <span class="hljs-string">&quot;@caido/sdk-frontend&quot;</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">import</span> <span class="hljs-punctuation">{</span> helper <span class="hljs-punctuation">}</span> from <span class="hljs-string">&quot;./helper&quot;</span><span class="hljs-punctuation">;</span>
+
+Caido<span class="hljs-punctuation">.</span>commands<span class="hljs-punctuation">.</span>register<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;my-sample-command&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span>
+  name<span class="hljs-operator">:</span> <span class="hljs-string">&quot;My Sample Command&quot;</span><span class="hljs-punctuation">,</span>
+  run<span class="hljs-operator">:</span> <span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+    helper<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+Caido<span class="hljs-punctuation">.</span>commandPalette<span class="hljs-punctuation">.</span>register<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;my-sample-command&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+<span class="hljs-comment">// Make myapp page
+</span><span class="hljs-comment"></span>Caido<span class="hljs-punctuation">.</span>navigation<span class="hljs-punctuation">.</span>addPage<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;myapp&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment">// Add myapp to sidebar
+</span><span class="hljs-comment"></span>Caido<span class="hljs-punctuation">.</span>sidebar<span class="hljs-punctuation">.</span>registerItem<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Open App&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;/myapp&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="workflows">Workflows</h2>
+<h3 id="types">Types</h3>
+<ul>
+<li>Passive Workflow</li>
+<li>Active Workflow</li>
+<li>Convert Workflow</li>
+</ul>
+<h3 id="javascript-codes">Javascript codes</h3>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// $active_start.request
+</span><span class="hljs-comment"></span><span class="hljs-comment">// $active_start.response
+</span><span class="hljs-comment"></span>
+request<span class="hljs-punctuation">.</span>getBody<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getHeader<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getHeaders<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getHost<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getId<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getMethod<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getPort<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getQuery<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+request<span class="hljs-punctuation">.</span>getTls<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+
+
+response<span class="hljs-punctuation">.</span>getBody<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+response<span class="hljs-punctuation">.</span>getCode<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+response<span class="hljs-punctuation">.</span>getHeader<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+response<span class="hljs-punctuation">.</span>getHeaders<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+response<span class="hljs-punctuation">.</span>getId<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="links">Links</h2>
+<ul>
+<li><a href="https://github.com/caido/awesome">Awesome caido</a></li>
+<li><a href="https://github.com/caido/starterkit-plugin">Caido Plugin StarterKit</a></li>
+<li><a href="https://github.com/caido/workflows">Community workflows</a></li>
+<li><a href="https://docs.caido.io/reference/">Documentation</a></li>
+</ul>
+<h2 id="my-articles">My articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2023/01/19/hello-caido/">Hello Caido 👋🏼</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/tool/caido/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

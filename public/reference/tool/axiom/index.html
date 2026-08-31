@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Axiom — PIXN</title>
+  <meta name="description" content="Axiom — Working notes and command references for security tooling.">
+  <meta property="og:title" content="Axiom — PIXN"><meta property="og:description" content="Axiom — Working notes and command references for security tooling."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/tool/">Security Tools</a></p>
+      <h1>Axiom</h1>
+      <time datetime="2021-08-12">AUGUST 12, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>The dynamic infrastructure framework for anybody! Distribute the workload of many different tools with ease, including nmap, ffuf, masscan, nuclei and many more!</p>
+<p>Axiom은 pry가 만든 dynamic infrastructure framework입니다. public-cloud(aws나 digital ocean 같은..) 환경을 기반으로 빠르게 분석 환경을 자동으로 구축하고, 미리 지정된 명령어들을 통해서 스캔과 결과 처리 작업을 수행할 수 있습니다. 재미있는점은 fleet이라고 해서 여러 인스턴스에 작업을 할당하는 방식이 있는데, 이를 활용하면 병렬 스캔 또한 가능합니다.</p>
+<h2 id="installation">Installation</h2>
+<pre><code>bash &lt;(curl -s https://raw.githubusercontent.com/pry0cc/axiom/master/interact/axiom-configure)
+</code></pre>
+<h2 id="usage-of-command">Usage of command</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Sub-Commands</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>axiom-init</td>
+<td></td>
+<td>init instance</td>
+</tr>
+<tr>
+<td>axiom-ssh</td>
+<td></td>
+<td>ssh connect to instance</td>
+</tr>
+<tr>
+<td>axiom-ls</td>
+<td></td>
+<td>list of instance</td>
+</tr>
+<tr>
+<td>axiom-rm</td>
+<td></td>
+<td>remove instance</td>
+</tr>
+<tr>
+<td>axiom-backup</td>
+<td></td>
+<td>backup instance</td>
+</tr>
+<tr>
+<td>axiom-boxes</td>
+<td>- ls&lt;br /&gt;- new&lt;br /&gt;- rm&lt;br /&gt;- cd &lt;br /&gt;- get&lt;br /&gt;- archive&lt;br /&gt;- unarchive</td>
+<td>manage backups</td>
+</tr>
+<tr>
+<td>axiom-account-setup</td>
+<td></td>
+<td>new account</td>
+</tr>
+<tr>
+<td>axiom-account-account</td>
+<td></td>
+<td>list and switch account</td>
+</tr>
+<tr>
+<td>axiom-fleet</td>
+<td></td>
+<td>init fleet</td>
+</tr>
+<tr>
+<td>axiom-scp</td>
+<td></td>
+<td>same <code>scp</code> (copy and paste with ssh)</td>
+</tr>
+<tr>
+<td>axiom-select</td>
+<td></td>
+<td>select instance</td>
+</tr>
+<tr>
+<td>axiom-deploy</td>
+<td>- openvpn&lt;br /&gt;- covenant</td>
+<td>deploy app</td>
+</tr>
+<tr>
+<td>axiom-vpn</td>
+<td></td>
+<td>deploy and connect OpenVPN</td>
+</tr>
+<tr>
+<td>axiom-proxy</td>
+<td></td>
+<td>set proxy</td>
+</tr>
+<tr>
+<td>axiom-dns</td>
+<td>- add&lt;br /&gt;- ls</td>
+<td>Manage DNS A record</td>
+</tr>
+<tr>
+<td>axiom-region</td>
+<td>- ls&lt;br /&gt;- select</td>
+<td>set region of public cloud</td>
+</tr>
+<tr>
+<td>axiom-exec</td>
+<td></td>
+<td>run commands in instance</td>
+</tr>
+<tr>
+<td>axiom-execb</td>
+<td></td>
+<td>run commands in instance background</td>
+</tr>
+<tr>
+<td>axiom-scan</td>
+<td>- httpx&lt;br /&gt;- nuclei&lt;br /&gt;- gowitness&lt;br /&gt;- dnsprobe&lt;br /&gt;- nmap&lt;br /&gt;- massscan</td>
+<td>scanning with template</td>
+</tr>
+</tbody>
+</table>
+<h2 id="make-new-instance">Make new instance</h2>
+<pre><code>axiom-init
+</code></pre>
+<pre><code>axiom-ls
+</code></pre>
+<h2 id="connecting-ssh">Connecting ssh</h2>
+<pre><code>axiom-ssh &lt;instance name&gt;
+</code></pre>
+<h2 id="delete-instance">Delete instance</h2>
+<pre><code>axiom-rm &lt;instance name&gt;
+</code></pre>
+<h2 id="backup">Backup</h2>
+<pre><code>axiom-backup &lt;instance name&gt;
+</code></pre>
+<p>and show backup list</p>
+<pre><code>axiom-boxes ls
+</code></pre>
+<h2 id="scanning-with-axiom">Scanning with axiom</h2>
+<pre><code>axiom-scan subs.txt -m httpx -o http.txt \
+axiom-scan http.txt -m nuclei -o nuclei.txt \
+axiom-scan http.txt -m gowitness -o screenshots \
+axiom-scan subs.txt -m dnsprobe -o dns.txt \
+axiom-scan ips.txt -m nmap -oG portscan.txt \
+axiom-scan ips.txt -m masscan -oG masscan.txt
+</code></pre>
+<h2 id="using-fleet">Using fleet</h2>
+<p>Make 5 instance using fleet</p>
+<pre><code>axiom-fleet &lt;name&gt; -i=5
+</code></pre>
+<p>Select 5 instance</p>
+<pre><code>axiom-select &lt;name*&gt;
+</code></pre>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2020/11/16/configuring-a-pentest-environment-with-axiom/">https://www.hahwul.com/2020/11/16/configuring-a-pentest-environment-with-axiom/</a></li>
+<li><a href="https://www.hahwul.com/2020/12/11/how-to-set-not-require-passphrase-in-pka-ssh-environment/">https://www.hahwul.com/2020/12/11/how-to-set-not-require-passphrase-in-pka-ssh-environment/</a></li>
+<li><a href="https://www.hahwul.com/2021/01/27/how-to-share-other-device-settings-in-axiom/">https://www.hahwul.com/2021/01/27/how-to-share-other-device-settings-in-axiom/</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/pry0cc/axiom">https://github.com/pry0cc/axiom</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/tool/axiom/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

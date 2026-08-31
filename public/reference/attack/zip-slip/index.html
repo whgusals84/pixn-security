@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zip Slip — PIXN</title>
+  <meta name="description" content="Zip Slip — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Zip Slip — PIXN"><meta property="og:description" content="Zip Slip — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Zip Slip</h1>
+      <time datetime="2021-09-20">SEPTEMBER 20, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>ZIP Slip은 Path traversal(directory traversal) 구문이 포함된 Archive 파일(zip, tar, jar, etc..)을 extract할 떄 이를 이용하여 공격자가 의도한 경로로 원하는 파일을 이동시키는 공격 방법입니다.</p>
+<p>일반적으로 Unarchive 관련해서 안전한 라이브러리가 있다면 크게 영향받지 않지만, 일부 언어는 이러한 라이브러리의 부재로 개발자들이 작성한 Code snippet 으로 extract 하는 경우가 많습니다. 그래서 이러한 공격에 대한 대응이 코드인 경우 공격자가 쉽게 상위 디렉토리 등으로 원하는 파일을 이동시킬 수 있습니다.</p>
+<p><strong>e.g</strong></p>
+<pre><code>├── dir1
+│   ├── file1.txt
+│   ├── file2.txt
+├── ../../../../../../evil.sh
+</code></pre>
+<p><em>어떻게 보면 <a href="https://www.hahwul.com/2017/05/27/web-hacking-ooxml-xxe/">OOXML XXE</a>와 유사한 부분도 있네요.</em></p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>Archive를 처리하는 모든 구간에서는 테스트해볼 가치가 있습니다. 특정 요청 등을 이용해 서비스에 압축 파일 형태로 업로드하여 처리되거나, 다른 파라미터 정보들이 조합되서 ZIP과 같이 처리되는 경우 유효할 수 있으며, 이를 쉽게 식별하기 이해서는 Path traversal과 같이 단순한 경로를 우선 지정하여 extract 되는지 체크해야합니다.</p>
+<p><strong>ZIP</strong></p>
+<pre><code>./normal.jpg
+../inject.jpg
+../ZIP_NAME/inject2.jpg
+</code></pre>
+<p><strong>Check</strong></p>
+<pre><code>/normal.jpg (200)
+/inject.jpg (404)
+/inject2.jpg (200) =&gt; 취약
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<p>실제 공격은 단순합니다. 이를 통해서 시스템의 중요 파일을 덮어쓰거나, 실행 가능한 경로로 파일을 이동시켜 RCE를 유도할 수 있습니다.</p>
+<pre><code>../../../../../../../../tmp/evil.sh
+</code></pre>
+<p>물론 이 경우 실행 권한이 있는 디렉토리르 정확하게 알아야하고, 어떤 조건으로 인해 실행이 되어야 합니다. 이외에도 다른 취약점으로 연결될 수 있는 브릿지 역할을 할 수 있습니다.</p>
+<h3 id="bypass-protection">Bypass protection</h3>
+<p>접근 경로에 대해 권한 기반으로 Limit이 있는 경우는 우회하기 어렵습니다. 다만 Path traversal과 동일하게 문자열 기반으로 체크하는 로직인 경우 Path traversal의 bypass 패턴을 동일하게 사용할 수 있습니다. 자세한 내용은 아래 링크를 참고해주세요.</p>
+<p>https://www.hahwul.com/cullinan/path-traversal/#bypass-protection</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>Extract 시 path를 검증하는 형태로 대응이 가능합니다. 또한 extract 하는 프로세스의 권한을 이용해서 최대 write할 수 있는 범위를 명시하는 방법으로도 공격을 예방할 수 있습니다.</p>
+<h3 id="example">Example</h3>
+<p>golang 코드로 예시를 들어보겠습니다.</p>
+<p><strong>Vuln code</strong></p>
+<pre><code class="language-go hljs"><span class="hljs-keyword">func</span> <span class="hljs-punctuation">(</span>rarFormat<span class="hljs-punctuation">)</span> <span class="hljs-title function_">Read</span><span class="hljs-punctuation">(</span>input io<span class="hljs-punctuation">.</span>Reader<span class="hljs-punctuation">,</span> dest <span class="hljs-type">string</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+  rr <span class="hljs-operator">:=</span> rardecode<span class="hljs-punctuation">.</span><span class="hljs-title function_">NewReader</span><span class="hljs-punctuation">(</span>input<span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;&quot;</span><span class="hljs-punctuation">)</span>
+  <span class="hljs-keyword">for</span> <span class="hljs-punctuation">{</span>
+    header <span class="hljs-operator">:=</span> rr<span class="hljs-punctuation">.</span><span class="hljs-title function_">Next</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+    <span class="hljs-title function_">writeNewFile</span><span class="hljs-punctuation">(</span>filepath<span class="hljs-punctuation">.</span><span class="hljs-title function_">Join</span><span class="hljs-punctuation">(</span>dest<span class="hljs-punctuation">,</span> header<span class="hljs-punctuation">.</span>Name<span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> rr<span class="hljs-punctuation">,</span> header<span class="hljs-punctuation">.</span><span class="hljs-title function_">Mode</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p><strong>Validation code</strong></p>
+<pre><code class="language-go hljs"><span class="hljs-keyword">func</span> <span class="hljs-title function_">sanitizeExtractPath</span><span class="hljs-punctuation">(</span>filePath <span class="hljs-type">string</span><span class="hljs-punctuation">,</span> destination <span class="hljs-type">string</span><span class="hljs-punctuation">)</span> <span class="hljs-type">error</span> <span class="hljs-punctuation">{</span>
+ destpath <span class="hljs-operator">:=</span> filepath<span class="hljs-punctuation">.</span><span class="hljs-title function_">Join</span><span class="hljs-punctuation">(</span>destination<span class="hljs-punctuation">,</span> filePath<span class="hljs-punctuation">)</span>
+ <span class="hljs-keyword">if</span> <span class="hljs-punctuation">!</span>strings<span class="hljs-punctuation">.</span><span class="hljs-title function_">HasPrefix</span><span class="hljs-punctuation">(</span>destpath<span class="hljs-punctuation">,</span> filepath<span class="hljs-punctuation">.</span><span class="hljs-title function_">Clean</span><span class="hljs-punctuation">(</span>destination<span class="hljs-punctuation">)</span> <span class="hljs-operator">+</span> <span class="hljs-built_in">string</span><span class="hljs-punctuation">(</span>os<span class="hljs-punctuation">.</span>PathSeparator<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+   <span class="hljs-keyword">return</span> fmt<span class="hljs-punctuation">.</span><span class="hljs-title function_">Errorf</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;%s: illegal file path&quot;</span><span class="hljs-punctuation">,</span> filePath<span class="hljs-punctuation">)</span>
+  <span class="hljs-punctuation">}</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="%5Bhttps://github.com/snyk/zip-slip-vulnerability#affected-libraries%5D(https://github.com/snyk/zip-slip-vulnerability#affected-libraries)">취약 라이브러리</a></li>
+<li><a href="https://github.com/clevernyyyy/zip-slip-poc">https://github.com/clevernyyyy/zip-slip-poc</a></li>
+<li><a href="https://github.com/ptoomey3/evilarc">https://github.com/ptoomey3/evilarc</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://snyk.io/research/zip-slip-vulnerability">https://snyk.io/research/zip-slip-vulnerability</a></li>
+<li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Zip%20Slip">https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload Insecure Files/Zip Slip</a></li>
+<li>https://www.hahwul.com/2017/05/27/web-hacking-ooxml-xxe/</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/zip-slip/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

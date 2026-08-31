@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTTP Parameter Pollution — PIXN</title>
+  <meta name="description" content="HTTP Parameter Pollution — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="HTTP Parameter Pollution — PIXN"><meta property="og:description" content="HTTP Parameter Pollution — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>HTTP Parameter Pollution</h1>
+      <time datetime="2021-09-20">SEPTEMBER 20, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>HTTP Parameter Pollution(HPP)는 중복된 파라미터를 웹 어플리케이션이 처리하는 방식의 차이를 이용한 공격 방법입니다. 정확하게는 특정 리스크를 가진 공격 방법이라기 보단 다른 취약점으로 연결하기 위한 트릭으로 사용되며, 동일한 이름의 파라미터를 중복으로 전송하여 서비스의 의도하지 않은 처리를 유도하는 방법입니다.</p>
+<p><strong>Normal request</strong></p>
+<pre><code>GET https://www.hahwul.com/?q=1234 HTTP/1.1
+</code></pre>
+<p><strong>HPP request</strong></p>
+<pre><code>GET https://www.hahwul.com/?q=1234&amp;q=4444 HTTP/1.1
+</code></pre>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>특정 기능들에 동일한 이름의 파라미터를 복수로 보내서 반응을 살펴봅니다. 웹 어플리케이션에 따라 처리 방법이 상이하며, 이를 이용하면 2개의 웹 어플리케이션이 다른 파라미터 값을 보도록 유도할 수도 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>Technology</th>
+<th>Parsing Result</th>
+<th style="text-align: center;">outcome (par1=)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASP.NET/IIS</td>
+<td>All occurrences</td>
+<td style="text-align: center;">a,b</td>
+</tr>
+<tr>
+<td>ASP/IIS</td>
+<td>All occurrences</td>
+<td style="text-align: center;">a,b</td>
+</tr>
+<tr>
+<td>PHP/Apache</td>
+<td>Last occurrence</td>
+<td style="text-align: center;">b</td>
+</tr>
+<tr>
+<td>PHP/Zues</td>
+<td>Last occurrence</td>
+<td style="text-align: center;">b</td>
+</tr>
+<tr>
+<td>JSP,Servlet/Tomcat</td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>Perl CGI/Apache</td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>Python Flask</td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>Python Django</td>
+<td>Last occurrence</td>
+<td style="text-align: center;">b</td>
+</tr>
+<tr>
+<td>Nodejs</td>
+<td>All occurrences</td>
+<td style="text-align: center;">a,b</td>
+</tr>
+<tr>
+<td>Golang net/http - <code>r.URL.Query().Get(&quot;param&quot;)</code></td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>Golang net/http - <code>r.URL.Query()[&quot;param&quot;]</code></td>
+<td>All occurrences</td>
+<td style="text-align: center;">a,b</td>
+</tr>
+<tr>
+<td>IBM Lotus Domino</td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>IBM HTTP Server</td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>Perl CGI/Apache</td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>mod_wsgi (Python)/Apache</td>
+<td>First occurrence</td>
+<td style="text-align: center;">a</td>
+</tr>
+<tr>
+<td>Python/Zope</td>
+<td>All occurences in array</td>
+<td style="text-align: center;">[&#39;a&#39;,&#39;b&#39;]</td>
+</tr>
+</tbody>
+</table>
+<p>또한 일부는 백엔드에서 Array 형태로 처리되기 때문에 이를 이용하여 IDOR 과 같이 타 권한에 영향을 끼칠 수 있도록 유도할 수 있습니다.</p>
+<h3 id="bypass-protection">Bypass protection</h3>
+<p>웹 어플리케이션의 처리 방식, 그리고 HPP를 통해 얻고자 하는 취약점에 따라서 방법이 상이합니다. 한가지 예시를 보여드리면, HPP를 이용해서 Host validation을 우회할 수 있습니다.</p>
+<p>일부 서비스는 동일 이름의 파라미터가 존재하는 경우 Array 형태로 처리하게 되는데, @와 함께 HPP 공격코드를 구성해서 아래와 같이 실제 도메인 검증은 우회하고, 공격자가 의도한 페이지로 이동할 수 있도록 구성해볼 수 있습니다.</p>
+<p><strong>Request</strong></p>
+<pre><code>GET /?url=https://trusted.domain&amp;url=@untrusted.domain
+</code></pre>
+<p><strong>Backend</strong></p>
+<pre><code>url: https://trusted.domain,@untrusted.domain
+</code></pre>
+<p>자세한 내용은 <a href="%5Bhttps://www.hahwul.com/2021/06/21/bypass-host-validation-with-parameter-pollution/%5D(https://www.hahwul.com/2021/06/21/bypass-host-validation-with-parameter-pollution/)">해당 포스트</a>를 참고해주세요.</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>HPP로 인한 공격이 발생헀다면, 동일 파라미터를 처리하는 방식에 변화를 주어야합니다. 이는 HPP로 발생하게 되는 여러가지 취약점에 따라 대응 방법이 상이하겠지만, 파라미터단에서 대응이 필요하다면 동일한 이름의 파라미터 값이 들어올 수 있다고 가정하고 개발을 진행해야 합니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>ZAP, Burpsuite 등 대다수 도구에서 이를 탐지합니다.</li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li>https://www.hahwul.com/2021/06/21/bypass-host-validation-with-parameter-pollution/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/HTTP%20Parameter%20Pollution</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/hpp/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nmap — PIXN</title>
+  <meta name="description" content="Nmap — Working notes and command references for security tooling.">
+  <meta property="og:title" content="Nmap — PIXN"><meta property="og:description" content="Nmap — Working notes and command references for security tooling."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/tool/">Security Tools</a></p>
+      <h1>Nmap</h1>
+      <time datetime="2021-08-12">AUGUST 12, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Nmap은 오픈소스 기반의 Network discovery 도구입니다. 일반적으로 포트스캐너로 알려져 있으며, Lua script(NSE)를 통해 별도의 테스팅 로직을 구성할 수 있어 웹부터 네트워크단 취약점에 대한 스캐닝까지 충분히 커버할 수 있습니다.</p>
+<h2 id="installation">Installation</h2>
+<h3 id="mac">Mac</h3>
+<pre><code>brew install nmap
+</code></pre>
+<h3 id="linux">Linux</h3>
+<pre><code>apt install nmap
+</code></pre>
+<h3 id="windows">Windows</h3>
+<p><a href="https://nmap.org/download.html">https://nmap.org/download.html</a></p>
+<h2 id="go-to-commands">Go-to commands</h2>
+<pre><code>nmap -sC 192.168.0.1   (same this, nmap 192.168.0.1 --script=default)
+- 디폴트 스크립트로 대상 스캔
+- scanning with default scripts
+</code></pre>
+<pre><code>nmap -sn -sC 192.168.0.1
+- 포트스캔 없이 스크립트 스캔만
+- scanning default script without portscan
+</code></pre>
+<pre><code>nmap -PN 192.168.0.1
+- Host 스캔 없이 바로 포트 스캐닝
+- Portscanning without host scan
+</code></pre>
+<pre><code>nmap -PN 192.168.0.1 -p-
+- Full port(1-65536) scanning
+</code></pre>
+<pre><code>nmap -sS 192.168.0.1
+- Syn 스캔
+- Syn portscan
+</code></pre>
+<pre><code>nmap -sS 192.168.0.1 --script=http* -oX test.xml
+- Syn scanning with enable &quot;http~~&quot; scripts and xml output file
+</code></pre>
+<h2 id="default-commands">Default Commands</h2>
+<h3 id="scan-single-ip-port">Scan single IP/Port</h3>
+<pre><code>nmap 192.168.0.1
+</code></pre>
+<pre><code>nmap www.hahwul.com
+</code></pre>
+<pre><code>nmap 192.168.0.1 -p 443
+</code></pre>
+<h3 id="scan-range-of-ip-ports">Scan range of IP/Ports</h3>
+<p>IP range and subnet</p>
+<pre><code>nmap 192.168.0.1-254
+</code></pre>
+<pre><code>nmap 192.168.0.0/24
+</code></pre>
+<p>Port range</p>
+<pre><code>nmap 192.168.0.1 -p 20-3000
+</code></pre>
+<p>Full port scanning</p>
+<pre><code>nmap 192.168.0.1 -p-
+</code></pre>
+<p>Most 100 port</p>
+<pre><code>nmap 192.168.0.1 -F
+</code></pre>
+<h3 id="scan-from-file">Scan from file</h3>
+<pre><code>nmap -iL hosts.txt
+</code></pre>
+<h2 id="scan-types">Scan types</h2>
+<p>TCP</p>
+<pre><code>nmap -sT 192.168.0.1
+</code></pre>
+<p>Syn</p>
+<pre><code>nmap -sS 192.168.0.1
+</code></pre>
+<p>UDP</p>
+<pre><code>nmap -sU 192.168.0.1
+</code></pre>
+<p>PING(Ping sweep)</p>
+<pre><code>nmap -sP 192.168.0.1
+</code></pre>
+<h2 id="use-nselua">Use NSE(Lua)</h2>
+<h3 id="usage">Usage</h3>
+<pre><code>Same lines.
+--script &lt;NSE FILE&gt;
+--script=&lt;NSE FILE&gt;
+</code></pre>
+<p>Use NSE</p>
+<pre><code>nmap 192.168.0.1 --script &lt;NSE FILE&gt;
+</code></pre>
+<p>Use NSE with arguments</p>
+<pre><code>nmap 192.168.0.1 --script nse --script-args &lt;ARGUMENTS&gt;
+</code></pre>
+<p>Use NSE with arguments file</p>
+<pre><code>nmap 192.168.0.1 --script nse --script-args-file &lt;FILE&gt;
+</code></pre>
+<p>Use NSE arguments scripts</p>
+<pre><code>nmap -sC --script-args 'user=foo,pass=&quot;,{}=bar&quot;,paths={/admin,/cgi-bin},xmpp-info.server_name=localhost’
+</code></pre>
+<pre><code>nmap.registry.args = {
+  user = &quot;foo&quot;,
+  pass = &quot;,{}=bar&quot;,
+  paths = {
+    &quot;/admin&quot;,
+    &quot;/cgi-bin&quot;
+  },
+  xmpp-info.server_name=&quot;localhost&quot;
+}
+</code></pre>
+<h3 id="nse-list">NSE list</h3>
+<ul>
+<li><a href="https://nmap.org/nsedoc/lib/nmap.html">https://nmap.org/nsedoc/lib/nmap.html</a></li>
+<li><a href="https://github.com/nmap/nmap/tree/master/scripts">https://github.com/nmap/nmap/tree/master/scripts</a></li>
+<li><a href="https://github.com/topics/nmap-scripts">https://github.com/topics/nmap-scripts</a></li>
+</ul>
+<h3 id="write-nse-scripts">Write NSE scripts</h3>
+<p>NSE Information</p>
+<pre><code>description = [[
+Attempts to find the owner of an open TCP port by querying an auth
+(identd - port 113) daemon which must also be open on the target system.
+]]
+
+author = &quot;Diman Todorov&quot;
+license = &quot;Same as Nmap--See https://nmap.org/book/man-legal.html&quot;
+categories = {&quot;default&quot;, &quot;safe&quot;}
+</code></pre>
+<p>portrule</p>
+<pre><code>portrule = function(host, port)
+    local auth_port = { number=113, protocol=&quot;tcp&quot; }
+    local identd = nmap.get_port_state(host, auth_port)
+
+    return identd ~= nil
+        and identd.state == &quot;open&quot;
+        and port.protocol == &quot;tcp&quot;
+        and port.state == &quot;open&quot;
+end
+</code></pre>
+<p>action</p>
+<pre><code>action = function(host, port)
+        local owner = &quot;&quot;
+        local client_ident = nmap.new_socket()
+        local client_service = nmap.new_socket()
+        local catch = function()
+                client_ident:close()
+                client_service:close()
+        end
+        local try = nmap.new_try(catch)
+        try(client_ident:connect(host.ip, 113))
+        try(client_service:connect(host.ip, port.number))
+        local localip, localport, remoteip, remoteport =
+                try(client_service:get_info())
+
+        local request = port.number .. &quot;, &quot; .. localport .. &quot;\r\n&quot;
+        try(client_ident:send(request))
+        owner = try(client_ident:receive_lines(1))
+        if string.match(owner, &quot;ERROR&quot;) then
+                owner = nil
+        else
+                owner = string.match(owner,
+                        &quot;%d+%s*,%s*%d+%s*:%s*USERID%s*:%s*.+%s*:%s*(.+)\r?\n&quot;)
+        end
+        try(client_ident:close())
+        try(client_service:close())
+        return owner
+end
+</code></pre>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2020/08/02/nmap-cheatsheet/">https://www.hahwul.com/2020/08/02/nmap-cheatsheet/</a></li>
+<li><a href="https://www.hahwul.com/2019/05/12/nmap-nse-4/">https://www.hahwul.com/2019/05/12/nmap-nse-4/</a></li>
+<li><a href="https://www.hahwul.com/2019/05/12/four-nmap-nse-scripts-for-penetration/">https://www.hahwul.com/2019/05/12/four-nmap-nse-scripts-for-penetration/</a></li>
+<li><a href="https://www.hahwul.com/2016/03/27/hacking-nmap-part2-nsenmap-script/">https://www.hahwul.com/2016/03/27/hacking-nmap-part2-nsenmap-script/</a></li>
+<li><a href="https://www.hahwul.com/2016/03/13/hacking-nmap-part1-nmap-network-scan/">https://www.hahwul.com/2016/03/13/hacking-nmap-part1-nmap-network-scan/</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://nmap.org">https://nmap.org</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/tool/nmap/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

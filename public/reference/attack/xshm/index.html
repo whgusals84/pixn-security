@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XSHM Attack — PIXN</title>
+  <meta name="description" content="XSHM Attack — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="XSHM Attack — PIXN"><meta property="og:description" content="XSHM Attack — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>XSHM Attack</h1>
+      <time datetime="2022-04-09">APRIL 9, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>XSHM (Cross Site History Manipulation)은 사용자의 브라우저 히스토리를 이용한 공격 방법으로 단순히 이전 history를 변경하여 공격자가 의도한 페이지로 이동되도록 하는 피싱 방법부터, SOP를 우회하거나 CSRF 또는 IFRAME을 이용하여 중요 정보를 탈취하는데 사용할 수 있습니다.</p>
+<ul>
+<li>https://developer.mozilla.org/en-US/docs/Web/API/Window/history</li>
+<li>https://developer.mozilla.org/en-US/docs/Web/API/History</li>
+</ul>
+<p>다만 history를 변경할 수 있었던 부분은</p>
+<pre><code class="language-javascript hljs">history<span class="hljs-punctuation">.</span>pushState<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;https://www.hahwul.com/fafa&#39;</span><span class="hljs-punctuation">)</span>
+history<span class="hljs-punctuation">.</span>replaceState<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;https://www.hahwul.com/z&#39;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>해당 공격 방법은 단독으로 동작한다기 보단 XSS나 업로드된 파일 등 공격자가 통제할 수 있는 페이지에서 스크립트 삽입이 필요합니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="phishing">Phishing</h4>
+<p>history.pushState, history.replaceState 를 사용해서 브라우저의 주소표시줄을 변경할 수 있습니다. 다만 이 과정은 SOP의 영향을 받기 때문에 Same-Origin 한정으로 변경할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/162476074-bce13bf1-a995-49b0-a333-bb6ef61a6f32.png" alt="" /></p>
+<p>위와 같이 <code>https://www.hahwul.com/cullinan/main/</code> 페이지 접근 후 <code>history.pushState()</code> 함수를 사용해서 URL을 추가한다면 아래와 같이 페이지는 변함없지만 사용자가 확인할 수 있는 주소표시줄의 데이터가 변경됩니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/162476089-af2e6204-1b17-46b1-b670-0bb74f1432bf.png" alt="" /></p>
+<p>Same-Origin이란 제한이 있지만, 예를들어 도메인 내 XSS나 html 파일 업로드 구간이 있을 때 사용자를 <code>/</code> 경로와 같이 신뢰도가 높은 주소로 변경하여 피싱의 성공률을 올릴 수 있습니다.</p>
+<p>한가지 예를들면 로그인 페이지 모습의 피싱 페이지가 아래 2개의 Path 중 어디로 보일 떄 신뢰도가 높을지 생각해보면 바로 답이 나옵니다.</p>
+<ul>
+<li>/users/file/125412519827125.html</li>
+<li>/logins</li>
+</ul>
+<p>사용할 수 있는 대표적인 함수는 아래와 같습니다.</p>
+<pre><code class="language-javascript hljs">history<span class="hljs-punctuation">.</span>pushState<span class="hljs-punctuation">(</span>state<span class="hljs-punctuation">,</span> unused<span class="hljs-punctuation">,</span> url<span class="hljs-punctuation">)</span>
+history<span class="hljs-punctuation">.</span>replaceState<span class="hljs-punctuation">(</span>stateObj<span class="hljs-punctuation">,</span> unused<span class="hljs-punctuation">,</span> url<span class="hljs-punctuation">)</span>
+</code></pre>
+<h4 id="cross-site-condition-leakage">Cross-Site Condition Leakage</h4>
+<p>Cross-Site Condition Leakage은 어플리케이션에서 공격자가 조건문의 민감한 값을 유추할 수 있을 때 발생합니다. 기본적으로 30x 같은 Redirect 페이지가 필요하며 이를 이용해서 다른 페이지의 조건 등을 확인할 수 있습니다.</p>
+<p>하나 예시를 들어보면 만약 <code>GET /myinfo</code> 페이지를 호출했을 때 로그인 사용자는 <code>200 OK</code> 비로그인 사용자는 <code>302를 통해 /error</code> 라는 페이지로 redirect 한다고 가정합시다. 그러면 공격자는 iframe을 이용해 먼저 <code>/error</code> 페이지를 불러온 후 history.length 사이즈를 기록해둡니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;f&quot;</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;/error&quot;</span> <span class="hljs-attr">onload</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;console.log(f.contentWindow.history.length)&quot;</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>이후 src를 수정하여 <code>/myinfo</code> 를 호출합니다. 여기서 사용자가 로그인되었다면 200OK로 history.length의 값이 하나 늘겠지만, 비로그인인 경우 <code>/error</code>로 리다이렉트되고 기존과 동일한 페이지기 때문에 history가 카운팅되지 않습니다. 이를 통해 사용자의 로그인 여부를 파악할 수 있습니다.</p>
+<pre><code class="language-javascript hljs">f<span class="hljs-punctuation">.</span>src<span class="hljs-operator">=</span><span class="hljs-string">&quot;/myinfo&quot;</span>
+console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>f<span class="hljs-punctuation">.</span>contentWindow<span class="hljs-punctuation">.</span>history<span class="hljs-punctuation">.</span>length<span class="hljs-punctuation">)</span>
+
+<span class="hljs-comment">// login: history=&gt; 2
+</span><span class="hljs-comment"></span><span class="hljs-comment">// not-login; history=&gt; 1
+</span><span class="hljs-comment"></span></code></pre>
+<p>예시로는 단순히 로그인 여부 체크였지만, 호출하는 API나 페이지에 종류에 따라서 true/false를 알 수 있기 때문에 이를 이용하여 중요정보나 개인정보를 유추하는데 사용할 수 있습니다. 이는 XS-Leaks 방법과 유사합니다.</p>
+<p>대표적으로 알려진 카테고리는 아래와 같습니다.</p>
+<ul>
+<li>Login Detection</li>
+<li>Resource Mapping</li>
+<li>Error Leakage</li>
+<li>State Detection</li>
+<li>Information Inference</li>
+</ul>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>SOP와 브라우저 정책들의 강화로 Cross-Origin에선 상대적으로 활용하기 어렵습니다. 다만 그래도 Same-Origin 한정으로는 XSHM을 이용하여 기존 취약점으로 얻을 수 없는 정보를 탈취할 수도 있기 때문에 X-Frame-Options, CSP 등의 보안 헤더를 통해 허들을 높이고 XSS나 CSRF 등의 취약점이 발생하지 않도록 예방하고 주기적으로 테스트하는 것이 좋습니다.</p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://owasp.org/www-community/attacks/Cross_Site_History_Manipulation_(XSHM)</li>
+<li>https://developer.mozilla.org/en-US/docs/Web/API/Window/history</li>
+<li>https://developer.mozilla.org/en-US/docs/Web/API/History</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/xshm/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

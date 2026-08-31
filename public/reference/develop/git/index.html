@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git — PIXN</title>
+  <meta name="description" content="Git — Language, workflow, and software development references.">
+  <meta property="og:title" content="Git — PIXN"><meta property="og:description" content="Git — Language, workflow, and software development references."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/develop/">Development</a></p>
+      <h1>Git</h1>
+      <time datetime="2021-08-12">AUGUST 12, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>깃은 오픈소스 분산 버전 관리 시스템으로 svn 이후에 개발 트렌드에서 가장 중요한 위치에 있는 도구입니다. 기본적으로 여러 사용자들의 공동 개발에 있어서 파일의 변경 사항을 지속적으로 추적하고 충돌나지 않도록 관리해주는 역할을 수행합니다.</p>
+<h2 id="installation">Installation</h2>
+<h3 id="macos">MacOS</h3>
+<pre><code>brew install git
+</code></pre>
+<h3 id="linux">Linux</h3>
+<pre><code>sudo apt isntall git-all
+</code></pre>
+<h2 id="go-to-commands">Go-to commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>git add </code></td>
+<td>Add</td>
+</tr>
+<tr>
+<td><code>git commit -m &#39;MESSAGE&#39; -s</code></td>
+<td>Commit (Signoff 커밋)</td>
+</tr>
+<tr>
+<td><code>git push</code></td>
+<td>Push</td>
+</tr>
+<tr>
+<td><code>git pull -v</code></td>
+<td>Pull</td>
+</tr>
+<tr>
+<td><code>git fetch -v</code></td>
+<td>Fetch</td>
+</tr>
+<tr>
+<td><code>git branch &lt;Branch-Name&gt;</code></td>
+<td>브랜치 생성</td>
+</tr>
+<tr>
+<td><code>git checkout &lt;Branch-Name&gt;</code></td>
+<td>브랜치 변경</td>
+</tr>
+<tr>
+<td><code>git merge </code></td>
+<td>Merge</td>
+</tr>
+<tr>
+<td><code>git reset HEAD </code></td>
+<td>Add 취소</td>
+</tr>
+<tr>
+<td><code>git reset --soft HEAD^</code></td>
+<td>Commit 취소(staged + 로컬 보존)</td>
+</tr>
+<tr>
+<td><code>git reset --mixed HEAD^</code></td>
+<td>Commit 취소(unstaged + 로컬 보존)</td>
+</tr>
+<tr>
+<td><code>git reset --hard HEAD^</code></td>
+<td>Commit 취소(unstaged + 로컬 삭제)</td>
+</tr>
+<tr>
+<td><code>git commit --amend</code></td>
+<td>Commit 메시지 수정</td>
+</tr>
+</tbody>
+</table>
+<h2 id="my-articles">My Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2021/01/21/how-to-change-and-ignore-the-default-editor-when-github-merge/">Git pull/merge 충돌 시 기본 데이터 변경, 에디터 띄우지 않기</a></li>
+<li><a href="https://www.hahwul.com/2018/08/22/git-credential-helper/">Git pull/push 시 password 물어보지 않도록 설정하기</a></li>
+<li><a href="https://www.hahwul.com/2018/07/27/closing-git-issue-with-commit/">Git commit 으로 github 이슈 종료하기</a></li>
+<li><a href="https://www.hahwul.com/2018/06/25/make-pull-request-git-contribute/">Github contribute 관련 정리</a></li>
+<li><a href="https://www.hahwul.com/2018/05/08/macos-git-commandlinetoolserrorsolution/">MacOS에서 git 실행 시 CommandLineTools 에러 해결</a></li>
+<li><a href="https://www.hahwul.com/2016/04/07/coding-git-pull-pull/">Git pull 강제로 수행하기</a></li>
+<li><a href="https://www.hahwul.com/2016/02/02/coding-git-push-push-error-failed-to/">Git push 강제로 수행하기</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/develop/git/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

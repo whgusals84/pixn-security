@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReDOS Attack — PIXN</title>
+  <meta name="description" content="ReDOS Attack — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="ReDOS Attack — PIXN"><meta property="og:description" content="ReDOS Attack — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>ReDOS Attack</h1>
+      <time datetime="2022-03-30">MARCH 30, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>ReDOS는 정규표현식을 사용자로부터 입력받을 때 발생할 수 있는 보안 문제입니다. 일반적으로 ReDOS, Regex DOS 등으로 불리며 자체적으로 반복되는 그룹화 정규식과 정규식 검증 로직을 만족하는 대량의 문자 등을 이용해서 한번의 웹 요청으로 서비스의 가용성을 떨어뜨리는 방법입니다.</p>
+<p>이러한 ReDOS는 Regexp 엔진이 Backtracking 기능을 사용할 때 발생하며 이 기능은 정규표현식 처리 시 가능한 모든 경로를 탐색하기 위해 비 효율적인 작업을 여러번 시도하게 됩니다. 이로인해 시스템의 자원을 고갈시키며 DOS를 수행할 수 있습니다.</p>
+<blockquote>
+<p>원인은 Regex의 알고리즘이 <a href="https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton">NFA(Nondeterministic Finite Automaton)</a>을 구성하고 이를 기반으로 처리하기 때문입니다.</p>
+</blockquote>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>외부에서의 인자값 등으로 정규표현식을 통제할 수 없다면 해당 정규표현식의 처리에서 부하가 될만한 부분을 찾아야합니다. 만약 정규표현식이 <code>^(a+)+$</code> 같은 구문을 사용할 때 <code>aaaaX</code> 란 값이 입력되면 아래와 같은 처리를 통해서 총 16번의 Path가 발생하게 됩니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/160662569-2d949809-b573-48c5-9aa2-2066c7f03ccf.png" alt="NFA" /></p>
+<p>이 때 만약 외부 입력 값이 <code>aaaaaaaaaaaaaaaaX</code> 로 들어왔을 경우 65536번의 Path가 발생하고 문자는 몇개 안늘었지만, 정규표현식 처리를 위해 반복되는 동작이 크게 늘어났습니다. 그래서 이러한 경우 훨씬 큰 a 값이 들어갔을 경우 Backtracking으로 인해 큰 루프가 발생합니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<p>Regexp 패턴을 바꿀 수 없다면 regexp 패턴에 따라서 큰 처리가 발생하도록 유도해야합니다. 예를들어 아래와 같이 email 검증 regexp가 있다고 가정합시다.</p>
+<pre><code class="language-bash hljs">^<span class="hljs-operator">(</span><span class="hljs-operator">[</span>a-zA-Z0-9<span class="hljs-operator">]</span><span class="hljs-operator">)</span><span class="hljs-operator">(</span><span class="hljs-operator">(</span><span class="hljs-operator">[</span><span class="hljs-string">\-</span>.<span class="hljs-operator">]</span><span class="hljs-punctuation">|</span><span class="hljs-operator">[</span>_<span class="hljs-operator">]</span>+<span class="hljs-operator">)</span>?<span class="hljs-operator">(</span><span class="hljs-operator">[</span>a-zA-Z0-9<span class="hljs-operator">]</span>+<span class="hljs-operator">)</span><span class="hljs-operator">)</span>*<span class="hljs-operator">(</span>@<span class="hljs-operator">)</span><span class="hljs-operator">{</span>1<span class="hljs-operator">}</span><span class="hljs-operator">[</span>a-z0-9<span class="hljs-operator">]</span>+<span class="hljs-operator">[</span>.<span class="hljs-operator">]</span><span class="hljs-operator">{</span>1<span class="hljs-operator">}</span><span class="hljs-operator">(</span><span class="hljs-operator">(</span><span class="hljs-operator">[</span>a-z<span class="hljs-operator">]</span><span class="hljs-operator">{</span>2,3<span class="hljs-operator">}</span><span class="hljs-operator">)</span><span class="hljs-punctuation">|</span><span class="hljs-operator">(</span><span class="hljs-operator">[</span>a-z<span class="hljs-operator">]</span><span class="hljs-operator">{</span>2,3<span class="hljs-operator">}</span><span class="hljs-operator">[</span>.<span class="hljs-operator">]</span><span class="hljs-operator">{</span>1<span class="hljs-operator">}</span><span class="hljs-operator">[</span>a-z<span class="hljs-operator">]</span><span class="hljs-operator">{</span>2,3<span class="hljs-operator">}</span><span class="hljs-operator">)</span><span class="hljs-operator">)</span>$
+</code></pre>
+<p>일반적인 email 검증 regexp로 보이지만, 이러한 경우 <code>aaaaaaaaaaaaaaaaaaaaaaaa!</code> 값이 input으로 들어가면 큰 오버헤드가 발생합니다.</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>Regexp 패턴을 체크해보고 반복적인 작업이 발생할 수 있는지 테스트하고 보완합니다. 이러한 과정은 test code를 통해 처리하면 regexp가 변경되어도 유연하게 대처할 수 있습니다. 또한 ReScue, SafeRegex 같은 ReDOS 탐지 도구를 통해서 ReDOS의 가능성을 체크해볼 수 있습니다.</p>
+<pre><code>java -jar saferegex.jar &quot;(a|aa)+&quot;
+
+Testing: (a|aa)+
+More than 10000 samples found.
+***
+This expression is vulnerable.
+Sample input: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab
+</code></pre>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>https://github.com/2bdenny/ReScue</li>
+<li>https://github.com/jkutner/saferegex</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS">https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/redos/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

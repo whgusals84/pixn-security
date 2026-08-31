@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Regular Expression — PIXN</title>
+  <meta name="description" content="Regular Expression — Language, workflow, and software development references.">
+  <meta property="og:title" content="Regular Expression — PIXN"><meta property="og:description" content="Regular Expression — Language, workflow, and software development references."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/develop/">Development</a></p>
+      <h1>Regular Expression</h1>
+      <time datetime="2021-08-16">AUGUST 16, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>정규표현식</p>
+<h2 id="meta-characters">Meta characters</h2>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Desc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>^</td>
+<td>문자열 시작</td>
+</tr>
+<tr>
+<td>$</td>
+<td>문자열 종료</td>
+</tr>
+<tr>
+<td>.</td>
+<td>개행문자를 제외한 임의의 문자 (한개)</td>
+</tr>
+<tr>
+<td>*</td>
+<td>Wildcard</td>
+</tr>
+<tr>
+<td>+</td>
+<td>앞의 문자가 <code>x&gt;1</code></td>
+</tr>
+<tr>
+<td>?</td>
+<td>앞의 문자가 <code>x&lt;1</code></td>
+</tr>
+<tr>
+<td>[]</td>
+<td>문자의 집합 또는 범위</td>
+</tr>
+<tr>
+<td>{}</td>
+<td>괄호안의 문자를 하나의 문자로 처리</td>
+</tr>
+<tr>
+<td>|</td>
+<td>OR</td>
+</tr>
+<tr>
+<td>\s</td>
+<td>공백 <code>[ \t\n\r\f\v]</code></td>
+</tr>
+<tr>
+<td>\S</td>
+<td>공백이 아닌 문자 <code>[^ \t\n\r\f\v]</code></td>
+</tr>
+<tr>
+<td>\w</td>
+<td>알파벳+숫자 <code>[a-zA-Z0-9_]</code></td>
+</tr>
+<tr>
+<td>\w</td>
+<td>알파벳+숫자를 제외한 문자 <code>[^a-zA-Z0-9_]</code></td>
+</tr>
+<tr>
+<td>\D</td>
+<td>숫자를 제외한 모든 문자 <code>[^0-9]</code></td>
+</tr>
+<tr>
+<td>\</td>
+<td>일반적으로 사용되는 \의미와 동일함 표현할 수 없는 문자를 표현할 떄 사용</td>
+</tr>
+<tr>
+<td>(?i)</td>
+<td>대소문자 구별하지 않음</td>
+</tr>
+<tr>
+<td>.*</td>
+<td>줄 전체 선택 (e.g <code>abcd.*</code> =&gt; abcd1234도 매치됨 )</td>
+</tr>
+</tbody>
+</table>
+<h2 id="online-tools">Online tools</h2>
+<h3 id="test-regex">Test regex</h3>
+<ul>
+<li><a href="https://regex101.com">https://regex101.com</a></li>
+<li><a href="https://regexr.com">https://regexr.com</a></li>
+<li><a href="https://extendsclass.com/regex-tester.html">https://extendsclass.com/regex-tester.html</a></li>
+</ul>
+<h3 id="generate-regex">Generate regex</h3>
+<ul>
+<li><a href="https://regex-generator.olafneumann.org/">https://regex-generator.olafneumann.org/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/develop/regex/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

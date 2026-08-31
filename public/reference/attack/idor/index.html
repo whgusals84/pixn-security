@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IDOR Attack — PIXN</title>
+  <meta name="description" content="IDOR Attack — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="IDOR Attack — PIXN"><meta property="og:description" content="IDOR Attack — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>IDOR Attack</h1>
+      <time datetime="2022-04-30">APRIL 30, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>IDOR(Insecure Direct Object References)는 Access Control에서 발생하는 취약점 중 외부에 노출되거나 제공되는 입력이 Object에 직접 참고하고 엑세스할 때 이를 이용하여 본인의 권한을 넘어서는 액션을 수행할 수 있습니다.</p>
+<p>Origin Request</p>
+<pre><code>GET /info?accountId=15442
+</code></pre>
+<p>IDOR Request</p>
+<pre><code>GET /info?accountId=1110
+</code></pre>
+<p>일반적으론 Horizontal privilege escalation 즉, 수평적으로 권한을 악용할 수 있지만 때때로 어플리케이션 구성이나 정책에 따라서 Vertical privilege escalation(수직적 권한 상승)으로 연결될 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>어플리케이션 처리 로직에서 사용자 입력 값이 Object에 직접 참조되는 부분들이 모두 영향 받습니다. 일반적으로 ID, Username 등 식별 값이 포인트가 되며, 파라미터가 아닌 Static File 등에서도 식별 정보를 기반으로한 데이터 참조가 있는 경우 IDOR의 영향을 받을 수 있습니다.</p>
+<p>Origin Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+account=15442&amp;name=aaa
+</code></pre>
+<p>IDOR Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+account=1110&amp;name=aaa
+</code></pre>
+<p>위 예시에서 account와 같이 사용자의 Object에 참조될만한 파라미터에 다른 사용자의 값을 넣어 어플리케이션의 처리, 리턴되는 반응을 살핍니다. 만약 account 값을 1110을 사용하는 유저의 데이터가 변경되었다면 IDOR에 취약한 것으로 판단합니다.</p>
+<h4 id="with-hunt">With HUNT</h4>
+<p>ZAP, Burpsuite에선 HUNT라는 AddOn을 통해 IDOR의 가능성을 가지는 Request를 Passive Scan 형태로 식별할 수 있습니다. 자세한 내용은 아래 글을 참고해주세요.</p>
+<ul>
+<li>https://www.hahwul.com/2022/04/12/zap-hunt-remix/</li>
+<li>https://www.hahwul.com/2018/04/18/bugcrowd-hunt-burp-extension/</li>
+</ul>
+<h4 id="with-gf-patterns">With GF-Patterns</h4>
+<p><a href="https://github.com/1ndianl33t/Gf-Patterns/blob/master/idor.json">GF-Patterns</a>에 명시된 대표적인 파라미터 이름은 아래와 같습니다. 이런 파라미터들은 IDOR의 주요 표적이 됩니다.</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+    [
+        <span class="hljs-name">&quot;id=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;user=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;account=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;number=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;order=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;no=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;doc=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;key=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;email=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;group=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;profile=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;edit=&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-name">&quot;report=&quot;</span>
+    ]
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="horizontal-privilege-escalation">Horizontal privilege escalation</h4>
+<p>수평 권한 상승은 IDOR를 통해 유사한 권한을 가진 다른 사용자의 데이터를 처리하는 형태의 방법입니다.</p>
+<p>Origin Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+account=15442&amp;name=aaa
+</code></pre>
+<p>IDOR Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+account=1110&amp;name=aaa
+</code></pre>
+<h4 id="vertical-privilege-escalation">Vertical privilege escalation</h4>
+<p>수직 권한 상승은 IDOR를 통해 상위 권한을 가진 다른 사용자의 데이터를 처리하는 형태의 방법입니다. 보통 일반 계정간의 권한 문제가 아닌 Admin 등 상위 권한의 데이터를 침범하는 형태의 방법입니다.</p>
+<p>Origin Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+account=15442&amp;name=aaa
+</code></pre>
+<p>IDOR Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+admin_account=1&amp;name=aaa
+</code></pre>
+<h3 id="bypass-protection">Bypass protection</h3>
+<h4 id="hpp">HPP</h4>
+<p>IDOR는 <a href="/reference/attack/hpp/">HPP(Http Parameter Pollution)</a>을 통해 우회할 수 있는 경우가 종종 있습니다.</p>
+<p>Bypass Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+account=15442&amp;account=1110&amp;name=aaa
+</code></pre>
+<p>Bypass Request (Array)</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+account[]=15442&amp;account[]=1110&amp;name=aaa
+</code></pre>
+<h4 id="json-array">JSON Array</h4>
+<p>Origin Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+{
+    &quot;account&quot;:&quot;15442&quot;
+}
+</code></pre>
+<p>Origin Request</p>
+<pre><code>POST /save_profile HTTP/1.1
+
+{
+    &quot;account&quot;:[
+        &quot;15442&quot;,
+        &quot;1110&quot;
+    ]
+}  
+</code></pre>
+<h4 id="change-method">Change Method</h4>
+<p>Bypass Request</p>
+<pre><code>PUT /save_profile HTTP/1.1
+
+account=1110&amp;name=aaa
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>대응 방안은 간단합니다. 사용자의 입력을 신뢰하지 않고 세션, 쿠키 등 인증 정보와 비교하여 권한을 정확하게 검증해야 합니다.</p>
+<p>또한 인증 정보를 검증할 수 없는 API 등의 경우 사용자가 직접 데이터를 통제할 수 없도록 벡엔드 뒤에 MSA 형태로 숨기던가 앞에 별도의 Interface를 구현하여 대응할 수도 있습니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>ZAP
+<ul>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/access-control-testing/">Access Control Testing AddOn</a></li>
+<li>Scripting &amp; Zest</li>
+</ul>
+</li>
+<li>Burpsuite
+<ul>
+<li>Authz</li>
+<li>AuthMatrix</li>
+<li>Authorize</li>
+</ul>
+</li>
+<li><a href="https://github.com/hahwul/authz0">Authz0</a></li>
+<li><a href="https://github.com/bm402/apidor">apidor</a></li>
+<li><a href="https://github.com/om3rcitak/ozauthmatrix">ozauthmatrix</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li>https://www.hahwul.com/2022/04/12/zap-hunt-remix/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://portswigger.net/web-security/access-control/idor</li>
+<li>https://github.com/1ndianl33t/Gf-Patterns/blob/master/idor.json</li>
+<li>https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Insecure%20Direct%20Object%20References</li>
+<li>https://wiki.owasp.org/index.php/Testing_for_Insecure_Direct_Object_References_(OTG-AUTHZ-004)</li>
+<li>https://book.hacktricks.xyz/pentesting-web/idor</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/idor/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

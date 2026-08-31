@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jekyll — PIXN</title>
+  <meta name="description" content="Jekyll — Language, workflow, and software development references.">
+  <meta property="og:title" content="Jekyll — PIXN"><meta property="og:description" content="Jekyll — Language, workflow, and software development references."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/develop/">Development</a></p>
+      <h1>Jekyll</h1>
+      <time datetime="2022-08-28">AUGUST 28, 2022</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>Jekyll은 Hugo, Hexo와 함께 굉장히 많이 사용되는 SSG(Static Site Genertor) 입니다. Ruby로 개발되었고 Liquid 문법을 사용하여 템플릿을 통제할 수 있고, 여러가지 기능들 담은 Gem(RubyGem)을 추가하여 쉽게 여러가지 기능들을 만들어낼 수 있습니다.</p>
+<h3 id="directory-structure">Directory Structure</h3>
+<ul>
+<li><code>_config.yml</code>: Jekyll 사이트이 Config 파일입니다. Jekyll에서 사용할 변수, 옵션 등 여러가지 설정이 이 파일에 포함됩니다.</li>
+<li><code>_posts</code>: 기본적인 Post 디렉토리입니다. 대다수 테마에선 블로그 글과 같이 날짜로 정렬되는 데이터가 여기에 포함됩니다.</li>
+<li><code>_pages</code>: 기본적인 Page 디렉토리입니다.</li>
+<li><code>Gemfile</code>: Ruby Gemfile입니다. Jekyll plugin 또한 Gem 파일에 명시하여 설치할 수 있습니다.</li>
+</ul>
+<blockquote>
+<p>참고로 config.yml에 exclude로 제외한 디렉토리를 빼면 <code>_</code> 가 붙은 디렉토리는 사이트에 포함되지 않고 없는 디렉토리는 내용 자체가 포함됩니다. 그래서 만약 <code>_data</code>란 디렉토리를 만들고 별도로 site에 포함(output: true)시키지 않는다면 사이트에 들어가지 않습니다. 그래서 빌드에서만 사용할 데이터를 별도로 넣고 관리할 수도 있습니다.</p>
+</blockquote>
+<h3 id="usage">Usage</h3>
+<p>Basic</p>
+<ul>
+<li><code>jekyll new</code>: 사이트를 생성합니다.</li>
+<li><code>jekyll new-theme</code>: 테마를 생성합니다.</li>
+<li><code>jekyll serve, server, s</code>: jekyll 사이트를 로컬에서 구동합니다.</li>
+<li><code>jekyll build</code>: 사이트를 빌드합니다. (_site 경로에 static file들이 생성됩니다.)</li>
+<li><code>jekyll doctor, hyde</code>: Warnings가 있는지 체크합니다.</li>
+</ul>
+<p>주로 사용되는건 위와 같으며 이외에 여러가지 subcommands는 <code>jekyll -h</code>로 확인하실 수 있습니다.</p>
+<p>Advanced - <a href="https://github.com/jekyll/jekyll-compose">Jekyll Compose</a>
+Jekyll Compose 설치 시 Jekeyll Command에서 글을 쓰고 관리하는 기능들이 추가됩니다. 이 명령으로 생성한 페이지들은 Front matter의 일부가 자동으로 작성됩니다. Front matter 또한 사용자가 직접 원하는 포맷으로 설정이 가능합니다.</p>
+<ul>
+<li><code>bundle exec jekyll post &quot;My New Post&quot;</code>: 새로운 Post를 만듭니다.</li>
+<li><code>bundle exec jekyll page &quot;My New Page&quot;</code>: 새로운 Page를 만듭니다.</li>
+<li><code>bundle exec jekyll draft &quot;My new draft&quot;</code>: 새로운 Draft 문서를 만듭니다.</li>
+<li><code>bundle exec jekyll compose &quot;My New Wiki&quot; --collection &quot;wikis&quot;</code>: 새로운 Collection 내용을 만듭니다.</li>
+</ul>
+<pre><code class="language-bash hljs">draft      <span class="hljs-comment"># Creates a new draft post with the given NAME</span>
+post       <span class="hljs-comment"># Creates a new post with the given NAME</span>
+publish    <span class="hljs-comment"># Moves a draft into the _posts directory and sets the date</span>
+unpublish  <span class="hljs-comment"># Moves a post back into the _drafts directory</span>
+page       <span class="hljs-comment"># Creates a new page with the given NAME</span>
+rename     <span class="hljs-comment"># Moves a draft to a given NAME and sets the title</span>
+compose    <span class="hljs-comment"># Creates a new file with the given NAME</span>
+</code></pre>
+<h3 id="bundle-command">Bundle command</h3>
+<p>Ruby는 rvm, rbenv 그리고 bundler로 디렉토리 별 환경이 모두 다를 수 있습니다. 만약 시스템에 여러 ruby 환경이 구성되어 있다면 jekyll 명령을 직접 실행하는 것 보단 jekyll 디렉토리에서 bundler를 통해 구동하는게 가장 좋습니다.</p>
+<pre><code class="language-bash hljs">bundle <span class="hljs-built_in">exec</span> jekyll &lt;subcommands&gt; <span class="hljs-operator">[</span>options<span class="hljs-operator">]</span>
+</code></pre>
+<h3 id="go-to-commands">Go-to commands</h3>
+<p>post를 가장 최근 문서 한개만 빌드하여 서빙합니다.</p>
+<pre><code class="language-bash hljs">bundle <span class="hljs-built_in">exec</span> jekyll serve --limit-posts <span class="hljs-number">1</span>
+</code></pre>
+<p><code>--profile</code> 옵션을 사용하여 jekyll serve 또는 build 시 파일 별 소모된 시간 등 자세한 내용을 볼 수 있습니다. 개인적으론 빌드 타임을 줄이거나, 잘못된 코드를 찾는데 자주 사용합니다.</p>
+<pre><code class="language-bash hljs">bundle <span class="hljs-built_in">exec</span> jekyll build --profile
+</code></pre>
+<h2 id="liquid">Liquid</h2>
+<p>Liquid는 shopify에서 만든 오픈소스 Markup Language로 Jekyll에서 Layout, Posts 등 여러 곳에서 사용할 수 있는 템플릿입니다. Ruby로 개발되었기 때문에 Liquid 문법은 루비와 유사하고 많은 문법이 공유됩니다.</p>
+<ul>
+<li><a href="https://shopify.github.io/liquid/">https://shopify.github.io/liquid/</a></li>
+<li><a href="https://github.com/Shopify/liquid">https://github.com/Shopify/liquid</a></li>
+</ul>
+<p>개인적으론 Template 관련 문법에선 가장 쉽다고 생각되네요.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">ul</span> <span class="hljs-attr">id</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;products&quot;</span><span class="hljs-punctuation">&gt;</span>
+  {% for product in products %}
+    <span class="hljs-punctuation">&lt;</span><span class="hljs-name">li</span><span class="hljs-punctuation">&gt;</span>
+      <span class="hljs-punctuation">&lt;</span><span class="hljs-name">h2</span><span class="hljs-punctuation">&gt;</span>{{ product.name }}<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">h2</span><span class="hljs-punctuation">&gt;</span>
+      Only {{ product.price | price }}
+
+      {{ product.description | prettyprint | paragraph }}
+    <span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">li</span><span class="hljs-punctuation">&gt;</span>
+  {% endfor %}
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">ul</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h3 id="variables">Variables</h3>
+<h4 id="global-var">Global Var</h4>
+<ul>
+<li>site</li>
+<li>page</li>
+<li>content</li>
+</ul>
+<h4 id="document-var">Document Var</h4>
+<ul>
+<li>content</li>
+<li>collection</li>
+<li>relative_path</li>
+</ul>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># content</span>
+<span class="hljs-comment"># output: Hello from my_collection.</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>first<span class="hljs-operator">.</span>content <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># collection</span>
+<span class="hljs-comment"># output: my_collection</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>first<span class="hljs-operator">.</span>collection <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># relative_path</span>
+<span class="hljs-comment"># output: _my_collection/item.md</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>first<span class="hljs-operator">.</span>relative_path <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="collection-var">Collection Var</h4>
+<ul>
+<li>directory</li>
+<li>docs</li>
+<li>files</li>
+<li>label</li>
+<li>output</li>
+<li>relative_path</li>
+</ul>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># directory</span>
+<span class="hljs-comment"># output: /Users/hahwul/jekyll-app/_my_collection</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>directory <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># docs</span>
+<span class="hljs-comment"># output: /my_collection/item.html</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>docs<span class="hljs-operator">.</span>first<span class="hljs-operator">.</span>url <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># files</span>
+<span class="hljs-comment"># output: 4</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>files <span class="hljs-operator">|</span> size <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># label</span>
+<span class="hljs-comment"># my_collection</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>label <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output</span>
+<span class="hljs-comment"># output: true</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>output <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># relative_path</span>
+<span class="hljs-comment"># output: _my_collection</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>collections<span class="hljs-operator">.</span>my_collection<span class="hljs-operator">.</span>relative_path <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="filter">Filter</h3>
+<p>Filter는 Pipe(<code>|</code>) 를 통해 값을 전달하여 처리하고 결과를 다시 받아오는 형태의 기능들입니다.</p>
+<h4 id="array">Array</h4>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># page.my_array is [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+<span class="hljs-comment"># --------------------------------</span>
+
+<span class="hljs-comment"># output: a, b, and c</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> array_to_sentence_string <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: a</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> first <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: a,b,c</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> <span class="hljs-symbol">join</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;, &#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;]</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> jsonify <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: c</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> last <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 3</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> size <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> sort <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># my_array =&gt; [&#39;a&#39;,&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;c&#39;,&#39;c&#39;,&#39;a&#39;]</span>
+<span class="hljs-comment"># output: &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-operator">|</span> uniq <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: my_array =&gt; [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> assign my_array <span class="hljs-operator">=</span> my_array <span class="hljs-operator">|</span> <span class="hljs-symbol">push</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;d&#39;</span> <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.people is
+</span><span class="hljs-string">#  - name: &quot;John&quot;
+</span><span class="hljs-string">#    school: &quot;Stanford&quot;
+</span><span class="hljs-string">#  - name: &quot;Jane&quot;
+</span><span class="hljs-string">#    school: &quot;Stanford&quot;
+</span><span class="hljs-string">#  - name: &quot;Joe&quot;
+</span><span class="hljs-string">#    school: &quot;Harvard&quot;
+</span><span class="hljs-string"># --------------------------------
+</span><span class="hljs-string">
+</span><span class="hljs-string"># output: JohnJaneJoe
+</span><span class="hljs-string">{{ page.people | map: &quot;name&quot; }</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: {&quot;name&quot;=&gt;&quot;John&quot;, &quot;school&quot;=&gt;&quot;Stanford&quot;}{&quot;name&quot;=&gt;&quot;Jane&quot;, &quot;school&quot;=&gt;&quot;Stanford&quot;}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>people <span class="hljs-operator">|</span> <span class="hljs-symbol">where</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;</span><span class="hljs-string">school</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Stanford</span><span class="hljs-string">&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: {&quot;name&quot;=&gt;&quot;John&quot;, &quot;school&quot;=&gt;&quot;Stanford&quot;, &quot;year&quot;=&gt;2016}{&quot;name&quot;=&gt;&quot;Joe&quot;, &quot;school&quot;=&gt;&quot;Harvard&quot;, &quot;year&quot;=&gt;2015}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>people <span class="hljs-operator">|</span> <span class="hljs-symbol">where_exp</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;</span><span class="hljs-string">item</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">item.name contains &#39;Jo&#39;</span><span class="hljs-string">&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: {&quot;name&quot;=&gt;4, &quot;items&quot;=&gt;[{&quot;name&quot;=&gt;&quot;John&quot;, &quot;school&quot;=&gt;&quot;Stanford&quot;, &quot;year&quot;=&gt;2016}, {&quot;name&quot;=&gt;&quot;Jane&quot;, &quot;school&quot;=&gt;&quot;Stanford&quot;, &quot;year&quot;=&gt;2017}], &quot;size&quot;=&gt;2}{&quot;name&quot;=&gt;3, &quot;items&quot;=&gt;[{&quot;name&quot;=&gt;&quot;Joe&quot;, &quot;school&quot;=&gt;&quot;Harvard&quot;, &quot;year&quot;=&gt;2015}], &quot;size&quot;=&gt;1}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>people <span class="hljs-operator">|</span> <span class="hljs-symbol">group_by_exp</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;</span><span class="hljs-string">item</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">item.name | size</span><span class="hljs-string">&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: {,&quot;name&quot;=&gt;&quot;Stanford&quot;,,&quot;items&quot;=&gt;[{,&quot;name&quot;=&gt;&quot;John&quot;,,&quot;school&quot;=&gt;&quot;Stanford&quot;,},{,&quot;name&quot;=&gt;&quot;Jane&quot;,,&quot;school&quot;=&gt;&quot;Stanford&quot;,}],}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>people <span class="hljs-operator">|</span> <span class="hljs-symbol">group_by</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;</span><span class="hljs-string">school</span><span class="hljs-string">&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="date">Date</h4>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># output: 09 Sep 2022</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>time <span class="hljs-operator">|</span> date_to_long_string <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: Fry, 09 Sep 2022 22:51:14 +0900</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>time <span class="hljs-operator">|</span> date_to_rfc822 <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 09 Sep 2022</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>time <span class="hljs-operator">|</span> date_to_string <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 2022-09-09T22:51:14+09:00</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>time <span class="hljs-operator">|</span> date_to_xmlschema <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: Fry, Sep 09, 22</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> site<span class="hljs-operator">.</span>time <span class="hljs-operator">|</span> <span class="hljs-symbol">date</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;</span><span class="hljs-string">%a, %b %d, %y</span><span class="hljs-string">&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="integer">Integer</h4>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># output: 2</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">1</span><span class="hljs-operator">.</span><span class="hljs-number">2</span> <span class="hljs-operator">|</span> ceil <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 3</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">10</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">divided_by</span><span class="hljs-punctuation">:</span><span class="hljs-number">3</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 1</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">1</span><span class="hljs-operator">.</span><span class="hljs-number">2</span> <span class="hljs-operator">|</span> floor <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 3</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">4</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">minus</span><span class="hljs-punctuation">:</span><span class="hljs-number">1</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 1</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">3</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">modulo</span><span class="hljs-punctuation">:</span><span class="hljs-number">2</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 5</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">4</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">plus</span><span class="hljs-punctuation">:</span><span class="hljs-number">1</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 2</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">1</span><span class="hljs-operator">.</span><span class="hljs-number">8</span> <span class="hljs-operator">|</span> round <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 30</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-number">10</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">times</span><span class="hljs-punctuation">:</span><span class="hljs-number">3</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h4 id="string">String</h4>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># output: http://example.com/mysite/images/dog.jpeg</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;/images/dog.jpeg&#39;</span> <span class="hljs-operator">|</span> absolute_url <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: jekyll.jpg</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;jekyll&#39;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">append</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;.jpg&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: Static site generator</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">static site generator</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> capitalize <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: foo%2Cbar%3Bbaz%3F</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">foo,bar;baz?</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> cgi_escape <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: hello</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-keyword">nil</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">default</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;</span><span class="hljs-string">hello</span><span class="hljs-string">&quot;</span>  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: static site generator</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">STATIC Site generator</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> downcase <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: &amp;amp;lt;p&amp;amp;gt;Jekyll&amp;amp;lt;/p&amp;amp;gt;</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">&lt;p&gt;Jekyll&lt;/p&gt;</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> escape <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I love Jekyll!</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;          I love Jekyll!          &#39;</span> <span class="hljs-operator">|</span> lstrip <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: Hello &lt;strong&gt;Jekyll&lt;/strong&gt;</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Hello **Jekyll**</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> markdownify <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 2</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Hi Jekyll!</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> number_of_words <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I love Jekyll</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;Jekyll&#39;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">prepend</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;I love &#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: /mysite/images/dog.jpeg</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;/images/dog.jpeg&#39;</span> <span class="hljs-operator">|</span> relative_url <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I really like Jekyll</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;I really really like Jekyll&#39;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">remove_first</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;really&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I like Jekyll</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;I really really like Jekyll&#39;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">remove</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;really&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I kinda really like Jekyll</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;I really really like Jekyll&#39;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">replace_first</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;really&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;kinda&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I truly truly like Jekyll</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;I really really like Jekyll&#39;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">replace</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;really&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;truly&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output:          I love Jekyll!</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;          I love Jekyll!          &#39;</span> <span class="hljs-operator">|</span> rstrip <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: 6</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> page<span class="hljs-operator">.</span>my_string <span class="hljs-operator">|</span> size <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: ell</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">hello</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">slice</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: the-config-yml-file</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">The _config.yml file</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> slugify <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: Use &amp;ldquo;Jekyll&amp;rdquo; &amp;mdash; the static generator&amp;hellip;</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;Use &quot;Jekyll&quot; --- the static generator...&#39;</span> <span class="hljs-operator">|</span> smartify <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: [&#39;a&#39;, &#39;b&#39;]</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">a~b</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> <span class="hljs-built_in">split</span><span class="hljs-symbol">:&quot;</span><span class="hljs-symbol">~</span><span class="hljs-symbol">&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: Jekyll is cool</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">&lt;p&gt;Jekyll is cool&lt;/p&gt;</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> strip_html <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: Hello there</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Hello
+</span><span class="hljs-string">there</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> strip_newlines <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I love Jekyll!</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&#39;          I love Jekyll!          &#39;</span> <span class="hljs-operator">|</span> strip <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I love Je...</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">I love Jekyll</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">truncate</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: I love...</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">I love Jekyll</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> <span class="hljs-symbol">truncatewords</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: STATIC SITE GENERATOR</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">static site generator</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> upcase <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: foo,%20bar%20%5Cbaz?</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">foo, bar </span><span class="hljs-string">\b</span><span class="hljs-string">az?</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> uri_escape <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: john%40example.com</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">john@example.com</span><span class="hljs-string">&quot;</span> <span class="hljs-operator">|</span> url_encode <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: &amp;amp;lt;p&amp;amp;gt;Hi Jekyll&amp;amp;lt;/p&amp;amp;gt;</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> <span class="hljs-string">&quot;</span><span class="hljs-string">&lt;p&gt;Hi Jekyll&lt;/p&gt;</span><span class="hljs-string">&quot;</span><span class="hljs-operator">|</span> xml_escape <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: sass to css code</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> sass_code <span class="hljs-operator">|</span> sassify <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># output: scss to css</span>
+<span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> scss_code <span class="hljs-operator">|</span> sassify <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="loop">Loop</h3>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># page.my_array =&gt; []</span>
+<span class="hljs-comment"># output: There are no items!</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-string">%}
+</span><span class="hljs-string">  {{ item }</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">else</span> <span class="hljs-string">%}
+</span><span class="hljs-string">  There are no items!
+</span><span class="hljs-string">{% endfor %}</span>
+
+<span class="hljs-comment"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]</span>
+<span class="hljs-comment"># output: First! Not first Not first</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-string">%}
+</span><span class="hljs-string">  {% if forloop.first %}</span>
+    <span class="hljs-variable constant_">First</span><span class="hljs-operator">!</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">else</span> <span class="hljs-string">%}
+</span><span class="hljs-string">    Not first
+</span><span class="hljs-string">{% endif %}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+</span><span class="hljs-string"># output: 1 2 3
+</span><span class="hljs-string">{% for item in page.my_array %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> forloop<span class="hljs-operator">.</span>index <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+</span><span class="hljs-string"># output: 0 1 2
+</span><span class="hljs-string">{% for item in page.my_array %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> forloop<span class="hljs-operator">.</span>index0 <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+</span><span class="hljs-string"># output: Not last Not last Last!
+</span><span class="hljs-string">{% for item in page.my_array %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">if</span> forloop<span class="hljs-operator">.</span>last <span class="hljs-string">%}
+</span><span class="hljs-string">    Last!
+</span><span class="hljs-string">  {% else %}</span>
+    <span class="hljs-variable constant_">Not</span> last
+  <span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endif <span class="hljs-string">%}
+</span><span class="hljs-string">{% endfor %}</span>
+
+<span class="hljs-comment"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]</span>
+<span class="hljs-comment"># output: 3 3 3</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> page<span class="hljs-operator">.</span>my_array <span class="hljs-string">%}
+</span><span class="hljs-string">  {{ forloop.length }</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+</span><span class="hljs-string"># output: a b
+</span><span class="hljs-string">{% for item in page.my_array limit: 2 %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> item <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;f&#39;,&#39;g]
+</span><span class="hljs-string"># output: c d e f g
+</span><span class="hljs-string">{% for item in page.my_array offset: 2 %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> item <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+</span><span class="hljs-string"># output: c b a
+</span><span class="hljs-string">{% for item in page.my_array reversed %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> item <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+</span><span class="hljs-string"># output: 3 2 1
+</span><span class="hljs-string">{% for item in page.my_array %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> forloop<span class="hljs-operator">.</span>rindex <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-string">%}
+</span><span class="hljs-string">
+</span><span class="hljs-string"># page.my_array =&gt; [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+</span><span class="hljs-string"># output: 2 1 0
+</span><span class="hljs-string">{% for item in page.my_array %}</span>
+  <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span> forloop<span class="hljs-operator">.</span>rindex0 <span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> endfor <span class="hljs-operator">%</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="conditional">Conditional</h3>
+<p>조건문들은 Ruby를 따라갑니다. 아래 문법들로 Jekyll 내부에서 분기할 수 있습니다.</p>
+<ul>
+<li>if</li>
+<li>elsif</li>
+<li>case</li>
+<li>operations</li>
+<li>unless</li>
+</ul>
+<p>e.g</p>
+<pre><code class="language-ruby hljs"><span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">if</span> page<span class="hljs-operator">.</span>name <span class="hljs-operator">==</span> <span class="hljs-string">&#39;about&#39;</span> <span class="hljs-string">%}
+</span><span class="hljs-string">  About Page
+</span><span class="hljs-string">{% elsif page.name == &#39;contact&#39; %}</span>
+  <span class="hljs-variable constant_">Contact</span> <span class="hljs-variable constant_">Page</span>
+<span class="hljs-punctuation">{</span><span class="hljs-operator">%</span> <span class="hljs-keyword">else</span> <span class="hljs-string">%}
+</span><span class="hljs-string">  Other Page
+</span><span class="hljs-string">{% endif %}</span>
+</code></pre>
+<h2 id="documents">Documents</h2>
+<p>Jekyll이 Documentaion이 잘 되어 있어서 공식 Documents를 참고하시면 Jekyll을 사용하는데 있어 큰 도움을 받을 수 있습니다.</p>
+<blockquote>
+<p><a href="https://jekyllrb.com/docs/">https://jekyllrb.com/docs/</a></p>
+</blockquote>
+<h2 id="plugins">Plugins</h2>
+<h3 id="lists">Lists</h3>
+<ul>
+<li><a href="https://github.com/planetjekyll/awesome-jekyll-plugins">Awesome Jekyll Plugins</a></li>
+<li><a href="https://planetjekyll.github.io/plugins/top">Planet jekyll's plugins &amp; extensions</a></li>
+</ul>
+<h3 id="useful-gem">Useful Gem</h3>
+<ul>
+<li><a href="https://github.com/jekyll/jekyll-paginate">jekyll-paginate</a></li>
+<li><a href="https://github.com/jekyll/jekyll-sitemap">jekyll-sitemap</a></li>
+<li><a href="https://github.com/rob-murray/jekyll-twitter-plugin">jekyll-twitter</a></li>
+<li><a href="https://github.com/jekyll/jekyll-gist">jekyll-gist</a></li>
+<li><a href="https://github.com/dommmel/jekyll-youtube">jekyll-youtube</a></li>
+<li><a href="https://github.com/mnuessler/jekyll-asciinema">jekyll-asciinema</a></li>
+<li><a href="https://github.com/jekyll/jekyll-seo-tag">jekyll-seo-tag</a></li>
+<li><a href="https://github.com/robwierzbowski/jekyll-picture-tag">picture-tag</a></li>
+<li><a href="https://github.com/jekyll/jemoji">jimoji</a></li>
+<li><a href="https://github.com/wildlyinaccurate/jekyll-responsive-image">jekyll-responsive-image</a></li>
+<li><a href="https://github.com/jekyll/jekyll-compose">jekyll-compose</a></li>
+</ul>
+<h2 id="security">Security</h2>
+<h3 id="check-list">Check List</h3>
+<ul>
+<li>Misconfigration
+<ul>
+<li>include and exclude</li>
+</ul>
+</li>
+<li>Vulnerabilities
+<ul>
+<li>DOM XSS</li>
+<li>DOM Clobbering</li>
+<li>Prototype Pollution</li>
+<li>Dependency Confusion (rubygem)</li>
+<li>Reverse Tabnabbing</li>
+<li>Broken Link</li>
+<li>Mixed Contents</li>
+<li>Sensitive/Secret Disclosure</li>
+<li>Liquid Injection</li>
+</ul>
+</li>
+<li>CVEs</li>
+</ul>
+<h2 id="tips">Tips</h2>
+<h3 id="footnote">Footnote</h3>
+<pre><code>Text[^1].
+
+Another text[^2].
+
+My text3.[^my_footnote].
+
+[^1]: [Source](https://en.wikipedia.org/wiki/Penguin).
+[^2]: [Source 2](https://ru.wikipedia.org/wiki/Penguin).
+[^my_footnote]: [This also works fine](https://ru.wikipedia.org/wiki/Penguin).
+</code></pre>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2022/08/27/jekyll-collection/">Jekyll Collection 다루기</a></li>
+<li><a href="https://www.hahwul.com/2020/11/12/jekyll-githubpage-build-speed-up/">Github page(Jekyll) build speed up!</a></li>
+<li><a href="https://www.hahwul.com/2020/10/21/minimize-feeds-in-jekyll/">Jekyll feed.xml 최소화하기</a></li>
+<li><a href="https://www.hahwul.com/2020/08/08/jekyll-utterances/">Jekyll에 Utterances, Giscus 댓글 적용하기</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://jekyllrb.com/docs/">https://jekyllrb.com/docs/</a></li>
+<li><a href="https://shopify.github.io/liquid/">https://shopify.github.io/liquid/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/develop/jekyll/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

