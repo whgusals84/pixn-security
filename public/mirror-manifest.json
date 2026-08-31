@@ -1,7 +1,7 @@
 {
   "capturedAt": "2026-08-30T06:41:14.622Z",
-  "routeCount": 1236,
-  "successfulRouteCount": 1236,
+  "routeCount": 1237,
+  "successfulRouteCount": 1237,
   "assetCount": 958,
   "routes": [
     "/",
@@ -1239,7 +1239,8 @@
     "/tags/xss/",
     "/tags/zap/",
     "/tags/zest/",
-    "/tags/zola/"
+    "/tags/zola/",
+    "/writing/"
   ],
   "targetOrigin": "https://pixn-analytics-portfolio.forhm0220.chatgpt.site",
   "builtAt": "2026-08-30T06:49:35.788Z",

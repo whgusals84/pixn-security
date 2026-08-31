@@ -14,6 +14,7 @@ const koSiteDescription = '웹 보안, 응용 암호학, 안전한 시스템과 
 const priorPublisherSocialUrlSource = String.raw`https?:\/\/(?:www\.)?(?:x\.com\/(?:hahwul|hahwul_)|twitter\.com\/(?:hahwul|hahwul_)|instagram\.com\/(?:hahwul|hahwul_)|linkedin\.com\/(?:in\/)?(?:hahwul|hahwul_))(?:\/[^\s"'<>]*)?`;
 const priorPublisherSocialUrlPattern = new RegExp(`^${priorPublisherSocialUrlSource}$`, 'i');
 const learningPages = [
+  { route: '/writing/', relativePath: 'writing/index.html', title: 'Writing', description: 'Technical posts, study notes, and the preserved security knowledge library in one place.' },
   { route: '/labs/', relativePath: 'labs/index.html', title: 'Security Labs', description: 'Authorized challenge write-ups, experiments, and lessons from hands-on security practice.' },
   { route: '/labs/dreamhack/', relativePath: 'labs/dreamhack/index.html', title: 'Dreamhack Write-ups', description: 'Study notes and solution approaches from authorized Dreamhack challenges.' },
   { route: '/labs/web/', relativePath: 'labs/web/index.html', title: 'Web Wargame Notes', description: 'Web security challenge notes covering browsers, authentication, injection, and application logic.' },
@@ -98,6 +99,7 @@ function neutralFooter() {
         <div class="footer-content">
             <span class="hw-mark footer-mark" aria-hidden="true"></span>
             <nav class="footer-menu" aria-label="Footer">
+                <a href="/writing/">WRITING</a>
                 <a href="/sec/">SECURITY</a>
                 <a href="/labs/">LABS</a>
                 <a href="/tags/">TAGS</a>
@@ -132,6 +134,19 @@ function homeMain() {
                 <li><a class="ledger-row" href="/sec/web-security/"><span class="ledger-key">01</span><span class="ledger-body"><span class="ledger-title">Web Security</span><span class="ledger-desc">Browser, protocol, and application security fundamentals</span></span><span aria-hidden="true">↗</span></a></li>
                 <li><a class="ledger-row" href="/sec/secure-sdlc/"><span class="ledger-key">02</span><span class="ledger-body"><span class="ledger-title">Secure SDLC</span><span class="ledger-desc">Threat modeling, DevSecOps, and secure delivery practices</span></span><span aria-hidden="true">↗</span></a></li>
                 <li><a class="ledger-row" href="/sec/how-to-hack/"><span class="ledger-key">03</span><span class="ledger-body"><span class="ledger-title">Security Testing</span><span class="ledger-desc">Defensive testing methods for web, mobile, and software</span></span><span aria-hidden="true">↗</span></a></li>
+            </ul>
+        </section>
+
+        <section class="home-room exhibit" aria-labelledby="plate-writing">
+            <header class="plate-row">
+                <h2 class="plate" id="plate-writing">Writing &amp; notes</h2>
+                <span class="plate-rule" aria-hidden="true"></span>
+                <a class="plate-link" href="/writing/">All writing</a>
+            </header>
+            <ul class="home-ledger">
+                <li><a class="ledger-row" href="/posts/"><span class="ledger-key">POSTS</span><span class="ledger-body"><span class="ledger-title">Technical Posts</span><span class="ledger-desc">Finished articles and longer technical explanations</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/notes/"><span class="ledger-key">NOTES</span><span class="ledger-body"><span class="ledger-title">Study Notes</span><span class="ledger-desc">Short observations, commands, and ideas recorded while learning</span></span><span aria-hidden="true">↗</span></a></li>
+                <li><a class="ledger-row" href="/blog/"><span class="ledger-key">LIB</span><span class="ledger-body"><span class="ledger-title">Technical Library</span><span class="ledger-desc">The preserved collection of security and development references</span></span><span aria-hidden="true">↗</span></a></li>
             </ul>
         </section>
 
@@ -185,6 +200,24 @@ function labsMain() {
 </main>`;
 }
 
+function writingMain() {
+  return `<main id="main-content">
+    <div class="container">
+        <div class="post-wrapper"><article class="post-content">
+            <header class="page-header"><h1 class="page-title">Writing</h1><p class="page-description">Posts, notes, and technical references—kept distinct, found together.</p></header>
+            <div class="post-body">
+                <p>Choose the format that fits what you want to read. Original paths remain unchanged, so existing links continue to work.</p>
+                <ul class="home-ledger">
+                    <li><a class="ledger-row" href="/posts/"><span class="ledger-key">POSTS</span><span class="ledger-body"><span class="ledger-title">Technical Posts</span><span class="ledger-desc">Finished articles and longer technical explanations</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/notes/"><span class="ledger-key">NOTES</span><span class="ledger-body"><span class="ledger-title">Study Notes</span><span class="ledger-desc">Short observations, commands, and learning records</span></span><span aria-hidden="true">↗</span></a></li>
+                    <li><a class="ledger-row" href="/blog/"><span class="ledger-key">LIB</span><span class="ledger-body"><span class="ledger-title">Technical Library</span><span class="ledger-desc">Preserved web security, software, and tooling references</span></span><span aria-hidden="true">↗</span></a></li>
+                </ul>
+            </div>
+        </article></div>
+    </div>
+</main>`;
+}
+
 function labCategoryMain(page) {
   const categoryCopy = {
     '/labs/dreamhack/': ['Dreamhack', 'Web, crypto, reversing, and pwn challenges solved in an authorized learning environment.'],
@@ -226,9 +259,10 @@ function personalizePageMetadata(html, page) {
 }
 
 function studentNav(route) {
-  const links = [['/posts/', 'Posts'], ['/notes/', 'Notes'], ['/labs/', 'Labs'], ['/projects/', 'Projects'], ['/sec/', 'Security']];
+  const links = [['/writing/', 'Writing'], ['/labs/', 'Labs'], ['/projects/', 'Projects'], ['/sec/', 'Security']];
   const topLevel = route === '/' ? '' : `/${route.split('/').filter(Boolean)[0]}/`;
-  return `<div class="nav-menu" id="nav-menu">${links.map(([href, label]) => `<a href="${href}"${topLevel === href ? ' class="active"' : ''}>${label}</a>`).join('')}</div>`;
+  const activeHref = ['/writing/', '/posts/', '/notes/', '/blog/'].includes(topLevel) ? '/writing/' : topLevel;
+  return `<div class="nav-menu" id="nav-menu">${links.map(([href, label]) => `<a href="${href}"${activeHref === href ? ' class="active"' : ''}>${label}</a>`).join('')}</div>`;
 }
 
 function aboutMain(language) {
@@ -590,7 +624,7 @@ function transformHtml(relativePath, html) {
   const learningPage = learningPageByRoute.get(route);
   if (learningPage) {
     output = personalizePageMetadata(output, learningPage);
-    output = replaceMain(output, route === '/labs/' ? labsMain() : labCategoryMain(learningPage));
+    output = replaceMain(output, route === '/writing/' ? writingMain() : route === '/labs/' ? labsMain() : labCategoryMain(learningPage));
   }
   output = neutralizePriorPublisherArticle(route, output);
   output = cleanChrome(output, route);
@@ -659,14 +693,17 @@ function transformSearchIndex(text) {
       return updated;
     });
   for (const page of learningPages) {
+    const writing = page.route === '/writing/';
     documents.push({
       title: page.title,
-      content: page.route === '/labs/'
+      content: writing
+        ? 'A single writing hub for technical posts, short study notes, and the preserved security knowledge library. Original Posts, Notes, and Blog paths remain available.'
+        : page.route === '/labs/'
         ? 'Authorized security challenge write-ups and isolated lab notes covering Dreamhack, web security, cryptography, systems, and pwn. Each note records observations, attempts, failures, and defensive lessons.'
         : `${page.description} Write-ups document the learning objective, observations, attempted approaches, why they worked or failed, and the secure implementation lesson.`,
-      tags: ['security-labs', page.route.split('/').filter(Boolean).at(-1)],
+      tags: writing ? ['writing', 'posts', 'notes'] : ['security-labs', page.route.split('/').filter(Boolean).at(-1)],
       url: page.route,
-      section: 'labs',
+      section: writing ? 'writing' : 'labs',
       description: page.description,
       lang: 'en',
     });
@@ -681,7 +718,7 @@ function transformSitemap(text) {
       .filter(Boolean);
     return locations.some(isPersonalUrl) || locations.some((value) => learningRouteSet.has(pathFromAbsoluteUrl(value))) ? '' : block;
   });
-  const entries = learningPages.map((page) => `  <url>\n    <loc>${targetOrigin}${page.route}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>${page.route === '/labs/' ? '0.8' : '0.7'}</priority>\n  </url>`).join('\n');
+  const entries = learningPages.map((page) => `  <url>\n    <loc>${targetOrigin}${page.route}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>${page.route === '/labs/' || page.route === '/writing/' ? '0.8' : '0.7'}</priority>\n  </url>`).join('\n');
   output = output.replace(/\s*<\/urlset>\s*$/i, `\n${entries}\n</urlset>\n`);
   return output;
 }

@@ -83,7 +83,7 @@ for (const file of htmlFiles) {
 }
 
 const searchDocuments = JSON.parse(await readFile(path.join(publicRoot, 'search_index.json'), 'utf8'));
-const learningRoutes = ['/labs/', '/labs/dreamhack/', '/labs/web/', '/labs/crypto/', '/labs/system/'];
+const learningRoutes = ['/writing/', '/labs/', '/labs/dreamhack/', '/labs/web/', '/labs/crypto/', '/labs/system/'];
 const expectedSearchDocumentCount = 1078 - PERSONAL_ONLY_ROUTES.length + learningRoutes.length;
 if (!Array.isArray(searchDocuments) || searchDocuments.length !== expectedSearchDocumentCount) {
   errors.push(`search index document count is ${searchDocuments?.length ?? 'invalid'}, expected ${expectedSearchDocumentCount}`);
@@ -120,6 +120,7 @@ const homepage = await readFile(path.join(publicRoot, 'index.html'), 'utf8');
 if (!homepage.includes('Web Security. Applied Cryptography. Built to Understand.')) errors.push('homepage was not personalized');
 if (!homepage.includes('PIXN — Web Security &amp; Applied Cryptography')) errors.push('homepage metadata was not personalized');
 if (!homepage.includes('Dreamhack Write-ups') || !homepage.includes('href="/labs/"')) errors.push('homepage does not link to security labs');
+if (!homepage.includes('Writing &amp; notes') || !homepage.includes('href="/writing/"')) errors.push('homepage does not link to the writing hub');
 const aboutPage = await readFile(path.join(publicRoot, 'about', 'index.html'), 'utf8');
 if (!aboutPage.includes('About PIXN') || /Lee Hwan|HAHWUL/i.test(aboutPage)) errors.push('about page was not neutralized');
 
