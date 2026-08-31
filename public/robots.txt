@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pixn-analytics-portfolio.forhm0220.chatgpt.site/sitemap.xml
+Sitemap: https://whgusals84.github.io/pixn-security/sitemap.xml

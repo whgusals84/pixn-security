@@ -1,291 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<!doctype html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
-    <meta name="theme-color" content="#040405">
-
-    
-    <title>PIXN — Web Security &amp; Applied Cryptography</title>
-
-    
-    
-        <meta name="description" content="Field notes from PIXN, a student exploring web security, applied cryptography, secure systems, and open-source tooling.">
-    
-
-    
-    <meta property="og:title" content="PIXN — Web Security &amp; Applied Cryptography">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/">
-  <meta property="og:description" content="Field notes from PIXN, a student exploring web security, applied cryptography, secure systems, and open-source tooling.">
-  <meta property="og:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-pixn-field-notes.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PIXN — Web Security &amp; Applied Cryptography">
-  <meta name="twitter:description" content="Field notes from PIXN, a student exploring web security, applied cryptography, secure systems, and open-source tooling.">
-  <meta name="twitter:image" content="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/og-pixn-field-notes.png">
-    <meta property="og:site_name" content="PIXN">
-    <meta property="og:locale" content="en_US">
-
-    
-    <link rel="canonical" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/">
-    
-
-    
-    <link rel="alternate" type="application/rss+xml" title="PIXN" href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/rss.xml">
-    
-
-    
-    <link rel="icon" type="image/png" href="/favicon.svg" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
-    <meta name="apple-mobile-web-app-title" content="PIXN" />
-    <link rel="manifest" href="/icons/site.webmanifest" />
-
-    
-    <link rel="preload" as="image" href="/images/pixn-mark.svg">
-
-    
-    <link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
-
-    
-    <link rel="stylesheet" href="/assets/main.8885b746.css">
-
-    
-    <link rel="stylesheet" href="/assets/css/highlight/atom-one-dark.min.css?v=f44d507f">
-
-    
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PIXN","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Practical web security knowledge, secure engineering references, and open-source tools.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PIXN","url":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/","description":"Practical web security knowledge, secure engineering references, and open-source tools.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixn-analytics-portfolio.forhm0220.chatgpt.site/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PIXN — Personal Blog</title>
+  <meta name="description" content="보안, 개발, 공부와 일상의 기록을 담는 PIXN의 개인 블로그입니다.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="/assets/site.js" defer></script>
 </head>
-
 <body>
-    <a class="skip-link sr-only" href="#main-content">Skip to content</a>
-    <div class="site-wrapper">
-        <header class="site-header">
-            <div class="header-content">
-                <nav class="main-nav">
-    <div class="nav-logo">
-        <a href="https://pixn-analytics-portfolio.forhm0220.chatgpt.site/" aria-label="PIXN, home">
-            <span class="hw-mark" aria-hidden="true"></span>
-            <span class="nav-wordmark" aria-hidden="true">PIXN</span>
-        </a>
-    </div>
+  <header data-site-header data-active="home"></header>
+  <main class="page" id="main">
+    <section class="hero">
+      <p class="eyebrow">Personal blog · learning in public</p>
+      <h1>Notes from the things I actually learn.</h1>
+      <p class="hero-copy">보안과 개발을 공부하면서 직접 이해한 것, 만든 것, 그리고 오래 남기고 싶은 생각을 기록합니다.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/blog/">Read the blog</a>
+        <a class="button" href="/about/">About PIXN</a>
+      </div>
+    </section>
 
-    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
+    <section class="section" aria-labelledby="channels-title">
+      <div class="section-heading">
+        <h2 id="channels-title">What lives here</h2>
+        <span class="section-index">01 / INDEX</span>
+      </div>
+      <div class="channel-grid">
+        <a class="channel-card" href="/blog/"><span class="channel-label">01 · BLOG</span><h3>Writing</h3><p>보안, 개발, 공부와 일상에서 직접 경험한 내용을 정리합니다.</p></a>
+        <a class="channel-card" href="/notes/"><span class="channel-label">02 · NOTES</span><h3>Short notes</h3><p>완성된 글이 되기 전의 짧은 메모와 학습 기록입니다.</p></a>
+        <a class="channel-card" href="/labs/"><span class="channel-label">03 · LABS</span><h3>Practice</h3><p>직접 푼 워게임과 보안 실습의 과정과 배운 점을 남깁니다.</p></a>
+        <a class="channel-card" href="/projects/"><span class="channel-label">04 · PROJECTS</span><h3>Things I build</h3><p>직접 만들고 공개할 수 있는 개인 프로젝트만 기록합니다.</p></a>
+      </div>
+    </section>
 
-    <div class="nav-overlay"></div>
-
-    <div class="nav-menu" id="nav-menu"><a href="/sec/">Learn</a><a href="/writing/">Writing</a><a href="/labs/">Labs</a><a href="/projects/">Projects</a><a href="/reference/">Reference</a><a href="/about/">About</a></div>
-
-    <button class="nav-search" type="button" data-search-trigger aria-label="Open search">
-        <span class="nav-search-key" data-search-key aria-hidden="true">⌘K</span>
-    </button>
-</nav>
-
-<script>
-(function() {
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    const navOverlay = document.querySelector('.nav-overlay');
-    const body = document.body;
-
-    function openMenu() {
-        navToggle.setAttribute('aria-expanded', 'true');
-        navToggle.classList.add('active');
-        navMenu.classList.add('active');
-        navOverlay.classList.add('active');
-        body.classList.add('nav-open');
-    }
-
-    function closeMenu() {
-        navToggle.setAttribute('aria-expanded', 'false');
-        navToggle.classList.remove('active');
-        navMenu.classList.remove('active');
-        navOverlay.classList.remove('active');
-        body.classList.remove('nav-open');
-    }
-
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
-            const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
-            if (isExpanded) {
-                closeMenu();
-            } else {
-                openMenu();
-            }
-        });
-
-        // Close menu when clicking overlay
-        if (navOverlay) {
-            navOverlay.addEventListener('click', closeMenu);
-        }
-
-        // Close menu when clicking a link
-        navMenu.querySelectorAll('a').forEach(function(link) {
-            link.addEventListener('click', closeMenu);
-        });
-
-        // Close menu on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeMenu();
-            }
-        });
-    }
-})();
-</script>
-            </div>
-        </header>
-
-        <main id="main-content">
-    <div class="container">
-        <section class="gallery-hero exhibit is-lit" aria-label="PIXN Web Security and Applied Cryptography">
-            <p class="hero-inscription"><span class="hw-mark" role="img" aria-label="PIXN"></span></p>
-            <h1 class="hero-statement">Web Security. Applied Cryptography. Built to Understand.</h1>
-            <p class="hero-intro">Field notes from PIXN, a student exploring web vulnerabilities, secure systems, cryptographic protocols, and open-source tooling.</p>
-            <p class="hero-doors"><a class="hero-archive-link" href="/sec/">Explore the field notes</a></p>
-        </section>
-
-        <section class="home-room exhibit" aria-labelledby="plate-start">
-            <header class="plate-row">
-                <h2 class="plate" id="plate-start">Start learning</h2>
-                <span class="plate-rule" aria-hidden="true"></span>
-                <a class="plate-link" href="/tags/">Browse all topics</a>
-            </header>
-            <ul class="home-ledger">
-                <li><a class="ledger-row" href="/sec/web-security/"><span class="ledger-key">01</span><span class="ledger-body"><span class="ledger-title">Web Security</span><span class="ledger-desc">Browser, protocol, and application security fundamentals</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/sec/cryptography/"><span class="ledger-key">02</span><span class="ledger-body"><span class="ledger-title">Cryptography</span><span class="ledger-desc">Cryptographic primitives, protocols, and implementation risks</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/sec/secure-sdlc/"><span class="ledger-key">03</span><span class="ledger-body"><span class="ledger-title">Secure SDLC</span><span class="ledger-desc">Threat modeling, DevSecOps, and secure delivery practices</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/sec/how-to-hack/"><span class="ledger-key">04</span><span class="ledger-body"><span class="ledger-title">Security Testing</span><span class="ledger-desc">Defensive testing methods for web, mobile, and software</span></span><span aria-hidden="true">↗</span></a></li>
-            </ul>
-        </section>
-
-        <section class="home-room exhibit" aria-labelledby="plate-writing">
-            <header class="plate-row">
-                <h2 class="plate" id="plate-writing">Writing &amp; notes</h2>
-                <span class="plate-rule" aria-hidden="true"></span>
-                <a class="plate-link" href="/writing/">All writing</a>
-            </header>
-            <ul class="home-ledger">
-                <li><a class="ledger-row" href="/posts/"><span class="ledger-key">POSTS</span><span class="ledger-body"><span class="ledger-title">Technical Posts</span><span class="ledger-desc">Finished articles and longer technical explanations</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/notes/"><span class="ledger-key">NOTES</span><span class="ledger-body"><span class="ledger-title">Study Notes</span><span class="ledger-desc">Short observations, commands, and ideas recorded while learning</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/blog/"><span class="ledger-key">LIB</span><span class="ledger-body"><span class="ledger-title">Technical Library</span><span class="ledger-desc">The preserved collection of security and development references</span></span><span aria-hidden="true">↗</span></a></li>
-            </ul>
-        </section>
-
-        <section class="home-room exhibit" aria-labelledby="plate-practice">
-            <header class="plate-row">
-                <h2 class="plate" id="plate-practice">Practice &amp; write-ups</h2>
-                <span class="plate-rule" aria-hidden="true"></span>
-                <a class="plate-link" href="/labs/">All labs</a>
-            </header>
-            <ul class="home-ledger">
-                <li><a class="ledger-row" href="/labs/dreamhack/"><span class="ledger-key">DH</span><span class="ledger-body"><span class="ledger-title">Dreamhack Write-ups</span><span class="ledger-desc">Challenge approaches, mistakes, and lessons from authorized practice</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/labs/web/"><span class="ledger-key">WEB</span><span class="ledger-body"><span class="ledger-title">Web Wargame Notes</span><span class="ledger-desc">Browser, authentication, injection, and application-logic challenges</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/labs/crypto/"><span class="ledger-key">CRYP</span><span class="ledger-body"><span class="ledger-title">Cryptography Challenges</span><span class="ledger-desc">Protocols, primitives, encodings, and implementation mistakes</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/labs/system/"><span class="ledger-key">PWN</span><span class="ledger-body"><span class="ledger-title">System &amp; Pwn Challenges</span><span class="ledger-desc">Binary analysis, debugging, and memory-safety practice</span></span><span aria-hidden="true">↗</span></a></li>
-            </ul>
-        </section>
-
-        <section class="home-room exhibit" aria-labelledby="plate-resources">
-            <header class="plate-row">
-                <h2 class="plate" id="plate-resources">Reference library</h2>
-                <span class="plate-rule" aria-hidden="true"></span>
-                <a class="plate-link" href="/reference/">All references</a>
-            </header>
-            <ul class="home-ledger">
-                <li><a class="ledger-row" href="/cullinan/attack/"><span class="ledger-key">A–Z</span><span class="ledger-body"><span class="ledger-title">Attack references</span><span class="ledger-desc">Techniques organized for study and defensive verification</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/cullinan/tool/"><span class="ledger-key">TOOLS</span><span class="ledger-body"><span class="ledger-title">Security tool catalog</span><span class="ledger-desc">Testing utilities, scanners, and supporting workflows</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/archive/"><span class="ledger-key">2014—</span><span class="ledger-body"><span class="ledger-title">Technical archive</span><span class="ledger-desc">Historical security and development notes</span></span><span aria-hidden="true">↗</span></a></li>
-            </ul>
-        </section>
-    </div>
-</main>
-
-        <footer class="site-footer">
-    <div class="container">
-        <div class="footer-content">
-            <span class="hw-mark footer-mark" aria-hidden="true"></span>
-            <nav class="footer-menu" aria-label="Footer">
-                <a href="/writing/">WRITING</a>
-                <a href="/sec/">SECURITY</a>
-                <a href="/labs/">LABS</a>
-                <a href="/reference/">REFERENCE</a>
-                <a href="/tags/">TAGS</a>
-                <a href="/projects/">TOOLS</a>
-                <a href="/feeds/">FEEDS</a>
-                <a href="/about/">ABOUT</a>
-                <a href="/privacy/">PRIVACY</a>
-            </nav>
-            <p>PIXN<br />Web Security &amp; Applied Cryptography.</p>
-        </div>
-    </div>
-</footer>
-        <div
-    class="search-overlay"
-    data-search-overlay
-    data-search-index="/search_index.json"
-    data-search-empty="Type to search posts, notes, projects and the archive."
-    data-search-no-results="No results found."
-    data-search-loading="Loading index"
-    data-search-error="Unable to load search index. Refresh and try again."
-    aria-hidden="true"
->
-    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
-        <div class="search-header">
-            <div class="search-input-wrapper">
-                <input
-                    type="search"
-                    name="search"
-                    placeholder="Search the site, #tag to filter"
-                    aria-label="Search the site"
-                    autocomplete="off"
-                    spellcheck="false"
-                    data-search-input
-                >
-            </div>
-            <div class="search-meta">
-                <span class="search-shortcut" data-search-key>⌘K</span>
-                <button class="search-close" type="button" data-search-close aria-label="Close search">
-                    Esc
-                </button>
-            </div>
-        </div>
-        <div class="search-filters" data-search-filters>
-            <div class="search-filter-group" role="group" aria-label="Filter by type" data-filter-group="type">
-                <button type="button" class="search-chip is-active" data-filter-type="all" aria-pressed="true">All<span class="search-chip-count" data-chip-count></span></button>
-                <button type="button" class="search-chip" data-filter-type="post" aria-pressed="false">Posts<span class="search-chip-count" data-chip-count></span></button>
-                <button type="button" class="search-chip" data-filter-type="note" aria-pressed="false">Notes<span class="search-chip-count" data-chip-count></span></button>
-                <button type="button" class="search-chip" data-filter-type="project" aria-pressed="false">Projects<span class="search-chip-count" data-chip-count></span></button>
-                <button type="button" class="search-chip" data-filter-type="archive" aria-pressed="false">Archive<span class="search-chip-count" data-chip-count></span></button>
-                <button type="button" class="search-chip" data-filter-type="page" aria-pressed="false">Pages<span class="search-chip-count" data-chip-count></span></button>
-            </div>
-            <div class="search-filter-group search-filter-group--lang" role="group" aria-label="Filter by language" data-filter-group="lang">
-                <button type="button" class="search-chip is-active" data-filter-lang="all" aria-pressed="true">All</button>
-                <button type="button" class="search-chip" data-filter-lang="en" aria-pressed="false">EN</button>
-                <button type="button" class="search-chip" data-filter-lang="ko" aria-pressed="false">KO</button>
-            </div>
-        </div>
-        <div class="search-status" data-search-status></div>
-        <div class="search-results" data-search-results aria-live="polite">
-            <p class="search-empty" data-search-empty>Type to search posts, notes, projects and the archive.</p>
-        </div>
-    </div>
-</div>
-    </div>
-
-    
-    
-
-    
-    <script src="/assets/app.1881a2e0.js" defer></script>
+    <section class="section" aria-labelledby="recent-title">
+      <div class="section-heading">
+        <h2 id="recent-title">Recent writing</h2>
+        <span class="section-index">02 / LATEST</span>
+      </div>
+      <div class="empty-state"><div><strong>The archive starts here.</strong><p>아직 공개한 글이 없습니다. 첫 번째로 직접 작성한 글부터 차근차근 채워갈 예정입니다.</p></div></div>
+    </section>
+  </main>
+  <footer data-site-footer></footer>
 </body>
-
 </html>
