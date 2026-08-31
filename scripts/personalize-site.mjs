@@ -150,7 +150,6 @@ function homeMain() {
                 <li><a class="ledger-row" href="/posts/"><span class="ledger-key">POSTS</span><span class="ledger-body"><span class="ledger-title">Technical Posts</span><span class="ledger-desc">Finished articles and longer technical explanations</span></span><span aria-hidden="true">↗</span></a></li>
                 <li><a class="ledger-row" href="/notes/"><span class="ledger-key">NOTES</span><span class="ledger-body"><span class="ledger-title">Study Notes</span><span class="ledger-desc">Short observations, commands, and ideas recorded while learning</span></span><span aria-hidden="true">↗</span></a></li>
                 <li><a class="ledger-row" href="/blog/"><span class="ledger-key">LIB</span><span class="ledger-body"><span class="ledger-title">Technical Library</span><span class="ledger-desc">The preserved collection of security and development references</span></span><span aria-hidden="true">↗</span></a></li>
-                <li><a class="ledger-row" href="/admin/"><span class="ledger-key">EDIT</span><span class="ledger-body"><span class="ledger-title">Content Studio</span><span class="ledger-desc">Write, save, and publish new posts, notes, and lab records</span></span><span aria-hidden="true">↗</span></a></li>
             </ul>
         </section>
 
@@ -216,7 +215,6 @@ function writingMain() {
                     <li><a class="ledger-row" href="/notes/"><span class="ledger-key">NOTES</span><span class="ledger-body"><span class="ledger-title">Study Notes</span><span class="ledger-desc">Short observations, commands, and learning records</span></span><span aria-hidden="true">↗</span></a></li>
                     <li><a class="ledger-row" href="/blog/"><span class="ledger-key">LIB</span><span class="ledger-body"><span class="ledger-title">Technical Library</span><span class="ledger-desc">Preserved web security, software, and tooling references</span></span><span aria-hidden="true">↗</span></a></li>
                     <li><a class="ledger-row" href="/journal/"><span class="ledger-key">NEW</span><span class="ledger-body"><span class="ledger-title">Latest Field Notes</span><span class="ledger-desc">New writing published from the content studio</span></span><span aria-hidden="true">↗</span></a></li>
-                    <li><a class="ledger-row" href="/admin/"><span class="ledger-key">EDIT</span><span class="ledger-body"><span class="ledger-title">Content Studio</span><span class="ledger-desc">Create and manage posts, notes, and lab records in the browser</span></span><span aria-hidden="true">↗</span></a></li>
                 </ul>
             </div>
         </article></div>

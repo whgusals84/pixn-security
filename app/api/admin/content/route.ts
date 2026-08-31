@@ -1,4 +1,4 @@
-import { ensureContentSchema, type ContentStatus, type ContentType, type ManagedContent } from '@/lib/content-db';
+import { configuredOwnerEmail, ensureContentSchema, type ContentStatus, type ContentType, type ManagedContent } from '@/lib/content-db';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,22 +26,18 @@ async function requireOwner(request: Request) {
   const email = request.headers.get('oai-authenticated-user-email') ?? '';
   if (!userId) throw new AuthError(401, 'ChatGPT 로그인이 필요합니다.');
 
+  const ownerEmail = configuredOwnerEmail();
+  if (!ownerEmail) throw new AuthError(503, '관리자 계정 설정이 완료되지 않았습니다.');
+  if (email.trim().toLowerCase() !== ownerEmail) {
+    throw new AuthError(403, '이 사이트의 관리자만 사용할 수 있습니다.');
+  }
+
   const db = await ensureContentSchema();
   const now = new Date().toISOString();
   await db
-    .prepare("INSERT OR IGNORE INTO site_settings (key, value, updated_at) VALUES ('owner_user_id', ?, ?)")
-    .bind(userId, now)
+    .prepare("INSERT OR REPLACE INTO site_settings (key, value, updated_at) VALUES ('owner_email', ?, ?)")
+    .bind(ownerEmail, now)
     .run();
-  if (email) {
-    await db
-      .prepare("INSERT OR REPLACE INTO site_settings (key, value, updated_at) VALUES ('owner_email', ?, ?)")
-      .bind(email, now)
-      .run();
-  }
-  const owner = await db
-    .prepare("SELECT value FROM site_settings WHERE key = 'owner_user_id' LIMIT 1")
-    .first<{ value: string }>();
-  if (!owner || owner.value !== userId) throw new AuthError(403, '이 사이트의 관리자만 사용할 수 있습니다.');
   return { db, email };
 }
 
@@ -144,4 +140,3 @@ export async function DELETE(request: Request) {
     return errorResponse(error);
   }
 }
-

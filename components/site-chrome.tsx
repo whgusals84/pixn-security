@@ -14,7 +14,6 @@ export function SiteHeader() {
         <a href="/projects/">PROJECTS</a>
         <a href="/reference/">REFERENCE</a>
         <a href="/about/">ABOUT</a>
-        <a href="/admin/">MANAGE</a>
       </nav>
       <SiteSearch />
     </header>
@@ -30,7 +29,6 @@ export function SiteFooter() {
         <a href="/writing/">WRITING</a>
         <a href="/labs/">LABS</a>
         <a href="/projects/">PROJECTS</a>
-        <a href="/admin/">MANAGE</a>
       </nav>
       <p>WEB SECURITY · APPLIED CRYPTOGRAPHY</p>
       <p>© 2026 PIXN.</p>

@@ -22,6 +22,12 @@ function database() {
   return (env as unknown as { DB: D1Database }).DB;
 }
 
+export function configuredOwnerEmail() {
+  return ((env as unknown as { SITE_OWNER_EMAIL?: string }).SITE_OWNER_EMAIL ?? '')
+    .trim()
+    .toLowerCase();
+}
+
 export async function ensureContentSchema() {
   const db = database();
   await db.batch(contentSchemaStatements.map((statement) => db.prepare(statement)));
@@ -136,4 +142,3 @@ export function renderMarkdown(markdown: string) {
     .join('\n')
     .replace(/@@CODE_BLOCK_(\d+)@@/g, (_match, index) => blocks[Number(index)] ?? '');
 }
-

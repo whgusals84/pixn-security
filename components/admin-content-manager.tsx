@@ -48,6 +48,7 @@ export function AdminContentManager() {
   const [message, setMessage] = useState('불러오는 중…');
   const [busy, setBusy] = useState(false);
   const [authRequired, setAuthRequired] = useState(false);
+  const [forbidden, setForbidden] = useState(false);
 
   const isEditing = Boolean(form.id);
   const sortedItems = useMemo(
@@ -61,6 +62,11 @@ export function AdminContentManager() {
       if (response.status === 401) {
         setAuthRequired(true);
         setMessage('로그인 후 관리할 수 있습니다.');
+        return;
+      }
+      if (response.status === 403) {
+        setForbidden(true);
+        setMessage('관리자 계정만 접근할 수 있습니다.');
         return;
       }
       const data = (await response.json()) as { items?: Entry[]; ownerEmail?: string; error?: string };
@@ -147,6 +153,15 @@ export function AdminContentManager() {
       <section className="admin-auth-card">
         <p>관리 화면은 사이트 소유자만 사용할 수 있습니다.</p>
         <a href="/signin-with-chatgpt?return_to=/admin/" target="_top">CHATGPT로 로그인</a>
+      </section>
+    );
+  }
+
+  if (forbidden) {
+    return (
+      <section className="admin-auth-card">
+        <p>로그인한 계정에는 이 사이트의 수정 권한이 없습니다.</p>
+        <a href="/signout-with-chatgpt?return_to=/admin/" target="_top">다른 계정으로 로그인</a>
       </section>
     );
   }
@@ -247,4 +262,3 @@ export function AdminContentManager() {
     </div>
   );
 }
-
