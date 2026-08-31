@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Subresource Integrity (SRI) — PIXN</title>
+  <meta name="description" content="Subresource Integrity (SRI) — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="Subresource Integrity (SRI) — PIXN"><meta property="og:description" content="Subresource Integrity (SRI) — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>Subresource Integrity (SRI)</h1>
+      <time datetime="2022-06-24">JUNE 24, 2022</time>
+    </header>
+    <article class="article-body"><p>Subresource Integrity (SRI) is a security feature that enables browsers to verify that resources they fetch (for example, from a CDN) are delivered without unexpected manipulation. It works by allowing you to provide a cryptographic hash that a fetched resource must match.</p>
+<p>This article explains what SRI is, why it's needed, how it works, and how to implement it.</p>
+<h2 id="what-is-sri">What is SRI?</h2>
+<p>SRI is a W3C specification that allows web developers to ensure that resources hosted on third-party servers (like CDNs) have not been tampered with. By providing a cryptographic hash (integrity metadata) for a resource, the browser can verify that the fetched resource matches the expected hash before executing it. If the resource does not match, the browser will refuse to load it, preventing potential attacks.</p>
+<pre class="mermaid">
+graph LR
+    subgraph Server
+        A[Generate resource hash and<br>embed in HTML 'integrity' attribute]
+    end
+
+    subgraph Browser
+        B[Download resource from CDN] --> C[Calculate hash from<br>the downloaded resource]
+        C --> D{Compare hashes}
+    end
+
+    A --> B
+    D -- Match --> E[✅ Execute script]
+    D -- Mismatch --> F[❌ Block script & throw error]
+</pre>
+<h2 id="why-is-sri-needed">Why is SRI needed?</h2>
+<p>Websites often rely on Content Delivery Networks (CDNs) to serve common files like JavaScript libraries and CSS frameworks. This improves performance and availability. However, if a CDN is compromised, malicious actors could modify these files to inject malicious code into websites that use them. This could lead to various attacks, such as data theft or a complete site takeover.</p>
+<p>SRI mitigates this risk by ensuring that the browser only executes code that matches the developer-provided integrity hash.</p>
+<h2 id="how-does-sri-work">How does SRI work?</h2>
+<p>SRI works by using the <code>integrity</code> attribute on <code>&lt;script&gt;</code> and <code>&lt;link&gt;</code> elements. This attribute contains one or more base64-encoded cryptographic hashes.</p>
+<h3 id="the-integrity-attribute">The <code>integrity</code> attribute</h3>
+<p>The <code>integrity</code> attribute's value is a string containing at least one hash. Multiple hashes can be provided, separated by whitespace. Each hash consists of a prefix indicating the hash algorithm (e.g., <code>sha256</code>, <code>sha384</code>, <code>sha512</code>), followed by a hyphen, and then the base64-encoded hash value.</p>
+<p>Example: <code>sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC</code></p>
+<h3 id="hash-generation">Hash generation</h3>
+<p>The most commonly used hash algorithms for SRI are SHA-256, SHA-384, and SHA-512. SHA-384 is generally recommended as a good balance between security and performance.</p>
+<h3 id="browser-verification-process">Browser verification process</h3>
+<p>When a browser encounters a <code>&lt;script&gt;</code> or <code>&lt;link&gt;</code> element with an <code>integrity</code> attribute, it performs the following steps:</p>
+<ol>
+<li>It fetches the resource from the specified URL.</li>
+<li>It calculates the cryptographic hash of the fetched resource using one of the algorithms specified in the <code>integrity</code> attribute. Browsers will attempt to use the strongest algorithm listed if multiple are provided.</li>
+<li>It compares the calculated hash with the hash provided in the <code>integrity</code> attribute.</li>
+<li>If the hashes match, the resource is executed or applied.</li>
+<li>If the hashes do not match, the browser refuses to execute or apply the resource and typically logs an error in the console.</li>
+</ol>
+<h2 id="how-to-implement-sri">How to implement SRI?</h2>
+<p>Implementing SRI is straightforward. You need to add the <code>integrity</code> attribute to your <code>&lt;script&gt;</code> and <code>&lt;link&gt;</code> tags that reference external resources.</p>
+<h3 id="examples">Examples</h3>
+<p>For a JavaScript file:</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://example.com/library.js&quot;</span>
+        <span class="hljs-attr">integrity</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC&quot;</span>
+        <span class="hljs-attr">crossorigin</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;anonymous&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>For a CSS file:</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">link</span> <span class="hljs-attr">href</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;https://example.com/style.css&quot;</span>
+      <span class="hljs-attr">rel</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;stylesheet&quot;</span>
+      <span class="hljs-attr">integrity</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;sha384-AbcDEfGhIjKlMnOpQrStUvWxYz1234567890AbcDEfGhIjKlMnOpQrSt=&quot;</span>
+      <span class="hljs-attr">crossorigin</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;anonymous&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>Note the <code>crossorigin=&quot;anonymous&quot;</code> attribute. For SRI to work with resources fetched from a third-party origin, the resource must be served with CORS (Cross-Origin Resource Sharing) headers that allow the resource to be shared with your origin (e.g., <code>Access-Control-Allow-Origin: *</code>). The <code>crossorigin=&quot;anonymous&quot;</code> attribute tells the browser to make a CORS request without sending credentials (cookies, client-side SSL certificates, or HTTP authentication).</p>
+<h3 id="sri-hash-generation-tools">SRI Hash Generation Tools</h3>
+<p>You can generate SRI hashes in several ways:</p>
+<ul>
+<li>Online Generators: There are many websites that can generate SRI hashes for you, such as <a href="https://www.srihash.org/">SRIHash.org</a>.</li>
+<li>OpenSSL Command-line Tool: You can use <code>openssl</code> to generate hashes. For example, to generate a SHA-384 hash:
+<pre><code class="language-bash hljs">curl -sL <span class="hljs-string">&quot;https://code.jquery.com/jquery-3.6.0.min.js&quot;</span> <span class="hljs-punctuation">|</span> openssl dgst -sha384 -binary <span class="hljs-punctuation">|</span> openssl base64 -A
+<span class="hljs-comment"># vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK</span>
+</code></pre>
+This command fetches the file, calculates its SHA-384 hash, and then base64 encodes it.</li>
+<li>npm Packages: Tools like <code>sri-toolbox</code> or <code>webpack-subresource-integrity</code> can help automate SRI hash generation in your build process.</li>
+</ul>
+<h2 id="advantages-of-sri">Advantages of SRI</h2>
+<ul>
+<li>Protection against CDN compromise: SRI ensures that even if a CDN is breached and files are modified, your website will not load the tampered resources.</li>
+<li>Increased trust: It provides an additional layer of security, increasing the trustworthiness of your website.</li>
+<li>Simple implementation: Adding the <code>integrity</code> attribute is relatively easy.</li>
+</ul>
+<h2 id="limitations-of-sri">Limitations of SRI</h2>
+<ul>
+<li>Dynamic content: SRI is not suitable for resources that change frequently or are dynamically generated, as the hash would need to be updated every time the content changes.</li>
+<li>Not a replacement for HTTPS: SRI protects against a specific type of attack (resource modification on a third-party server). It does not replace the need for HTTPS, which encrypts the communication channel and protects against man-in-the-middle attacks.</li>
+<li>Browser support: While most modern browsers support SRI, older browsers might not. However, these browsers will simply ignore the <code>integrity</code> attribute and load the resource without verification, so it doesn't break functionality for them.</li>
+<li>Requires CORS: For cross-origin resources, the server hosting the resource must include appropriate CORS headers.</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Subresource Integrity is a valuable security feature that helps protect websites from attacks originating from compromised third-party hosts. By verifying the integrity of external resources, SRI adds a crucial layer of defense against malicious code injection. While it has some limitations, its ease of implementation and significant security benefits make it a recommended practice for any website that relies on external resources.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/web-security/sri/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

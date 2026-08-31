@@ -19,9 +19,9 @@ export default function HomePage() {
           <a className="plate-link" href="/learn/">See the learning map</a>
         </div>
         <ul className="home-ledger">
-          <li><a className="ledger-row" href="/learn/#web-security"><span className="ledger-key">01</span><span className="ledger-body"><span className="ledger-title">Web &amp; Trust</span><span className="ledger-desc">How browsers, identity, and broken assumptions shape security</span></span><span aria-hidden="true">↗</span></a></li>
-          <li><a className="ledger-row" href="/learn/#cryptography"><span className="ledger-key">02</span><span className="ledger-body"><span className="ledger-title">Codes &amp; Ciphers</span><span className="ledger-desc">The ideas behind cryptography and the mistakes that weaken it</span></span><span aria-hidden="true">↗</span></a></li>
-          <li><a className="ledger-row" href="/projects/"><span className="ledger-key">03</span><span className="ledger-body"><span className="ledger-title">Building Better</span><span className="ledger-desc">Small programs, tools, and experiments made to learn by doing</span></span><span aria-hidden="true">↗</span></a></li>
+          <li><a className="ledger-row" href="/learn/security/"><span className="ledger-key">01</span><span className="ledger-body"><span className="ledger-title">Web &amp; Trust</span><span className="ledger-desc">How browsers, identity, and broken assumptions shape security</span></span><span aria-hidden="true">↗</span></a></li>
+          <li><a className="ledger-row" href="/learn/security/cryptography/"><span className="ledger-key">02</span><span className="ledger-body"><span className="ledger-title">Codes &amp; Ciphers</span><span className="ledger-desc">The ideas behind cryptography and the mistakes that weaken it</span></span><span aria-hidden="true">↗</span></a></li>
+          <li><a className="ledger-row" href="/learn/development/"><span className="ledger-key">03</span><span className="ledger-body"><span className="ledger-title">Building Better</span><span className="ledger-desc">Small programs, tools, and experiments made to learn by doing</span></span><span aria-hidden="true">↗</span></a></li>
         </ul>
       </section>
 

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Hack Web Application — PIXN</title>
+  <meta name="description" content="How to Hack Web Application — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="How to Hack Web Application — PIXN"><meta property="og:description" content="How to Hack Web Application — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>How to Hack Web Application</h1>
+      <time datetime="2022-11-20">NOVEMBER 20, 2022</time>
+    </header>
+    <article class="article-body"><p>Web applications are dynamic websites or software programs that run on web servers and are accessed through web browsers. Unlike static websites, web applications allow users to interact with the content, perform operations, and manipulate data in real-time. They are built using various technologies like HTML, CSS, JavaScript for the client-side, and server-side languages like PHP, Python, Ruby, or Java.</p>
+<p>Web applications range from simple forms and shopping carts to complex enterprise systems like CRM software or social media platforms. Their functionality hinges on the ability to process user inputs, interact with databases, and deliver customized content back to the user's browser. This interactivity is made possible through protocols like HTTP, which stands as the backbone for data communication on the web.</p>
+<h3 id="http">HTTP</h3>
+<p>HTTP (HyperText Transfer Protocol) is the foundation of any data exchange on the Web. It's a protocol used for transmitting hypertext, which is structured text that uses logical links (hyperlinks) between nodes containing text.</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># Request</span>
+GET / HTTP/1.1
+Host www.hahwul.com
+
+<span class="hljs-comment"># Response</span>
+HTTP/1.1 <span class="hljs-number">200</span> OK
+Connection: keep-alive
+Content-Length: <span class="hljs-number">4332</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP/1.1</td>
+<td>Text-based, single connection, no header compression</td>
+</tr>
+<tr>
+<td>HTTP/2</td>
+<td>Binary framing, multiplexing, header compression (HPACK), server push</td>
+</tr>
+<tr>
+<td>HTTP/3</td>
+<td>Based on QUIC protocol, faster connection setup, multiplexing, header compression (QPACK), improved security and performance</td>
+</tr>
+</tbody>
+</table>
+<h2 id="testing-mechanism">Testing mechanism</h2>
+<p>A Man-in-the-Middle (MITM) attack typically refers to an intermediary attack. While in actual attacks this might involve techniques like sniffing, from a web testing perspective, we use tools that intervene in this middle position. These tools allow us to intercept and modify the communication between a device like a browser or mobile app and the server for testing purposes.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/202911288-4412d25f-6848-41e1-9cb4-ade7c5ff36c3.png" alt="" />
+<em>Modifies data between the Client and Server for testing.</em></p>
+<h2 id="setting-up-the-environment">Setting Up the Environment</h2>
+<h3 id="selecting-a-proxy-tool">Selecting a Proxy Tool</h3>
+<p>There are many MITM proxies in the world. However, in the field of security, there are three well-known tools that most hackers or security engineers use: <a href="https://portswigger.net/burp">Burp Suite</a>, <a href="https://caido.io">Caido</a>, and <a href="https://www.zaproxy.org">ZAP</a>. Typically, they use one or more of these tools.</p>
+<div class="gallery-box">
+  <div class="gallery">
+    <img loading="lazy" src="images/burp.png" />
+    <img loading="lazy" src="images/caido.png" />
+    <img loading="lazy" src="images/zap.png" />
+  </div>
+</div>
+<blockquote>
+<p>For your information, I use ZAP, Caido, and Burp all at the same time.</p>
+</blockquote>
+<h3 id="configuring-certificates">Configuring Certificates</h3>
+<p>These tools can magically intercept requests, but well-known web browsers and clients aren't naive. They check if the request has been intercepted through certificate validation. Since our goal is testing, we need to disguise the proxy tool as a trusted intermediary. To achieve this, we must configure the web browser, client, or the OS to trust the certificate from the proxy.</p>
+<p>First, you need to obtain the certificate from the Proxy tool. This can be found through the manuals provided by these tools, and with tools like Burp and ZAP, you can directly access the proxy port to download the certificate.</p>
+<ul>
+<li><a href="https://portswigger.net/burp/documentation/desktop/external-browser-config/certificate">BurpSuite - Installing Burp's CA certificate</a></li>
+<li><a href="https://docs.caido.io/reference/configuration/import_ca_certificate.html">Caido - CA Certificate</a></li>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/network/options/servercertificates/">ZAP - Server Certificates</a></li>
+</ul>
+<p>Now, you'll trust the certificate in your browser or OS.</p>
+<ul>
+<li>Firefox: <code>Setting</code> &gt; <code>Privacy and Security</code> &gt; <code>Security</code> &gt; <code>Certificates</code></li>
+<li>Safari: <code>Key chanin</code></li>
+<li>Chrome: <code>Setting</code> &gt; <code>Privacy and Security</code> &gt; <code>Security</code> &gt; <code>Manage Certificates</code></li>
+</ul>
+<h3 id="embedded-browser">Embedded Browser</h3>
+<p>These tools often provide built-in browsers to streamline this process. However, personally, I recommend using an external browser because it's easier to verify real issues, and you can customize it with extensions, making it more user-friendly.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/how-to-hack/web/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

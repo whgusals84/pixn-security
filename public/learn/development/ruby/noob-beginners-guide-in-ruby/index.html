@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beginner’s Guide: Creating Your First Ruby Project — PIXN</title>
+  <meta name="description" content="Beginner’s Guide: Creating Your First Ruby Project — Practical guides for languages, tools, and software workflows.">
+  <meta property="og:title" content="Beginner’s Guide: Creating Your First Ruby Project — PIXN"><meta property="og:description" content="Beginner’s Guide: Creating Your First Ruby Project — Practical guides for languages, tools, and software workflows."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/development/">Development Guides</a></p>
+      <h1>Beginner’s Guide: Creating Your First Ruby Project</h1>
+      <time datetime="2025-09-21">SEPTEMBER 21, 2025</time>
+    </header>
+    <article class="article-body"><p>Getting started with Ruby is quick if you follow a few simple steps. In this guide, you’ll install Ruby, scaffold a new gem project, write a tiny program, run tests, and produce a gem build.</p>
+<p>I’ll keep it minimal and practical so you can get productive fast.</p>
+<h2 id="1-install-ruby">1) Install Ruby</h2>
+<ul>
+<li>Using RVM (Ruby Version Manager, macOS/Linux):</li>
+</ul>
+<pre><code class="language-bash hljs">curl -sSL https://get.rvm.io <span class="hljs-punctuation">|</span> bash -s stable
+<span class="hljs-built_in">source</span> ~/.rvm/scripts/rvm
+</code></pre>
+<ul>
+<li>Install Ruby:</li>
+</ul>
+<pre><code class="language-bash hljs">rvm install ruby --latest
+rvm use ruby --default
+</code></pre>
+<ul>
+<li>Verify:</li>
+</ul>
+<pre><code class="language-bash hljs">ruby --version
+gem --version
+bundler --version
+</code></pre>
+<h2 id="2-create-a-new-project">2) Create a new project</h2>
+<p>Ruby uses <code>bundler</code> for dependency management and project scaffolding.</p>
+<ul>
+<li>Gem library:</li>
+</ul>
+<pre><code class="language-bash hljs">bundle gem my_gem
+<span class="hljs-built_in">cd</span> my_gem
+</code></pre>
+<p>This creates a basic structure:</p>
+<pre><code>my_gem/
+├─ Gemfile
+├─ lib/
+│   └─ my_gem.rb
+├─ my_gem.gemspec
+└─ spec/
+    └─ my_gem_spec.rb
+</code></pre>
+<h2 id="3-write-your-first-program">3) Write your first program</h2>
+<p>Open <code>lib/my_gem.rb</code> and define a simple module:</p>
+<pre><code class="language-ruby hljs"><span class="hljs-keyword">module</span> <span class="hljs-title class_">MyGem</span>
+  <span class="hljs-keyword">def</span> <span class="hljs-title class_">self</span><span class="hljs-operator">.</span><span class="hljs-title function_">greet</span><span class="hljs-punctuation">(</span><span class="hljs-built_in">name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Ruby</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span>
+    <span class="hljs-string">&quot;</span><span class="hljs-string">Hello, </span><span class="hljs-subst">#{</span><span class="hljs-built_in">name</span><span class="hljs-subst">}</span><span class="hljs-string">!</span><span class="hljs-string">&quot;</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Run it:</p>
+<pre><code class="language-bash hljs">ruby -e <span class="hljs-string">&quot;require_relative &#39;lib/my_gem.rb&#39;; puts MyGem.greet&quot;</span>
+</code></pre>
+<h2 id="4-manage-dependencies">4) Manage dependencies</h2>
+<p>If you add dependencies to <code>Gemfile</code>, install them:</p>
+<pre><code class="language-bash hljs">bundle install
+</code></pre>
+<p>You generally won’t need this for the very first “hello world,” but it’s essential once you pull in libraries like HTTP clients or web frameworks.</p>
+<h2 id="5-format-your-code">5) Format your code</h2>
+<p>Install and use RuboCop:</p>
+<pre><code class="language-bash hljs">gem install rubocop
+</code></pre>
+<ul>
+<li>Lint:</li>
+</ul>
+<pre><code class="language-bash hljs">rubocop
+</code></pre>
+<ul>
+<li>Auto-fix:</li>
+</ul>
+<pre><code class="language-bash hljs">rubocop -a
+</code></pre>
+<h2 id="6-add-a-simple-test-rspec">6) Add a simple test (RSpec)</h2>
+<p>Edit <code>spec/my_gem_spec.rb</code>:</p>
+<pre><code class="language-ruby hljs"><span class="hljs-built_in">require</span> <span class="hljs-string">&quot;</span><span class="hljs-string">my_gem</span><span class="hljs-string">&quot;</span>
+
+<span class="hljs-variable constant_">RSpec</span><span class="hljs-operator">.</span>describe <span class="hljs-variable constant_">MyGem</span> <span class="hljs-keyword">do</span>
+  it <span class="hljs-string">&quot;</span><span class="hljs-string">greets with default name</span><span class="hljs-string">&quot;</span> <span class="hljs-keyword">do</span>
+    expect<span class="hljs-punctuation">(</span><span class="hljs-variable constant_">MyGem</span><span class="hljs-operator">.</span>greet<span class="hljs-punctuation">)</span><span class="hljs-operator">.</span>to eq <span class="hljs-string">&quot;</span><span class="hljs-string">Hello, Ruby!</span><span class="hljs-string">&quot;</span>
+  <span class="hljs-keyword">end</span>
+
+  it <span class="hljs-string">&quot;</span><span class="hljs-string">greets a custom name</span><span class="hljs-string">&quot;</span> <span class="hljs-keyword">do</span>
+    expect<span class="hljs-punctuation">(</span><span class="hljs-variable constant_">MyGem</span><span class="hljs-operator">.</span>greet<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">World</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-operator">.</span>to eq <span class="hljs-string">&quot;</span><span class="hljs-string">Hello, World!</span><span class="hljs-string">&quot;</span>
+  <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+</code></pre>
+<p>Run tests:</p>
+<pre><code class="language-bash hljs">bundle <span class="hljs-built_in">exec</span> rspec
+<span class="hljs-comment"># or verbose:</span>
+bundle <span class="hljs-built_in">exec</span> rspec -v
+</code></pre>
+<h2 id="7-build-a-gem">7) Build a gem</h2>
+<p>Build your gem:</p>
+<pre><code class="language-bash hljs">gem build my_gem.gemspec
+</code></pre>
+<p>Test install:</p>
+<pre><code class="language-bash hljs">gem install ./my_gem-0.1.0.gem
+</code></pre>
+<h2 id="8-check-dependencies-graph-nice-debugging-tool">8) Check dependencies graph (nice debugging tool)</h2>
+<pre><code class="language-bash hljs">bundle viz
+</code></pre>
+<h2 id="9-optional-lint-with-rubocop">9) Optional: Lint with RuboCop</h2>
+<p>As mentioned, for more config:</p>
+<pre><code class="language-bash hljs">rubocop --auto-gen-config
+</code></pre>
+<h2 id="visual-overview">Visual overview</h2>
+<p>Here’s a simple flow of your first project:</p>
+<pre class="mermaid">
+flowchart LR
+  A[Install Ruby] --> B[bundle gem my_gem]
+  B --> C[Edit lib/my_gem.rb]
+  C --> D[ruby run]
+  D --> E[bundle exec rspec]
+  E --> F[rubocop]
+  F --> G[gem build]
+  G --> H[gem install]
+</pre>
+<h2 id="whats-next">What’s next?</h2>
+<ul>
+<li>Explore popular gems:
+<ul>
+<li>Web frameworks: Sinatra, Rails</li>
+<li>Testing: RSpec</li>
+<li>HTTP client: Faraday</li>
+</ul>
+</li>
+<li>Build a gem, a CLI tool, or a Rails app and publish it on RubyGems.</li>
+</ul>
+<p>You’ve just created, tested, and built your first Ruby gem. Keep it small, iterate quickly, and enjoy the flexibility of Ruby.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/dev/ruby/noob-beginners-guide-in-ruby/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

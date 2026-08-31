@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Integrating Mermaid.js in Zola — PIXN</title>
+  <meta name="description" content="Integrating Mermaid.js in Zola — Practical guides for languages, tools, and software workflows.">
+  <meta property="og:title" content="Integrating Mermaid.js in Zola — PIXN"><meta property="og:description" content="Integrating Mermaid.js in Zola — Practical guides for languages, tools, and software workflows."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/development/">Development Guides</a></p>
+      <h1>Integrating Mermaid.js in Zola</h1>
+      <time datetime="2025-06-17">JUNE 17, 2025</time>
+    </header>
+    <article class="article-body"><p><a href="https://mermaid.js.org">Mermaid.js</a> is a powerful library that lets you create various diagrams using Markdown-like syntax. In this post, I'll walk you through the steps to integrate Mermaid.js into a Zola static site generator and how to optimize its performance.</p>
+<div class="gallery-box">
+  <div class="gallery">
+<pre><code>quadrantChart
+    title Reach and engagement of campaigns
+    x-axis Low Reach --&gt; High Reach
+    y-axis Low Engagement --&gt; High Engagement
+    quadrant-1 We should expand
+    quadrant-2 Need to promote
+    quadrant-3 Re-evaluate
+    quadrant-4 May be improved
+    Campaign A: [0.3, 0.6]
+    Campaign B: [0.45, 0.23]
+    Campaign C: [0.57, 0.69]
+    Campaign D: [0.78, 0.34]
+    Campaign E: [0.40, 0.34]
+    Campaign F: [0.35, 0.78]
+</code></pre>
+  <pre class="mermaid">
+quadrantChart
+      title Reach and engagement of campaigns
+      x-axis Low Reach --> High Reach
+      y-axis Low Engagement --> High Engagement
+      quadrant-1 We should expand
+      quadrant-2 Need to promote
+      quadrant-3 Re-evaluate
+      quadrant-4 May be improved
+      Campaign A: [0.3, 0.6]
+      Campaign B: [0.45, 0.23]
+      Campaign C: [0.57, 0.69]
+      Campaign D: [0.78, 0.34]
+      Campaign E: [0.40, 0.34]
+      Campaign F: [0.35, 0.78]
+</pre>
+  </div>
+</div>
+<h2 id="1-creating-a-shortcode">1. Creating a Shortcode</h2>
+<p>The first step to using Mermaid.js in Zola is to create a shortcode. I created mermaid.html in the templates/shortcodes directory.</p>
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">pre</span> <span class="hljs-attr">class</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;mermaid&quot;</span><span class="hljs-punctuation">&gt;</span>
+ {{ body }}
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">pre</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>This shortcode is very simple; it just generates a <code>&lt;pre&gt;</code> tag with the mermaid class. However, Mermaid.js identifies this mermaid class to convert the content into a graph, making it incredibly easy to create diagrams.</p>
+<p>You can use it like this code in markdown.</p>
+<pre><code class="language-jinja2 hljs">{%/* mermaid() */%}
+sequenceDiagram
+    Alice-&gt;&gt;+John: Hello John, how are you?
+    Alice-&gt;&gt;+John: John, can you hear me?
+    John--&gt;&gt;-Alice: Hi Alice, I can hear you!
+    John--&gt;&gt;-Alice: I feel great!
+{%/* end */%}
+</code></pre>
+<h2 id="2-adding-the-mermaidjs-library">2. Adding the Mermaid.js Library</h2>
+<h3 id="cdn-approach-initial-method">CDN Approach (Initial Method)</h3>
+<p>Initially, I used a CDN to load Mermaid.js. I added the code to load mermaid.js in my overall layout, <code>base.html</code>:</p>
+<pre><code class="language-html hljs"><span class="hljs-comment">&lt;!--</span><span class="hljs-comment"> mermaid </span><span class="hljs-comment">--&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">type</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;module&quot;</span><span class="hljs-punctuation">&gt;</span>
+   <span class="hljs-keyword">import</span> mermaid from <span class="hljs-string">&#39;https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs&#39;</span><span class="hljs-punctuation">;</span>
+   mermaid<span class="hljs-punctuation">.</span>initialize<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> startOnLoad<span class="hljs-operator">:</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">,</span> theme<span class="hljs-operator">:</span> <span class="hljs-string">&#39;dark&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<p>This method was simple to implement but came with the downsides of external dependency and potential network latency.</p>
+<h3 id="internalizing-with-local-files-optimization">Internalizing with Local Files (Optimization)</h3>
+<p>To improve performance and remove external dependencies, I internalized Mermaid.js by saving it as a local file.</p>
+<p>First, I found that .mjs files were difficult to handle as they often load multiple chunks. So, I opted to download the <code>.js</code> file instead.</p>
+<pre><code class="language-bash hljs">curl -s https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js -o static/js/mermaid.min.js
+</code></pre>
+<p>Afterward, I loaded it in base.html by referencing the local path:</p>
+<pre><code class="language-html hljs"><span class="hljs-comment">&lt;!--</span><span class="hljs-comment"> mermaid </span><span class="hljs-comment">--&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span> <span class="hljs-attr">src</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;/js/mermaid.min.js&quot;</span><span class="hljs-punctuation">&gt;</span><span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+  mermaid<span class="hljs-punctuation">.</span>initialize<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> startOnLoad<span class="hljs-operator">:</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">,</span> theme<span class="hljs-operator">:</span> <span class="hljs-string">&#39;dark&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">&lt;</span><span class="hljs-punctuation">/</span><span class="hljs-name">script</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+<h2 id="3-optimizing-the-rendering-method">3. Optimizing the Rendering Method</h2>
+<h3 id="startonload-method-initial-method">startOnLoad Method (Initial Method)</h3>
+<p>Initially, I used Mermaid.js's default rendering method, <code>startOnLoad: true</code>.</p>
+<pre><code class="language-js hljs">mermaid<span class="hljs-punctuation">.</span>initialize<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> startOnLoad<span class="hljs-operator">:</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">,</span> theme<span class="hljs-operator">:</span> <span class="hljs-string">&#39;dark&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>While this method automatically rendered all diagrams upon page load, it caused a delay in rendering because it waited for all other elements, like images, to fully load on the page.</p>
+<h3 id="manual-rendering-method-optimization">Manual Rendering Method (Optimization)</h3>
+<p>I realized it would be better to proceed immediately once the Mermaid code was fully loaded. So, I switched to manually specifying the rendering time. I set <code>startOnLoad: false</code> to prevent automatic rendering and then changed it to manually render only the necessary elements after the DOM was loaded.</p>
+<pre><code class="language-js hljs">mermaid<span class="hljs-punctuation">.</span>initialize<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> startOnLoad<span class="hljs-operator">:</span> <span class="hljs-literal">false</span><span class="hljs-punctuation">,</span> theme<span class="hljs-operator">:</span> <span class="hljs-string">&#39;dark&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>addEventListener<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;DOMContentLoaded&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-keyword">async</span> <span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">const</span> mermaidElements <span class="hljs-operator">=</span> <span class="hljs-built_in">document</span><span class="hljs-punctuation">.</span>querySelectorAll<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;.mermaid&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+  <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span>mermaidElements<span class="hljs-punctuation">.</span>length <span class="hljs-operator">&gt;</span> <span class="hljs-number">0</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-keyword">await</span> mermaid<span class="hljs-punctuation">.</span>run<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span>
+          nodes<span class="hljs-operator">:</span> mermaidElements
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>As a result, as soon as objects with the mermaid class are identified, rendering starts almost simultaneously with page access.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Let's test with a simple example to see if it works well</p>
+<pre class="mermaid">
+mindmap
+  root((mindmap))
+    Origins
+      Long history
+      ::icon(fa fa-book)
+      Popularisation
+        British popular psychology author Tony Buzan
+    Research
+      On effectiveness<br/>and features
+      On Automatic creation
+        Uses
+            Creative techniques
+            Strategic planning
+            Argument mapping
+    Tools
+      Pen and paper
+      Mermaid
+</pre>
+<p>It works perfectly!</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/dev/zola/mermaid-in-zola/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

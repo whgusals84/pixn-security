@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Understanding DevSecOps — PIXN</title>
+  <meta name="description" content="Understanding DevSecOps — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="Understanding DevSecOps — PIXN"><meta property="og:description" content="Understanding DevSecOps — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>Understanding DevSecOps</h1>
+      <time datetime="2025-06-25">JUNE 25, 2025</time>
+    </header>
+    <article class="article-body"><h2 id="what-is-devsecops">What is DevSecOps?</h2>
+<p>DevSecOps is a culture and methodology that integrates security throughout the entire development cycle while maintaining DevOps speed. As a Red Team, the most ideal scenario is a service built securely from the start, with no vulnerabilities to exploit. DevSecOps offers a practical solution to achieve this.</p>
+<p>In the past, security was often applied after development was complete, creating inefficiencies similar to tearing down walls in a finished building. DevSecOps solves this problem through the 'Shift Left' concept, moving security activities to earlier stages of development.</p>
+<pre class="mermaid">
+graph TD
+    A[Plan] --> B(Code);
+    B --> C{Build};
+    C --> D[Test];
+    D --> E(Release);
+    E --> F[Deploy];
+    F --> G(Operate);
+    G --> H{Monitor};
+    H --> A;
+
+    subgraph Security in All Phases
+        direction LR
+        S1[Threat Modeling] -- in --> A;
+        S2[SAST / SCA] -- in --> B;
+        S3[SAST] -- in --> C;
+        S4[DAST / IAST] -- in --> D;
+        S5[Config Scan] -- in --> F;
+        S6[Runtime Security] -- in --> G;
+    end
+</pre>
+<p>The key is automating and integrating security into every phase, from threat modeling at the planning stage to SAST during coding and DAST during testing.</p>
+<h2 id="why-devsecops">Why DevSecOps?</h2>
+<p>Speed is the essence. In CI/CD environments with multiple deployments per day, security performed after development completion becomes a bottleneck. DevSecOps automates security verification and integrates it into the pipeline, maintaining development speed while ensuring security. Here are examples of security activities and tools that can be applied at each SDLC stage:</p>
+<ul>
+<li><strong>Design</strong>: Threat modeling (e.g., OWASP Threat Dragon)</li>
+<li><strong>Develop</strong>: Real-time IDE scanning (e.g., SonarLint)</li>
+<li><strong>Build</strong>: SAST (Static Analysis), SCA (Open Source Analysis) (e.g., SonarQube, dependency-check)</li>
+<li><strong>Test</strong>: DAST (Dynamic Analysis) (e.g., OWASP ZAP)</li>
+<li><strong>Deploy</strong>: IaC and container image scanning (e.g., Trivy, tfsec)</li>
+</ul>
+<h2 id="how-to-measure-maturity">How to measure maturity?</h2>
+<p>After implementing DevSecOps, measuring maturity and continuously improving is essential. The <a href="https://github.com/OWASP/www-project-devsecops-verification-standard">OWASP DevSecOps Verification Standard (DSOVS)</a> provides a useful framework for this purpose.</p>
+<p>DSOVS offers specific maturity assessment criteria across various domains including organization, design, and implementation, helping to diagnose current levels and design improvement roadmaps. For example, you can check items like:</p>
+<ul>
+<li>Do all team members receive regular security training? (ORG-002)</li>
+<li>Are security requirements defined and tracked during feature development? (REQ-002)</li>
+<li>Is threat modeling performed during architectural changes? (DES-002)</li>
+<li>Are security scans automated in the CI/CD pipeline? (IMP-003)</li>
+<li>Are penetration tests conducted regularly? (VER-002)</li>
+</ul>
+<h2 id="resources">Resources</h2>
+<p><img loading="lazy" src="https://www.hahwul.com/projects/devsecops/devsecops.jpg" alt="" />
+<em>I maintain the <a href="https://github.com/hahwul/DevSecOps">hahwul/DevSecOps</a> project to organize and manage various related materials for personal reference.</em></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The success of DevSecOps goes beyond tool adoption; it depends on cultural change. True value emerges when security becomes a shared responsibility of everyone creating the product, not just the job of a specific team.</p>
+<p>The offensive perspective of a Red Team and the defensive approach of DevSecOps ultimately converge toward the same goal: creating secure services. I hope this article provides a small help in starting your DevSecOps journey.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/secure-sdlc/devsecops/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Understanding Content Security Policy (CSP) — PIXN</title>
+  <meta name="description" content="Understanding Content Security Policy (CSP) — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="Understanding Content Security Policy (CSP) — PIXN"><meta property="og:description" content="Understanding Content Security Policy (CSP) — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>Understanding Content Security Policy (CSP)</h1>
+      <time datetime="2025-06-23">JUNE 23, 2025</time>
+    </header>
+    <article class="article-body"><h2 id="what-is-content-security-policy-csp">What is Content Security Policy (CSP)?</h2>
+<p>Content Security Policy (CSP) is a security mechanism that controls which resources a web page can load, preventing attacks like Cross-Site Scripting (XSS) and data injection.</p>
+<p>CSP uses HTTP headers to specify trusted content sources, blocking execution of malicious scripts in the browser.</p>
+<h2 id="why-is-csp-important">Why is CSP Important?</h2>
+<p>Modern web applications use resources from multiple sources, creating attack opportunities. CSP mitigates these threats by:</p>
+<ul>
+<li>Prevents XSS Attacks: By specifying trusted script sources, CSP blocks malicious scripts from being injected and executed.</li>
+<li>Prevents Data Exfiltration: It can restrict data transmission to specific domains, preventing sensitive information from being leaked.</li>
+<li>Prevents Clickjacking: The <code>frame-ancestors</code> directive controls how other sites can frame the page, thus preventing clickjacking attacks.</li>
+<li>Prevents Mixed Content: It helps maintain a secure connection by preventing HTTP content from being loaded on HTTPS pages.</li>
+</ul>
+<h2 id="how-does-csp-work">How Does CSP Work?</h2>
+<p>The web server sends the <code>Content-Security-Policy</code> HTTP header to the browser with directives that control resource loading:</p>
+<pre><code class="language-http hljs">Content-Security-Policy: script-src 'self';
+</code></pre>
+<p>The browser enforces this policy, blocking non-compliant resources and optionally reporting violations.</p>
+<h3 id="key-csp-directives">Key CSP Directives</h3>
+<p>CSP provides these key directives:</p>
+<table>
+<thead>
+<tr>
+<th>Directive</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default-src</code></td>
+<td>Sets a default policy for many other directives. If a specific directive is not set, this value is used.</td>
+</tr>
+<tr>
+<td><code>script-src</code></td>
+<td>Specifies valid sources for JavaScript code.</td>
+</tr>
+<tr>
+<td><code>style-src</code></td>
+<td>Specifies valid sources for CSS stylesheets.</td>
+</tr>
+<tr>
+<td><code>img-src</code></td>
+<td>Specifies valid sources for images.</td>
+</tr>
+<tr>
+<td><code>font-src</code></td>
+<td>Specifies valid sources for fonts.</td>
+</tr>
+<tr>
+<td><code>media-src</code></td>
+<td>Specifies valid sources for media files like audio and video.</td>
+</tr>
+<tr>
+<td><code>connect-src</code></td>
+<td>Restricts origins that can be connected to using <code>fetch</code>, <code>XMLHttpRequest</code>, <code>WebSocket</code>, <code>EventSource</code>, etc.</td>
+</tr>
+<tr>
+<td><code>frame-src</code></td>
+<td>Specifies valid sources that can be embedded as frames. (Deprecated, <code>child-src</code> is recommended).</td>
+</tr>
+<tr>
+<td><code>child-src</code></td>
+<td>Specifies valid sources for nested browsing contexts, such as web workers and frames.</td>
+</tr>
+<tr>
+<td><code>object-src</code></td>
+<td>Controls valid sources for <code>&lt;object&gt;</code>, <code>&lt;embed&gt;</code>, and <code>&lt;applet&gt;</code> tags. It&#39;s recommended to set this to <code>&#39;none&#39;</code> for security reasons.</td>
+</tr>
+<tr>
+<td><code>frame-ancestors</code></td>
+<td>Specifies valid parent origins that can embed the current page using frames, iframes, objects, embeds, or applets. This is crucial for defending against clickjacking attacks.</td>
+</tr>
+<tr>
+<td><code>report-uri</code> / <code>report-to</code></td>
+<td>Specifies a URL where the browser will send reports when a CSP violation occurs. <code>report-to</code> is a newer directive that supports JSON-formatted reports and supersedes <code>report-uri</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="source-values">Source Values</h3>
+<p>Each directive can have source values such as:</p>
+<table>
+<thead>
+<tr>
+<th>Source Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&#39;self&#39;</code></td>
+<td>Current origin only (same scheme, host, port).</td>
+</tr>
+<tr>
+<td><code>&#39;unsafe-inline&#39;</code></td>
+<td>Inline JavaScript and CSS (security risk).</td>
+</tr>
+<tr>
+<td><code>&#39;unsafe-eval&#39;</code></td>
+<td>Allows <code>eval()</code> and similar (security risk).</td>
+</tr>
+<tr>
+<td><code>&#39;none&#39;</code></td>
+<td>No sources allowed.</td>
+</tr>
+<tr>
+<td><code>https://example.com</code></td>
+<td>Specific domain.</td>
+</tr>
+<tr>
+<td><code>*.example.com</code></td>
+<td>All subdomains of example.com.</td>
+</tr>
+<tr>
+<td><code>data:</code></td>
+<td>Data URI scheme resources.</td>
+</tr>
+<tr>
+<td><code>nonce-&lt;base64-value&gt;</code></td>
+<td>Scripts/styles with specific nonce.</td>
+</tr>
+<tr>
+<td><code>sha256-&lt;base64-value&gt;</code></td>
+<td>Scripts/styles with matching hash.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-apply-csp">How to Apply CSP</h2>
+<p>Apply CSP in one of two ways:</p>
+<ol>
+<li>HTTP Header (recommended):</li>
+</ol>
+<ul>
+<li>Nginx: <code>add_header Content-Security-Policy &quot;default-src 'self'; script-src 'self' https://trusted-cdn.com&quot;;</code></li>
+<li>Apache: <code>Header set Content-Security-Policy &quot;default-src 'self'; script-src 'self' https://trusted-cdn.com&quot;</code></li>
+</ul>
+<ol start="2">
+<li><code>&lt;meta&gt;</code> Tag (limited support):
+<pre><code class="language-html hljs"><span class="hljs-punctuation">&lt;</span><span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;Content-Security-Policy&quot;</span> <span class="hljs-attr">content</span><span class="hljs-operator">=</span><span class="hljs-string">&quot;default-src &#39;self&#39;; script-src &#39;self&#39; https://trusted-cdn.com;&quot;</span><span class="hljs-punctuation">&gt;</span>
+</code></pre>
+Note: <code>&lt;meta&gt;</code> doesn't support <code>frame-ancestors</code>, <code>report-uri</code>, or <code>sandbox</code> directives.</li>
+</ol>
+<h2 id="csp-implementation-strategy">CSP Implementation Strategy</h2>
+<p>Implement CSP gradually to avoid breaking functionality:</p>
+<ul>
+<li>Report-Only Mode: Test without enforcement</li>
+<li>Start lenient, then tighten: Begin with permissive rules, gradually remove unsafe directives</li>
+<li>Use nonces/hashes instead of <code>'unsafe-inline'</code></li>
+<li>Monitor and update: Regularly review violation reports and adjust as needed</li>
+</ul>
+<pre><code class="language-http hljs">  Content-Security-Policy-Report-Only: default-src 'self'; report-uri /csp-violation-report-endpoint;
+</code></pre>
+<h2 id="benefits-of-csp">Benefits of CSP</h2>
+<ul>
+<li>Strong XSS Defense: Blocks untrusted script execution</li>
+<li>Reduced Data Injection: Limits malicious data insertion</li>
+<li>Clickjacking Protection: Controls framing via <code>frame-ancestors</code></li>
+<li>Enhanced Security Awareness: Improves resource visibility</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>CSP is essential for modern web application security, protecting against XSS and other common attacks. Despite implementation complexity, its security benefits are substantial. Gradual implementation and ongoing monitoring will significantly improve your site's security posture.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/web-security/csp/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

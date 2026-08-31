@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OAST (Out-of-band Application Security Testing) — PIXN</title>
+  <meta name="description" content="OAST (Out-of-band Application Security Testing) — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="OAST (Out-of-band Application Security Testing) — PIXN"><meta property="og:description" content="OAST (Out-of-band Application Security Testing) — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>OAST (Out-of-band Application Security Testing)</h1>
+      <time datetime="2022-04-04">APRIL 4, 2022</time>
+    </header>
+    <article class="article-body"><p>OAST stands for Out-of-band Application Security Testing. As the name suggests, it is a security testing technique that identifies vulnerabilities through Out-of-Band (OOB) interactions. While an OOB interaction itself is not a vulnerability, it's a highly effective method for triggering outbound communication from a server. This allows for the detection of blind vulnerabilities (like Blind RCE, Blind XSS, and Blind SSRF) and the exfiltration of sensitive information.</p>
+<p>This post covers the core principles of OAST, along with its offensive and defensive techniques.</p>
+<h2 id="what-is-oast">What is OAST?</h2>
+<p>OAST works by confirming vulnerabilities based on whether an interaction occurs with an external, attacker-controlled server (the OAST server). An attacker injects a payload containing a unique address of their OAST server into a location where a vulnerability is suspected. If the application processes this payload and sends a network request (e.g., a DNS query or HTTP request) to the OAST server, the attacker can detect this interaction and confirm the vulnerability's existence.</p>
+<p>Because of this capability, OAST is a core feature in DAST (Dynamic Application Security Testing) solutions like ZAP and Burp Suite, significantly improving their detection rates.</p>
+<pre class="mermaid">
+sequenceDiagram
+    participant Attacker
+    participant Target Server
+    participant OAST Server
+
+    Attacker->>+Target Server: Sends payload with OAST domain<br>(e.g., 'ping unique-id.oast.server')
+    Note right of Target Server: The application executes the command,<br>triggering an out-of-band interaction.
+    Target Server->>+OAST Server: DNS Query for 'unique-id.oast.server'
+    OAST Server-->>-Target Server: DNS Response
+    Attacker->>OAST Server: Polls for interactions
+    OAST Server-->>Attacker: Reports interaction from Target Server's IP
+</pre>
+<h2 id="core-reaction-methods">Core Reaction Methods</h2>
+<h3 id="dns-reaction">DNS Reaction</h3>
+<p>The most crucial interaction in OAST is achieved through DNS. Most production environments, as a security policy, block outbound traffic from servers by default and only allow it on an exceptional basis. This is why traditional HTTP callback methods are often blocked by firewalls.</p>
+<p>However, a DNS query isn't typically sent directly from the server to the internet. Instead, it's propagated through internal or external DNS resolvers. This process often bypasses standard outbound firewall policies, making it a reliable channel for detecting interactions even in environments with restricted outbound access.</p>
+<pre class="mermaid">
+graph TD
+    subgraph Target Infrastructure
+        A[Vulnerable Application] --> B{Outbound Request};
+        B -->|HTTP/HTTPS Request| C[Firewall];
+        C -->|DENY Default| D[Internet];
+        B -->|DNS Query| E[Internal/External DNS Resolver];
+    end
+
+    subgraph Internet
+      F[OAST Server];
+    end
+
+    E --> F;
+    style D stroke:#f00,stroke-width:2px,stroke-dasharray: 5 5
+    style C fill:#445,stroke:#333,stroke-width:2px
+</pre>
+<h3 id="http-other-reaction">HTTP/Other Reaction</h3>
+<p>If interactions using other protocols like HTTP or SMTP are observed after the initial DNS query, it indicates that outbound communication is permitted for those protocols. While a DNS interaction primarily serves to &quot;identify&quot; the existence of a vulnerability, subsequent HTTP or other protocol interactions are directly related to actually &quot;exploiting&quot; it.</p>
+<p>This channel can be used to exfiltrate information from internal systems or to pivot to more severe threats, such as using SSRF to scan the internal network.</p>
+<h2 id="offensive-techniques">Offensive techniques</h2>
+<h3 id="protocols">Protocols</h3>
+<p>OAST supports various protocols to provide testers with richer information. While DNS and HTTP are fundamental, support for other protocols can be invaluable for identifying vulnerabilities in specific environments.</p>
+<ul>
+<li>HTTP/HTTPS</li>
+<li>DNS</li>
+<li>SMTP</li>
+<li>LDAP</li>
+<li>NTLM</li>
+<li>SMB</li>
+<li>FTP</li>
+<li>Etc..</li>
+</ul>
+<h3 id="provider">Provider</h3>
+<p>Various public and private OAST services exist, each with slightly different features and tool support.</p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>ZAP</th>
+<th>Burp</th>
+<th>Nuclei</th>
+<th>CLI</th>
+<th>Receiver</th>
+<th>OSS</th>
+<th>Self-Host</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BOAST</td>
+<td>O</td>
+<td>X</td>
+<td>X</td>
+<td>O</td>
+<td>DNS, HTTP(S)</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Interactsh</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+<td>DNS, HTTP(S), SMTP, LDAP, SMB, FTP</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Burp Collaborator</td>
+<td>X</td>
+<td>O</td>
+<td>O</td>
+<td>O</td>
+<td>DNS, HTTP(S), SMTP</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>TukTuk</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>O</td>
+<td>DNS, HTTP(S), SMTP, LDAP, SMB, FTP, TCP</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interfaces">Interfaces</h3>
+<h4 id="caido">Caido</h4>
+<p>Caido does not offer OAST functionality by default, but you can enable it using the <code>QuickSSRF</code>, <code>OmniOAST</code> plugin.</p>
+<h4 id="zap">ZAP</h4>
+<p>In ZAP, OAST functionality is available through the OAST Add-on. You can get a unique domain and poll for interactions in the OAST tab. During an Active Scan, OAST payloads are automatically generated and used for testing. ZAP supports BOAST, Interactsh, and a simple IP-based callback service.</p>
+<h4 id="burpsuite">Burpsuite</h4>
+<p>Burp Suite Professional provides OAST capabilities through its Burp Collaborator client. Like ZAP, it automatically injects Collaborator payloads during an Active Scan to detect blind vulnerabilities.</p>
+<h4 id="cli-interface">CLI interface</h4>
+<p>For the CLI environment, ProjectDiscovery's Interactsh offers the most powerful feature set. You can use the public server or set up your own self-hosted server.</p>
+<p>@@@bash</p>
+<h1 id="public-server">Public server</h1>
+<p>interactsh-client</p>
+<h1 id="self-hosted-server">Self-hosted server</h1>
+<p>interactsh-client -server <YOUR-SELF-HOSTED-SERVER> -token <YOUR-SECRET>
+@@@</p>
+<h2 id="oast-in-dast">OAST in DAST</h2>
+<p>The process of a DAST tool utilizing OAST generally follows these steps:</p>
+<ol>
+<li>For each scan request, a unique subdomain is generated from the OAST service (e.g., <code>o5rglw6hawoivfmeylovdxtqji.odiss.eu</code>).</li>
+<li>A payload containing the generated domain is sent to the target to perform the test.</li>
+<li>The tool polls the OAST server for a set period to check if any interactions for that domain have been received.</li>
+<li>If an interaction is detected, it confirms the existence of a blind vulnerability based on that request.</li>
+</ol>
+<h2 id="bypass-techniques">Bypass techniques</h2>
+<p>Following major events like the Log4Shell vulnerability, the domains and IP addresses of public OAST services are now frequently blocked by firewalls and security solutions. To bypass this, using a self-hosted OAST server or a lesser-known service can be effective.</p>
+<ul>
+<li><a href="https://www.hahwul.com/blog/2022/bypass-system-hardening-rce-oob/">Bypassing System Hardening to Detect RCE via OOB Methods</a></li>
+<li><a href="https://www.hahwul.com/blog/2021/make-self-hosted-interactsh-server/">Self-Hosted Interactsh for Private OOB Testing</a></li>
+</ul>
+<h2 id="defensive-techniques">Defensive techniques</h2>
+<p>From a defender's perspective, the impact of OAST attacks can be minimized through system hardening.</p>
+<ul>
+<li><strong>Minimize Outbound Traffic</strong>: Apply a Default Deny policy for all outbound traffic from servers. Only allow connections to essential domains and ports on an allowlist basis.</li>
+<li><strong>Block Known OAST Services</strong>: Block the domains and IP addresses of known public OAST services at the firewall.</li>
+</ul>
+<h3 id="known-oast-service-address">Known OAST Service Address</h3>
+<ul>
+<li><strong>ZAP</strong>: <code>*.odiss.eu</code></li>
+<li><strong>Burpsuite</strong>: <code>*.oastify.com</code>, <code>*.burpcollaborator.net</code></li>
+<li><strong>Interactsh</strong>: <code>*.oast.pro</code>, <code>*.oast.live</code>, <code>*.oast.site</code>, <code>*.oast.online</code>, <code>*.oast.fun</code>, <code>*.oast.me</code></li>
+<li><strong>CVSS Advisor</strong>: <code>*.c5.rs</code>, <code>*.ssrf.cvssadvisor.com</code></li>
+</ul>
+<h2 id="tools">Tools</h2>
+<ul>
+<li>🌐 <a href="https://github.com/caido-community/quickssrf">Caido - QuickSSRF</a> (public/private)</li>
+<li>🌐 <a href="https://github.com/hahwul/OmniOAST">Caido - OmniOAST</a> (public/private)</li>
+<li>🌐 <a href="https://www.zaproxy.org/docs/desktop/addons/oast-support/">ZAP OAST</a> (public/private)</li>
+<li>🌐 <a href="https://portswigger.net/burp/documentation/collaborator">Burpsuite Collaborator</a> (public/private)</li>
+<li>🌐 <a href="https://ssrf.cvssadvisor.com">CVSS Advisor's SSRF</a> (public)</li>
+<li>🔒 <a href="https://github.com/projectdiscovery/interactsh">Interachsh</a> (public/private)</li>
+<li>🔒 <a href="https://github.com/marcoagner/boast">boast</a> (private)</li>
+<li>🔒 <a href="https://github.com/ArturSS7/TukTuk">tuktuk</a> (private)</li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/web-hacking/oast/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

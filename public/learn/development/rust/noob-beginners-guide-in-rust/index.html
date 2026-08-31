@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beginner’s Guide: Creating Your First Rust Project — PIXN</title>
+  <meta name="description" content="Beginner’s Guide: Creating Your First Rust Project — Practical guides for languages, tools, and software workflows.">
+  <meta property="og:title" content="Beginner’s Guide: Creating Your First Rust Project — PIXN"><meta property="og:description" content="Beginner’s Guide: Creating Your First Rust Project — Practical guides for languages, tools, and software workflows."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/development/">Development Guides</a></p>
+      <h1>Beginner’s Guide: Creating Your First Rust Project</h1>
+      <time datetime="2025-09-21">SEPTEMBER 21, 2025</time>
+    </header>
+    <article class="article-body"><p>Getting started with Rust is quick if you follow a few simple steps. In this guide, you’ll install Rust, scaffold a new project, write a tiny program, run tests, and produce a release build.</p>
+<p>I’ll keep it minimal and practical so you can get productive fast.</p>
+<h2 id="1-install-rust">1) Install Rust</h2>
+<ul>
+<li>Official installer (works on all platforms):</li>
+</ul>
+<pre><code class="language-bash hljs">curl --proto <span class="hljs-string">&#39;=https&#39;</span> --tlsv1.2 -sSf https://sh.rustup.rs <span class="hljs-punctuation">|</span> sh
+</code></pre>
+<ul>
+<li>Verify</li>
+</ul>
+<pre><code class="language-bash hljs">rustc --version
+cargo --version
+</code></pre>
+<h2 id="2-create-a-new-project">2) Create a new project</h2>
+<p>Rust uses <code>cargo</code> for building, testing, and dependency management.</p>
+<ul>
+<li>Binary app (recommended for CLI apps and services):</li>
+</ul>
+<pre><code class="language-bash hljs">cargo new hello_rust
+<span class="hljs-built_in">cd</span> hello_rust
+</code></pre>
+<p>This creates a basic structure:</p>
+<pre><code>hello_rust/
+├─ Cargo.toml
+└─ src/
+   └─ main.rs
+</code></pre>
+<h2 id="3-write-your-first-program">3) Write your first program</h2>
+<p>Open <code>src/main.rs</code> and print a greeting:</p>
+<pre><code class="language-rust hljs"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-title function_">println!</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">Hello, Rust!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>Run it:</p>
+<pre><code class="language-bash hljs">cargo run
+</code></pre>
+<h2 id="4-manage-dependencies-when-you-need-them">4) Manage dependencies (when you need them)</h2>
+<p>If you add dependencies to <code>Cargo.toml</code>, build to install them:</p>
+<pre><code class="language-bash hljs">cargo build
+</code></pre>
+<p>You generally won’t need this for the very first “hello world,” but it’s essential once you pull in crates like HTTP clients or web frameworks.</p>
+<h2 id="5-format-your-code">5) Format your code</h2>
+<p>Rust ships a formatter:</p>
+<pre><code class="language-bash hljs">cargo fmt
+</code></pre>
+<p>Run it from the project root to format all sources.</p>
+<h2 id="6-add-a-simple-test">6) Add a simple test</h2>
+<p>For a beginner-friendly pattern, wrap your code in a module and test it:</p>
+<pre><code class="language-rust hljs"><span class="hljs-comment">// src/main.rs
+</span><span class="hljs-comment"></span><span class="hljs-keyword">mod</span> <span class="hljs-title class_">hello_rust</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">pub</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">greet</span><span class="hljs-punctuation">(</span>name: <span class="hljs-keyword">&amp;</span><span class="hljs-type">str</span><span class="hljs-punctuation">)</span> -&gt; <span class="hljs-built_in">String</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-title function_">format!</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">Hello, </span><span class="hljs-subst">{}</span><span class="hljs-string">!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> name<span class="hljs-punctuation">)</span>
+    <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">main</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-title function_">println!</span><span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-subst">{}</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">,</span> hello_rust::greet<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">Rust</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span>
+
+<span class="hljs-meta">#[</span><span class="hljs-meta">cfg(test)</span><span class="hljs-meta">]</span>
+<span class="hljs-keyword">mod</span> <span class="hljs-title class_">tests</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-keyword">use</span> <span class="hljs-keyword">super</span>::<span class="hljs-operator">*</span><span class="hljs-punctuation">;</span>
+
+    <span class="hljs-meta">#[</span><span class="hljs-meta">test</span><span class="hljs-meta">]</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">test_greet_default</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-title function_">assert_eq!</span><span class="hljs-punctuation">(</span>hello_rust::greet<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">Rust</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Hello, Rust!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+
+    <span class="hljs-meta">#[</span><span class="hljs-meta">test</span><span class="hljs-meta">]</span>
+    <span class="hljs-keyword">fn</span> <span class="hljs-title function_">test_greet_custom</span><span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-title function_">assert_eq!</span><span class="hljs-punctuation">(</span>hello_rust::greet<span class="hljs-punctuation">(</span><span class="hljs-string">&quot;</span><span class="hljs-string">World</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;</span><span class="hljs-string">Hello, World!</span><span class="hljs-string">&quot;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>Run tests:</p>
+<pre><code class="language-bash hljs">cargo <span class="hljs-built_in">test</span>
+<span class="hljs-comment"># or verbose:</span>
+cargo <span class="hljs-built_in">test</span> -- --nocapture
+</code></pre>
+<h2 id="7-build-a-binary">7) Build a binary</h2>
+<p>Two common ways to build:</p>
+<ul>
+<li>Debug build:</li>
+</ul>
+<pre><code class="language-bash hljs">cargo build
+</code></pre>
+<ul>
+<li>Release build:</li>
+</ul>
+<pre><code class="language-bash hljs">cargo build --release
+</code></pre>
+<p>Run your binary:</p>
+<pre><code class="language-bash hljs">./target/debug/hello_rust  <span class="hljs-comment"># debug</span>
+./target/release/hello_rust  <span class="hljs-comment"># release</span>
+</code></pre>
+<h2 id="8-check-dependencies-graph-nice-debugging-tool">8) Check dependencies graph (nice debugging tool)</h2>
+<pre><code class="language-bash hljs">cargo tree
+</code></pre>
+<h2 id="9-optional-lint-with-clippy">9) Optional: Lint with Clippy</h2>
+<p>Clippy is Rust’s official linter.</p>
+<ul>
+<li>Lint:</li>
+</ul>
+<pre><code class="language-bash hljs">cargo clippy
+</code></pre>
+<ul>
+<li>Auto-fix:</li>
+</ul>
+<pre><code class="language-bash hljs">cargo clippy --fix
+</code></pre>
+<h2 id="visual-overview">Visual overview</h2>
+<p>Here’s a simple flow of your first project:</p>
+<pre class="mermaid">
+flowchart LR
+  A[Install Rust] --> B[cargo new hello_rust]
+  B --> C[Edit src/main.rs]
+  C --> D[cargo run]
+  D --> E[cargo test]
+  E --> F[cargo fmt]
+  F --> G[cargo build --release]
+  G --> H[Run ./target/release/hello_rust]
+</pre>
+<h2 id="whats-next">What’s next?</h2>
+<ul>
+<li>Explore popular crates:
+<ul>
+<li>Web frameworks: Rocket, Actix-Web</li>
+<li>CLI: clap</li>
+<li>HTTP client: reqwest</li>
+</ul>
+</li>
+<li>Build a CLI tool, a web service, or a small library and publish it on crates.io.</li>
+</ul>
+<p>You’ve just created, tested, and built your first Rust project. Keep it small, iterate quickly, and enjoy the safety and performance of Rust.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/dev/rust/noob-beginners-guide-in-rust/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

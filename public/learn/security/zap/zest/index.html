@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>An Introduction to Zest — PIXN</title>
+  <meta name="description" content="An Introduction to Zest — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="An Introduction to Zest — PIXN"><meta property="og:description" content="An Introduction to Zest — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>An Introduction to Zest</h1>
+      <time datetime="2022-05-30">MAY 30, 2022</time>
+    </header>
+    <article class="article-body"><p>Zest is a JSON/YAML-based scripting language developed by the Mozilla Security team. It is now maintained as part of the ZAP Core project and is used to define and execute automated test scenarios involving HTTP Requests/Responses, Headless Browsers, and Assertions.</p>
+<p>Personally, it's my favorite language for writing automation scripts in ZAP.</p>
+<h2 id="what-is-zest">What is Zest?</h2>
+<p>A Zest script has the following basic structure. It recently started supporting the YAML format, which has made writing scripts much more convenient than with JSON.</p>
+<h3 id="json-format">JSON Format</h3>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+  <span class="hljs-name">&quot;about&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;A description of Zest&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;zestVersion&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;0.8&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;title&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Script Name&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Script Description&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;prefix&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;https://www.hahwul.com&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;StandAlone&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;parameters&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-name">&quot;tokenStart&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;{{&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;tokenEnd&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;}}&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;tokens&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-name">&quot;elementType&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ZestVariables&quot;</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;statements&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;authentication&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;index&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;enabled&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-name">&quot;elementType&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ZestScript&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 id="yaml-format">YAML Format</h3>
+<pre><code class="language-yaml hljs"><span class="hljs-name">about</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">A description of Zest</span>
+<span class="hljs-name">zestVersion</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;0.8&#39;</span>
+<span class="hljs-name">title</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">Script Name</span>
+<span class="hljs-name">description</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">Script Description</span>
+<span class="hljs-name">prefix</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;https://www.hahwul.com&#39;</span>
+<span class="hljs-name">type</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">StandAlone</span>
+<span class="hljs-name">parameters</span><span class="hljs-punctuation">:</span>
+  <span class="hljs-name">tokenStart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;{{&#39;</span>
+  <span class="hljs-name">tokenEnd</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#39;}}&#39;</span>
+  <span class="hljs-name">tokens</span><span class="hljs-punctuation">:</span> {}
+  <span class="hljs-name">elementType</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">ZestVariables</span>
+<span class="hljs-name">statements</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span>
+<span class="hljs-name">authentication</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span>
+<span class="hljs-name">index</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span>
+<span class="hljs-name">enabled</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">true</span>
+<span class="hljs-name">elementType</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">ZestScript</span>
+</code></pre>
+<h2 id="interfaces">Interfaces</h2>
+<p>There are a few ways to work with Zest.</p>
+<h3 id="zap-gui">ZAP GUI</h3>
+<p>Since Zest is ZAP's built-in scripting engine, you can intuitively write and manage scripts through the ZAP GUI.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/107125511-cd8c6480-68ed-11eb-9a62-e01e28efc683.jpg" alt="" /></p>
+<h3 id="zest-cli">Zest CLI</h3>
+<p>While Zest operates as a ZAP library, it also offers a standalone CLI. You can build it separately or use the <code>zest-env</code> Docker image I created to easily run it in various environments like GitHub Actions.</p>
+<blockquote>
+<p>https://github.com/hahwul/zest-env</p>
+</blockquote>
+<pre><code class="language-sh hljs">docker pull hahwul/zest-env:v1.0.0
+docker run hahwul/zest-env:v1.0.0 zest -script &lt;YOUR-ZEST-SCRIPT&gt;
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171013021-2be8f3c5-2c6d-42ad-b7d7-c67aec17670f.png" alt="" /></p>
+<h2 id="how-to-write">How to Write</h2>
+<p>There are three main methods for writing scripts.</p>
+<h3 id="zap-script-console">ZAP Script Console</h3>
+<p>Within ZAP, you can write and test code directly via the GUI and CLI in the &quot;Scripts&quot; and &quot;Script Console&quot; tabs.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171009547-87965459-50b4-4830-9db7-f3333278a33f.png" alt="" /></p>
+<h3 id="zap-zest-record">ZAP Zest Record</h3>
+<p>ZAP has a built-in Zest Record feature. Once you start recording, it captures your web requests and automatically generates a draft Zest script. This is incredibly useful for scripting complex workflows.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578438-36f6b97d-3ff9-4c15-a4e4-aaa19c92a2a5.jpg" alt="" /></p>
+<h3 id="texteditor-ide">TextEditor &amp; IDE</h3>
+<p>Of course, since it's JSON/YAML-based, you can write scripts directly in your favorite text editor or IDE. While JSON can be a bit cumbersome to edit manually, the addition of YAML support in September 2023 has made this process much smoother.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/171009538-5a7f8796-4a6b-45f9-ae7e-fa911d2ef5a8.png" alt="" /></p>
+<h2 id="structure">Structure</h2>
+<p>A Zest script is composed of several key components.</p>
+<pre class="mermaid">
+graph TD
+    A[Start] --> B(Statement 1: Request);
+    B --> C{Condition: if status == 200};
+    C -- True --> D[Assertion: body contains 'login_success'];
+    C -- False --> E[Action: Log 'Login Failed'];
+    D --> F(Statement 2: ...);
+    E --> F;
+    F --> G[End];
+</pre>
+<h3 id="statements">Statements</h3>
+<p>The core of Zest is the <code>statements</code> array. The actions included in this array are executed sequentially. Zest processes this array to handle web requests, Actions, Assertions, Conditions, and Assignments, and then returns the final result.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578391-b7e73fb9-0155-47c2-8f0e-70f289957d65.png" alt="" /></p>
+<h3 id="condition-ifstatements">Condition (ifStatements)</h3>
+<p>You can implement branching logic within your script using <code>Condition</code>. Similar to an <code>if</code> statement, it allows you to control the flow by executing different <code>statements</code> based on specific criteria.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578402-327141f0-f78c-47c1-b867-a55ba6ba11b7.png" alt="" /></p>
+<h3 id="assertions">Assertions</h3>
+<p><code>Assertion</code> is a verification feature that determines the success or failure of a test. It's the same concept as assertions in unit testing, allowing you to check if the response code, headers, or body content match your expectations.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578412-d38fb7b1-8fa5-4d50-9b19-5c8687060e5e.png" alt="" /></p>
+<h3 id="action">Action</h3>
+<p>An <code>Action</code> performs a specific operation. For example, you can introduce a <code>sleep</code> delay or set a variable's value. Some actions are dependent on the ZAP scanner.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578418-aeecee58-9ce4-4b66-bc32-99aa449e36c0.png" alt="" /></p>
+<h3 id="assignment">Assignment</h3>
+<p><code>Assignment</code> is used to handle variables. You can perform tasks like generating a random number or calculating a specific value, and then reference that result elsewhere in the script using <code>{{ variable_name }}</code>.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578423-d4972da2-0803-4a4b-b24e-9b620150facd.png" alt="" /></p>
+<p>Variables can be accessed using the <code>{{ variable_name }}</code> format.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578428-086c59ee-bef3-4187-9240-5fd87296f8a1.png" alt="" /></p>
+<h3 id="loop">Loop</h3>
+<p>Zest also supports loops through the <code>Loop</code> element. However, configuring complex loops often requires using <code>Assignment</code> as well, so for such cases, a general-purpose scripting language like Ruby or Python might be more efficient.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/148578432-715a1a4a-a545-4175-9131-98a0d4bf6236.png" alt="" /></p>
+<h2 id="tools">Tools</h2>
+<ul>
+<li><a href="https://github.com/hahwul/zest-env">https://github.com/hahwul/zest-env</a></li>
+</ul>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2023/09/29/zest-now-supports-yaml/">Zest + YAML = ❤️</a></li>
+<li><a href="https://www.hahwul.com/2023/02/07/handling-cookies-in-zest/">Cross handling Cookies in Zest</a></li>
+<li><a href="https://www.hahwul.com/2022/05/28/zest-in-cli/">Zest script in CLI</a></li>
+<li><a href="https://www.hahwul.com/2022/05/19/zest-and-headless-authentication-script/">ZAP에서 Zest Script로 Headless 기반의 인증 자동화 처리하기</a></li>
+<li><a href="https://www.hahwul.com/2022/01/08/zest-and-zap/">Zest와 ZAP! 강력한 보안 테스트 루틴을 만들어봐요 ⚡️</a></li>
+<li><a href="https://www.hahwul.com/2021/02/06/semiautomated-security-testing-using-zest-script-of-zap/">Zest와 ZAP을 이용한 Semi-Automated Security Testing</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.zaproxy.org/docs/desktop/addons/zest/">https://www.zaproxy.org/docs/desktop/addons/zest/</a></li>
+<li><a href="https://github.com/zaproxy/zest/">https://github.com/zaproxy/zest/</a></li>
+<li><a href="https://github.com/zaproxy/zest/wiki">https://github.com/zaproxy/zest/wiki</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/zap/zest/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

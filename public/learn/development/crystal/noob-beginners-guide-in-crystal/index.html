@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beginner’s Guide: Creating Your First Crystal Project — PIXN</title>
+  <meta name="description" content="Beginner’s Guide: Creating Your First Crystal Project — Practical guides for languages, tools, and software workflows.">
+  <meta property="og:title" content="Beginner’s Guide: Creating Your First Crystal Project — PIXN"><meta property="og:description" content="Beginner’s Guide: Creating Your First Crystal Project — Practical guides for languages, tools, and software workflows."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/development/">Development Guides</a></p>
+      <h1>Beginner’s Guide: Creating Your First Crystal Project</h1>
+      <time datetime="2025-09-16">SEPTEMBER 16, 2025</time>
+    </header>
+    <article class="article-body"><p>Getting started with Crystal is quick if you follow a few simple steps. In this guide, you’ll install Crystal, scaffold a new project, write a tiny program, run tests, and produce a release build.</p>
+<p>I’ll keep it minimal and practical so you can get productive fast.</p>
+<h2 id="1-install-crystal">1) Install Crystal</h2>
+<ul>
+<li>macOS (Homebrew)</li>
+</ul>
+<pre><code class="language-bash hljs">brew install crystal
+</code></pre>
+<ul>
+<li>
+<p>Linux</p>
+<ul>
+<li>Check the official installation page for distro-specific instructions:
+https://crystal-lang.org/install/</li>
+</ul>
+</li>
+<li>
+<p>Verify</p>
+</li>
+</ul>
+<pre><code class="language-bash hljs">crystal --version
+shards --version
+</code></pre>
+<p>Optional tools you’ll probably want soon:</p>
+<ul>
+<li>VS Code extension (Crystal + LSP): https://marketplace.visualstudio.com/items?itemName=crystal-lang-tools.crystal-lang</li>
+<li>Linter (Ameba): https://marketplace.visualstudio.com/items?itemName=veelenga.crystal-ameba</li>
+</ul>
+<h2 id="2-create-a-new-project">2) Create a new project</h2>
+<p>Crystal uses <code>shards</code> (like Ruby’s Bundler) for dependency management and project scaffolding.</p>
+<ul>
+<li>App template (recommended for CLI apps and services):</li>
+</ul>
+<pre><code class="language-bash hljs">mkdir hello_crystal <span class="hljs-operator">&amp;&amp;</span> <span class="hljs-built_in">cd</span> hello_crystal
+shards init app hello_crystal
+</code></pre>
+<ul>
+<li>Library template (if you’re building a shard/gem-like package):</li>
+</ul>
+<pre><code class="language-bash hljs">mkdir my_lib <span class="hljs-operator">&amp;&amp;</span> <span class="hljs-built_in">cd</span> my_lib
+shards init lib my_lib
+</code></pre>
+<p>This creates a basic structure (for an app):</p>
+<pre><code>hello_crystal/
+├─ shard.yml
+└─ src/
+   └─ hello_crystal.cr
+</code></pre>
+<h2 id="3-write-your-first-program">3) Write your first program</h2>
+<p>Open <code>src/hello_crystal.cr</code> and print a greeting:</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># src/hello_crystal.cr</span>
+puts <span class="hljs-string">&quot;Hello, Crystal!&quot;</span>
+</code></pre>
+<p>Run it:</p>
+<pre><code class="language-bash hljs">crystal run src/hello_crystal.cr
+</code></pre>
+<h2 id="4-manage-dependencies-when-you-need-them">4) Manage dependencies (when you need them)</h2>
+<p>If you add dependencies to <code>shard.yml</code>, install them with:</p>
+<pre><code class="language-bash hljs">shards install
+</code></pre>
+<p>You generally won’t need this for the very first “hello world,” but it’s essential once you pull in libraries like HTTP clients or web frameworks.</p>
+<h2 id="5-format-your-code">5) Format your code</h2>
+<p>Crystal ships a formatter:</p>
+<pre><code class="language-bash hljs">crystal tool format
+</code></pre>
+<p>Run it from the project root to format all sources.</p>
+<h2 id="6-add-a-simple-test-spec">6) Add a simple test (spec)</h2>
+<p>Create a spec file:</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># spec/hello_crystal_spec.cr</span>
+require <span class="hljs-string">&quot;spec&quot;</span>
+require <span class="hljs-string">&quot;../src/hello_crystal&quot;</span>
+
+describe <span class="hljs-string">&quot;hello_crystal&quot;</span> <span class="hljs-keyword">do</span>
+  it <span class="hljs-string">&quot;runs without raising&quot;</span> <span class="hljs-keyword">do</span>
+    expect <span class="hljs-operator">{</span> Crystal.main <span class="hljs-operator">}</span>.not_to raise_error
+  end
+end
+</code></pre>
+<p>If your app doesn’t define <code>Crystal.main</code>, you can test a function you write instead. For a beginner-friendly pattern, wrap your app code in a module:</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># src/hello_crystal.cr</span>
+module HelloCrystal
+  def self.greet<span class="hljs-operator">(</span>name : <span class="hljs-variable">String</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Crystal&quot;</span><span class="hljs-operator">)</span>
+    <span class="hljs-string">&quot;Hello, #{name}!&quot;</span>
+  end
+end
+
+puts HelloCrystal.greet
+</code></pre>
+<p>And test it:</p>
+<pre><code class="language-bash hljs"><span class="hljs-comment"># spec/hello_crystal_spec.cr</span>
+require <span class="hljs-string">&quot;spec&quot;</span>
+require <span class="hljs-string">&quot;../src/hello_crystal&quot;</span>
+
+describe HelloCrystal <span class="hljs-keyword">do</span>
+  it <span class="hljs-string">&quot;greets with default name&quot;</span> <span class="hljs-keyword">do</span>
+    HelloCrystal.greet.should eq <span class="hljs-string">&quot;Hello, Crystal!&quot;</span>
+  end
+
+  it <span class="hljs-string">&quot;greets a custom name&quot;</span> <span class="hljs-keyword">do</span>
+    HelloCrystal.greet<span class="hljs-operator">(</span><span class="hljs-string">&quot;World&quot;</span><span class="hljs-operator">)</span>.should eq <span class="hljs-string">&quot;Hello, World!&quot;</span>
+  end
+end
+</code></pre>
+<p>Run tests:</p>
+<pre><code class="language-bash hljs">crystal spec
+<span class="hljs-comment"># or verbose:</span>
+crystal spec -v
+</code></pre>
+<h2 id="7-build-a-binary">7) Build a binary</h2>
+<p>Two common ways to build:</p>
+<ul>
+<li>Using crystal directly:</li>
+</ul>
+<pre><code class="language-bash hljs">crystal build --no-debug --release src/hello_crystal.cr -o bin/hello_crystal
+</code></pre>
+<ul>
+<li>Using shards (works when <code>shard.yml</code> defines targets):</li>
+</ul>
+<pre><code class="language-bash hljs">shards build --no-debug --release
+</code></pre>
+<p>Run your binary:</p>
+<pre><code class="language-bash hljs">./bin/hello_crystal
+</code></pre>
+<p>For production-like builds (strict dependencies and no dev deps):</p>
+<pre><code class="language-bash hljs">shards build --release --no-debug --production
+</code></pre>
+<h2 id="8-check-dependencies-graph-nice-debugging-tool">8) Check dependencies graph (nice debugging tool)</h2>
+<pre><code class="language-bash hljs">crystal tool dependencies ./src/hello_crystal.cr
+</code></pre>
+<h2 id="9-optional-lint-with-ameba">9) Optional: Lint with Ameba</h2>
+<p>Ameba is Crystal’s code style linter (similar to RuboCop).</p>
+<ul>
+<li>Install (macOS example):</li>
+</ul>
+<pre><code class="language-bash hljs">brew tap crystal-ameba/ameba
+brew install ameba
+</code></pre>
+<ul>
+<li>Lint:</li>
+</ul>
+<pre><code class="language-bash hljs">ameba
+</code></pre>
+<ul>
+<li>Auto-fix:</li>
+</ul>
+<pre><code class="language-bash hljs">ameba --fix
+</code></pre>
+<h2 id="visual-overview">Visual overview</h2>
+<p>Here’s a simple flow of your first project:</p>
+<pre class="mermaid">
+flowchart LR
+  A[Install Crystal] --> B[shards init app hello_crystal]
+  B --> C[Edit src/hello_crystal.cr]
+  C --> D[crystal run]
+  D --> E[crystal spec]
+  E --> F[crystal tool format]
+  F --> G[shards build --release]
+  G --> H[Run ./bin/hello_crystal]
+</pre>
+<h2 id="whats-next">What’s next?</h2>
+<ul>
+<li>Explore popular shards:
+<ul>
+<li>Web frameworks: Kemal (Sinatra-like), Lucky and Amber (Rails-like)</li>
+<li>Linting: Ameba</li>
+<li>HTTP client: Crest</li>
+</ul>
+</li>
+<li>Build a CLI tool, a web service, or a small library and publish it as a shard.</li>
+</ul>
+<p>You’ve just created, tested, and built your first Crystal project. Keep it small, iterate quickly, and enjoy the speed and expressiveness of Crystal.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/dev/crystal/noob-beginners-guide-in-crystal/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

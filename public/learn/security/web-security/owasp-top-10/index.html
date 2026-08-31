@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OWASP Top 10 — PIXN</title>
+  <meta name="description" content="OWASP Top 10 — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="OWASP Top 10 — PIXN"><meta property="og:description" content="OWASP Top 10 — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>OWASP Top 10</h1>
+      <time datetime="2024-10-10">OCTOBER 10, 2024</time>
+    </header>
+    <article class="article-body"><p>The OWASP Top 10 is a standard awareness document representing the most critical security risks to web applications. Published by the Open Web Application Security Project (OWASP), this list is regularly updated to reflect the evolving landscape of web security threats.</p>
+<h2 id="history">History</h2>
+<ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+  <li>
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-end mb-10 md:text-end">
+      <time class="font-mono italic">2025 RC</time>
+      <ul>
+        <li>A1 Broken Access Control</li>
+        <li>A2 Security Misconfiguration</li>
+        <li>A3 Software Supply Chain Failures</li>
+        <li>A4 Cryptographic Failures</li>
+        <li>A5 Injection</li>
+        <li>A6 Insecure Design</li>
+        <li>A7 Authentication Failures</li>
+        <li>A8 Software or Data Integrity Failures</li>
+        <li>A9 Logging & Alerting Failures</li>
+        <li>A10 Mishandling of Exceptional Conditions</li>
+      </ul>
+    </div>
+    <hr />
+  </li>
+  <li>
+    <hr />
+  <li>
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-start mb-10 md:text-end">
+      <time class="font-mono italic">2021</time>
+      <ul>
+        <li>A1 Broken Access Control </li>
+        <li>A2 Cryptographic Failures </li>
+        <li>A3 Injection</li>
+        <li>A4 Insecure Design</li>
+        <li>A5 Security Misconfiguration</li>
+        <li>A6 Vulnerable and Outdated Components</li>
+        <li>A7 Identification and Authentication Failures</li>
+        <li>A8 Software and Data Integrity Failures</li>
+        <li>A9 Security Logging and Monitoring Failures</li>
+        <li>A10 Server-Side Request Forgery</li>
+      </ul>
+    </div>
+    <hr />
+  </li>
+  <li>
+    <hr />
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-end md:mb-10">
+      <time class="font-mono italic">2017</time>
+      <ul>
+        <li>A1 Injection</li>
+        <li>A2 Broken Authentication</li>
+        <li>A3 Sensitive Data Exposure</li>
+        <li>A4 XML External Entities (XXE)</li>
+        <li>A5 Broken Access Control </li>
+        <li>A6 Security Misconfiguration</li>
+        <li>A7 Cross-Site Scripting</li>
+        <li>A8 Insecure Deserialization</li>
+        <li>A9 Using Components with Known Vulnerabilities</li>
+        <li>A10 Insufficient Logging & Monitoring</li>
+      </ul>
+    </div>
+    <hr />
+  </li>
+  <li>
+    <hr />
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-start mb-10 md:text-end">
+      <time class="font-mono italic">2013</time>
+      <ul>
+        <li>A1 Injection</li>
+        <li>A2 Broken Authentication and Session Management </li>
+        <li>A3 Cross-Site Scripting</li>
+        <li>A4 Insecure Direct Object References</li>
+        <li>A5 Security Misconfiguration  </li>
+        <li>A6 Sensitive Data Exposure </li>
+        <li>A7 Missing Function Level Access Control</li>
+        <li>A8 Cross-Site Request Forgery</li>
+        <li>A9 Using Components with Known Vulnerabilities</li>
+        <li>A10 Unvalidated Redirects and Forwards</li>
+      </ul>
+    </div>
+    <hr />
+  </li>
+  <li>
+    <hr />
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-end md:mb-10">
+      <time class="font-mono italic">2010</time>
+      <ul>
+        <li>A1 Injection</li>
+        <li>A2 Cross-Site Scripting</li>
+        <li>A3 Broken Authentication and Session Management</li>
+        <li>A4 Insecure Direct Object References</li>
+        <li>A5 Cross-Site Request Forgery</li>
+        <li>A6 Security Misconfiguration</li>
+        <li>A7 Insecure Cryptographic Storage</li>
+        <li>A8 Failure to Restrict URL Access</li>
+        <li>A9 Insufficient Transport Layer Protection</li>
+        <li>A10 Unvalidated Redirects and Forwards</li>
+      </ul>
+    </div>
+    <hr />
+  </li>
+   <li>
+    <hr />
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-start mb-10 md:text-end">
+      <time class="font-mono italic">2007</time>
+      <ul>
+        <li>A1 Cross Site Scripting (XSS)</li>
+        <li>A2 Injection Flaws</li>
+        <li>A3 Malicious File Execution</li>
+        <li>A4 Insecure Direct Object Reference</li>
+        <li>A5 Cross Site Request Forgery (CSRF) </li>
+        <li>A6 Information Leakage and Improper Error Handling</li>
+        <li>A7 Broken Authentication and Session Management</li>
+        <li>A8 Insecure Cryptographic Storage</li>
+        <li>A9 Insecure Communications</li>
+        <li>A10 Failure to Restrict URL Access</li>
+      </ul>
+    </div>
+    <hr />
+  </li>
+  <li>
+    <hr />
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-end md:mb-10">
+      <time class="font-mono italic">2004</time>
+      <ul>
+        <li>A1 Unvalidated Input</li>
+        <li>A2 Broken Access Control</li>
+        <li>A3 Broken Authentication and Session Management</li>
+        <li>A4 Cross Site Scripting</li>
+        <li>A5 Buffer Overflow </li>
+        <li>A6 Injection Flaws</li>
+        <li>A7 Improper Error Handling</li>
+        <li>A8 Insecure Storage</li>
+        <li>A9 Application Denial of Service</li>
+        <li>A10 Insecure Configuration Management</li>
+      </ul>
+    </div>
+    <hr />
+  </li>
+    <li>
+    <hr />
+    <div class="timeline-middle">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        class="h-5 w-5"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </div>
+    <div class="timeline-start mb-10 md:text-end">
+      <time class="font-mono italic">2003</time>
+      <ul>
+        <li>A1 Unvalidated Input</li>
+        <li>A2 Broken Access Control</li>
+        <li>A3 Broken Authentication and Session Management</li>
+        <li>A4 Cross Site Scripting</li>
+        <li>A5 Buffer Overflow </li>
+        <li>A6 Injection Flaws</li>
+        <li>A7 Improper Error Handling</li>
+        <li>A8 Insecure Storage</li>
+        <li>A9 Application Denial of Service</li>
+        <li>A10 Insecure Configuration Management</li>
+      </ul>
+    </div>
+    </li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.owasptopten.org">https://www.owasptopten.org</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/web-security/owasp-top-10/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

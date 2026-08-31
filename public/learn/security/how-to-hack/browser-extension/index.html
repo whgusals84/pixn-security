@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Hack Browser Extension — PIXN</title>
+  <meta name="description" content="How to Hack Browser Extension — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="How to Hack Browser Extension — PIXN"><meta property="og:description" content="How to Hack Browser Extension — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>How to Hack Browser Extension</h1>
+      <time datetime="2022-11-20">NOVEMBER 20, 2022</time>
+    </header>
+    <article class="article-body"><p>Browser Extensions are features that allow users to customize and expand the functionality of web browsers. Major browsers like Chrome, Safari, Firefox, and Edge all support them, and Chrome-based browsers (Brave, Whale, etc.) also support extensions.</p>
+<p>This document outlines methods for testing and finding security vulnerabilities in Browser Extensions.</p>
+<h3 id="structure">Structure</h3>
+<h4 id="chrome-firefox-extension">Chrome/Firefox Extension</h4>
+<p>Chrome and Firefox fundamentally share the same Extension structure, leading to the existence of mutually compatible Extensions. However, as versions advance, they increasingly adopt slightly different processing structures, often leading to incompatibility.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/195373397-d02f59d6-3c11-48eb-a780-ff109f8560bb.png" alt="" /></p>
+<h4 id="safari-app-extension">Safari App Extension</h4>
+<p>Unlike Web Extensions used in Chrome and Firefox, Safari app extensions are applications built with Swift code. While their internal composition is quite different, they ultimately control parts of the DOM with JavaScript and HTML, allowing for similar testing methods as described below.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/195373388-0ccf4a7c-526d-4f42-be32-da0d413d2a69.png" alt="" /></p>
+<h4 id="safari-web-extension">Safari Web Extension</h4>
+<p>Safari Web Extension is the same type of Extension as Web Extensions used in Chrome/Firefox. The way to distinguish between App Extension and Web Extension is by installation method.</p>
+<ul>
+<li>App Extension: Installed only through the AppStore</li>
+<li>Web Extension: File-based installation, similar to Chrome</li>
+</ul>
+<h3 id="api-documents">API Documents</h3>
+<ul>
+<li>Chrome: <a href="https://developer.chrome.com/docs/extensions/reference/">https://developer.chrome.com/docs/extensions/reference/</a></li>
+<li>Firefox: <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions">https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions</a></li>
+<li>Safari
+    - App Extension: <a href="https://developer.apple.com/documentation/safariservices/safari_app_extensions">https://developer.apple.com/documentation/safariservices/safari_app_extensions</a>
+    - Web Extension: <a href="https://developer.apple.com/documentation/safariservices/safari_web_extensions">https://developer.apple.com/documentation/safariservices/safari_web_extensions</a></li>
+</ul>
+<h2 id="hack-mechanism">Hack Mechanism</h2>
+<p>Although the internal operation methods differ for each browser, the scope of what they ultimately perform is similar. Therefore, you can test and find security issues in all browser extensions in a similar manner.</p>
+<h3 id="code-audit">Code audit</h3>
+<p>Browser extensions are essentially ZIP files, so you can download them, extract them, and examine the source code and resources. However, since the stores do not directly provide the files, you need to use a small trick to locate them.</p>
+<h4 id="find-source-code">Find source code</h4>
+<p>Chrome extensions are saved in the following paths upon installation:</p>
+<ul>
+<li>MacOS: <code>~/Library/Application\ Support/Google/Chrome/Default/Extensions</code></li>
+<li>Linux: <code>~/.config/google-chrome/Default/Extensions/</code></li>
+<li>Windows: <code>C:\Users\&lt;Your_User_Name&gt;\AppData\Local\Google\Chrome\User Data\Default\Extensions</code></li>
+</ul>
+<p>In this directory, you will find folders named after the extension's key.</p>
+<pre><code class="language-bash hljs">ll ~/Library/Application<span class="hljs-string">\ </span>Support/Google/Chrome/Default/Extensions
+
+<span class="hljs-comment"># drwx------@ 2 hahwul  staff    64B 12 24 00:37 Temp</span>
+<span class="hljs-comment"># drwx------@ 3 hahwul  staff    96B  9 29  2019 aapocclcgogkmnckokdopfmhonfmgoek</span>
+<span class="hljs-comment"># drwx------@ 3 hahwul  staff    96B  9 29  2019 aohghmighlieiainnegkcijnfilokake</span>
+<span class="hljs-comment"># drwx------@ 3 hahwul  staff    96B 11 14 18:39 apdfllckaahabafndbhieahigkjlhalf</span>
+<span class="hljs-comment"># drwx------@ 3 hahwul  staff    96B  7 12 00:48 baacjfeencnlcclennchejfnbcplfmbb</span>
+<span class="hljs-comment"># drwx------@ 3 hahwul  staff    96B  7  9 00:53 phbjaiacjbplfmapmlljdoacomhbpfoe</span>
+</code></pre>
+<p>The extension's key can be found on the Chrome extensions page.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103444356-fd22ce00-4caa-11eb-8a0c-a2d4df5dd9ba.png" alt="https://user-images.githubusercontent.com/13212227/103444356-fd22ce00-4caa-11eb-8a0c-a2d4df5dd9ba.png" /></p>
+<p>Once you've found the files, you can copy them to an analysis directory and proceed with your work.</p>
+<pre><code class="language-bash hljs">cp -r ~/Library/Application<span class="hljs-string">\ </span>Support/Google/Chrome/Default/Extensions/phbjaiacjbplfmapmlljdoacomhbpfoe .
+</code></pre>
+<h4 id="manifest">Manifest</h4>
+<p>Browser extensions typically declare most of their policies and permissions in the <code>manifest.json</code> file. Check this file to understand the allowed policies and identify any misconfigured settings.</p>
+<pre><code class="language-json hljs"><span class="hljs-punctuation">{</span>
+   <span class="hljs-name">&quot;author&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;MM3Tools&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;background&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;scripts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span> <span class="hljs-string">&quot;util.js&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;ProxySwitch.js&quot;</span> <span class="hljs-punctuation">]</span>
+   <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;browser_action&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;browser_style&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;default_icon&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+         <span class="hljs-name">&quot;16&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;img/MM3_16off.png&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-name">&quot;32&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;img/MM3_32off.png&quot;</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;default_popup&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;popup.html&quot;</span>
+   <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;commands&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;ProxySwitch-1&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+         <span class="hljs-name">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-name">&quot;suggested_key&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-name">&quot;default&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Ctrl+Shift+1&quot;</span>
+         <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;ProxySwitch-2&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+         <span class="hljs-name">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-name">&quot;suggested_key&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-name">&quot;default&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Ctrl+Shift+2&quot;</span>
+         <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;ProxySwitch-3&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+         <span class="hljs-name">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;3&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-name">&quot;suggested_key&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-name">&quot;default&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Ctrl+Shift+3&quot;</span>
+         <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;ProxySwitch-4&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+         <span class="hljs-name">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;4&quot;</span><span class="hljs-punctuation">,</span>
+         <span class="hljs-name">&quot;suggested_key&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-name">&quot;default&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Ctrl+Shift+4&quot;</span>
+         <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+   <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;default_locale&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;en&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;__MSG_appDescription__&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;icons&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;48&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;img/MM3_48.png&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;96&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;img/MM3_96.png&quot;</span>
+   <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;key&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;...snip...&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;manifest_version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;MM3-ProxySwitch&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;options_ui&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-name">&quot;open_in_tab&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-name">&quot;page&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;setting.html&quot;</span>
+   <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;permissions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span> <span class="hljs-string">&quot;storage&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;proxy&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;BrowseData&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;http://*/*&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&quot;https://*/*&quot;</span> <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;short_name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ProxySwitch&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;update_url&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;https://clients2.google.com/service/update2/crx&quot;</span><span class="hljs-punctuation">,</span>
+   <span class="hljs-name">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2018.332&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p>*For each permission, please refer to <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions">https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/permissions</a>!</p>
+<h4 id="source-code">Source code</h4>
+<p>The source code within the extension directory consists of the actual code used for operation. This includes markup for rendering pages like <code>popup.html</code>, as well as JavaScript files containing the actual logic. Examine these codes for exposed sensitive values (secrets, keys, etc.) and for any inputs that can be received from external sources.</p>
+<p>Key areas to look at are:</p>
+<ul>
+<li>postMessage</li>
+<li>SSE</li>
+<li>webSocket</li>
+<li>wasm</li>
+<li>API Call (ajax, xmlhttprequest, etc..)</li>
+<li>localStorage / sessionStorage</li>
+</ul>
+<h3 id="live-audit">Live audit</h3>
+<h4 id="test-with-devtools">Test with devtools</h4>
+<p>Extensions operate in a separate DOM from web pages. While you can open DevTools for regular web pages, extensions might not provide a view or might be difficult to trigger a view depending on the code. In such cases, you can open the DOM area using the following method:</p>
+<blockquote>
+<p>Options &gt; Extensions &gt; Target Extension &gt; Inspect views</p>
+</blockquote>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103444418-5c80de00-4cab-11eb-9042-2e85db32c21b.png" alt="https://user-images.githubusercontent.com/13212227/103444418-5c80de00-4cab-11eb-9042-2e85db32c21b.png" /></p>
+<p>Once you've loaded the page by inspecting the view, each JavaScript file in the background will already be loaded, allowing you to test it through the DevTools console or debugger. Function information can be found by filtering the source code you're analyzing with <code>cat</code> and <code>grep</code>.</p>
+<pre><code class="language-bash hljs">cat util.js
+</code></pre>
+<pre><code class="language-javascript hljs"><span class="hljs-string">&quot;use strict&quot;</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">function</span> err<span class="hljs-punctuation">(</span>ex<span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span>ex<span class="hljs-operator">!=</span><span class="hljs-literal">null</span><span class="hljs-punctuation">)</span>console<span class="hljs-punctuation">.</span>error<span class="hljs-punctuation">(</span>ex<span class="hljs-punctuation">,</span>ex<span class="hljs-punctuation">.</span>message<span class="hljs-punctuation">,</span>chrome<span class="hljs-punctuation">.</span>runtime<span class="hljs-punctuation">.</span>lastError<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">else</span> console<span class="hljs-punctuation">.</span>error<span class="hljs-punctuation">(</span>chrome<span class="hljs-punctuation">.</span>runtime<span class="hljs-punctuation">.</span>lastError<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-keyword">function</span> myParseInt<span class="hljs-punctuation">(</span>value<span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">try</span><span class="hljs-punctuation">{</span>value<span class="hljs-operator">=</span>value<span class="hljs-punctuation">.</span>trim<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span><span class="hljs-regexp">/^(\-|\+)?([0-9]+|Infinity)$/</span><span class="hljs-punctuation">.</span>test<span class="hljs-punctuation">(</span>value<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-keyword">return</span> <span class="hljs-built_in">Number</span><span class="hljs-punctuation">(</span>value<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-keyword">catch</span><span class="hljs-punctuation">(</span>ex<span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>err<span class="hljs-punctuation">(</span>ex<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-keyword">return</span> <span class="hljs-literal">NaN</span><span class="hljs-punctuation">;</span><span class="hljs-punctuation">}</span><span class="hljs-keyword">function</span> hostM<span class="hljs-punctuation">(</span>host<span class="hljs-punctuation">,</span>isProxy<span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">try</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">let</span> hp<span class="hljs-operator">=</span><span class="hljs-punctuation">{</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">let</span> i<span class="hljs-operator">=</span>host<span class="hljs-punctuation">.</span>lastIndexOf<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;:&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span>i<span class="hljs-operator">!=</span><span class="hljs-operator">-</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">{</span>hp<span class="hljs-punctuation">.</span>port<span class="hljs-operator">=</span>host<span class="hljs-punctuation">.</span>substring<span class="hljs-punctuation">(</span>i<span class="hljs-operator">+</span><span class="hljs-number">1</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">let</span> em<span class="hljs-operator">=</span><span class="hljs-literal">null</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span>hp<span class="hljs-punctuation">.</span>port<span class="hljs-punctuation">.</span>length<span class="hljs-operator">==</span><span class="hljs-number">0</span><span class="hljs-punctuation">)</span>em<span class="hljs-operator">=</span>chrome<span class="hljs-punctuation">.</span>i18n<span class="hljs-punctuation">.</span>getMessage<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;notSpecified&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">else</span><span class="hljs-punctuation">{</span><span class="hljs-keyword">let</span> n<span class="hljs-operator">=</span>myParseInt<span class="hljs-punctuation">(</span>hp<span class="hljs-punctuation">.</span>port<span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span><span class="hljs-keyword">if</span><span class="hljs-punctuation">(</span><span class="hljs-built_in">isNaN</span><span class="hljs-punctuation">(</span>n<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+</code></pre>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103444494-0eb8a580-4cac-11eb-89b9-226f8598260e.png" alt="https://user-images.githubusercontent.com/13212227/103444494-0eb8a580-4cac-11eb-89b9-226f8598260e.png" /></p>
+<h4 id="chrome-extension">chrome-extension</h4>
+<p>If the extension provides a view, such as <code>popup.html</code>, you can also directly access it and test it via <code>chrome-extension://</code> as shown in the image below.</p>
+<p><img loading="lazy" src="https://user-images.githubusercontent.com/13212227/103444589-db2a4b00-4cac-11eb-9d82-0c219378b175.png" alt="https://user-images.githubusercontent.com/13212227/103444589-db2a4b00-4cac-11eb-9d82-0c219378b175.png" /></p>
+<p>In such cases, it is much more convenient as you can test while visually observing the actual behavior. Note that the <code>chrome-extension://</code> protocol can also become a testing point if the popup or other pages process values through query parsing.</p>
+<pre><code>chrome-extension://vulnapp/landing?c=};alert(45);function a(){//
+</code></pre>
+<h4 id="user-input">User input</h4>
+<p>Although browser extensions operate as web pages with their own DOM, isolated from the general Browse area, they can communicate with web pages, APIs, and process data within the DOM through various features like <code>postMessage</code> and SSE. This means that browser extensions are also susceptible to web vulnerabilities, just like regular web pages.</p>
+<p>Testing should be conducted on the endpoints identified through source code analysis.</p>
+<ul>
+<li><a href="https://www.hahwul.com/2020/05/14/vulnerability-of-postmessage/">https://www.hahwul.com/2020/05/14/vulnerability-of-postmessage/</a></li>
+<li><a href="https://www.hahwul.com/2016/08/29/web-hacking-html5-postmessage-api/">https://www.hahwul.com/2016/08/29/web-hacking-html5-postmessage-api/</a></li>
+</ul>
+<h3 id="a-major-weakness">A major weakness</h3>
+<h4 id="sensitive-data-leak">Sensitive Data Leak</h4>
+<p>Depending on the extension's functionality, it may contain sensitive information internally. If this information can be exfiltrated externally via <code>postMessage</code> or similar methods, it becomes an issue where users' critical information can be compromised.</p>
+<p>Generally, there is much discussion about storage locations, and based on Manifest V3, it is recommended to store sensitive information in session storage.</p>
+<h4 id="xss">XSS</h4>
+<p>While most web vulnerabilities are potential targets, XSS seems to be the most critical aspect to focus on. Since it involves client-side risks beyond domain-based issues, potentially leading to widespread UXSS or further attacks via Browser APIs, it appears to be a more significant area for extensions.</p>
+<h4 id="bypass-csp">Bypass CSP</h4>
+<p>In browser extensions, CSP is declared in the Manifest. CSP policies can generally be bypassed using known CSP bypass techniques, which can significantly aid in increasing the risk of XSS vulnerabilities.</p>
+<ul>
+<li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/XSS%20Injection#csp-bypass">Bypass CSP</a></li>
+<li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/XSS%20Injection/Intruders/jsonp_endpoint.txt">Bypass CSP Endpoints</a></li>
+</ul>
+<h4 id="javascript-cve">Javascript CVE</h4>
+<p>Naturally, as a web-based page, it is affected by publicly known JavaScript library vulnerabilities. Updates usually require package updates for the extension, so they are generally slower than web pages. This can be easily checked with tools like <code>retire.js</code>.</p>
+<ul>
+<li><a href="https://www.hahwul.com/2017/09/04/web-hacking-retirejs-js-library/">https://www.hahwul.com/2017/09/04/web-hacking-retirejs-js-library/</a></li>
+</ul>
+<h4 id="api-security">API Security</h4>
+<p>The API server linked to the extension is a primary target for analysis. Naturally, common vulnerabilities can be found here, and because of its interconnectedness with the extension, exploiting these vulnerabilities can create vulnerabilities that affect the extension itself.</p>
+<p>If there's a vulnerability that allows arbitrary data to be stored on the API Server, and this data acts as an XSS in the extension, it can escalate the risk, potentially leading to UXSS or attacks that leverage Browser Extension APIs.</p>
+<h2 id="environment">🛠 Environment</h2>
+<h3 id="include-wasm">Include WASM</h3>
+<p>If the Extension includes WASM (Web Assembly), additional analysis of WASM will be required. For more details on WASM analysis, please refer to the link below.</p>
+<blockquote>
+<p><a href="https://www.hahwul.com/2018/10/06/hacking-security-analysis-web-assembly/">How to analyze security vulnerabilities in WebAssembly?</a></p>
+</blockquote>
+<h3 id="inclulde-sse">Inclulde SSE</h3>
+<p>If the extension uses SSE, a tool capable of handling SSE is required. Both ZAP and Burpsuite can do this; refer to the link below for more details.</p>
+<blockquote>
+<p><a href="https://www.hahwul.com/cullinan/sse/">Cullinan &gt; SSE</a></p>
+</blockquote>
+<h3 id="include-websocket">Include WebSocket</h3>
+<p>If the extension uses WebSocket, a tool capable of handling WebSocket is required. Similar to SSE, both ZAP and Burpsuite can do this; refer to the link below for more details.</p>
+<blockquote>
+<p><a href="https://www.hahwul.com/cullinan/websocket/">Cullinan &gt; WebSocket</a></p>
+</blockquote>
+<h2 id="articles">Articles</h2>
+<ul>
+<li><a href="https://www.hahwul.com/2021/01/01/testing-vulnerbility-of-browser-extension/">Hack the browser extension 🚀 (Check for web browser extension vulnerabilities)</a></li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension">https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Anatomy_of_a_WebExtension</a></li>
+<li><a href="https://www.slideshare.net/OleksandrZinevych/chrome-extensions-56125231">https://www.slideshare.net/OleksandrZinevych/chrome-extensions-56125231</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json">https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json</a></li>
+<li><a href="https://developer.apple.com/documentation/safariservices/safari_web_extensions">https://developer.apple.com/documentation/safariservices/safari_web_extensions</a></li>
+</ul></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/how-to-hack/browser-extension/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>

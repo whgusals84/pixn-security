@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Securing Web Socket — PIXN</title>
+  <meta name="description" content="How to Securing Web Socket — Web security, testing methods, secure development, and defensive concepts.">
+  <meta property="og:title" content="How to Securing Web Socket — PIXN"><meta property="og:description" content="How to Securing Web Socket — Web security, testing methods, secure development, and defensive concepts."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header data-site-header data-active="learn"></header>
+  <main class="page article-page" id="main">
+    <header class="article-heading">
+      <p class="eyebrow"><a href="/learn/">Learn</a> / <a href="/learn/security/">Security Learning</a></p>
+      <h1>How to Securing Web Socket</h1>
+      <time datetime="2022-07-02">JULY 2, 2022</time>
+    </header>
+    <article class="article-body"><p>This article covers the security vulnerabilities of WebSocket, which enables real-time bidirectional communication, and the core methodologies to defend against them. Unlike HTTP, WebSocket is efficient as it allows continuous data exchange once a connection is established, but this characteristic can expose it to new security threats.</p>
+<h2 id="core-principles-of-websocket-security">Core Principles of WebSocket Security</h2>
+<p>To strengthen WebSocket security, the following core principles must be considered. Each item plays a crucial role in blocking potential attack vectors.</p>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Encrypt Communication (WSS)</td>
+<td>Always use the <code>wss://</code> protocol to encrypt communications. <code>ws://</code> transmits data in plaintext, making it vulnerable to sniffing attacks, while <code>wss://</code> encrypts data through TLS (Transport Layer Security), protecting communications from man-in-the-middle (MITM) attacks.</td>
+</tr>
+<tr>
+<td>Validate Origin Headers</td>
+<td>To defend against Cross-Site WebSocket Hijacking (CSWSH) attacks, the server must validate the <code>Origin</code> header during WebSocket handshake requests. Create an allowlist of permitted domains and reject connection requests from origins not on this list.</td>
+</tr>
+<tr>
+<td>Implement Robust Authentication</td>
+<td>The WebSocket protocol itself has no authentication mechanism. Therefore, users must be authenticated during the HTTP handshake process, which is the initial connection stage. Proven methods like cookies, sessions, and JWT (JSON Web Token) can be utilized.</td>
+</tr>
+<tr>
+<td>Sanitize and Validate All Inputs</td>
+<td>All data received from clients should be considered untrusted. To prevent injection attacks like XSS (Cross-Site Scripting) and SQL Injection, servers must perform strong validation and data sanitization on all messages.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-vulnerabilities-and-mitigations">Common Vulnerabilities and Mitigations</h2>
+<p>Here are the main vulnerabilities commonly found in WebSocket environments and how to address them:</p>
+<h3 id="cross-site-websocket-hijacking-cswsh">Cross-Site WebSocket Hijacking (CSWSH)</h3>
+<p>CSWSH is an attack where attackers induce users' browsers to establish unauthorized WebSocket connections. If a user has an authenticated session (e.g., cookies), the attacker's malicious page can communicate with the server using the user's privileges.</p>
+<ul>
+<li>Mitigation: As mentioned earlier, the server must strictly validate the <code>Origin</code> header of handshake requests and only accept requests from allowed origins.</li>
+</ul>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// Example: Origin header validation in Node.js (ws library)
+</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> allowedOrigins <span class="hljs-operator">=</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&#39;https://hahwul.com&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-string">&#39;https://sub.hahwul.com&#39;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">;</span>
+
+wsServer<span class="hljs-punctuation">.</span>on<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;request&#39;</span><span class="hljs-punctuation">,</span> <span class="hljs-punctuation">(</span>request<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+  <span class="hljs-keyword">const</span> origin <span class="hljs-operator">=</span> request<span class="hljs-punctuation">.</span>origin<span class="hljs-punctuation">;</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-punctuation">(</span><span class="hljs-operator">!</span>allowedOrigins<span class="hljs-punctuation">.</span>includes<span class="hljs-punctuation">(</span>origin<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-comment">// Reject the connection
+</span><span class="hljs-comment"></span>    request<span class="hljs-punctuation">.</span>reject<span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    console<span class="hljs-punctuation">.</span>log<span class="hljs-punctuation">(</span><span class="hljs-string">`</span><span class="hljs-string">Connection from origin </span><span class="hljs-subst">${</span>origin<span class="hljs-subst">}</span><span class="hljs-string"> rejected.</span><span class="hljs-string">`</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+    <span class="hljs-keyword">return</span><span class="hljs-punctuation">;</span>
+  <span class="hljs-punctuation">}</span>
+  <span class="hljs-comment">// ... accept connection
+</span><span class="hljs-comment"></span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<h3 id="data-injection-attacks-xss-sqli">Data Injection Attacks (XSS, SQLi)</h3>
+<p>If data transmitted via WebSocket isn't properly handled, it can have malicious effects on the server or other clients. For example, in a chat application, if a script sent by one user executes in other users' browsers, an XSS attack has occurred.</p>
+<ul>
+<li>Mitigation: The server must validate all message content received from clients and always escape or sanitize it before using it in database queries or HTML output. Always exercise caution when handling untrusted data.</li>
+</ul>
+<h3 id="denial-of-service-dos">Denial-of-Service (DoS)</h3>
+<p>Attackers can deplete server resources by creating numerous connections or sending large volumes of resource-intensive messages. This disrupts normal users' access to services.</p>
+<ul>
+<li>Mitigation:
+<ul>
+<li>Rate Limiting: Restrict the number of connections and message transmission rates per IP address or user account.</li>
+<li>Message Size Limits: Block abnormally large messages to prevent buffer overflows or resource waste.</li>
+</ul>
+</li>
+</ul>
+<h2 id="authentication-and-authorization">Authentication and Authorization</h2>
+<p>While WebSocket is a stateful protocol, authentication should be performed through the stateless HTTP handshake.</p>
+<pre class="mermaid">
+sequenceDiagram
+    participant Client
+    participant Server
+
+    Client->>Server: HTTP GET /chat (Upgrade: websocket)
+    Note over Server: 1. Verify Origin Header
+    Note over Server: 2. Authenticate User (e.g., via Cookie/JWT)
+    alt Authentication/Origin Check Fails
+        Server-->>Client: HTTP 401/403 Unauthorized
+    else Authentication & Origin OK
+        Server-->>Client: HTTP 101 Switching Protocols
+        Note over Client,Server: WebSocket Connection Established
+        Client-->>Server: WebSocket Message (JSON)
+        Note over Server: 3. Validate & Sanitize Message
+        Server-->>Client: WebSocket Message (Broadcast)
+    end
+</pre>
+<p>Commonly used authentication methods include:</p>
+<ol>
+<li>Cookie-based Authentication: When operating WebSocket on the same domain as the web application, browsers automatically send authentication cookies. The server can identify users by validating these cookies.</li>
+<li>Token-based Authentication: Clients send tokens (e.g., JWT) obtained during login through query parameters or as the first WebSocket message. The server verifies the token's validity before allowing the connection.</li>
+</ol>
+<pre><code class="language-javascript hljs"><span class="hljs-comment">// Token via query parameter
+</span><span class="hljs-comment"></span><span class="hljs-keyword">const</span> socket <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> WebSocket<span class="hljs-punctuation">(</span><span class="hljs-string">&#39;wss://api.hahwul.com/ws?token=YOUR_JWT_TOKEN&#39;</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+
+<span class="hljs-comment">// Token as the first message
+</span><span class="hljs-comment"></span>socket<span class="hljs-punctuation">.</span>onopen <span class="hljs-operator">=</span> <span class="hljs-punctuation">(</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">=&gt;</span> <span class="hljs-punctuation">{</span>
+  socket<span class="hljs-punctuation">.</span>send<span class="hljs-punctuation">(</span>JSON<span class="hljs-punctuation">.</span>stringify<span class="hljs-punctuation">(</span><span class="hljs-punctuation">{</span> type<span class="hljs-operator">:</span> <span class="hljs-string">&#39;auth&#39;</span><span class="hljs-punctuation">,</span> token<span class="hljs-operator">:</span> <span class="hljs-string">&#39;YOUR_JWT_TOKEN&#39;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">;</span>
+<span class="hljs-punctuation">}</span><span class="hljs-punctuation">;</span>
+</code></pre>
+<p>Sending tokens as query parameters is simple to implement but has the drawback of potentially leaving tokens in server logs. Conversely, sending them as the first message after connection is safer, but requires implementing logic to avoid processing other messages until authentication is complete.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>WebSocket has become an essential element in modern web applications, but alongside its convenience lie security issues that must be considered. The mandatory use of <code>wss://</code>, validation of <code>Origin</code> headers, handling input data, and applying robust authentication mechanisms discussed in this article are minimum requirements for building a secure WebSocket environment. From a red team perspective, systems lacking these basic defenses can easily become targets for attacks. Therefore, it's crucial to design with security in mind from the early development stages.</p></article>
+    <footer class="article-source"><span>Republished with permission</span><a href="https://www.hahwul.com/sec/web-security/websocket/" rel="noopener noreferrer">Original source ↗</a></footer>
+  </main>
+  <footer data-site-footer></footer><script src="/assets/site.js"></script>
+</body>
+</html>
