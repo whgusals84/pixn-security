@@ -4,11 +4,11 @@
   const to = (path) => `${basePath}${path}`;
   const active = document.querySelector('[data-site-header]')?.dataset.active || 'home';
   const links = [
-    ['home', '', 'Home'],
-    ['blog', 'blog/', 'Blog'],
-    ['notes', 'notes/', 'Notes'],
+    ['learn', 'learn/', 'Learn'],
+    ['writing', 'writing/', 'Writing'],
     ['labs', 'labs/', 'Labs'],
     ['projects', 'projects/', 'Projects'],
+    ['reference', 'reference/', 'Reference'],
     ['about', 'about/', 'About'],
   ];
 
@@ -19,8 +19,8 @@
       <a class="skip-link" href="#main">Skip to content</a>
       <div class="nav-shell">
         <a class="brand" href="${to('')}" aria-label="PIXN home">
-          <span class="brand-mark" aria-hidden="true">PX</span>
-          <span class="brand-name">PIXN / LOG</span>
+          <span class="brand-mark" aria-hidden="true">Px</span>
+          <span class="brand-name">PIXN</span>
         </a>
         <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span></button>
         <nav class="site-nav" aria-label="Primary navigation">

@@ -1,13 +1,13 @@
 :root {
   color-scheme: dark;
   --bg: #0b0c0d;
-  --surface: #111315;
-  --surface-raised: #17191c;
-  --text: #f2f1ed;
-  --muted: #9a9a94;
-  --line: #292b2e;
-  --accent: #b8ff58;
-  --max: 1080px;
+  --surface: #101112;
+  --surface-raised: #151617;
+  --text: #f0efeb;
+  --muted: #8d8b86;
+  --line: #282827;
+  --accent: #c7aa7a;
+  --max: 1180px;
   --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
@@ -88,21 +88,22 @@ button {
 }
 
 .brand-mark {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  border: 1px solid var(--text);
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: -0.08em;
+  display: inline-flex;
+  width: 44px;
+  align-items: center;
+  font-family: var(--sans);
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.15em;
+  line-height: 1;
 }
 
 .brand-name {
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.2em;
+  font-family: var(--sans);
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
 }
 
 .site-nav {
@@ -191,6 +192,39 @@ button {
   padding: 6rem 0;
 }
 
+.gallery-hero {
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.gallery-hero .hero-mark {
+  margin: 0 0 clamp(1.75rem, 5vh, 3.5rem);
+  color: var(--text);
+  font-size: clamp(2.7rem, 5vw, 4.8rem);
+  font-weight: 800;
+  letter-spacing: -0.14em;
+  line-height: 1;
+}
+
+.gallery-hero h1 {
+  max-width: 22ch;
+  font-size: clamp(2rem, 4.6vw, 3.7rem);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1.16;
+  text-wrap: balance;
+}
+
+.gallery-hero .hero-copy {
+  max-width: 48ch;
+  text-wrap: pretty;
+}
+
+.gallery-hero .hero-actions {
+  justify-content: center;
+}
+
 .eyebrow {
   margin: 0 0 1.4rem;
   color: var(--accent);
@@ -260,6 +294,84 @@ button {
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 2rem;
+}
+
+.plate-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.plate-row h2 {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.plate-rule {
+  height: 1px;
+  background: var(--line);
+}
+
+.plate-link {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.home-ledger {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.ledger-row {
+  display: grid;
+  grid-template-columns: 4.25rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  min-height: 96px;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--line);
+  transition: color 160ms ease, padding 160ms ease;
+}
+
+.ledger-row:hover {
+  padding-right: 0.6rem;
+  padding-left: 0.6rem;
+  color: var(--accent);
+}
+
+.ledger-key {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+}
+
+.ledger-body {
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.42fr) 1fr;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.ledger-title {
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.ledger-desc {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .section-heading h2 {
@@ -403,7 +515,7 @@ button {
   text-transform: uppercase;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1120px) {
   .nav-shell {
     min-height: 64px;
   }
@@ -448,6 +560,11 @@ button {
   .principles {
     grid-template-columns: 1fr;
   }
+
+  .ledger-body {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
 }
 
 @media (max-width: 560px) {
@@ -470,6 +587,18 @@ button {
 
   .site-footer {
     flex-direction: column;
+  }
+
+  .plate-row {
+    grid-template-columns: auto 1fr;
+  }
+
+  .plate-link {
+    display: none;
+  }
+
+  .ledger-row {
+    grid-template-columns: 2.6rem 1fr auto;
   }
 }
 

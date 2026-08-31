@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PIXN — Personal Blog</title>
   <meta name="description" content="보안, 개발, 공부와 일상의 기록을 담는 PIXN의 개인 블로그입니다.">
+  <meta property="og:title" content="PIXN — Personal Blog"><meta property="og:description" content="Security, code, study, and life — notes from what PIXN actually learns."><meta property="og:image" content="https://whgusals84.github.io/pixn-security/og.png"><meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/style.css">
   <script src="/assets/site.js" defer></script>
@@ -12,35 +13,31 @@
 <body>
   <header data-site-header data-active="home"></header>
   <main class="page" id="main">
-    <section class="hero">
-      <p class="eyebrow">Personal blog · learning in public</p>
-      <h1>Notes from the things I actually learn.</h1>
-      <p class="hero-copy">보안과 개발을 공부하면서 직접 이해한 것, 만든 것, 그리고 오래 남기고 싶은 생각을 기록합니다.</p>
+    <section class="hero gallery-hero">
+      <p class="hero-mark" aria-label="PIXN">Px</p>
+      <h1>Security, code, study, and everything worth remembering.</h1>
+      <p class="hero-copy">보안과 개발을 공부하면서 직접 이해한 것, 만든 것, 그리고 오래 남기고 싶은 생각을 기록하는 PIXN의 개인 블로그입니다.</p>
       <div class="hero-actions">
-        <a class="button button-primary" href="/blog/">Read the blog</a>
-        <a class="button" href="/about/">About PIXN</a>
+        <a class="button button-primary" href="/writing/">Explore writing</a>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="channels-title">
-      <div class="section-heading">
-        <h2 id="channels-title">What lives here</h2>
-        <span class="section-index">01 / INDEX</span>
-      </div>
-      <div class="channel-grid">
-        <a class="channel-card" href="/blog/"><span class="channel-label">01 · BLOG</span><h3>Writing</h3><p>보안, 개발, 공부와 일상에서 직접 경험한 내용을 정리합니다.</p></a>
-        <a class="channel-card" href="/notes/"><span class="channel-label">02 · NOTES</span><h3>Short notes</h3><p>완성된 글이 되기 전의 짧은 메모와 학습 기록입니다.</p></a>
-        <a class="channel-card" href="/labs/"><span class="channel-label">03 · LABS</span><h3>Practice</h3><p>직접 푼 워게임과 보안 실습의 과정과 배운 점을 남깁니다.</p></a>
-        <a class="channel-card" href="/projects/"><span class="channel-label">04 · PROJECTS</span><h3>Things I build</h3><p>직접 만들고 공개할 수 있는 개인 프로젝트만 기록합니다.</p></a>
-      </div>
+    <section class="section" aria-labelledby="learning-title">
+      <div class="plate-row"><h2 id="learning-title">Start learning</h2><span class="plate-rule" aria-hidden="true"></span><a class="plate-link" href="/learn/">View learning map</a></div>
+      <ul class="home-ledger">
+        <li><a class="ledger-row" href="/learn/#web-security"><span class="ledger-key">01</span><span class="ledger-body"><span class="ledger-title">Web Security</span><span class="ledger-desc">웹 취약점과 브라우저·애플리케이션 보안 공부</span></span><span aria-hidden="true">↗</span></a></li>
+        <li><a class="ledger-row" href="/learn/#cryptography"><span class="ledger-key">02</span><span class="ledger-body"><span class="ledger-title">Cryptography</span><span class="ledger-desc">암호학 개념과 프로토콜을 이해한 만큼 기록</span></span><span aria-hidden="true">↗</span></a></li>
+        <li><a class="ledger-row" href="/learn/#development"><span class="ledger-key">03</span><span class="ledger-body"><span class="ledger-title">Development</span><span class="ledger-desc">코드와 시스템을 만들며 배운 내용</span></span><span aria-hidden="true">↗</span></a></li>
+      </ul>
     </section>
 
-    <section class="section" aria-labelledby="recent-title">
-      <div class="section-heading">
-        <h2 id="recent-title">Recent writing</h2>
-        <span class="section-index">02 / LATEST</span>
-      </div>
-      <div class="empty-state"><div><strong>The archive starts here.</strong><p>아직 공개한 글이 없습니다. 첫 번째로 직접 작성한 글부터 차근차근 채워갈 예정입니다.</p></div></div>
+    <section class="section" aria-labelledby="library-title">
+      <div class="plate-row"><h2 id="library-title">Personal archive</h2><span class="plate-rule" aria-hidden="true"></span><a class="plate-link" href="/writing/">Browse writing</a></div>
+      <ul class="home-ledger">
+        <li><a class="ledger-row" href="/writing/"><span class="ledger-key">A–Z</span><span class="ledger-body"><span class="ledger-title">Writing</span><span class="ledger-desc">보안, 개발, 공부와 일상에 관한 긴 글</span></span><span aria-hidden="true">↗</span></a></li>
+        <li><a class="ledger-row" href="/labs/"><span class="ledger-key">LAB</span><span class="ledger-body"><span class="ledger-title">Security Labs</span><span class="ledger-desc">직접 푼 문제와 실습 과정</span></span><span aria-hidden="true">↗</span></a></li>
+        <li><a class="ledger-row" href="/reference/"><span class="ledger-key">REF</span><span class="ledger-body"><span class="ledger-title">Reference</span><span class="ledger-desc">다시 보기 위해 정리한 개인 참고 자료</span></span><span aria-hidden="true">↗</span></a></li>
+      </ul>
     </section>
   </main>
   <footer data-site-footer></footer>
