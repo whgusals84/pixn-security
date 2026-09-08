@@ -68,7 +68,7 @@ function sanitizeBody(html) {
     .replace(/(href|src)\s*=\s*("|')javascript:[\s\S]*?\2/gi, '$1="#"')
     .replace(/href=("|')https:\/\/www\.hahwul\.com\/cullinan\/(attack|tool|develop)\/([^"']+)\1/gi, 'href=$1/reference/$2/$3$1')
     .replace(/href=("|')\/cullinan\/(attack|tool|develop)\/([^"']+)\1/gi, 'href=$1/reference/$2/$3$1')
-    .replace(/href=("|')(?:https:\/\/www\.hahwul\.com)?\/cullinan\/([^\/"'#?]+)\/?([^"']*)\1/gi, (match, quote, slug, suffix) => {
+    .replace(/href=("|')(?:https:\/\/www\.hahwul\.com)?\/cullinan\/([^/"'#?]+)\/?([^"']*)\1/gi, (match, quote, slug, suffix) => {
       const route = legacyRouteBySlug.get(slug.toLowerCase());
       return route ? `href=${quote}/reference/${route}${suffix}${quote}` : match;
     })

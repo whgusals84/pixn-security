@@ -1,3 +1,5 @@
+/* oxlint-disable next/no-html-link-for-pages, jsx-a11y/prefer-tag-over-role -- Static route links and the CSS-rendered Px mark are shared with GitHub Pages. */
+
 export default function HomePage() {
   return (
     <main className="page" id="main">

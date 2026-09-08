@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+/* oxlint-disable next/no-css-tags -- This shared stylesheet is also used by GitHub Pages. */
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://pixn-analytics-portfolio.forhm0220.chatgpt.site"),
+  metadataBase: new URL("https://whgusals84.github.io/pixn-security/"),
   title: "PIXN — Personal Blog",
   description: "A personal blog by PIXN about security, code, study, and the things worth remembering.",
   openGraph: {

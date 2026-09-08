@@ -6,8 +6,6 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const sourceRoot = path.join(projectRoot, 'public');
 const outputRoot = path.join(projectRoot, 'dist', 'github-pages');
 const projectPath = '/pixn-security';
-const githubOrigin = 'https://whgusals84.github.io';
-const githubSiteOrigin = `${githubOrigin}${projectPath}`;
 
 const textExtensions = new Set(['.html', '.css', '.js', '.svg', '.xml', '.txt', '.webmanifest']);
 
@@ -40,14 +38,13 @@ await cp(sourceRoot, outputRoot, { recursive: true });
 
 const files = await walk(outputRoot);
 for (const filePath of files) {
-  const relativePath = path.relative(outputRoot, filePath).replaceAll('\\', '/');
   const extension = path.extname(filePath).toLowerCase();
   if (!textExtensions.has(extension)) continue;
 
   const original = await readFile(filePath, 'utf8');
-  let transformed = original.replaceAll('https://pixn-analytics-portfolio.forhm0220.chatgpt.site/', `${githubSiteOrigin}/`);
-  if (extension === '.html') transformed = prefixHtmlPaths(original);
-  if (extension === '.css') transformed = prefixCssPaths(original);
+  let transformed = original;
+  if (extension === '.html') transformed = prefixHtmlPaths(transformed);
+  if (extension === '.css') transformed = prefixCssPaths(transformed);
   if (transformed !== original) await writeFile(filePath, transformed, 'utf8');
 }
 
