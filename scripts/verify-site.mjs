@@ -36,7 +36,7 @@ function routeTarget(pathname) {
 
 const files = await walk(publicRoot);
 const htmlFiles = files.filter((filePath) => filePath.endsWith('.html'));
-const requiredRoutes = ['/', '/learn/', '/writing/', '/labs/', '/projects/', '/reference/', '/about/'];
+const requiredRoutes = ['/', '/learn/', '/writing/', '/labs/', '/projects/', '/reference/', '/about/', '/privacy/'];
 
 for (const route of requiredRoutes) {
   const target = routeTarget(route);
@@ -81,4 +81,3 @@ if (failures.length) {
 }
 
 console.log(`Site verification passed: ${htmlFiles.length} HTML pages checked.`);
-

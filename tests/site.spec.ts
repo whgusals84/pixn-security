@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const primaryRoutes = ['/learn/', '/writing/', '/labs/', '/projects/', '/reference/', '/about/'];
+const primaryRoutes = ['/learn/', '/writing/', '/labs/', '/projects/', '/reference/', '/about/', '/privacy/'];
 
 test('primary routes render successfully', async ({ page }) => {
   for (const route of primaryRoutes) {
@@ -44,4 +44,18 @@ test('header controls never overlap', async ({ page }) => {
     if (!navBox) throw new Error('Desktop navigation has no layout box');
     expect(brandBox.x + brandBox.width).toBeLessThanOrEqual(navBox.x);
   }
+});
+
+test('analytics only loads after the visitor opts in', async ({ page }) => {
+  const response = await page.goto('/');
+  expect(response?.status()).toBe(200);
+
+  const notice = page.locator('[data-analytics-consent]');
+  await expect(notice).toBeVisible();
+  await expect(page.locator('script[data-pixn-analytics]')).toHaveCount(0);
+
+  await notice.getByRole('button', { name: 'Accept analytics' }).click();
+  await expect(notice).toBeHidden();
+  await expect(page.locator('script[data-pixn-analytics]')).toHaveCount(1);
+  await expect(page.locator('script[data-pixn-analytics]')).toHaveAttribute('src', /G-V2QQ024NEN/);
 });
