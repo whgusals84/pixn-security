@@ -521,6 +521,10 @@ button {
   max-width: 900px;
 }
 
+.privacy-page {
+  max-width: 900px;
+}
+
 .article-heading {
   padding: 8rem 0 3rem;
   border-bottom: 1px solid var(--line);

@@ -83,8 +83,8 @@
     if (document.querySelector('[data-pixn-analytics]')) return;
 
     window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function gtag() {
-      window.dataLayer.push(arguments);
+    window.gtag = window.gtag || function gtag(...args) {
+      window.dataLayer.push(args);
     };
     window.gtag('consent', 'default', {
       analytics_storage: 'granted',
